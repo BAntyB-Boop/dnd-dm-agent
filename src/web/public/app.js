@@ -1399,6 +1399,44 @@ async function openCampaignManager() {
   $('campaign-overlay').classList.add('active');
 }
 
+async function startCampaign(campaignId) {
+  // Activate if not already active
+  await fetch(`/api/campaign/${campaignId}/activate`, { method: 'POST' });
+  await fetchAndRefreshState();
+
+  // Check party size
+  const stateRes = await fetch('/api/state');
+  const state = stateRes.ok ? await stateRes.json() : null;
+  const hasParty = state && state.characters && state.characters.length > 0;
+
+  // Close campaign modal
+  $('campaign-overlay').classList.remove('active');
+
+  if (!hasParty) {
+    // No characters — prompt to create party
+    switchMobileTab('party');
+    setTimeout(() => {
+      if (confirm('ยังไม่มีตัวละครใน Campaign นี้\nกด OK เพื่อสร้างตัวละครตัวแรก')) {
+        $('new-char-btn').click();
+      }
+    }, 200);
+  } else {
+    // Has party — go to DM tab and ready to play
+    switchMobileTab('dm');
+  }
+}
+
+function switchMobileTab(tab) {
+  const layout = document.getElementById('layout');
+  const nav = document.getElementById('mobile-nav');
+  if (window.innerWidth <= 680) {
+    layout.className = `tab-${tab}`;
+    nav.querySelectorAll('.mob-tab').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.tab === tab);
+    });
+  }
+}
+
 async function loadCampaigns() {
   const res  = await fetch('/api/campaigns');
   const data = await res.json();
@@ -1408,20 +1446,24 @@ async function loadCampaigns() {
     const row = document.createElement('div');
     row.className = `camp-row${c.active ? ' active-camp' : ''}`;
     const activeBadge = c.active ? '<span class="active-badge">ACTIVE</span>' : '';
-    const advLabel = c.adventure_id ? `📜 ${c.adventure_id}` : '— no adventure —';
+    const advLabel = c.adventure_id ? `📜 ${c.adventure_id}` : '— ยังไม่มี adventure —';
     row.innerHTML = `
       <div class="camp-info">
         <span class="camp-name">${c.name} ${activeBadge}</span>
         <span class="camp-adv">${advLabel} · ${c.language === 'th' ? '🇹🇭' : '🇬🇧'}</span>
       </div>
       <div class="camp-actions">
-        ${!c.active ? `<button class="camp-activate-btn" data-id="${c.id}">Set Active</button>` : ''}
+        ${c.active
+          ? `<button class="camp-play-btn" data-id="${c.id}">▶ เริ่มเล่น</button>`
+          : `<button class="camp-activate-btn" data-id="${c.id}">เลือก</button>`
+        }
         <select class="camp-adv-select" data-id="${c.id}">
-          <option value="">Load adventure…</option>
+          <option value="">เลือก Adventure…</option>
         </select>
       </div>
     `;
     list.appendChild(row);
+
     // Populate adventure dropdown
     const sel = row.querySelector('.camp-adv-select');
     adventuresList.forEach(a => {
@@ -1439,12 +1481,19 @@ async function loadCampaigns() {
       });
       await loadCampaigns();
     });
+
+    // Play button (active campaign)
+    const playBtn = row.querySelector('.camp-play-btn');
+    if (playBtn) {
+      playBtn.addEventListener('click', () => startCampaign(c.id));
+    }
+
+    // Select button (inactive campaign)
     const activateBtn = row.querySelector('.camp-activate-btn');
     if (activateBtn) {
       activateBtn.addEventListener('click', async () => {
-        await fetch(`/api/campaign/${c.id}/activate`, { method: 'POST' });
-        await loadCampaigns();
-        await fetchAndRefreshState();
+        await loadCampaigns(); // refresh to show new active state
+        await startCampaign(c.id);
       });
     }
   });

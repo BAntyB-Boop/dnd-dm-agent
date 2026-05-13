@@ -1526,10 +1526,22 @@ body.mood-eerie     #scene-section { box-shadow: 0 0 30px rgba(80,122,90,0.12); 
 .camp-actions { display: flex; align-items: center; gap: 6px; }
 .camp-activate-btn {
   background: rgba(58,154,80,0.12); border: 1px solid rgba(58,154,80,0.4);
-  color: var(--accent-green); padding: 4px 10px; border-radius: 5px;
-  cursor: pointer; font-size: 0.8rem;
+  color: var(--accent-green); padding: 4px 12px; border-radius: 5px;
+  cursor: pointer; font-size: 0.8rem; white-space: nowrap;
 }
 .camp-activate-btn:hover { background: rgba(58,154,80,0.25); }
+
+.camp-play-btn {
+  background: rgba(201,168,76,0.18); border: 1px solid var(--accent-gold-dim);
+  color: var(--accent-gold); padding: 6px 16px; border-radius: 6px;
+  cursor: pointer; font-family: 'Cinzel', serif; font-size: 0.85rem;
+  font-weight: 600; letter-spacing: 0.04em; white-space: nowrap;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+.camp-play-btn:hover {
+  background: rgba(201,168,76,0.32);
+  box-shadow: 0 0 12px rgba(201,168,76,0.25);
+}
 .camp-adv-select {
   background: var(--bg-panel); border: 1px solid var(--border);
   color: var(--text-secondary); padding: 4px 6px; border-radius: 5px;

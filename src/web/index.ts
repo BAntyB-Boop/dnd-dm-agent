@@ -12,7 +12,7 @@ import {
   longRestHeal, restoreAllSpellSlots, shortRestWarlockSlots, updateCharacterHp,
   getAllCampaigns, setActiveCampaign, updateCampaignAdventure, createCampaign,
   setItemEquipped, updateCharacterAc, levelUpCharacter, updateCharacterSubclass,
-  updatePreparedSpells, getPreparedSpells,
+  updatePreparedSpells, getPreparedSpells, addSessionMessage,
 } from "../db/database.js";
 import { listAdventures, loadAdventure } from "../scripts/loader.js";
 import {
@@ -334,6 +334,18 @@ export async function startWebServer(): Promise<void> {
     })));
 
     return { id: charId, name: body.name, hp: maxHp, ac: finalAc };
+  });
+
+  // ── Human DM Narrate ──────────────────────────────────────────────────
+
+  app.post("/api/dm/narrate", async (req, reply) => {
+    const { message } = req.body as { message: string };
+    const campaign = getActiveCampaign();
+    if (!campaign) return reply.status(404).send({ error: "No active campaign" });
+    if (!message?.trim()) return reply.status(400).send({ error: "message required" });
+    addSessionMessage(campaign.id, "assistant", message.trim());
+    broadcast(campaign.id, "dm_narrative", { narrative: message.trim() });
+    return { ok: true, narrative: message.trim() };
   });
 
   // ── DM Chat ────────────────────────────────────────────────────────────

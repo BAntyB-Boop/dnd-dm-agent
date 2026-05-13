@@ -79,10 +79,13 @@
         <section id="chat-section">
           <div id="chat-panel-header">
             <span id="chat-title">💬 Chat with DM</span>
-            <select id="chat-provider">
-              <option value="default">⚔️ DM (Groq)</option>
-              <option value="mimo">🤖 DM2 (MiMo)</option>
-            </select>
+            <div id="chat-header-right">
+              <select id="chat-provider">
+                <option value="default">⚔️ DM (Groq)</option>
+                <option value="mimo">🤖 DM2 (MiMo)</option>
+              </select>
+              <button id="dm-mode-btn" title="Switch DM mode">🤖 AI DM</button>
+            </div>
           </div>
           <div id="chat-messages">
             <div class="chat-msg system"><span class="chat-text"><em>Adventure awaits — speak to your Dungeon Master...</em></span></div>

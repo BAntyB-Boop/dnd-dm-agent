@@ -798,14 +798,49 @@ async function executePartyRoll(groupId, charIdx, btn) {
   }
 }
 
+// ── DM Mode (AI vs Human) ────────────────────────────────────────────────
+
+let humanDmMode = false;
+
+function initDmModeToggle() {
+  const btn = $('dm-mode-btn');
+  const chatSection = document.getElementById('chat-section');
+  const input = $('chat-input');
+  const sendBtn = $('chat-send-btn');
+
+  btn.addEventListener('click', () => {
+    humanDmMode = !humanDmMode;
+    btn.textContent = humanDmMode ? '✍️ Human DM' : '🤖 AI DM';
+    btn.classList.toggle('human-mode', humanDmMode);
+    chatSection.classList.toggle('human-dm-mode', humanDmMode);
+    input.placeholder = humanDmMode
+      ? 'พิมพ์ narrative ในฐานะ DM...'
+      : 'What do you say or do?';
+    sendBtn.textContent = humanDmMode ? '📖 Narrate' : '⚔️ Send';
+  });
+}
+
 async function sendToDM() {
   if (chatLoading) return;
   const input = $('chat-input');
   const message = input.value.trim();
   if (!message) return;
+  input.value = '';
+
+  if (humanDmMode) {
+    // Human DM: send directly as narrative, no AI call
+    addChatMsg('dm', 'DM', message);
+    try {
+      await fetch('/api/dm/narrate', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message }),
+      });
+    } catch { /* broadcast may fail silently */ }
+    return;
+  }
+
   const characterName = $('chat-character').value || null;
   const provider = $('chat-provider').value;
-  input.value = '';
   addChatMsg('player', characterName || 'Player', message);
   setChatLoading(true);
   try {
@@ -2163,4 +2198,5 @@ function initMobileNav() {
 initMapControls();
 initResizeHandles();
 initMobileNav();
+initDmModeToggle();
 init();

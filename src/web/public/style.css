@@ -1020,6 +1020,12 @@ body.mood-eerie     #scene-section { box-shadow: 0 0 30px rgba(80,122,90,0.12); 
   text-transform: uppercase;
 }
 
+#chat-header-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
 #chat-provider {
   background: var(--bg-panel);
   border: 1px solid var(--border);
@@ -1029,6 +1035,38 @@ body.mood-eerie     #scene-section { box-shadow: 0 0 30px rgba(80,122,90,0.12); 
   font-size: 0.8rem;
   cursor: pointer;
   outline: none;
+}
+
+#dm-mode-btn {
+  background: rgba(74,112,200,0.12);
+  border: 1px solid rgba(74,112,200,0.4);
+  color: #90a8e0;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+#dm-mode-btn:hover {
+  background: rgba(74,112,200,0.25);
+}
+#dm-mode-btn.human-mode {
+  background: rgba(201,168,76,0.15);
+  border-color: var(--accent-gold-dim);
+  color: var(--accent-gold);
+}
+
+/* Human DM mode — hide character selector, change input style */
+#chat-section.human-dm-mode #chat-character { display: none; }
+#chat-section.human-dm-mode #chat-provider  { display: none; }
+#chat-section.human-dm-mode #chat-input {
+  border-color: var(--accent-gold-dim);
+}
+#chat-section.human-dm-mode #chat-send-btn {
+  background: rgba(201,168,76,0.15);
+  border-color: var(--accent-gold-dim);
+  color: var(--accent-gold);
 }
 
 #chat-messages {

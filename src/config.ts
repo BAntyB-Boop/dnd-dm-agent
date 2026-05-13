@@ -66,7 +66,7 @@ export const config = {
     dmChannelId: process.env.DM_CHANNEL_ID,
   },
   web: {
-    port: parseInt(process.env.WEB_PORT ?? "3000"),
+    port: parseInt(process.env.PORT ?? process.env.WEB_PORT ?? "3000"),
     secret: process.env.WEB_SECRET ?? "dnd-secret-change-me",
   },
   database: {

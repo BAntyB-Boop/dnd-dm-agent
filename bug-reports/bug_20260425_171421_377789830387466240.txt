@@ -1,0 +1,26 @@
+=== BUG REPORT ===
+Timestamp : 2026-04-25 17:14:21
+User      : _l3anty_ (id: 377789830387466240)
+Campaign  : "dead log" (id: 6)
+
+=== DESCRIPTION ===
+บทล่าสุด sun ร่าย Chill Touch ได้ยังไง
+
+=== CHARACTER STATE ===
+Name      : ค.8
+Class     : paladin | Race: dragonborn | Level: 1
+HP        : 18/18  AC: 16  Gold: 10g
+Stats     : STR 20 DEX 14 CON 15 INT 11 WIS 7 CHA 17
+Inventory : 6 item(s) — Longsword [E], Shield, Chain Mail [E], Javelin, Holy Symbol [E], Priest's Pack
+
+=== COMBAT STATE ===
+No active combat
+
+=== RECENT SESSION (last 5 messages) ===
+[Player] **ค.8**: ตอนนี้ทำอะไรได้บ้าง
+[DM]    ## 🗺️ สถานการณ์ปัจจุบัน  ---  **ถนนบนเทือกเขา Stensia** — สายหมอกหนาทึบลอยเอื่อยๆ ผ่านต้นสนสูงตระหง่าน แสงอาทิตย์ยามบ่ายแทบไม่อาจทะลุเมฆหนาลงมาได้  ทางแยกอยู่เบื้องหน้า...  ---  🎲 **สิ่งที่คุณทำได้ต
+[Player] **empty**: ผม Sun ลองใช้ Chill Touch สัมผัสไปที่ต้นไม้แล้วตะโกนถ้ายังไม่อยากตายโผล่หัวออกมา
+[Player] **empty**: ผม Sun ลองใช้ Chill Touch สัมผัสไปที่ต้นไม้แล้วตะโกนถ้ายังไม่อยากตายโผล่หัวออกมา
+[DM]    ## 🔮 Sun ร่าย *Chill Touch*  ---  มือคนแคระยื่นออกไปแตะที่ลำต้นสนใหญ่ข้างทาง ทันใดนั้น—  **มือโครงกระดูกสีเทาอ่อน** โผล่ออกมาจากอากาศรอบๆ ฝ่ามือของ Sun มันเป็นมือที่เหมือนถูกฉีกออกมาจากหลุมศพ นิ้วเรี
+
+=== END OF REPORT ===

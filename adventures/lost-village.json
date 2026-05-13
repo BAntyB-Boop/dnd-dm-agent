@@ -1,0 +1,96 @@
+{
+  "title": "The Lost Village of Ashenmoor",
+  "synopsis": "A village has gone silent. Farmers report seeing ghostly lights in the old mill. The party must uncover what happened — and face the evil that claimed Ashenmoor.",
+  "language": "en",
+  "current_scene": "The party arrives at the edge of Ashenmoor as dusk falls. The village is eerily quiet. Smoke still drifts from chimneys, but no villagers are visible on the streets.",
+  "tone": "gothic horror, mystery",
+  "key_npcs": [
+    {
+      "name": "Mira the Herbalist",
+      "race": "Human",
+      "description": "An old woman who hid in her cellar when the trouble started. She knows what happened but is too frightened to speak directly.",
+      "personality": "Nervous, speaks in riddles, clutches a small iron charm",
+      "secret": "She sold a cursed artifact to the miller three weeks ago"
+    },
+    {
+      "name": "Brother Aldric",
+      "race": "Human",
+      "description": "The village priest, now a hollow-eyed shade serving the dark power in the mill",
+      "personality": "Speaks calmly with no emotion, tries to lure party to the mill",
+      "stats": { "hp": 22, "ac": 11, "cr": "1" }
+    },
+    {
+      "name": "The Miller's Shade",
+      "race": "Undead",
+      "description": "The corrupted spirit of Henrik the miller, now bound to a cursed grinding wheel in the old mill",
+      "personality": "Speaks in the miller's voice, begs for release, then attacks",
+      "stats": { "hp": 45, "ac": 14, "cr": "3", "attack_bonus": 5, "damage": "2d6+3" }
+    }
+  ],
+  "locations": [
+    {
+      "id": "village_edge",
+      "name": "Edge of Ashenmoor",
+      "description": "A dirt road curves into a silent village. Laundry hangs motionless. A dog watches from shadows but doesn't bark.",
+      "atmosphere": { "mood": "eerie", "time_of_day": "dusk", "lighting": "dim", "sounds": ["distant wind", "creaking sign"] }
+    },
+    {
+      "id": "herbalist_cottage",
+      "name": "Mira's Cottage",
+      "description": "A small cottage smelling of dried herbs. Bundles hang from low beams. A trapdoor is partially visible under a rug.",
+      "atmosphere": { "mood": "mysterious", "lighting": "candlelight", "sounds": ["herbs rustling", "distant owl"] }
+    },
+    {
+      "id": "village_well",
+      "name": "The Village Well",
+      "description": "The stone well is covered with a rough wooden board. Dark water stains streak down its sides. Something was dragged here recently.",
+      "clue": "A child's shoe is caught between the stones. DC 12 Investigation reveals drag marks toward the mill."
+    },
+    {
+      "id": "old_mill",
+      "name": "Ashenmoor Mill",
+      "description": "The mill wheel still turns, but no water powers it. A faint violet glow pulses through cracks in the wall. The door is warm to the touch.",
+      "atmosphere": { "mood": "dangerous", "lighting": "magical", "sounds": ["grinding stone", "low moaning", "whispered name"] },
+      "final_boss": "The Miller's Shade"
+    }
+  ],
+  "encounters": [
+    {
+      "id": "shade_guards",
+      "location": "village_edge",
+      "trigger": "Party approaches main square after dusk",
+      "enemies": [
+        { "name": "Villager Shade 1", "hp": 12, "max_hp": 12, "ac": 10, "initiative": 8, "attack_bonus": 3, "damage": "1d6+1", "is_player": false },
+        { "name": "Villager Shade 2", "hp": 12, "max_hp": 12, "ac": 10, "initiative": 6, "attack_bonus": 3, "damage": "1d6+1", "is_player": false }
+      ],
+      "xp": 100,
+      "description": "Two villagers with empty eyes block the path. Their movements are jerky, unnatural."
+    },
+    {
+      "id": "final_encounter",
+      "location": "old_mill",
+      "trigger": "Party enters the mill and approaches the grinding wheel",
+      "enemies": [
+        { "name": "The Miller's Shade", "hp": 45, "max_hp": 45, "ac": 14, "initiative": 10, "attack_bonus": 5, "damage": "2d6+3", "is_player": false },
+        { "name": "Brother Aldric", "hp": 22, "max_hp": 22, "ac": 11, "initiative": 7, "attack_bonus": 3, "damage": "1d8+1", "is_player": false }
+      ],
+      "xp": 450,
+      "resolution": "Destroying the cursed artifact (the grinding wheel talisman) breaks the shade's hold. The villagers collapse unconscious but alive."
+    }
+  ],
+  "quests": [
+    {
+      "id": "main_quest",
+      "title": "Silence the Mill",
+      "description": "Discover what happened to the villagers and end the curse on Ashenmoor.",
+      "xp_reward": 300,
+      "objectives": [
+        "Speak with Mira the Herbalist",
+        "Discover the source of the corruption",
+        "Defeat the Miller's Shade",
+        "Destroy the cursed talisman"
+      ]
+    }
+  ],
+  "dm_notes": "This is a gothic horror mystery. Build tension slowly. Let players explore before combat. The curse can be ended peacefully if players persuade Brother Aldric's lucid moments (DC 15 Persuasion). Play up the eerie sounds and the mill wheel turning without wind."
+}

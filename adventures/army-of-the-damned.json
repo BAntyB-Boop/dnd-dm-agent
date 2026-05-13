@@ -1,0 +1,239 @@
+{
+  "title": "Army of the Damned",
+  "id": "army-of-the-damned",
+  "setting": "Innistrad (Magic: The Gathering / D&D 5e fan module)",
+  "synopsis": "Adventure Background\nHumanitys Peril\nThe archangel Avacyn, the central figure of the Church\nof Avacyn and the main conduit of holy magic on the\nplane, hasnt been seen over the last few seasons, and her\nabsence shows. Since Avacyn has disappeared, prayers\nhave not spared remote villages from werewolf attacks as\nthey once did. Holy symbols have not stopped vampires\nfrom preying on travelers in the high mountain passes.\nThe dead are not protected from tampering by ghoulcallers\nand flesh-animating alchemists called skaberen. With the\npower of holy magic waning, humanity is being pushed\ninto a corner by an encroaching darkness that threatens\nto consume them.\nOnly a select few elders in the Church, including\nMikaeus, the ruling Lunarch, know what has happened\nto Avacyn; the archangel is trapped within the Helvault\nafter a desperate struggle with the demon Griselbrand. To\nsave Avacyn (if she is even alive) would require shattering\nthe Helvault and releasing hundreds of years worth of\ncaptured demons imprisoned within the silver prison with\nher, a risky move that may doom the plane utterly.\nOne Hope\nMikaeus and a handful of his most trusted advisors\nhatched a desperate plan: they believe t...",
+  "tone": "Gothic horror, zombie apocalypse, mystery, survival",
+  "recommended_level": "1-5",
+  "current_scene": "The party travels the dark roads of Stensia toward the isolated village of Shadowgrange. Strange lights flicker in the distance. The dead have begun to stir.",
+  "dm_notes": "Gothic horror adventure set in Innistrad. Emphasize dread, isolation, and the gradual revelation that something ancient has been unleashed. The main villain is a ghoulcaller raising an army of undead. Use maps prefixed with aotd-. Start with aotd-Stensia Map.png for the overworld.",
+  "maps": {
+    "world": "aotd-Innistrad Map.png",
+    "region": "aotd-Stensia Map.png",
+    "shadowgrange": "aotd-Iso Shadowgrange.png",
+    "mauer_estate": "aotd-Mauer Estate.png",
+    "music_puzzle": "aotd-music-puzzle-play.png"
+  },
+  "key_npcs": [
+    {
+      "name": "Flora Mayweather",
+      "role": "Head Priestess of Shadowgrange Chapel",
+      "personality": "Devout, caring, desperate for help. Has a quest for the party.",
+      "image": "artwork/army-of-the-damned/npcs/Priestess Flora.png"
+    },
+    {
+      "name": "Captain Levi",
+      "role": "Captain of the local militia",
+      "personality": "Gruff, practical, deeply worried about the village defenses.",
+      "image": "artwork/army-of-the-damned/npcs/Captain Levi.jpg"
+    },
+    {
+      "name": "Eckhardt Sheck",
+      "role": "Innkeeper",
+      "personality": "Nervous, talkative, knows all the local gossip."
+    },
+    {
+      "name": "Magda Botler",
+      "role": "Trading post owner",
+      "personality": "Friendly on the surface. Has a cursed item.",
+      "secret": "Secretly a Skirsdag cultist worshipping demons"
+    },
+    {
+      "name": "Marcus Ritter",
+      "role": "Blacksmith",
+      "personality": "Stoic, strong, has a personal stake in ending the undead threat. Has a quest."
+    },
+    {
+      "name": "Silvia Wintsch",
+      "role": "Fletcher",
+      "personality": "Sharp-tongued, skilled, supplies the village hunters. Has a quest."
+    },
+    {
+      "name": "Shilgengar",
+      "role": "Demon Lord (antagonist)",
+      "personality": "Ancient, manipulative, seeks to use the undead army for his own ends.",
+      "image": "artwork/army-of-the-damned/monsters/Demonlord of Ashmouth.jpg"
+    }
+  ],
+  "locations": [
+    {
+      "name": "Stensia Road",
+      "description": "The treacherous mountain road through Kruin Pass into Stensia. Werewolves, vampires, and restless dead haunt this route.",
+      "chapter": 1
+    },
+    {
+      "name": "Shadowgrange",
+      "description": "A bleak, isolated village in Stensia. Besieged by undead rising from the surrounding countryside.",
+      "chapter": "2-5",
+      "map": "aotd-Iso Shadowgrange.png"
+    },
+    {
+      "name": "Shadowgrange Chapel",
+      "description": "The village chapel. Flora Mayweather leads prayers here, though divine magic has been weakening.",
+      "chapter": 2
+    },
+    {
+      "name": "Sheck Inn",
+      "description": "The village inn run by Eckhardt Sheck. The party base of operations.",
+      "chapter": 2
+    },
+    {
+      "name": "Mauer Estate",
+      "description": "An abandoned noble estate on the outskirts. Vampires have claimed it. Dark secrets buried here.",
+      "chapter": 3,
+      "map": "aotd-Mauer Estate.png"
+    },
+    {
+      "name": "The Farbog",
+      "description": "A treacherous swamp east of Shadowgrange. Ancient evil stirs here — source of the undead plague.",
+      "chapter": 4
+    },
+    {
+      "name": "Ghoulcaller Sanctum",
+      "description": "The lair of the ghoulcaller behind the Army of the Damned. Final confrontation.",
+      "chapter": 5
+    }
+  ],
+  "chapters": [
+    {
+      "number": 1,
+      "title": "Into Stensia",
+      "summary": "Part 1: Into Stensia\nThe adventure begins with the player characters on the\nroad, traveling from Thraben to Shadowgrange (MAP).\nThe journey took them through the province Gavony into\nStensia via the Kruin Pass, a treacherous pass through the\nmountain range called Geier Reach, which cuts off Stensia\nfrom the rest of the provinces. The characters journeyed\nthrough Stensias inner valley and now cross Hofsaddel\npass into the outer valley where Shadowgrange resides.\nBefore you begin, have your players introduce their\ncharacters. Let them explain why their characters are\nmaking the journey from Thra...",
+      "milestone_xp": 300,
+      "milestone": "Reach Shadowgrange (Level 2)"
+    },
+    {
+      "number": 2,
+      "title": "Shadowgrange",
+      "summary": "Part 2: Shadowgrange\nShadowgrange (MAP) is one of the oldest human\nsettlements in Stensia. Most of the villagers are farmers,\nthe majority being shepherds. The rest of the villagers\nwork in trades that support the farmers by spinning wool,\nweaving clothes, shoeing horses, milling grain, and the\nlike. Some merchants move goods from Shadowgrange to\nother settlements such as Lammas, but shipments move\nless frequently these days as the roads become more\ndangerous.\nIn the last two years, Shadowgrange has experienced\na swell of new citizens that sought refuge behind the\nvillages fortifications. Most...",
+      "milestone": "Discover the source of the undead (Level 3)"
+    },
+    {
+      "number": 3,
+      "title": "Night of the Dead",
+      "summary": "Part 3: Night of the Dead\nThis chapter begins shortly after the adventurers find the\nStrionic Resonator in the previous chapter. If the players\ndo not have any intention of locating the artifact, or they\nstill have other intended goals in town, you may choose to\nstart this chapter after the players have had sufficient time\nto rest, explore Shadowgrange, and restock on supplies.\nUndead Menace\nEvents are unfolding beyond the scope of the characters\nactivities: an army of undead are currently on a murderous\nrampage, laying waste to all the settlements in their way.\nShadowgrange is their ultimate ...",
+      "milestone": "Survive the undead assault (Level 4)"
+    },
+    {
+      "number": 4,
+      "title": "Into the Farbog",
+      "summary": "Part 4: Into the Farbog\nIn this part of the adventure, the characters travel to\nMauer Estate, located at the northern edge of Stensias\nouter valley. To do so, they will need to journey through a\nlarge bog that divides the southern part of the valley from\nits northern tip.\nDepending on which NPCs the characters met and\nwhich quests or clues they picked up, some or all the\nfollowing information might be known to them:\n Priestess Flora wants the characters to travel to Mauer\nEstate and uncover the source of the undead.\n Rinelda Smit can confirm that Siegfried is the creator\nof the undead armies a...",
+      "milestone": "Reach the Farbog sanctum (Level 5)"
+    },
+    {
+      "number": 5,
+      "title": "The Perfect Storm",
+      "summary": "Chapter 5: The Perfect\nSixty miles north of Shadowgrange, nestled in a clearing at\nthe center of a grove of live oak trees deep within northern\nStensia, stands Mauer Estate. The mansion is one of the\noldest buildings in the region, its foundation dating back\nthousands of years to a holy sect of paladins that brought\nthe Light to Innistrad long before even Avacyn. Since then,\ncountless occupants have claimed Mauer Estate as their\nhome, modifying the grounds to suit their needs.\nSiegfried is the estates current owner and uses it as\nhis base of operations. Ever since he fled Shadowgrange\nin the w...",
+      "milestone": "Defeat the ghoulcaller and end the Army of the Damned"
+    }
+  ],
+  "quests": [
+    {
+      "id": "main",
+      "title": "End the Army of the Damned",
+      "description": "Discover who is raising the undead army and stop them before Shadowgrange falls.",
+      "chapters": "1-5"
+    },
+    {
+      "id": "flora_quest",
+      "title": "The Missing Faithful",
+      "giver": "Flora Mayweather",
+      "description": "Several villagers have gone missing near the old cemetery."
+    },
+    {
+      "id": "ritter_quest",
+      "title": "Silver and Steel",
+      "giver": "Marcus Ritter",
+      "description": "Forge blessed silver weapons effective against undead."
+    },
+    {
+      "id": "levi_quest",
+      "title": "Defend the Walls",
+      "giver": "Captain Levi",
+      "description": "Reinforce village defenses before the nightly undead attacks overwhelm the militia."
+    },
+    {
+      "id": "wintsch_quest",
+      "title": "Arrows of Light",
+      "giver": "Silvia Wintsch",
+      "description": "Retrieve components from the dangerous forest for blessed ammunition."
+    }
+  ],
+  "adventure_hooks": "Adventure Hooks\nYou can let players invent their own reasons for visiting\nShadowgrange, or they can use the following backgrounds\nas an easy way to create characters with compelling ties to\nthe events of Army of the Damned.\nBelow is a list of bonds that applies to any background\nthat players select or create. You can replace or augment\nsome or all of the options in your chosen background with\none or more of the bonds.\nBOND (D8)\n1. The Church of Avacyn has hired you to make contact\nwith Katarina Brunn, a musical prodigy living in\nShadowgrange, whom they have not heard from in\nmonths. You must find her and/or retrieve an artifact\nthat was under her care.\n2. A letter has arrived summoning you to Shadowgrange.\nYour cousin, Siegfried Reinholdt, has fled from\nhis home in Shadowgrange under myste...",
+  "key_monsters": [
+    {
+      "name": "Walking Corpse",
+      "type": "Undead",
+      "cr": "1/4",
+      "image": "artwork/army-of-the-damned/monsters/Walking Corpse.jpg"
+    },
+    {
+      "name": "Zombie",
+      "type": "Undead",
+      "cr": "1/4"
+    },
+    {
+      "name": "Skaab Goliath",
+      "type": "Undead Construct",
+      "cr": "7",
+      "description": "Massive undead stitched from multiple corpses.",
+      "image": "artwork/army-of-the-damned/monsters/Skaab Goliath.jpg"
+    },
+    {
+      "name": "Falkenrath Marauder",
+      "type": "Vampire",
+      "cr": "3",
+      "image": "artwork/army-of-the-damned/monsters/Falkenrath Marauders.jpg"
+    },
+    {
+      "name": "Kessig Recluse",
+      "type": "Giant Spider",
+      "cr": "1",
+      "image": "artwork/army-of-the-damned/monsters/Kessig Recluse.jpg"
+    },
+    {
+      "name": "Ashmouth Hound",
+      "type": "Fiend",
+      "cr": "1",
+      "image": "artwork/army-of-the-damned/monsters/Ashmouth Hound.jpg"
+    },
+    {
+      "name": "Shilgengar (Demonlord of Ashmouth)",
+      "type": "Demon",
+      "cr": "10",
+      "image": "artwork/army-of-the-damned/monsters/Demonlord of Ashmouth.jpg"
+    }
+  ],
+  "magic_items": [
+    {
+      "name": "Avacyn Collar",
+      "description": "A holy symbol that wards against undead.",
+      "image": "artwork/army-of-the-damned/items/loot_Avacyns Collar.jpg"
+    },
+    {
+      "name": "Moonsilver Spear",
+      "description": "A blessed spear effective against werewolves and undead.",
+      "image": "artwork/army-of-the-damned/items/loot_Moonsilver Spear.jpg"
+    },
+    {
+      "name": "Ghoulcaller Bell",
+      "description": "A cursed bell that can command undead.",
+      "image": "artwork/army-of-the-damned/items/loot_GhoulcallersBell.jpg"
+    },
+    {
+      "name": "Elbrus the Binding Blade",
+      "description": "A legendary cursed weapon that transforms its wielder.",
+      "image": "artwork/army-of-the-damned/items/loot_elbrus.jpg"
+    },
+    {
+      "name": "Silver-Inlaid Dagger",
+      "description": "Effective against vampires and werewolves.",
+      "image": "artwork/army-of-the-damned/items/loot_Silver-Inlaid Dagger.jpg"
+    },
+    {
+      "name": "Shapeshifter Blade",
+      "description": "A blade that adapts to its target.",
+      "image": "artwork/army-of-the-damned/items/loot_Shapeshifters Blade.jpg"
+    }
+  ]
+}

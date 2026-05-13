@@ -1,0 +1,26 @@
+=== BUG REPORT ===
+Timestamp : 2026-04-25 11:53:15
+User      : _l3anty_ (id: 377789830387466240)
+Campaign  : "new dead mode" (id: 5)
+
+=== DESCRIPTION ===
+DM ยังไม่รัน start_combat เพราอะไร
+
+=== CHARACTER STATE ===
+Name      : ทนูทวย
+Class     : paladin | Race: dragonborn | Level: 1
+HP        : 11/11  AC: 16  Gold: 10g
+Stats     : STR 20 DEX 14 CON 13 INT 11 WIS 8 CHA 18
+Inventory : 0 item(s)
+
+=== COMBAT STATE ===
+No active combat
+
+=== RECENT SESSION (last 5 messages) ===
+[DM]    # ⚔️ การต่อสู้ที่หน้าหมู่บ้าน Shadowgrange!  ---  ปาร์ตี้อยู่ในสถานการณ์ที่ยากลำบาก แต่ไม่ต้องกลัว — เรามา phân tíchกัน!  **ศพและโครงกระดูก** กำลังเดินเข้ามาใกล้ประตูหมู่บ้าน **Captain Levi** สั่งปิดป
+[Player] **UwU**: ซันเลือกที่จะร่าย magic missie ใส่ โครงกระดูก ตัวเดียวให้ตาย
+[DM]    # ⚔️ **Magic Missile ที่โครงกระดูก!**  ---  **Sun** ใช้ **Magic Missile** ใส่ **โครงกระดูก** — **3 ลูก missile** บินออกไปจากมือของเธอ!  **Rolling Damage:** * 1d4+1: **4** (Force damage) * 1d4+1: **3**
+[Player] **UwU**: เกิดอะไรขึ้นต่อ
+[DM]    # ⚔️ Round 1 ดำเนินต่อ!  ---  ## สถานการณ์ปัจจุบัน:  **Sun** ยิง *Magic Missile* ออกไป — **ลูกพลังงานสีขาวน้ำเงิน 3 ลูก** พุ่งเข้าใส่โครงกระดูกตัวหนึ่ง มัน **แตกกระจายเป็นเศษกระดูก** กระเด็นไปทั่วพื้น
+
+=== END OF REPORT ===

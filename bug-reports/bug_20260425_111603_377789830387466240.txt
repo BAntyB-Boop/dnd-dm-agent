@@ -1,0 +1,26 @@
+=== BUG REPORT ===
+Timestamp : 2026-04-25 11:16:03
+User      : _l3anty_ (id: 377789830387466240)
+Campaign  : "new dead mode" (id: 5)
+
+=== DESCRIPTION ===
+DM2 encountered an error: 400 Param Incorrect
+
+=== CHARACTER STATE ===
+Name      : ทนูทวย
+Class     : paladin | Race: dragonborn | Level: 1
+HP        : 11/11  AC: 16  Gold: 10g
+Stats     : STR 20 DEX 14 CON 13 INT 11 WIS 8 CHA 18
+Inventory : 0 item(s)
+
+=== COMBAT STATE ===
+Active combat — round 1, turn index 0
+
+=== RECENT SESSION (last 5 messages) ===
+[DM]    ---  ## ⚠️ **กฎเหล็ก: Fireball ใช้ไม่ได้**  **empty**, ผมต้องหยุดตรงนี้เพราะเป็นเรื่องสำคัญ:  ### 🔮 **Sun (Sorcerer Lv.1) ไม่สามารถทำ Fireball ได้**  **เหตุผล:** - ✅ **Fireball = 3rd Level Spell** (P
+[Player] **empty**: ใช้ Fireball ขว้างใส่ ผู้ควบคุมศพ ให้ตายด้วยปฏิหาร เชื่อผมมันทำได้
+[Player] **UwU**: ปกป้องหมู่บ้าน
+[Player] **UwU**: ปกป้องหมู่บ้าน
+[Player] **UwU**: gxHopy'w'[hk'
+
+=== END OF REPORT ===

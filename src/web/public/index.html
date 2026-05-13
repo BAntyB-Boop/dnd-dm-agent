@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>D&D DM — Atmosphere Viewer</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app">
+    <header id="header">
+      <div id="campaign-name">⚔️ D&D Dungeon Master</div>
+      <div id="header-actions">
+        <button id="campaign-btn" title="Campaigns &amp; Adventures">📋</button>
+        <div id="connection-status" class="status-dot disconnected" title="Connecting..."></div>
+      </div>
+    </header>
+
+    <div id="layout">
+
+      <!-- LEFT: Party Roster -->
+      <aside id="left-panel" style="width:var(--left-w)">
+        <section id="party-section">
+          <div id="party-header">
+            <span class="party-title">⚔️ Party</span>
+            <button id="new-char-btn">+ New</button>
+          </div>
+          <div id="party-cards"></div>
+        </section>
+      </aside>
+
+      <div class="resize-handle v" id="rh-left" title="Drag to resize"></div>
+
+      <!-- CENTER: Scene · Map · Combat · Chat -->
+      <main id="center-panel">
+        <section id="scene-section">
+          <div id="location-bar">
+            <span id="location-icon">🗺️</span>
+            <span id="location-text">Unknown Location</span>
+            <span id="time-icon">🌙</span>
+            <span id="time-text">Night</span>
+            <span id="weather-icon">☁️</span>
+            <span id="weather-text">Clear</span>
+          </div>
+          <div id="scene-text">Awaiting the adventure to begin...</div>
+          <div id="active-effects"></div>
+        </section>
+
+        <div id="mood-bar">
+          <div id="mood-fill"></div>
+          <span id="mood-label">neutral</span>
+        </div>
+
+        <section id="map-section" style="display:none">
+          <div id="map-header">
+            <span id="map-title">🗺️ Map</span>
+            <div id="map-controls">
+              <button id="map-reset-btn" title="Reset view">⟳</button>
+              <button id="map-expand-btn" title="Expand map">⤢</button>
+              <button id="map-fullscreen-btn" title="Fullscreen">⛶</button>
+            </div>
+          </div>
+          <div id="map-viewport">
+            <div id="map-canvas">
+              <img id="map-img" src="" alt="Map" draggable="false" />
+              <div id="party-markers"></div>
+            </div>
+          </div>
+          <div id="map-hint">Scroll to zoom · Drag to pan · Double-click to reset</div>
+          <div class="resize-handle h" id="rh-map" title="Drag to resize map"></div>
+        </section>
+
+        <section class="panel" id="combat-panel" style="display:none">
+          <h2>⚔️ Combat</h2>
+          <div id="combat-round">Round 1</div>
+          <div id="combat-participants"></div>
+        </section>
+
+        <section id="chat-section">
+          <div id="chat-panel-header">
+            <span id="chat-title">💬 Chat with DM</span>
+            <select id="chat-provider">
+              <option value="default">⚔️ DM (Groq)</option>
+              <option value="mimo">🤖 DM2 (MiMo)</option>
+            </select>
+          </div>
+          <div id="chat-messages">
+            <div class="chat-msg system"><span class="chat-text"><em>Adventure awaits — speak to your Dungeon Master...</em></span></div>
+          </div>
+          <div id="chat-roll-area"></div>
+          <div id="chat-input-area">
+            <select id="chat-character">
+              <option value="">— Character —</option>
+            </select>
+            <input id="chat-input" type="text" placeholder="What do you say or do?" autocomplete="off" />
+            <button id="chat-send-btn">⚔️ Send</button>
+          </div>
+        </section>
+      </main>
+
+      <div class="resize-handle v" id="rh-right" title="Drag to resize"></div>
+
+      <!-- RIGHT: Event Log · Atmosphere -->
+      <aside id="right-panel">
+        <section id="log-section">
+          <h2>📜 Event Log</h2>
+          <div id="event-log"></div>
+        </section>
+
+        <div class="resize-handle h" id="rh-log" title="Drag to resize log"></div>
+
+        <section class="panel" id="atmosphere-panel">
+          <h2>🌫️ Atmosphere</h2>
+          <div id="lighting-row" class="detail-row">
+            <span class="label">Lighting</span>
+            <span id="lighting-val">—</span>
+          </div>
+          <div id="sounds-container">
+            <div class="label">Ambient Sounds</div>
+            <div id="sounds-list"></div>
+          </div>
+        </section>
+      </aside>
+
+    </div><!-- /#layout -->
+  </div><!-- /#app -->
+
+  <!-- Fullscreen map overlay -->
+  <div id="map-fullscreen-overlay">
+    <button id="map-fullscreen-close">✕</button>
+    <img id="map-fullscreen-img" src="" alt="Map fullscreen" />
+  </div>
+
+  <!-- Character Sheet Modal -->
+  <div id="charsheet-overlay" class="modal-overlay">
+    <div class="modal-box" id="charsheet-modal">
+      <button class="modal-close" id="charsheet-close">✕</button>
+      <div id="charsheet-tabs">
+        <button class="cs-tab active" data-tab="sheet">📋 Sheet</button>
+        <button class="cs-tab" data-tab="abilities">📖 Spells &amp; Abilities</button>
+      </div>
+      <div id="charsheet-content"></div>
+      <div id="charsheet-abilities" style="display:none"></div>
+    </div>
+  </div>
+
+  <!-- Campaign Manager Modal -->
+  <div id="campaign-overlay" class="modal-overlay">
+    <div class="modal-box wide" id="campaign-modal">
+      <button class="modal-close" id="campaign-close">✕</button>
+      <h2 class="modal-title">📋 Campaigns &amp; Adventures</h2>
+
+      <div id="campaign-tabs">
+        <button class="camp-tab active" data-tab="campaigns">Campaigns</button>
+        <button class="camp-tab" data-tab="adventures">Adventures</button>
+      </div>
+
+      <div id="tab-campaigns" class="tab-content">
+        <div id="campaigns-list"></div>
+        <div id="new-campaign-form">
+          <h3>New Campaign</h3>
+          <input id="new-camp-name" type="text" placeholder="Campaign name" />
+          <input id="new-camp-desc" type="text" placeholder="Description (optional)" />
+          <select id="new-camp-lang">
+            <option value="th">🇹🇭 Thai</option>
+            <option value="en">🇬🇧 English</option>
+          </select>
+          <button id="new-camp-btn">+ Create</button>
+        </div>
+      </div>
+
+      <div id="tab-adventures" class="tab-content" style="display:none">
+        <div id="adventures-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Character Creation Modal -->
+  <div id="create-char-overlay" class="modal-overlay">
+    <div class="modal-box wide" id="create-char-modal">
+      <button class="modal-close" id="create-char-close">✕</button>
+      <h2 class="modal-title">⚔️ Create Character</h2>
+
+      <div id="cc-progress">
+        <div class="cc-dot" data-step="0">1<span>Info</span></div>
+        <div class="cc-dot" data-step="1">2<span>Race</span></div>
+        <div class="cc-dot" data-step="2">3<span>Class</span></div>
+        <div class="cc-dot" data-step="3">4<span>Stats</span></div>
+        <div class="cc-dot" data-step="4">5<span>Skills</span></div>
+        <div class="cc-dot" data-step="5">6<span>Persona</span></div>
+        <div class="cc-dot" data-step="6">7<span>Equipment</span></div>
+        <div class="cc-dot" data-step="7">8<span>Review</span></div>
+      </div>
+
+      <div id="cc-body"></div>
+
+      <div id="cc-nav">
+        <button id="cc-back-btn">← Back</button>
+        <div id="cc-error"></div>
+        <button id="cc-next-btn">Next →</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

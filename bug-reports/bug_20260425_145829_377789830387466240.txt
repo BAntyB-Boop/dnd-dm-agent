@@ -1,0 +1,26 @@
+=== BUG REPORT ===
+Timestamp : 2026-04-25 14:58:29
+User      : _l3anty_ (id: 377789830387466240)
+Campaign  : "dead log" (id: 6)
+
+=== DESCRIPTION ===
+ไม่สามารถรันได้ระบบบอกว่า DM2 encountered an error: 402 Insufficient account balance
+
+=== CHARACTER STATE ===
+Name      : ค.8
+Class     : paladin | Race: dragonborn | Level: 1
+HP        : 18/18  AC: 16  Gold: 10g
+Stats     : STR 20 DEX 14 CON 15 INT 11 WIS 7 CHA 17
+Inventory : 6 item(s) — Longsword, Shield, Chain Mail, Javelin, Holy Symbol, Priest's Pack
+
+=== COMBAT STATE ===
+No active combat
+
+=== RECENT SESSION (last 5 messages) ===
+[Player] **UwU**: เริ่มได้
+[Player] **UwU**: เริ่มได้
+[Player] **UwU**: เริ่มได้
+[Player] **UwU**: เริ่มได้
+[Player] **UwU**: เริ่มได้
+
+=== END OF REPORT ===

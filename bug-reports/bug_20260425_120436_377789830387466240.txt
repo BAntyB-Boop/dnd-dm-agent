@@ -1,0 +1,26 @@
+=== BUG REPORT ===
+Timestamp : 2026-04-25 12:04:36
+User      : _l3anty_ (id: 377789830387466240)
+Campaign  : "new dead mode" (id: 5)
+
+=== DESCRIPTION ===
+ทำไม DM ถึงมีการแสดงตอบแบบนี้
+
+=== CHARACTER STATE ===
+Name      : ทนูทวย
+Class     : paladin | Race: dragonborn | Level: 1
+HP        : 11/11  AC: 16  Gold: 10g
+Stats     : STR 20 DEX 14 CON 13 INT 11 WIS 8 CHA 18
+Inventory : 0 item(s)
+
+=== COMBAT STATE ===
+No active combat
+
+=== RECENT SESSION (last 5 messages) ===
+[DM]    เข้าใจครับ! ผมจะสรุปสถานการณ์ปัจจุบันให้ชัดเจนอีกครั้ง — เนื่องจากมีความสับสนในรอบก่อนหน้า ผมจะเริ่มจากจุดที่ถูกต้องตามบันทึกใน Session  ---  # 📜 สรุปสถานการณ์ปัจจุบัน  ## ⚔️ การต่อสู้รอบแรก — **จบแล
+[Player] **UwU**: ตั้งรับหน้าประตู
+[Player] **UwU**: ตั้งรับหน้าประตู
+[Player] **UwU**: ตั้งรับหน้าประตู
+[DM]    The request was rejected because it was considered high risk  # ⚔️ ศพเคลื่อนทัพ! การป้องกันหน้าประตูเริ่มแล้ว!  ---  > **ทนูทวย** ได้ยินเสียงครวญครางจากทุ่งหญ้า เขาหันกลับมามอง — **ศพนับสิบ!** กำลังเด
+
+=== END OF REPORT ===

@@ -1,0 +1,26 @@
+=== BUG REPORT ===
+Timestamp : 2026-04-25 11:30:32
+User      : _l3anty_ (id: 377789830387466240)
+Campaign  : "new dead mode" (id: 5)
+
+=== DESCRIPTION ===
+ในตอนนี้ DM ถามผู้เล่นว่า Sun จะทำอะไร ทั้งที่ตอนนี้อาจจะเป็นค่าของ ผู้เล่นซับ และใน combat ยังมีมอสเตอร์เท่าเดิมอันนี้ถูกได้
+
+=== CHARACTER STATE ===
+Name      : ทนูทวย
+Class     : paladin | Race: dragonborn | Level: 1
+HP        : 11/11  AC: 16  Gold: 10g
+Stats     : STR 20 DEX 14 CON 13 INT 11 WIS 8 CHA 18
+Inventory : 0 item(s)
+
+=== COMBAT STATE ===
+Active combat — round 1, turn index 0
+
+=== RECENT SESSION (last 5 messages) ===
+[Player] **UwU**: test
+[Player] **UwU**: test
+[DM]    # ⚔️ การต่อสู้ที่หน้าหมู่บ้าน Shadowgrange  ---  **empty**, ผมเข้าใจความต้องการของคุณ แต่ต้องยืนยันอีกครั้ง:  > **Sun (Sorcerer Lv.1) ไม่สามารถใช้ Fireball ได้** — มันเป็น **3rd Level Spell** และคุณมี
+[Player] [Party Roll Results — Initiative — ทุกคนเพิ่ม DEX modifier ของตัวเอง (1d20)] ทนูทวย: ไม่ได้ทอย (หมดเวลา) ซับ: ไม่ได้ทอย (หมดเวลา) [🌞] Sun: ไม่ได้ทอย (หมดเวลา) ไม่ได้ทอย: ทนูทวย, ซับ, [🌞] Sun
+[DM]    ปาร์ตี้หมดเวลาทอย Initiative — ผมจะทอยให้ทุกคนเอง!  # ⚔️ การต่อสู้เริ่มแล้ว! — Round 1  ---  ## 🎲 ผล Initiative:  | ลำดับ | ตัวละคร | Initiative | |-------|---------|-----------| | 1️⃣ | ☀️ **Sun** |
+
+=== END OF REPORT ===

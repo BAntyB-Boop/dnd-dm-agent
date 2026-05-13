@@ -175,11 +175,11 @@ async function resolveWebPartyRoll(partyRoll: PendingPartyRoll, useMimo = false)
 
 // ── Auth helpers ─────────────────────────────────────────────────────────
 
-type AuthUser = { role: string; dmName: string };
+type AuthUser = { role: string; name: string };
 
-function createToken(role: string, dmName = ""): string {
+function createToken(role: string, name = ""): string {
   const expiry = Date.now() + 7 * 24 * 60 * 60 * 1000;
-  const data = `${role}:${dmName}:${expiry}`;
+  const data = `${role}:${name}:${expiry}`;
   const sig = crypto.createHmac("sha256", config.web.secret).update(data).digest("hex").slice(0, 16);
   return Buffer.from(`${data}:${sig}`).toString("base64url");
 }
@@ -189,12 +189,12 @@ function verifyToken(token: string): AuthUser | null {
     const decoded = Buffer.from(token, "base64url").toString();
     const parts = decoded.split(":");
     if (parts.length === 4) {
-      const [role, dmName, expiry, sig] = parts;
+      const [role, name, expiry, sig] = parts;
       if (Date.now() > parseInt(expiry)) return null;
-      const data = `${role}:${dmName}:${expiry}`;
+      const data = `${role}:${name}:${expiry}`;
       const expected = crypto.createHmac("sha256", config.web.secret).update(data).digest("hex").slice(0, 16);
       if (sig !== expected) return null;
-      return { role, dmName };
+      return { role, name };
     }
     // backward-compat: old 3-part tokens
     if (parts.length === 3) {
@@ -203,7 +203,7 @@ function verifyToken(token: string): AuthUser | null {
       const data = `${role}:${expiry}`;
       const expected = crypto.createHmac("sha256", config.web.secret).update(data).digest("hex").slice(0, 16);
       if (sig !== expected) return null;
-      return { role, dmName: role === "dm" ? "dm" : "" };
+      return { role, name: role === "dm" ? "dm" : "" };
     }
     return null;
   } catch { return null; }
@@ -249,20 +249,34 @@ export async function startWebServer(): Promise<void> {
 
   // ── Auth ──────────────────────────────────────────────────────────────
 
-  app.post("/api/auth/login", async (req, reply) => {
+  // Step 1: check password → returns which roles are available (no token issued yet)
+  app.post("/api/auth/check", async (req, reply) => {
     const { password } = req.body as { password?: string };
     if (!password) return reply.status(400).send({ error: "Password required" });
-    // Check DM accounts (supports multiple DMs via DM_ACCOUNTS env)
-    for (const account of config.web.dmAccounts) {
-      if (password === account.password) {
-        return reply.send({ role: "dm", dmName: account.name, token: createToken("dm", account.name) });
-      }
+    const canBeDm = config.web.dmAccounts.some(a => a.password === password);
+    const canBePlayer = config.web.playerPassword === "" || password === config.web.playerPassword || canBeDm;
+    if (!canBeDm && !canBePlayer) return reply.status(401).send({ error: "รหัสผ่านไม่ถูกต้อง" });
+    return reply.send({ canBeDm, canBePlayer });
+  });
+
+  // Step 2: finalize login with chosen role → issues token
+  app.post("/api/auth/login", async (req, reply) => {
+    const { username, password, role } = req.body as { username?: string; password?: string; role?: string };
+    const name = username?.trim() ?? "";
+    if (!name || !password || !role) return reply.status(400).send({ error: "username, password, role required" });
+
+    if (role === "dm") {
+      const validDm = config.web.dmAccounts.some(a => a.password === password);
+      if (!validDm) return reply.status(401).send({ error: "รหัสผ่าน DM ไม่ถูกต้อง" });
+      return reply.send({ role: "dm", name, token: createToken("dm", name) });
     }
-    // Check player password
-    if (config.web.playerPassword === "" || password === config.web.playerPassword) {
-      return reply.send({ role: "player", dmName: "", token: createToken("player") });
+    if (role === "player") {
+      const validPlayer = config.web.playerPassword === "" || password === config.web.playerPassword
+        || config.web.dmAccounts.some(a => a.password === password);
+      if (!validPlayer) return reply.status(401).send({ error: "รหัสผ่านไม่ถูกต้อง" });
+      return reply.send({ role: "player", name, token: createToken("player", name) });
     }
-    return reply.status(401).send({ error: "Invalid password" });
+    return reply.status(400).send({ error: "invalid role" });
   });
 
   app.get("/api/auth/me", async (req, reply) => {
@@ -634,7 +648,7 @@ export async function startWebServer(): Promise<void> {
     const user = getTokenFromRequest(req as any);
     const isDm = user?.role === "dm";
     const campaigns = isDm
-      ? getCampaignsByDm(user!.dmName)
+      ? getCampaignsByDm(user!.name)
       : getAllCampaigns();
     return campaigns.map(c => ({
       id: c.id, name: c.name, description: c.description,
@@ -652,7 +666,7 @@ export async function startWebServer(): Promise<void> {
       name?: string; description?: string; language?: "th" | "en";
     };
     if (!name?.trim()) return reply.status(400).send({ error: "name required" });
-    const id = createCampaign(name.trim(), description, language, user.dmName);
+    const id = createCampaign(name.trim(), description, language, user.name);
     return { id, name: name.trim() };
   });
 

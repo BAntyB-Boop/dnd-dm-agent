@@ -230,13 +230,36 @@
   <div id="login-overlay" class="modal-overlay" style="display:flex">
     <div class="modal-box" id="login-modal">
       <h2 class="modal-title">⚔️ D&amp;D Dungeon Master</h2>
-      <p id="login-subtitle">Enter your password to continue</p>
-      <div id="login-form">
-        <input id="login-password" type="password" placeholder="Password" autocomplete="current-password" />
-        <div id="login-error"></div>
-        <button id="login-btn">Enter</button>
+
+      <!-- Step 1: Credentials -->
+      <div id="login-step1">
+        <p class="login-subtitle">เข้าสู่ระบบ</p>
+        <div id="login-form">
+          <input id="login-username" type="text" placeholder="ชื่อ (Username)" autocomplete="username" />
+          <input id="login-password" type="password" placeholder="รหัสผ่าน (Password)" autocomplete="current-password" />
+          <div id="login-error"></div>
+          <button id="login-next-btn">ต่อไป →</button>
+        </div>
       </div>
-      <div id="login-role-info"></div>
+
+      <!-- Step 2: Role picker -->
+      <div id="login-step2" style="display:none">
+        <p class="login-subtitle">สวัสดี <strong id="login-greeting-name"></strong> — เลือกบทบาท</p>
+        <div id="login-role-btns">
+          <button id="login-dm-btn" class="role-btn" style="display:none">
+            <span class="role-icon">⚔️</span>
+            <span class="role-label">Dungeon Master</span>
+            <span class="role-desc">ควบคุมโลกและเล่าเรื่อง</span>
+          </button>
+          <button id="login-player-btn" class="role-btn">
+            <span class="role-icon">🧙</span>
+            <span class="role-label">Player</span>
+            <span class="role-desc">เล่นเป็นตัวละครในโลก</span>
+          </button>
+        </div>
+        <div id="login-step2-error"></div>
+        <button id="login-back-btn">← กลับ</button>
+      </div>
     </div>
   </div>
 

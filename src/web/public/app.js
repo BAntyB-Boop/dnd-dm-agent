@@ -2309,33 +2309,30 @@ function initMobileNav() {
 
 let authToken = null;
 let authRole = null;
-let authDmName = '';
+let authName = '';
 
 function getAuthHeaders() {
   return authToken ? { 'Authorization': `Bearer ${authToken}` } : {};
 }
 
-function applyRoleUi(role, dmName = '') {
+function applyRoleUi(role, name = '') {
   authRole = role;
-  authDmName = dmName;
+  authName = name;
   const isDm = role === 'dm';
-  // Hide DM-only controls from players
   const dmOnly = document.querySelectorAll('#new-char-btn, #dm-mode-btn, #chat-provider');
   dmOnly.forEach(el => { el.style.display = isDm ? '' : 'none'; });
-  // Campaign button is visible to all (players need to browse/join)
   const campBtn = $('campaign-btn');
   if (campBtn) campBtn.style.display = '';
-  // Show role badge in header
   let badge = $('auth-role-badge');
   if (!badge) {
     badge = document.createElement('span');
     badge.id = 'auth-role-badge';
-    badge.style.cssText = 'font-size:0.7rem;padding:2px 8px;border-radius:10px;font-weight:700;letter-spacing:0.05em;cursor:pointer;';
-    badge.title = 'Click to logout';
+    badge.style.cssText = 'font-size:0.7rem;padding:2px 8px;border-radius:10px;font-weight:700;letter-spacing:0.05em;cursor:pointer;max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;';
+    badge.title = 'คลิกเพื่อออกจากระบบ';
     badge.addEventListener('click', logout);
     $('header-actions').prepend(badge);
   }
-  badge.textContent = isDm ? `DM: ${dmName || 'DM'}` : 'Player';
+  badge.textContent = isDm ? `⚔️ ${name}` : `🧙 ${name}`;
   badge.style.background = isDm ? 'var(--accent-gold-dim)' : 'var(--bg-input)';
   badge.style.color = isDm ? 'var(--bg-dark)' : 'var(--text-secondary)';
 }
@@ -2343,25 +2340,31 @@ function applyRoleUi(role, dmName = '') {
 function logout() {
   localStorage.removeItem('dnd_token');
   localStorage.removeItem('dnd_role');
-  localStorage.removeItem('dnd_dmname');
+  localStorage.removeItem('dnd_name');
   authToken = null;
   authRole = null;
-  authDmName = '';
-  $('login-overlay').style.display = 'flex';
+  authName = '';
+  // Reset login form to step 1
+  showLoginStep(1);
   $('login-password').value = '';
+  $('login-username').value = '';
   $('login-error').textContent = '';
+  $('login-overlay').style.display = 'flex';
+  setTimeout(() => $('login-username').focus(), 100);
+}
+
+function showLoginStep(step) {
+  $('login-step1').style.display = step === 1 ? '' : 'none';
+  $('login-step2').style.display = step === 2 ? '' : 'none';
 }
 
 async function initAuth() {
   const overlay = $('login-overlay');
-  const btn = $('login-btn');
-  const input = $('login-password');
-  const errEl = $('login-error');
 
   // Restore saved token
   const savedToken = localStorage.getItem('dnd_token');
   const savedRole = localStorage.getItem('dnd_role');
-  const savedDmName = localStorage.getItem('dnd_dmname') ?? '';
+  const savedName = localStorage.getItem('dnd_name') ?? '';
   if (savedToken && savedRole) {
     try {
       const res = await fetch('/api/auth/me', {
@@ -2370,54 +2373,96 @@ async function initAuth() {
       if (res.ok) {
         authToken = savedToken;
         overlay.style.display = 'none';
-        applyRoleUi(savedRole, savedDmName);
+        applyRoleUi(savedRole, savedName);
         return;
       }
     } catch (_) {}
     localStorage.removeItem('dnd_token');
     localStorage.removeItem('dnd_role');
-    localStorage.removeItem('dnd_dmname');
+    localStorage.removeItem('dnd_name');
   }
 
-  // Show login
   overlay.style.display = 'flex';
-  setTimeout(() => input.focus(), 100);
+  showLoginStep(1);
+  setTimeout(() => $('login-username').focus(), 150);
 
-  async function doLogin() {
-    const password = input.value.trim();
-    if (!password) return;
+  let checkedPassword = '';
+  let checkedCanBeDm = false;
+
+  // ── Step 1: check credentials ──────────────────────────────────────
+  const nextBtn = $('login-next-btn');
+  const errEl = $('login-error');
+
+  async function doCheck() {
+    const username = $('login-username').value.trim();
+    const password = $('login-password').value;
+    if (!username) { errEl.textContent = 'กรุณาใส่ชื่อ'; return; }
+    if (!password) { errEl.textContent = 'กรุณาใส่รหัสผ่าน'; return; }
     errEl.textContent = '';
-    btn.disabled = true;
-    btn.textContent = '...';
+    nextBtn.disabled = true;
+    nextBtn.textContent = '...';
     try {
-      const res = await fetch('/api/auth/login', {
+      const res = await fetch('/api/auth/check', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ password })
       });
       const data = await res.json();
-      if (!res.ok) {
-        errEl.textContent = data.error ?? 'Invalid password';
-        input.value = '';
-        input.focus();
-        return;
-      }
-      authToken = data.token;
-      localStorage.setItem('dnd_token', data.token);
-      localStorage.setItem('dnd_role', data.role);
-      localStorage.setItem('dnd_dmname', data.dmName ?? '');
-      overlay.style.display = 'none';
-      applyRoleUi(data.role, data.dmName ?? '');
+      if (!res.ok) { errEl.textContent = data.error ?? 'รหัสผ่านไม่ถูกต้อง'; return; }
+      checkedPassword = password;
+      checkedCanBeDm = data.canBeDm;
+      // Show step 2
+      $('login-greeting-name').textContent = username;
+      $('login-dm-btn').style.display = data.canBeDm ? '' : 'none';
+      $('login-step2-error').textContent = '';
+      showLoginStep(2);
     } catch (_) {
       errEl.textContent = 'Connection error';
     } finally {
-      btn.disabled = false;
-      btn.textContent = 'Enter';
+      nextBtn.disabled = false;
+      nextBtn.textContent = 'ต่อไป →';
     }
   }
 
-  btn.addEventListener('click', doLogin);
-  input.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+  nextBtn.addEventListener('click', doCheck);
+  $('login-password').addEventListener('keydown', e => { if (e.key === 'Enter') doCheck(); });
+  $('login-username').addEventListener('keydown', e => { if (e.key === 'Enter') $('login-password').focus(); });
+
+  // ── Step 2: pick role ──────────────────────────────────────────────
+  $('login-back-btn').addEventListener('click', () => {
+    showLoginStep(1);
+    setTimeout(() => $('login-password').focus(), 100);
+  });
+
+  async function doRoleLogin(role) {
+    const username = $('login-username').value.trim();
+    const errEl2 = $('login-step2-error');
+    errEl2.textContent = '';
+    const btn = role === 'dm' ? $('login-dm-btn') : $('login-player-btn');
+    btn.disabled = true;
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password: checkedPassword, role })
+      });
+      const data = await res.json();
+      if (!res.ok) { errEl2.textContent = data.error ?? 'เกิดข้อผิดพลาด'; return; }
+      authToken = data.token;
+      localStorage.setItem('dnd_token', data.token);
+      localStorage.setItem('dnd_role', data.role);
+      localStorage.setItem('dnd_name', data.name ?? username);
+      overlay.style.display = 'none';
+      applyRoleUi(data.role, data.name ?? username);
+    } catch (_) {
+      errEl2.textContent = 'Connection error';
+    } finally {
+      btn.disabled = false;
+    }
+  }
+
+  $('login-dm-btn').addEventListener('click', () => doRoleLogin('dm'));
+  $('login-player-btn').addEventListener('click', () => doRoleLogin('player'));
 }
 
 // Patch fetch calls that need auth token for DM operations

@@ -2122,7 +2122,45 @@ function makeDragV(el, { getStart, apply, save, min, max }) {
   });
 }
 
+// ── Mobile Tab Navigation ─────────────────────────────────────────────────
+function initMobileNav() {
+  const nav = document.getElementById('mobile-nav');
+  if (!nav) return;
+  const layout = document.getElementById('layout');
+
+  function setTab(tab) {
+    layout.className = `tab-${tab}`;
+    nav.querySelectorAll('.mob-tab').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.tab === tab);
+    });
+    // Scroll atmosphere into view when on atmos tab
+    if (tab === 'atmos') {
+      const el = document.getElementById('atmosphere-panel');
+      if (el) setTimeout(() => el.scrollIntoView({ behavior: 'smooth' }), 50);
+    }
+  }
+
+  nav.querySelectorAll('.mob-tab').forEach(btn => {
+    btn.addEventListener('click', () => setTab(btn.dataset.tab));
+  });
+
+  // Set default tab
+  setTab('dm');
+
+  // Apply tab class only on mobile
+  function applyMobile() {
+    if (window.innerWidth <= 680) {
+      if (!layout.className.startsWith('tab-')) setTab('dm');
+    } else {
+      layout.className = '';
+    }
+  }
+  window.addEventListener('resize', applyMobile);
+  applyMobile();
+}
+
 // ── Start ─────────────────────────────────────────────────────────────────
 initMapControls();
 initResizeHandles();
+initMobileNav();
 init();

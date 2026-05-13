@@ -171,10 +171,90 @@ html, body {
 @media (max-width: 900px) {
   #layout { grid-template-columns: 190px 5px 1fr 5px 210px; }
 }
+/* ── Mobile Nav Bar ── */
+#mobile-nav { display: none; }
+
 @media (max-width: 680px) {
-  #layout { grid-template-columns: 1fr; grid-template-rows: auto 1fr auto; }
-  .resize-handle.v { display: none; }
-  html, body { overflow: auto; }
+  html, body { overflow: hidden; height: 100%; }
+
+  #app { height: 100%; display: flex; flex-direction: column; }
+
+  #layout {
+    flex: 1;
+    min-height: 0;
+    display: block;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* All panels hidden by default on mobile */
+  #left-panel, #center-panel, #right-panel {
+    display: none !important;
+    position: absolute;
+    inset: 0;
+    overflow-y: auto;
+    background: var(--bg-deep);
+    width: 100% !important;
+  }
+
+  /* Show active panel */
+  #layout.tab-dm    #center-panel { display: flex !important; }
+  #layout.tab-party #left-panel   { display: flex !important; }
+  #layout.tab-log   #right-panel  { display: flex !important; }
+  #layout.tab-atmos #right-panel  { display: flex !important; }
+
+  /* When on log tab, scroll to log; atmos tab scroll to atmosphere */
+  #layout.tab-atmos #right-panel { justify-content: flex-end; flex-direction: column; }
+
+  .resize-handle { display: none !important; }
+
+  /* Mobile Tab Bar */
+  #mobile-nav {
+    display: flex;
+    background: var(--bg-dark);
+    border-top: 1px solid var(--border);
+    flex-shrink: 0;
+    z-index: 100;
+  }
+
+  .mob-tab {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    padding: 8px 4px 10px;
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: color 0.2s;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .mob-tab.active { color: var(--accent-gold); }
+  .mob-tab-icon { font-size: 1.3rem; line-height: 1; }
+  .mob-tab-label { font-family: 'Cinzel', serif; font-size: 0.6rem; letter-spacing: 0.05em; }
+
+  /* Center panel fills height */
+  #center-panel {
+    height: 100%;
+    padding: 8px;
+    gap: 6px;
+  }
+
+  /* Chat takes remaining space */
+  #chat-section { flex: 1; min-height: 0; }
+
+  /* Party panel */
+  #left-panel { flex-direction: column; }
+  #party-cards { padding: 8px; }
+
+  /* Bigger touch targets for inputs */
+  #chat-input { font-size: 1rem; padding: 10px 12px; }
+  #chat-send-btn { padding: 10px 14px; }
+  #chat-character { min-width: 100px; }
 }
 
 /* ── Header ── */

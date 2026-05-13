@@ -199,7 +199,38 @@ function createTables(): void {
       updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     );
+
+    CREATE TABLE IF NOT EXISTS users (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      username TEXT UNIQUE NOT NULL COLLATE NOCASE,
+      password_hash TEXT NOT NULL,
+      salt TEXT NOT NULL,
+      roles TEXT NOT NULL DEFAULT '["player"]',
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
   `);
+}
+
+// ─── Users ───────────────────────────────────────────────────────────────────
+
+export interface AppUser {
+  id: number;
+  username: string;
+  password_hash: string;
+  salt: string;
+  roles: string;
+  created_at: string;
+}
+
+export function getUserByUsername(username: string): AppUser | undefined {
+  return db.prepare("SELECT * FROM users WHERE username = ? COLLATE NOCASE").get(username) as AppUser | undefined;
+}
+
+export function createUser(username: string, passwordHash: string, salt: string, roles: string[]): number {
+  const result = db.prepare(
+    "INSERT INTO users (username, password_hash, salt, roles) VALUES (?, ?, ?, ?)"
+  ).run(username, passwordHash, salt, JSON.stringify(roles));
+  return result.lastInsertRowid as number;
 }
 
 // ─── Campaign ────────────────────────────────────────────────────────────────

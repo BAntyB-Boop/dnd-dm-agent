@@ -2344,18 +2344,19 @@ function logout() {
   authToken = null;
   authRole = null;
   authName = '';
-  // Reset login form to step 1
-  showLoginStep(1);
-  $('login-password').value = '';
   $('login-username').value = '';
-  $('login-error').textContent = '';
+  $('login-password').value = '';
+  $('login-step1-error').textContent = '';
+  showLoginStep(1);
   $('login-overlay').style.display = 'flex';
   setTimeout(() => $('login-username').focus(), 100);
 }
 
 function showLoginStep(step) {
-  $('login-step1').style.display = step === 1 ? '' : 'none';
-  $('login-step2').style.display = step === 2 ? '' : 'none';
+  [1, 2, 3, 4].forEach(n => {
+    const el = $(`login-step${n}`);
+    if (el) el.style.display = n === step ? '' : 'none';
+  });
 }
 
 async function initAuth() {
@@ -2386,68 +2387,28 @@ async function initAuth() {
   showLoginStep(1);
   setTimeout(() => $('login-username').focus(), 150);
 
-  let checkedPassword = '';
-  let checkedCanBeDm = false;
+  let pendingUsername = '';
+  let pendingPassword = '';
 
-  // ── Step 1: check credentials ──────────────────────────────────────
-  const nextBtn = $('login-next-btn');
-  const errEl = $('login-error');
-
-  async function doCheck() {
-    const username = $('login-username').value.trim();
-    const password = $('login-password').value;
-    if (!username) { errEl.textContent = 'กรุณาใส่ชื่อ'; return; }
-    if (!password) { errEl.textContent = 'กรุณาใส่รหัสผ่าน'; return; }
-    errEl.textContent = '';
-    nextBtn.disabled = true;
-    nextBtn.textContent = '...';
-    try {
-      const res = await fetch('/api/auth/check', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password })
-      });
-      const data = await res.json();
-      if (!res.ok) { errEl.textContent = data.error ?? 'รหัสผ่านไม่ถูกต้อง'; return; }
-      checkedPassword = password;
-      checkedCanBeDm = data.canBeDm;
-      // Show step 2
-      $('login-greeting-name').textContent = username;
-      $('login-dm-btn').style.display = data.canBeDm ? '' : 'none';
-      $('login-step2-error').textContent = '';
-      showLoginStep(2);
-    } catch (_) {
-      errEl.textContent = 'Connection error';
-    } finally {
-      nextBtn.disabled = false;
-      nextBtn.textContent = 'ต่อไป →';
-    }
+  // ── Helpers ──────────────────────────────────────────────────────────
+  function setBtn(btn, loading) {
+    btn.disabled = loading;
+    btn._origText = btn._origText || btn.textContent;
+    btn.textContent = loading ? '...' : btn._origText;
   }
 
-  nextBtn.addEventListener('click', doCheck);
-  $('login-password').addEventListener('keydown', e => { if (e.key === 'Enter') doCheck(); });
-  $('login-username').addEventListener('keydown', e => { if (e.key === 'Enter') $('login-password').focus(); });
-
-  // ── Step 2: pick role ──────────────────────────────────────────────
-  $('login-back-btn').addEventListener('click', () => {
-    showLoginStep(1);
-    setTimeout(() => $('login-password').focus(), 100);
-  });
-
-  async function doRoleLogin(role) {
-    const username = $('login-username').value.trim();
-    const errEl2 = $('login-step2-error');
-    errEl2.textContent = '';
+  async function finishLogin(username, password, role) {
+    const errEl = $('login-step4-error');
     const btn = role === 'dm' ? $('login-dm-btn') : $('login-player-btn');
-    btn.disabled = true;
+    setBtn(btn, true);
+    errEl.textContent = '';
     try {
       const res = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password: checkedPassword, role })
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password, role })
       });
       const data = await res.json();
-      if (!res.ok) { errEl2.textContent = data.error ?? 'เกิดข้อผิดพลาด'; return; }
+      if (!res.ok) { errEl.textContent = data.error ?? 'เกิดข้อผิดพลาด'; return; }
       authToken = data.token;
       localStorage.setItem('dnd_token', data.token);
       localStorage.setItem('dnd_role', data.role);
@@ -2455,14 +2416,133 @@ async function initAuth() {
       overlay.style.display = 'none';
       applyRoleUi(data.role, data.name ?? username);
     } catch (_) {
-      errEl2.textContent = 'Connection error';
+      errEl.textContent = 'Connection error';
     } finally {
-      btn.disabled = false;
+      setBtn(btn, false);
     }
   }
 
-  $('login-dm-btn').addEventListener('click', () => doRoleLogin('dm'));
-  $('login-player-btn').addEventListener('click', () => doRoleLogin('player'));
+  function showRolePicker(username, password, roles) {
+    pendingUsername = username;
+    pendingPassword = password;
+    $('login-greeting-name').textContent = username;
+    $('login-dm-btn').style.display = roles.includes('dm') ? '' : 'none';
+    $('login-player-btn').style.display = roles.includes('player') ? '' : 'none';
+    $('login-step4-error').textContent = '';
+    // Auto-login if only one role
+    if (roles.length === 1) { finishLogin(username, password, roles[0]); return; }
+    showLoginStep(4);
+  }
+
+  // ── Step 1: username check ────────────────────────────────────────
+  async function doCheckUsername() {
+    const username = $('login-username').value.trim();
+    const errEl = $('login-step1-error');
+    if (!username) { errEl.textContent = 'กรุณาใส่ชื่อของคุณ'; return; }
+    errEl.textContent = '';
+    const btn = $('login-check-btn');
+    setBtn(btn, true);
+    try {
+      const res = await fetch(`/api/auth/user-exists/${encodeURIComponent(username)}`);
+      const data = await res.json();
+      pendingUsername = username;
+      if (data.exists) {
+        $('login-name-display').textContent = username;
+        $('login-step2-error').textContent = '';
+        $('login-password').value = '';
+        showLoginStep(2);
+        setTimeout(() => $('login-password').focus(), 100);
+      } else {
+        $('register-name-display').textContent = username;
+        $('reg-password').value = '';
+        $('reg-confirm').value = '';
+        $('login-step3-error').textContent = '';
+        showLoginStep(3);
+        setTimeout(() => $('reg-password').focus(), 100);
+      }
+    } catch (_) {
+      errEl.textContent = 'Connection error';
+    } finally {
+      setBtn(btn, false);
+    }
+  }
+
+  $('login-check-btn').addEventListener('click', doCheckUsername);
+  $('login-username').addEventListener('keydown', e => { if (e.key === 'Enter') doCheckUsername(); });
+
+  // ── Step 2: login password ────────────────────────────────────────
+  async function doLogin() {
+    const password = $('login-password').value;
+    const errEl = $('login-step2-error');
+    if (!password) { errEl.textContent = 'กรุณาใส่รหัสผ่าน'; return; }
+    errEl.textContent = '';
+    const btn = $('login-submit-btn');
+    setBtn(btn, true);
+    try {
+      const res = await fetch('/api/auth/check', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: pendingUsername, password })
+      });
+      const data = await res.json();
+      if (!res.ok) { errEl.textContent = data.error ?? 'รหัสผ่านไม่ถูกต้อง'; return; }
+      showRolePicker(pendingUsername, password, data.roles);
+    } catch (_) {
+      errEl.textContent = 'Connection error';
+    } finally {
+      setBtn(btn, false);
+    }
+  }
+
+  $('login-submit-btn').addEventListener('click', doLogin);
+  $('login-password').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+  $('login-back1').addEventListener('click', () => { showLoginStep(1); setTimeout(() => $('login-username').focus(), 100); });
+
+  // ── Step 3: register ──────────────────────────────────────────────
+  const regDmCheck = $('reg-role-dm');
+  regDmCheck.addEventListener('change', () => {
+    $('reg-access-code-row').style.display = regDmCheck.checked ? '' : 'none';
+  });
+
+  async function doRegister() {
+    const password = $('reg-password').value;
+    const confirm = $('reg-confirm').value;
+    const accessCode = $('reg-access-code').value;
+    const errEl = $('login-step3-error');
+    errEl.textContent = '';
+
+    if (password.length < 4) { errEl.textContent = 'รหัสผ่านต้องมีอย่างน้อย 4 ตัวอักษร'; return; }
+    if (password !== confirm) { errEl.textContent = 'รหัสผ่านไม่ตรงกัน'; return; }
+
+    const roles = [];
+    if ($('reg-role-player').checked) roles.push('player');
+    if ($('reg-role-dm').checked) roles.push('dm');
+    if (roles.length === 0) { errEl.textContent = 'กรุณาเลือกบทบาทอย่างน้อย 1 อย่าง'; return; }
+
+    const btn = $('reg-submit-btn');
+    setBtn(btn, true);
+    try {
+      const res = await fetch('/api/auth/register', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: pendingUsername, password, roles, accessCode })
+      });
+      const data = await res.json();
+      if (!res.ok) { errEl.textContent = data.error ?? 'สมัครสมาชิกไม่สำเร็จ'; return; }
+      // Auto-login after register
+      showRolePicker(pendingUsername, password, roles);
+    } catch (_) {
+      errEl.textContent = 'Connection error';
+    } finally {
+      setBtn(btn, false);
+    }
+  }
+
+  $('reg-submit-btn').addEventListener('click', doRegister);
+  $('reg-confirm').addEventListener('keydown', e => { if (e.key === 'Enter') doRegister(); });
+  $('login-back2').addEventListener('click', () => { showLoginStep(1); setTimeout(() => $('login-username').focus(), 100); });
+
+  // ── Step 4: role picker ───────────────────────────────────────────
+  $('login-dm-btn').addEventListener('click', () => finishLogin(pendingUsername, pendingPassword, 'dm'));
+  $('login-player-btn').addEventListener('click', () => finishLogin(pendingUsername, pendingPassword, 'player'));
 }
 
 // Patch fetch calls that need auth token for DM operations

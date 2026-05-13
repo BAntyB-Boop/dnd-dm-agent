@@ -13,6 +13,7 @@ import {
   longRestHeal, restoreAllSpellSlots, shortRestWarlockSlots, updateCharacterHp,
   getAllCampaigns, getCampaignsByDm, getCampaignPlayerCount,
   setActiveCampaign, updateCampaignAdventure, createCampaign,
+  getUserByUsername, createUser,
   setItemEquipped, updateCharacterAc, levelUpCharacter, updateCharacterSubclass,
   updatePreparedSpells, getPreparedSpells, addSessionMessage,
 } from "../db/database.js";
@@ -173,6 +174,21 @@ async function resolveWebPartyRoll(partyRoll: PendingPartyRoll, useMimo = false)
   } catch { return { narrative: "", pendingRoll: null }; }
 }
 
+// ── Password helpers ─────────────────────────────────────────────────────
+
+function hashPassword(password: string): { hash: string; salt: string } {
+  const salt = crypto.randomBytes(16).toString("hex");
+  const hash = crypto.scryptSync(password, salt, 64).toString("hex");
+  return { hash, salt };
+}
+
+function verifyPassword(password: string, hash: string, salt: string): boolean {
+  try {
+    const computed = crypto.scryptSync(password, salt, 64);
+    return crypto.timingSafeEqual(computed, Buffer.from(hash, "hex"));
+  } catch { return false; }
+}
+
 // ── Auth helpers ─────────────────────────────────────────────────────────
 
 type AuthUser = { role: string; name: string };
@@ -249,34 +265,63 @@ export async function startWebServer(): Promise<void> {
 
   // ── Auth ──────────────────────────────────────────────────────────────
 
-  // Step 1: check password → returns which roles are available (no token issued yet)
-  app.post("/api/auth/check", async (req, reply) => {
-    const { password } = req.body as { password?: string };
-    if (!password) return reply.status(400).send({ error: "Password required" });
-    const canBeDm = config.web.dmAccounts.some(a => a.password === password);
-    const canBePlayer = config.web.playerPassword === "" || password === config.web.playerPassword || canBeDm;
-    if (!canBeDm && !canBePlayer) return reply.status(401).send({ error: "รหัสผ่านไม่ถูกต้อง" });
-    return reply.send({ canBeDm, canBePlayer });
+  // Check if username exists
+  app.get("/api/auth/user-exists/:username", async (req, reply) => {
+    const { username } = req.params as { username: string };
+    const user = getUserByUsername(username.trim());
+    return reply.send({ exists: !!user });
   });
 
-  // Step 2: finalize login with chosen role → issues token
+  // Register new user
+  app.post("/api/auth/register", async (req, reply) => {
+    const { username, password, roles, accessCode } = req.body as {
+      username?: string; password?: string; roles?: string[]; accessCode?: string;
+    };
+    const name = username?.trim() ?? "";
+    if (!name || !password) return reply.status(400).send({ error: "username และ password จำเป็น" });
+    if (name.length < 2) return reply.status(400).send({ error: "ชื่อต้องมีอย่างน้อย 2 ตัวอักษร" });
+    if (password.length < 4) return reply.status(400).send({ error: "รหัสผ่านต้องมีอย่างน้อย 4 ตัวอักษร" });
+
+    const wantedRoles = Array.isArray(roles) && roles.length > 0 ? roles : ["player"];
+
+    // Validate DM access code if registering as DM
+    if (wantedRoles.includes("dm")) {
+      const validCode = config.web.dmAccounts.some(a => a.password === accessCode);
+      if (!validCode) return reply.status(403).send({ error: "DM Access Code ไม่ถูกต้อง" });
+    }
+
+    if (getUserByUsername(name)) return reply.status(409).send({ error: "ชื่อนี้ถูกใช้ไปแล้ว" });
+
+    const { hash, salt } = hashPassword(password);
+    createUser(name, hash, salt, wantedRoles);
+    return reply.send({ ok: true });
+  });
+
+  // Validate credentials → return available roles (no token yet)
+  app.post("/api/auth/check", async (req, reply) => {
+    const { username, password } = req.body as { username?: string; password?: string };
+    const name = username?.trim() ?? "";
+    if (!name || !password) return reply.status(400).send({ error: "username และ password จำเป็น" });
+    const user = getUserByUsername(name);
+    if (!user || !verifyPassword(password, user.password_hash, user.salt)) {
+      return reply.status(401).send({ error: "ชื่อหรือรหัสผ่านไม่ถูกต้อง" });
+    }
+    const roles: string[] = (() => { try { return JSON.parse(user.roles); } catch { return ["player"]; } })();
+    return reply.send({ roles });
+  });
+
+  // Issue token for chosen role
   app.post("/api/auth/login", async (req, reply) => {
     const { username, password, role } = req.body as { username?: string; password?: string; role?: string };
     const name = username?.trim() ?? "";
-    if (!name || !password || !role) return reply.status(400).send({ error: "username, password, role required" });
-
-    if (role === "dm") {
-      const validDm = config.web.dmAccounts.some(a => a.password === password);
-      if (!validDm) return reply.status(401).send({ error: "รหัสผ่าน DM ไม่ถูกต้อง" });
-      return reply.send({ role: "dm", name, token: createToken("dm", name) });
+    if (!name || !password || !role) return reply.status(400).send({ error: "username, password, role จำเป็น" });
+    const user = getUserByUsername(name);
+    if (!user || !verifyPassword(password, user.password_hash, user.salt)) {
+      return reply.status(401).send({ error: "ชื่อหรือรหัสผ่านไม่ถูกต้อง" });
     }
-    if (role === "player") {
-      const validPlayer = config.web.playerPassword === "" || password === config.web.playerPassword
-        || config.web.dmAccounts.some(a => a.password === password);
-      if (!validPlayer) return reply.status(401).send({ error: "รหัสผ่านไม่ถูกต้อง" });
-      return reply.send({ role: "player", name, token: createToken("player", name) });
-    }
-    return reply.status(400).send({ error: "invalid role" });
+    const roles: string[] = (() => { try { return JSON.parse(user.roles); } catch { return ["player"]; } })();
+    if (!roles.includes(role)) return reply.status(403).send({ error: `ไม่มีสิทธิ์ ${role}` });
+    return reply.send({ role, name, token: createToken(role, name) });
   });
 
   app.get("/api/auth/me", async (req, reply) => {

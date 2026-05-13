@@ -1327,67 +1327,85 @@ body.mood-eerie     #scene-section { box-shadow: 0 0 30px rgba(80,122,90,0.12); 
   border-bottom: 1px solid var(--border);
 }
 
-/* ── Login Modal ── */
+/* ── Login / Register Modal ── */
 #login-overlay { z-index: 9999; align-items: center; background: rgba(0,0,0,0.92); }
 #login-modal {
-  max-width: 380px;
-  width: 100%;
-  text-align: center;
-  padding: 40px 32px;
+  max-width: 380px; width: 100%;
+  text-align: center; padding: 36px 28px;
 }
-#login-modal .modal-title { font-size: 1.3rem; margin-bottom: 8px; }
-.login-subtitle { color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 20px; }
+#login-modal .modal-title { font-size: 1.25rem; margin-bottom: 6px; }
+.login-subtitle { color: var(--text-secondary); font-size: 0.83rem; margin-bottom: 18px; line-height: 1.5; }
 .login-subtitle strong { color: var(--accent-gold); }
 
-/* Step 1 */
-#login-form { display: flex; flex-direction: column; gap: 10px; }
-#login-username, #login-password {
+.login-form-inner { display: flex; flex-direction: column; gap: 10px; }
+.login-form-inner input {
   width: 100%; padding: 10px 14px;
   background: var(--bg-dark); border: 1px solid var(--border-bright);
-  border-radius: 6px; color: var(--text-primary); font-size: 1rem;
+  border-radius: 6px; color: var(--text-primary); font-size: 0.95rem;
   text-align: center; box-sizing: border-box;
 }
-#login-username:focus, #login-password:focus { outline: none; border-color: var(--accent-gold-dim); }
-#login-next-btn {
+.login-form-inner input:focus { outline: none; border-color: var(--accent-gold-dim); }
+.login-primary-btn {
   padding: 11px; background: var(--accent-gold-dim); border: none;
   border-radius: 6px; color: var(--bg-dark); font-family: 'Cinzel', serif;
-  font-size: 0.95rem; font-weight: 700; cursor: pointer; letter-spacing: 0.06em;
-  margin-top: 4px;
+  font-size: 0.92rem; font-weight: 700; cursor: pointer; letter-spacing: 0.05em; margin-top: 4px;
 }
-#login-next-btn:hover { background: var(--accent-gold); }
-#login-error, #login-step2-error { color: #e05252; font-size: 0.82rem; min-height: 18px; }
+.login-primary-btn:hover { background: var(--accent-gold); }
+.login-primary-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.login-error-msg { color: #e05252; font-size: 0.8rem; min-height: 16px; text-align: left; }
+.login-back-btn {
+  display: inline-block; margin-top: 12px;
+  background: none; border: none; color: var(--text-secondary);
+  font-size: 0.8rem; cursor: pointer; text-decoration: underline;
+}
+.login-back-btn:hover { color: var(--text-primary); }
 
-/* Step 2 Role picker */
-#login-role-btns {
-  display: flex; gap: 12px; justify-content: center; margin: 8px 0 16px;
+/* Register role checkboxes */
+.reg-role-section { text-align: left; margin: 4px 0; }
+.reg-role-label { font-size: 0.78rem; color: var(--text-secondary); margin-bottom: 8px; }
+.reg-role-check {
+  display: flex; align-items: center; gap: 8px;
+  padding: 9px 12px; border-radius: 8px; cursor: pointer;
+  border: 1px solid var(--border); margin-bottom: 6px;
+  transition: border-color 0.15s, background 0.15s;
+  font-size: 0.85rem; color: var(--text-primary);
 }
+.reg-role-check:hover { border-color: var(--border-bright); background: var(--bg-dark); }
+.reg-role-check input[type="checkbox"] { display: none; }
+.reg-check-box {
+  width: 16px; height: 16px; border: 2px solid var(--border-bright);
+  border-radius: 4px; flex-shrink: 0; position: relative; transition: all 0.15s;
+}
+.reg-role-check input:checked ~ .reg-check-box,
+.reg-role-check:has(input:checked) .reg-check-box {
+  background: var(--accent-gold-dim); border-color: var(--accent-gold-dim);
+}
+.reg-role-check:has(input:checked) { border-color: var(--accent-gold-dim); background: rgba(201,168,76,0.07); }
+.reg-role-icon { font-size: 1.1rem; }
+#reg-access-code-row { padding-top: 2px; }
+#reg-access-code {
+  width: 100%; padding: 8px 12px; box-sizing: border-box;
+  background: var(--bg-dark); border: 1px solid rgba(201,168,76,0.4);
+  border-radius: 6px; color: var(--text-primary); font-size: 0.88rem;
+  text-align: center;
+}
+#reg-access-code::placeholder { color: var(--text-secondary); }
+#reg-access-code:focus { outline: none; border-color: var(--accent-gold-dim); }
+
+/* Role picker (step 4) */
+#login-role-btns { display: flex; gap: 12px; justify-content: center; margin: 8px 0 4px; }
 .role-btn {
   flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px;
-  padding: 18px 12px; background: var(--bg-dark);
+  padding: 18px 10px; background: var(--bg-dark);
   border: 2px solid var(--border); border-radius: 12px;
-  cursor: pointer; transition: border-color 0.2s, background 0.2s;
-  color: var(--text-primary);
+  cursor: pointer; transition: border-color 0.2s, background 0.2s; color: var(--text-primary);
 }
 .role-btn:hover { border-color: var(--border-bright); background: var(--bg-panel); }
-.role-btn.dm-active { border-color: var(--accent-gold-dim); background: rgba(201,168,76,0.08); }
-.role-btn.player-active { border-color: rgba(58,154,80,0.6); background: rgba(58,154,80,0.08); }
+#login-dm-btn:hover { border-color: var(--accent-gold-dim); background: rgba(201,168,76,0.08); }
+#login-player-btn:hover { border-color: rgba(58,154,80,0.6); background: rgba(58,154,80,0.08); }
 .role-icon { font-size: 2rem; }
-.role-label { font-family: 'Cinzel', serif; font-size: 0.9rem; font-weight: 700; letter-spacing: 0.05em; }
-.role-desc { font-size: 0.72rem; color: var(--text-secondary); }
-
-#login-back-btn {
-  background: none; border: 1px solid var(--border); color: var(--text-secondary);
-  padding: 6px 14px; border-radius: 5px; cursor: pointer; font-size: 0.82rem; margin-top: 4px;
-}
-#login-back-btn:hover { color: var(--text-primary); border-color: var(--border-bright); }
-
-.login-hint {
-  margin-top: 18px; padding: 10px 14px;
-  background: rgba(201,168,76,0.07); border: 1px solid rgba(201,168,76,0.2);
-  border-radius: 8px; font-size: 0.8rem; color: var(--text-secondary);
-  line-height: 1.6;
-}
-.login-hint-sub { font-size: 0.72rem; opacity: 0.75; }
+.role-label { font-family: 'Cinzel', serif; font-size: 0.88rem; font-weight: 700; letter-spacing: 0.05em; }
+.role-desc { font-size: 0.7rem; color: var(--text-secondary); line-height: 1.4; }
 
 /* ── Character Sheet ── */
 .cs-header {

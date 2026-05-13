@@ -226,29 +226,65 @@
     </div>
   </div>
 
-  <!-- Login Modal -->
+  <!-- Login / Register Modal -->
   <div id="login-overlay" class="modal-overlay" style="display:flex">
     <div class="modal-box" id="login-modal">
       <h2 class="modal-title">⚔️ D&amp;D Dungeon Master</h2>
 
-      <!-- Step 1: Credentials -->
+      <!-- Step 1: Enter username -->
       <div id="login-step1">
-        <p class="login-subtitle">เข้าสู่ระบบเพื่อเริ่มการผจญภัย</p>
-        <div id="login-form">
-          <input id="login-username" type="text" placeholder="ชื่อของคุณ" autocomplete="username" />
-          <input id="login-password" type="password" placeholder="รหัสผ่าน" autocomplete="current-password" />
-          <div id="login-error"></div>
-          <button id="login-next-btn">ต่อไป →</button>
-        </div>
-        <div class="login-hint">
-          🎲 รับรหัสผ่านจาก DM ของกลุ่มคุณ<br/>
-          <span class="login-hint-sub">รหัส DM → เข้าได้ทั้ง DM และ Player · รหัส Player → เข้าเป็น Player</span>
+        <p class="login-subtitle">เข้าสู่ระบบหรือสมัครสมาชิก</p>
+        <div class="login-form-inner">
+          <input id="login-username" type="text" placeholder="ชื่อของคุณ (Username)" autocomplete="username" />
+          <div id="login-step1-error" class="login-error-msg"></div>
+          <button id="login-check-btn" class="login-primary-btn">ต่อไป →</button>
         </div>
       </div>
 
-      <!-- Step 2: Role picker -->
+      <!-- Step 2: Password (existing user) -->
       <div id="login-step2" style="display:none">
-        <p class="login-subtitle">สวัสดี <strong id="login-greeting-name"></strong> — เลือกบทบาท</p>
+        <p class="login-subtitle">ยินดีต้อนรับกลับ <strong id="login-name-display"></strong></p>
+        <div class="login-form-inner">
+          <input id="login-password" type="password" placeholder="รหัสผ่าน" autocomplete="current-password" />
+          <div id="login-step2-error" class="login-error-msg"></div>
+          <button id="login-submit-btn" class="login-primary-btn">เข้าสู่ระบบ</button>
+        </div>
+        <button class="login-back-btn" id="login-back1">← กลับ</button>
+      </div>
+
+      <!-- Step 3: Register (new user) -->
+      <div id="login-step3" style="display:none">
+        <p class="login-subtitle">สมัครสมาชิกใหม่ — <strong id="register-name-display"></strong></p>
+        <div class="login-form-inner">
+          <input id="reg-password" type="password" placeholder="รหัสผ่าน (อย่างน้อย 4 ตัว)" autocomplete="new-password" />
+          <input id="reg-confirm" type="password" placeholder="ยืนยันรหัสผ่าน" autocomplete="new-password" />
+          <div class="reg-role-section">
+            <p class="reg-role-label">เลือกบทบาท (เลือกได้มากกว่า 1)</p>
+            <label class="reg-role-check">
+              <input type="checkbox" id="reg-role-player" checked />
+              <span class="reg-check-box"></span>
+              <span class="reg-role-icon">🧙</span>
+              <span>Player — เล่นเป็นตัวละคร</span>
+            </label>
+            <label class="reg-role-check">
+              <input type="checkbox" id="reg-role-dm" />
+              <span class="reg-check-box"></span>
+              <span class="reg-role-icon">⚔️</span>
+              <span>Dungeon Master — จัดการเกม</span>
+            </label>
+            <div id="reg-access-code-row" style="display:none">
+              <input id="reg-access-code" type="password" placeholder="DM Access Code (ได้จาก Admin)" />
+            </div>
+          </div>
+          <div id="login-step3-error" class="login-error-msg"></div>
+          <button id="reg-submit-btn" class="login-primary-btn">สมัครสมาชิก</button>
+        </div>
+        <button class="login-back-btn" id="login-back2">← กลับ</button>
+      </div>
+
+      <!-- Step 4: Role picker -->
+      <div id="login-step4" style="display:none">
+        <p class="login-subtitle">สวัสดี <strong id="login-greeting-name"></strong> — เลือกบทบาทวันนี้</p>
         <div id="login-role-btns">
           <button id="login-dm-btn" class="role-btn" style="display:none">
             <span class="role-icon">⚔️</span>
@@ -261,9 +297,9 @@
             <span class="role-desc">สร้างตัวละครและ<br/>เข้าร่วมการผจญภัย</span>
           </button>
         </div>
-        <div id="login-step2-error"></div>
-        <button id="login-back-btn">← กลับ</button>
+        <div id="login-step4-error" class="login-error-msg"></div>
       </div>
+
     </div>
   </div>
 

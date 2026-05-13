@@ -4,6 +4,7 @@ import FastifyCors from "@fastify/cors";
 import { WebSocketServer, WebSocket } from "ws";
 import path from "path";
 import fs from "fs";
+import crypto from "crypto";
 import { config } from "../config.js";
 import {
   getActiveCampaign, getAtmosphere, getActiveCombat, getAllCharacters,
@@ -171,6 +172,44 @@ async function resolveWebPartyRoll(partyRoll: PendingPartyRoll, useMimo = false)
   } catch { return { narrative: "", pendingRoll: null }; }
 }
 
+// ── Auth helpers ─────────────────────────────────────────────────────────
+
+function createToken(role: string): string {
+  const expiry = Date.now() + 7 * 24 * 60 * 60 * 1000;
+  const data = `${role}:${expiry}`;
+  const sig = crypto.createHmac("sha256", config.web.secret).update(data).digest("hex").slice(0, 16);
+  return Buffer.from(`${data}:${sig}`).toString("base64url");
+}
+
+function verifyToken(token: string): { role: string } | null {
+  try {
+    const decoded = Buffer.from(token, "base64url").toString();
+    const parts = decoded.split(":");
+    if (parts.length !== 3) return null;
+    const [role, expiry, sig] = parts;
+    if (Date.now() > parseInt(expiry)) return null;
+    const data = `${role}:${expiry}`;
+    const expected = crypto.createHmac("sha256", config.web.secret).update(data).digest("hex").slice(0, 16);
+    if (sig !== expected) return null;
+    return { role };
+  } catch { return null; }
+}
+
+function getTokenFromRequest(req: { headers: Record<string, string | string[] | undefined> }): { role: string } | null {
+  const auth = req.headers["authorization"];
+  if (typeof auth !== "string" || !auth.startsWith("Bearer ")) return null;
+  return verifyToken(auth.slice(7));
+}
+
+function requireDm(req: { headers: Record<string, string | string[] | undefined> }, reply: { status: (n: number) => { send: (v: unknown) => unknown } }): boolean {
+  const user = getTokenFromRequest(req);
+  if (!user || user.role !== "dm") {
+    reply.status(403).send({ error: "DM access required" });
+    return false;
+  }
+  return true;
+}
+
 // ── Web server ────────────────────────────────────────────────────────────
 
 export async function startWebServer(): Promise<void> {
@@ -193,6 +232,26 @@ export async function startWebServer(): Promise<void> {
   const monstersDir = path.join(process.cwd(), "monsters");
   if (!fs.existsSync(monstersDir)) fs.mkdirSync(monstersDir, { recursive: true });
   await app.register(FastifyStatic, { root: monstersDir, prefix: "/monsters/", decorateReply: false });
+
+  // ── Auth ──────────────────────────────────────────────────────────────
+
+  app.post("/api/auth/login", async (req, reply) => {
+    const { password } = req.body as { password?: string };
+    if (!password) return reply.status(400).send({ error: "Password required" });
+    if (password === config.web.dmPassword) {
+      return reply.send({ role: "dm", token: createToken("dm") });
+    }
+    if (config.web.playerPassword === "" || password === config.web.playerPassword) {
+      return reply.send({ role: "player", token: createToken("player") });
+    }
+    return reply.status(401).send({ error: "Invalid password" });
+  });
+
+  app.get("/api/auth/me", async (req, reply) => {
+    const user = getTokenFromRequest(req as any);
+    if (!user) return reply.status(401).send({ error: "Not authenticated" });
+    return reply.send(user);
+  });
 
   // ── Game State ─────────────────────────────────────────────────────────
 
@@ -339,6 +398,7 @@ export async function startWebServer(): Promise<void> {
   // ── Human DM Narrate ──────────────────────────────────────────────────
 
   app.post("/api/dm/narrate", async (req, reply) => {
+    if (!requireDm(req as any, reply)) return;
     const { message } = req.body as { message: string };
     const campaign = getActiveCampaign();
     if (!campaign) return reply.status(404).send({ error: "No active campaign" });
@@ -562,6 +622,7 @@ export async function startWebServer(): Promise<void> {
   });
 
   app.post("/api/campaign", async (req, reply) => {
+    if (!requireDm(req as any, reply)) return;
     const { name, description = "", language = "th" } = req.body as {
       name?: string; description?: string; language?: "th" | "en";
     };
@@ -571,6 +632,7 @@ export async function startWebServer(): Promise<void> {
   });
 
   app.post("/api/campaign/:id/activate", async (req, reply) => {
+    if (!requireDm(req as any, reply)) return;
     const id = parseInt((req.params as { id: string }).id);
     if (isNaN(id)) return reply.status(400).send({ error: "invalid id" });
     setActiveCampaign(id);
@@ -738,6 +800,7 @@ export async function startWebServer(): Promise<void> {
   });
 
   app.post("/api/campaign/:id/adventure", async (req, reply) => {
+    if (!requireDm(req as any, reply)) return;
     const campaignId = parseInt((req.params as { id: string }).id);
     const { adventureId } = req.body as { adventureId?: string };
     if (!adventureId) return reply.status(400).send({ error: "adventureId required" });

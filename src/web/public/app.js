@@ -2243,9 +2243,125 @@ function initMobileNav() {
   applyMobile();
 }
 
+// ── Auth ──────────────────────────────────────────────────────────────────
+
+let authToken = null;
+let authRole = null;
+
+function getAuthHeaders() {
+  return authToken ? { 'Authorization': `Bearer ${authToken}` } : {};
+}
+
+function applyRoleUi(role) {
+  authRole = role;
+  const isDm = role === 'dm';
+  // Hide DM-only controls from players
+  const dmOnly = document.querySelectorAll(
+    '#new-char-btn, #campaign-btn, #dm-mode-btn, #chat-provider'
+  );
+  dmOnly.forEach(el => { el.style.display = isDm ? '' : 'none'; });
+  // Show role badge in header
+  let badge = $('auth-role-badge');
+  if (!badge) {
+    badge = document.createElement('span');
+    badge.id = 'auth-role-badge';
+    badge.style.cssText = 'font-size:0.7rem;padding:2px 8px;border-radius:10px;font-weight:700;letter-spacing:0.05em;cursor:pointer;';
+    badge.title = 'Click to logout';
+    badge.addEventListener('click', logout);
+    $('header-actions').prepend(badge);
+  }
+  badge.textContent = isDm ? 'DM' : 'Player';
+  badge.style.background = isDm ? 'var(--accent-gold-dim)' : 'var(--bg-input)';
+  badge.style.color = isDm ? 'var(--bg-dark)' : 'var(--text-secondary)';
+}
+
+function logout() {
+  localStorage.removeItem('dnd_token');
+  localStorage.removeItem('dnd_role');
+  authToken = null;
+  authRole = null;
+  $('login-overlay').style.display = 'flex';
+  $('login-password').value = '';
+  $('login-error').textContent = '';
+}
+
+async function initAuth() {
+  const overlay = $('login-overlay');
+  const btn = $('login-btn');
+  const input = $('login-password');
+  const errEl = $('login-error');
+
+  // Restore saved token
+  const savedToken = localStorage.getItem('dnd_token');
+  const savedRole = localStorage.getItem('dnd_role');
+  if (savedToken && savedRole) {
+    try {
+      const res = await fetch('/api/auth/me', {
+        headers: { 'Authorization': `Bearer ${savedToken}` }
+      });
+      if (res.ok) {
+        authToken = savedToken;
+        overlay.style.display = 'none';
+        applyRoleUi(savedRole);
+        return;
+      }
+    } catch (_) {}
+    localStorage.removeItem('dnd_token');
+    localStorage.removeItem('dnd_role');
+  }
+
+  // Show login
+  overlay.style.display = 'flex';
+  input.focus();
+
+  async function doLogin() {
+    const password = input.value.trim();
+    if (!password) return;
+    errEl.textContent = '';
+    btn.disabled = true;
+    btn.textContent = '...';
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password })
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        errEl.textContent = data.error ?? 'Invalid password';
+        input.value = '';
+        input.focus();
+        return;
+      }
+      authToken = data.token;
+      localStorage.setItem('dnd_token', data.token);
+      localStorage.setItem('dnd_role', data.role);
+      overlay.style.display = 'none';
+      applyRoleUi(data.role);
+    } catch (_) {
+      errEl.textContent = 'Connection error';
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Enter';
+    }
+  }
+
+  btn.addEventListener('click', doLogin);
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+}
+
+// Patch fetch calls that need auth token for DM operations
+const _origFetch = window.fetch.bind(window);
+window.fetch = function(url, opts = {}) {
+  if (typeof url === 'string' && url.startsWith('/api/') && authToken) {
+    opts = { ...opts, headers: { ...opts.headers, ...getAuthHeaders() } };
+  }
+  return _origFetch(url, opts);
+};
+
 // ── Start ─────────────────────────────────────────────────────────────────
 initMapControls();
 initResizeHandles();
 initMobileNav();
 initDmModeToggle();
-init();
+initAuth().then(() => init());

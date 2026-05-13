@@ -68,6 +68,8 @@ export const config = {
   web: {
     port: parseInt(process.env.PORT ?? process.env.WEB_PORT ?? "3000"),
     secret: process.env.WEB_SECRET ?? "dnd-secret-change-me",
+    dmPassword: process.env.DM_PASSWORD ?? "dm1234",
+    playerPassword: process.env.PLAYER_PASSWORD ?? "",
   },
   database: {
     path: process.env.DATABASE_PATH ?? path.join(process.cwd(), "dnd.db"),

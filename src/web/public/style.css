@@ -1327,6 +1327,45 @@ body.mood-eerie     #scene-section { box-shadow: 0 0 30px rgba(80,122,90,0.12); 
   border-bottom: 1px solid var(--border);
 }
 
+/* ── Login Modal ── */
+#login-overlay { z-index: 9999; align-items: center; background: rgba(0,0,0,0.92); }
+#login-modal {
+  max-width: 360px;
+  width: 100%;
+  text-align: center;
+  padding: 40px 32px;
+}
+#login-modal .modal-title { font-size: 1.3rem; margin-bottom: 8px; }
+#login-subtitle { color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 24px; }
+#login-form { display: flex; flex-direction: column; gap: 12px; }
+#login-password {
+  width: 100%;
+  padding: 10px 14px;
+  background: var(--bg-dark);
+  border: 1px solid var(--border-bright);
+  border-radius: 6px;
+  color: var(--text-primary);
+  font-size: 1rem;
+  text-align: center;
+  box-sizing: border-box;
+}
+#login-password:focus { outline: none; border-color: var(--accent-gold-dim); }
+#login-btn {
+  padding: 10px;
+  background: var(--accent-gold-dim);
+  border: none;
+  border-radius: 6px;
+  color: var(--bg-dark);
+  font-family: 'Cinzel', serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 0.06em;
+}
+#login-btn:hover { background: var(--accent-gold); }
+#login-error { color: #e05252; font-size: 0.82rem; min-height: 18px; }
+#login-role-info { margin-top: 16px; font-size: 0.78rem; color: var(--text-secondary); }
+
 /* ── Character Sheet ── */
 .cs-header {
   display: flex;

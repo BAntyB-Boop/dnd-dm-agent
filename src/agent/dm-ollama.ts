@@ -174,6 +174,7 @@ export async function runDm(
       const toolResultMessages: OpenAI.Chat.ChatCompletionMessageParam[] = [];
 
       for (const toolCall of properToolCalls) {
+        if (!("function" in toolCall)) continue;
         let args: Record<string, unknown> = {};
         try { args = JSON.parse(toolCall.function.arguments); } catch { /* leave empty */ }
 

@@ -68,7 +68,18 @@ export const config = {
   web: {
     port: parseInt(process.env.PORT ?? process.env.WEB_PORT ?? "3000"),
     secret: process.env.WEB_SECRET ?? "dnd-secret-change-me",
-    dmPassword: process.env.DM_PASSWORD ?? "dm1234",
+    // DM_ACCOUNTS=alice:pass1,bob:pass2  (multiple DMs)
+    // Falls back to single DM using DM_PASSWORD
+    dmAccounts: (() => {
+      const raw = process.env.DM_ACCOUNTS?.trim() ?? "";
+      if (raw) {
+        return raw.split(",").map(s => {
+          const idx = s.indexOf(":");
+          return idx === -1 ? null : { name: s.slice(0, idx).trim(), password: s.slice(idx + 1).trim() };
+        }).filter((a): a is { name: string; password: string } => !!a?.name && !!a?.password);
+      }
+      return [{ name: "dm", password: process.env.DM_PASSWORD ?? "dm1234" }];
+    })(),
     playerPassword: process.env.PLAYER_PASSWORD ?? "",
   },
   database: {

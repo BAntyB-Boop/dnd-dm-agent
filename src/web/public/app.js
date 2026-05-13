@@ -1395,7 +1395,13 @@ let adventuresList = [];
 
 async function openCampaignManager() {
   await loadCampaigns();
-  await loadAdventuresList();
+  const isDm = authRole === 'dm';
+  if (isDm) await loadAdventuresList();
+
+  // Hide Adventures tab from players
+  const advTab = document.querySelector('.camp-tab[data-tab="adventures"]');
+  if (advTab) advTab.style.display = isDm ? '' : 'none';
+
   $('campaign-overlay').classList.add('active');
 }
 
@@ -1437,20 +1443,18 @@ function switchMobileTab(tab) {
   }
 }
 
-async function loadCampaigns() {
-  const res  = await fetch('/api/campaigns');
-  const data = await res.json();
-  const list = $('campaigns-list');
-  list.innerHTML = '';
-  data.forEach(c => {
-    const row = document.createElement('div');
-    row.className = `camp-row${c.active ? ' active-camp' : ''}`;
-    const activeBadge = c.active ? '<span class="active-badge">ACTIVE</span>' : '';
-    const advLabel = c.adventure_id ? `📜 ${c.adventure_id}` : '— ยังไม่มี adventure —';
+function buildCampRow(c, isDm) {
+  const row = document.createElement('div');
+  row.className = `camp-row${c.active ? ' active-camp' : ''}`;
+  const playerBadge = `<span class="camp-player-badge">👥 ${c.playerCount ?? 0}</span>`;
+  const advLabel = c.adventure_id ? `📜 ${c.adventure_id}` : '—';
+  const langFlag = c.language === 'th' ? '🇹🇭' : '🇬🇧';
+
+  if (isDm) {
     row.innerHTML = `
       <div class="camp-info">
-        <span class="camp-name">${c.name} ${activeBadge}</span>
-        <span class="camp-adv">${advLabel} · ${c.language === 'th' ? '🇹🇭' : '🇬🇧'}</span>
+        <span class="camp-name">${c.name}${c.active ? ' <span class="active-badge">ACTIVE</span>' : ''}</span>
+        <span class="camp-adv">${advLabel} · ${langFlag} · ${playerBadge}</span>
       </div>
       <div class="camp-actions">
         ${c.active
@@ -1458,12 +1462,10 @@ async function loadCampaigns() {
           : `<button class="camp-activate-btn" data-id="${c.id}">เลือก</button>`
         }
         <select class="camp-adv-select" data-id="${c.id}">
-          <option value="">เลือก Adventure…</option>
+          <option value="">Adventure…</option>
         </select>
       </div>
     `;
-    list.appendChild(row);
-
     // Populate adventure dropdown
     const sel = row.querySelector('.camp-adv-select');
     adventuresList.forEach(a => {
@@ -1481,22 +1483,82 @@ async function loadCampaigns() {
       });
       await loadCampaigns();
     });
+  } else {
+    // Player view: just name + player count + join button
+    row.innerHTML = `
+      <div class="camp-info">
+        <span class="camp-name">${c.name}</span>
+        <span class="camp-adv">${langFlag} · ${playerBadge} · ${advLabel}</span>
+      </div>
+      <div class="camp-actions">
+        <button class="camp-join-btn" data-id="${c.id}">▶ เข้าร่วม</button>
+      </div>
+    `;
+  }
 
-    // Play button (active campaign)
-    const playBtn = row.querySelector('.camp-play-btn');
-    if (playBtn) {
-      playBtn.addEventListener('click', () => startCampaign(c.id));
+  // Activate / play / join buttons
+  const playBtn = row.querySelector('.camp-play-btn');
+  if (playBtn) playBtn.addEventListener('click', () => startCampaign(c.id));
+
+  const activateBtn = row.querySelector('.camp-activate-btn');
+  if (activateBtn) activateBtn.addEventListener('click', () => startCampaign(c.id));
+
+  const joinBtn = row.querySelector('.camp-join-btn');
+  if (joinBtn) joinBtn.addEventListener('click', () => playerJoinCampaign(c.id));
+
+  return row;
+}
+
+async function playerJoinCampaign(campaignId) {
+  $('campaign-overlay').classList.remove('active');
+  // Just switch to the active campaign view in the UI; no activation (DM controls that)
+  await fetchAndRefreshState();
+  switchMobileTab('dm');
+}
+
+async function loadCampaigns() {
+  const res  = await fetch('/api/campaigns');
+  const data = await res.json();
+  const list = $('campaigns-list');
+  list.innerHTML = '';
+  const isDm = authRole === 'dm';
+
+  if (isDm) {
+    // DM sees own campaigns only
+    if (data.length === 0) {
+      list.innerHTML = '<div class="cs-empty">ยังไม่มี Campaign — สร้างด้านล่าง</div>';
+    } else {
+      data.forEach(c => list.appendChild(buildCampRow(c, true)));
+    }
+  } else {
+    // Player: split into active vs all others
+    const active = data.filter(c => c.active);
+    const others = data.filter(c => !c.active);
+
+    if (active.length > 0) {
+      const hdr = document.createElement('div');
+      hdr.className = 'camp-section-header';
+      hdr.textContent = '⚔️ กำลังเล่นอยู่';
+      list.appendChild(hdr);
+      active.forEach(c => list.appendChild(buildCampRow(c, false)));
     }
 
-    // Select button (inactive campaign)
-    const activateBtn = row.querySelector('.camp-activate-btn');
-    if (activateBtn) {
-      activateBtn.addEventListener('click', async () => {
-        await loadCampaigns(); // refresh to show new active state
-        await startCampaign(c.id);
-      });
+    if (others.length > 0) {
+      const hdr = document.createElement('div');
+      hdr.className = 'camp-section-header';
+      hdr.textContent = '📋 Campaigns ทั้งหมด';
+      list.appendChild(hdr);
+      others.forEach(c => list.appendChild(buildCampRow(c, false)));
     }
-  });
+
+    if (data.length === 0) {
+      list.innerHTML = '<div class="cs-empty">ยังไม่มี Campaign ที่เปิดให้เล่น</div>';
+    }
+
+    // Hide the new-campaign form from players
+    const form = $('new-campaign-form');
+    if (form) form.style.display = 'none';
+  }
 }
 
 async function loadAdventuresList() {
@@ -2247,19 +2309,22 @@ function initMobileNav() {
 
 let authToken = null;
 let authRole = null;
+let authDmName = '';
 
 function getAuthHeaders() {
   return authToken ? { 'Authorization': `Bearer ${authToken}` } : {};
 }
 
-function applyRoleUi(role) {
+function applyRoleUi(role, dmName = '') {
   authRole = role;
+  authDmName = dmName;
   const isDm = role === 'dm';
   // Hide DM-only controls from players
-  const dmOnly = document.querySelectorAll(
-    '#new-char-btn, #campaign-btn, #dm-mode-btn, #chat-provider'
-  );
+  const dmOnly = document.querySelectorAll('#new-char-btn, #dm-mode-btn, #chat-provider');
   dmOnly.forEach(el => { el.style.display = isDm ? '' : 'none'; });
+  // Campaign button is visible to all (players need to browse/join)
+  const campBtn = $('campaign-btn');
+  if (campBtn) campBtn.style.display = '';
   // Show role badge in header
   let badge = $('auth-role-badge');
   if (!badge) {
@@ -2270,7 +2335,7 @@ function applyRoleUi(role) {
     badge.addEventListener('click', logout);
     $('header-actions').prepend(badge);
   }
-  badge.textContent = isDm ? 'DM' : 'Player';
+  badge.textContent = isDm ? `DM: ${dmName || 'DM'}` : 'Player';
   badge.style.background = isDm ? 'var(--accent-gold-dim)' : 'var(--bg-input)';
   badge.style.color = isDm ? 'var(--bg-dark)' : 'var(--text-secondary)';
 }
@@ -2278,8 +2343,10 @@ function applyRoleUi(role) {
 function logout() {
   localStorage.removeItem('dnd_token');
   localStorage.removeItem('dnd_role');
+  localStorage.removeItem('dnd_dmname');
   authToken = null;
   authRole = null;
+  authDmName = '';
   $('login-overlay').style.display = 'flex';
   $('login-password').value = '';
   $('login-error').textContent = '';
@@ -2294,6 +2361,7 @@ async function initAuth() {
   // Restore saved token
   const savedToken = localStorage.getItem('dnd_token');
   const savedRole = localStorage.getItem('dnd_role');
+  const savedDmName = localStorage.getItem('dnd_dmname') ?? '';
   if (savedToken && savedRole) {
     try {
       const res = await fetch('/api/auth/me', {
@@ -2302,17 +2370,18 @@ async function initAuth() {
       if (res.ok) {
         authToken = savedToken;
         overlay.style.display = 'none';
-        applyRoleUi(savedRole);
+        applyRoleUi(savedRole, savedDmName);
         return;
       }
     } catch (_) {}
     localStorage.removeItem('dnd_token');
     localStorage.removeItem('dnd_role');
+    localStorage.removeItem('dnd_dmname');
   }
 
   // Show login
   overlay.style.display = 'flex';
-  input.focus();
+  setTimeout(() => input.focus(), 100);
 
   async function doLogin() {
     const password = input.value.trim();
@@ -2336,8 +2405,9 @@ async function initAuth() {
       authToken = data.token;
       localStorage.setItem('dnd_token', data.token);
       localStorage.setItem('dnd_role', data.role);
+      localStorage.setItem('dnd_dmname', data.dmName ?? '');
       overlay.style.display = 'none';
-      applyRoleUi(data.role);
+      applyRoleUi(data.role, data.dmName ?? '');
     } catch (_) {
       errEl.textContent = 'Connection error';
     } finally {

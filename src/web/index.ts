@@ -11,7 +11,8 @@ import {
   getCharacterById, getInventory, createCharacter,
   updateCharacterSkills, addInventoryItem,
   longRestHeal, restoreAllSpellSlots, shortRestWarlockSlots, updateCharacterHp,
-  getAllCampaigns, setActiveCampaign, updateCampaignAdventure, createCampaign,
+  getAllCampaigns, getCampaignsByDm, getCampaignPlayerCount,
+  setActiveCampaign, updateCampaignAdventure, createCampaign,
   setItemEquipped, updateCharacterAc, levelUpCharacter, updateCharacterSubclass,
   updatePreparedSpells, getPreparedSpells, addSessionMessage,
 } from "../db/database.js";
@@ -174,28 +175,41 @@ async function resolveWebPartyRoll(partyRoll: PendingPartyRoll, useMimo = false)
 
 // ── Auth helpers ─────────────────────────────────────────────────────────
 
-function createToken(role: string): string {
+type AuthUser = { role: string; dmName: string };
+
+function createToken(role: string, dmName = ""): string {
   const expiry = Date.now() + 7 * 24 * 60 * 60 * 1000;
-  const data = `${role}:${expiry}`;
+  const data = `${role}:${dmName}:${expiry}`;
   const sig = crypto.createHmac("sha256", config.web.secret).update(data).digest("hex").slice(0, 16);
   return Buffer.from(`${data}:${sig}`).toString("base64url");
 }
 
-function verifyToken(token: string): { role: string } | null {
+function verifyToken(token: string): AuthUser | null {
   try {
     const decoded = Buffer.from(token, "base64url").toString();
     const parts = decoded.split(":");
-    if (parts.length !== 3) return null;
-    const [role, expiry, sig] = parts;
-    if (Date.now() > parseInt(expiry)) return null;
-    const data = `${role}:${expiry}`;
-    const expected = crypto.createHmac("sha256", config.web.secret).update(data).digest("hex").slice(0, 16);
-    if (sig !== expected) return null;
-    return { role };
+    if (parts.length === 4) {
+      const [role, dmName, expiry, sig] = parts;
+      if (Date.now() > parseInt(expiry)) return null;
+      const data = `${role}:${dmName}:${expiry}`;
+      const expected = crypto.createHmac("sha256", config.web.secret).update(data).digest("hex").slice(0, 16);
+      if (sig !== expected) return null;
+      return { role, dmName };
+    }
+    // backward-compat: old 3-part tokens
+    if (parts.length === 3) {
+      const [role, expiry, sig] = parts;
+      if (Date.now() > parseInt(expiry)) return null;
+      const data = `${role}:${expiry}`;
+      const expected = crypto.createHmac("sha256", config.web.secret).update(data).digest("hex").slice(0, 16);
+      if (sig !== expected) return null;
+      return { role, dmName: role === "dm" ? "dm" : "" };
+    }
+    return null;
   } catch { return null; }
 }
 
-function getTokenFromRequest(req: { headers: Record<string, string | string[] | undefined> }): { role: string } | null {
+function getTokenFromRequest(req: { headers: Record<string, string | string[] | undefined> }): AuthUser | null {
   const auth = req.headers["authorization"];
   if (typeof auth !== "string" || !auth.startsWith("Bearer ")) return null;
   return verifyToken(auth.slice(7));
@@ -238,11 +252,15 @@ export async function startWebServer(): Promise<void> {
   app.post("/api/auth/login", async (req, reply) => {
     const { password } = req.body as { password?: string };
     if (!password) return reply.status(400).send({ error: "Password required" });
-    if (password === config.web.dmPassword) {
-      return reply.send({ role: "dm", token: createToken("dm") });
+    // Check DM accounts (supports multiple DMs via DM_ACCOUNTS env)
+    for (const account of config.web.dmAccounts) {
+      if (password === account.password) {
+        return reply.send({ role: "dm", dmName: account.name, token: createToken("dm", account.name) });
+      }
     }
+    // Check player password
     if (config.web.playerPassword === "" || password === config.web.playerPassword) {
-      return reply.send({ role: "player", token: createToken("player") });
+      return reply.send({ role: "player", dmName: "", token: createToken("player") });
     }
     return reply.status(401).send({ error: "Invalid password" });
   });
@@ -612,22 +630,29 @@ export async function startWebServer(): Promise<void> {
 
   // ── Campaigns ──────────────────────────────────────────────────────────
 
-  app.get("/api/campaigns", async () => {
-    const campaigns = getAllCampaigns();
+  app.get("/api/campaigns", async (req) => {
+    const user = getTokenFromRequest(req as any);
+    const isDm = user?.role === "dm";
+    const campaigns = isDm
+      ? getCampaignsByDm(user!.dmName)
+      : getAllCampaigns();
     return campaigns.map(c => ({
       id: c.id, name: c.name, description: c.description,
-      language: c.language, active: (c as { active: number }).active === 1,
+      language: c.language, active: c.active === 1,
       adventure_id: c.adventure_id ?? null,
+      dm_name: c.dm_name ?? "dm",
+      playerCount: getCampaignPlayerCount(c.id),
     }));
   });
 
   app.post("/api/campaign", async (req, reply) => {
     if (!requireDm(req as any, reply)) return;
+    const user = getTokenFromRequest(req as any)!;
     const { name, description = "", language = "th" } = req.body as {
       name?: string; description?: string; language?: "th" | "en";
     };
     if (!name?.trim()) return reply.status(400).send({ error: "name required" });
-    const id = createCampaign(name.trim(), description, language);
+    const id = createCampaign(name.trim(), description, language, user.dmName);
     return { id, name: name.trim() };
   });
 

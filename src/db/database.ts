@@ -33,6 +33,7 @@ function runMigrations(): void {
     "ALTER TABLE characters ADD COLUMN race_option TEXT DEFAULT ''",
     "ALTER TABLE characters ADD COLUMN personality TEXT DEFAULT '{}'",
     "ALTER TABLE characters ADD COLUMN prepared_spells TEXT DEFAULT '[]'",
+    "ALTER TABLE campaigns ADD COLUMN dm_name TEXT DEFAULT 'dm'",
   ];
   for (const sql of migrations) {
     try { db.exec(sql); } catch { /* column already exists — skip */ }
@@ -211,13 +212,22 @@ export function getActiveCampaign() {
   return db.prepare("SELECT * FROM campaigns WHERE active = 1 ORDER BY id DESC LIMIT 1").get() as Campaign | undefined;
 }
 
-export function createCampaign(name: string, description: string, language: "th" | "en" = "th") {
+export function createCampaign(name: string, description: string, language: "th" | "en" = "th", dmName = "dm") {
   db.prepare("UPDATE campaigns SET active = 0").run();
   const result = db.prepare(
-    "INSERT INTO campaigns (name, description, language) VALUES (?, ?, ?)"
-  ).run(name, description, language);
+    "INSERT INTO campaigns (name, description, language, dm_name) VALUES (?, ?, ?, ?)"
+  ).run(name, description, language, dmName);
   db.prepare("INSERT INTO atmosphere_state (campaign_id) VALUES (?)").run(result.lastInsertRowid);
   return result.lastInsertRowid as number;
+}
+
+export function getCampaignsByDm(dmName: string) {
+  return db.prepare("SELECT * FROM campaigns WHERE dm_name = ? ORDER BY id DESC").all(dmName) as Campaign[];
+}
+
+export function getCampaignPlayerCount(campaignId: number): number {
+  const row = db.prepare("SELECT COUNT(*) as cnt FROM characters WHERE campaign_id = ?").get(campaignId) as { cnt: number };
+  return row.cnt;
 }
 
 export function updateCampaignAdventure(campaignId: number, adventureId: string, data: object) {
@@ -730,6 +740,7 @@ export interface Campaign {
   adventure_data: string;
   created_at: string;
   active: number;
+  dm_name: string;
 }
 
 export interface Character {

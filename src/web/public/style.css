@@ -1587,6 +1587,26 @@ body.mood-eerie     #scene-section { box-shadow: 0 0 30px rgba(80,122,90,0.12); 
   font-size: 0.8rem; cursor: pointer; max-width: 170px;
 }
 
+.camp-join-btn {
+  background: rgba(58,154,80,0.18); border: 1px solid rgba(58,154,80,0.5);
+  color: var(--accent-green); padding: 6px 16px; border-radius: 6px;
+  cursor: pointer; font-size: 0.85rem; font-family: 'Cinzel', serif;
+  white-space: nowrap; transition: background 0.2s;
+}
+.camp-join-btn:hover { background: rgba(58,154,80,0.32); }
+
+.camp-player-badge {
+  display: inline-flex; align-items: center; gap: 3px;
+  background: rgba(80,120,200,0.15); border: 1px solid rgba(80,120,200,0.3);
+  color: #8ab4f8; font-size: 0.72rem; padding: 1px 6px; border-radius: 10px;
+}
+
+.camp-section-header {
+  font-family: 'Cinzel', serif; font-size: 0.78rem; font-weight: 700;
+  color: var(--text-secondary); letter-spacing: 0.08em;
+  padding: 4px 2px; border-bottom: 1px solid var(--border); margin-top: 4px;
+}
+
 #new-campaign-form {
   border-top: 1px solid var(--border); padding-top: 16px;
   display: flex; flex-wrap: wrap; gap: 8px; align-items: center;

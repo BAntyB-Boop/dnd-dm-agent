@@ -1523,6 +1523,9 @@ async function loadCampaigns() {
   list.innerHTML = '';
   const isDm = authRole === 'dm';
 
+  const form = $('new-campaign-form');
+  if (form) form.style.display = isDm ? '' : 'none';
+
   if (isDm) {
     // DM sees own campaigns only
     if (data.length === 0) {

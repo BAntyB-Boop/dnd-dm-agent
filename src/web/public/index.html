@@ -233,12 +233,16 @@
 
       <!-- Step 1: Credentials -->
       <div id="login-step1">
-        <p class="login-subtitle">เข้าสู่ระบบ</p>
+        <p class="login-subtitle">เข้าสู่ระบบเพื่อเริ่มการผจญภัย</p>
         <div id="login-form">
-          <input id="login-username" type="text" placeholder="ชื่อ (Username)" autocomplete="username" />
-          <input id="login-password" type="password" placeholder="รหัสผ่าน (Password)" autocomplete="current-password" />
+          <input id="login-username" type="text" placeholder="ชื่อของคุณ" autocomplete="username" />
+          <input id="login-password" type="password" placeholder="รหัสผ่าน" autocomplete="current-password" />
           <div id="login-error"></div>
           <button id="login-next-btn">ต่อไป →</button>
+        </div>
+        <div class="login-hint">
+          🎲 รับรหัสผ่านจาก DM ของกลุ่มคุณ<br/>
+          <span class="login-hint-sub">รหัส DM → เข้าได้ทั้ง DM และ Player · รหัส Player → เข้าเป็น Player</span>
         </div>
       </div>
 
@@ -249,12 +253,12 @@
           <button id="login-dm-btn" class="role-btn" style="display:none">
             <span class="role-icon">⚔️</span>
             <span class="role-label">Dungeon Master</span>
-            <span class="role-desc">ควบคุมโลกและเล่าเรื่อง</span>
+            <span class="role-desc">จัดการ Campaign<br/>และเล่าเรื่องราว</span>
           </button>
           <button id="login-player-btn" class="role-btn">
             <span class="role-icon">🧙</span>
             <span class="role-label">Player</span>
-            <span class="role-desc">เล่นเป็นตัวละครในโลก</span>
+            <span class="role-desc">สร้างตัวละครและ<br/>เข้าร่วมการผจญภัย</span>
           </button>
         </div>
         <div id="login-step2-error"></div>

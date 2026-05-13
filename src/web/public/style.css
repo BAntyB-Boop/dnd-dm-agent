@@ -1381,6 +1381,14 @@ body.mood-eerie     #scene-section { box-shadow: 0 0 30px rgba(80,122,90,0.12); 
 }
 #login-back-btn:hover { color: var(--text-primary); border-color: var(--border-bright); }
 
+.login-hint {
+  margin-top: 18px; padding: 10px 14px;
+  background: rgba(201,168,76,0.07); border: 1px solid rgba(201,168,76,0.2);
+  border-radius: 8px; font-size: 0.8rem; color: var(--text-secondary);
+  line-height: 1.6;
+}
+.login-hint-sub { font-size: 0.72rem; opacity: 0.75; }
+
 /* ── Character Sheet ── */
 .cs-header {
   display: flex;

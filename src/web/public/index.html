@@ -1,308 +1,734 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>D&D DM — Atmosphere Viewer</title>
-  <link rel="stylesheet" href="style.css" />
+﻿<!DOCTYPE html><html lang="en"><head>
+
+
+
+
+
+
+<meta charset="utf-8">
+<title>The Veiled Codex â€” Roster of Folios</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800&amp;family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&amp;display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-deep:    #07070a;
+    --bg-paper:   #0e0e13;
+    --bg-card:    #15151c;
+    --bg-card-2:  #1c1c25;
+    --line:       #2a2a35;
+    --line-soft:  #1d1d25;
+    --ink:        #e8e2cf;
+    --ink-soft:   #c9c2ad;
+    --ink-mute:   #7a7461;
+    --ink-faint:  #4a4636;
+    --gold:       #c9a45c;
+    --gold-dim:   #8a6f3a;
+    --gold-deep:  #5a4622;
+    --blood:      #b01a1a;
+  }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--bg-deep);
+    color: var(--ink);
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-size: 17px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    min-height: 100vh;
+    background:
+      radial-gradient(1200px 800px at 50% -10%, #14141d 0%, transparent 60%),
+      radial-gradient(900px 600px at 50% 110%, #110b0b 0%, transparent 65%),
+      var(--bg-deep);
+  }
+  body::before {
+    content: "";
+    position: fixed; inset: 0;
+    pointer-events: none;
+    z-index: 100;
+    opacity: 0.06;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.7 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+
+  .page {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: clamp(28px, 5vw, 56px) clamp(16px, 4vw, 40px) clamp(40px, 6vw, 80px);
+    position: relative;
+  }
+
+  /* ---------- header ---------- */
+  header.shelf-head {
+    text-align: center;
+    margin-bottom: 56px;
+    position: relative;
+  }
+  .seal-rule {
+    display: flex; align-items: center; justify-content: center;
+    gap: 14px;
+    margin-bottom: 22px;
+  }
+  .seal-rule .line {
+    flex: 1 1 60px;
+    max-width: 180px;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold-dim) 50%, transparent);
+  }
+  .seal-rule .glyph {
+    width: 30px; height: 30px;
+    color: var(--gold);
+  }
+  .smallcaps {
+    font-family: "Cinzel", serif;
+    text-transform: uppercase;
+    letter-spacing: 0.32em;
+    font-weight: 500;
+    font-size: 0.72rem;
+    color: var(--gold);
+  }
+  h1.title {
+    font-family: "Cinzel", serif;
+    font-weight: 500;
+    font-size: clamp(36px, 6vw, 84px);
+    letter-spacing: 0.18em;
+    line-height: 1;
+    margin: 6px 0 12px;
+    color: var(--ink);
+  }
+  .subtitle {
+    font-family: "Cormorant Garamond", serif;
+    font-style: italic;
+    color: var(--ink-mute);
+    font-size: clamp(1rem, 1.4vw, 1.2rem);
+    max-width: 580px;
+    margin: 0 auto;
+    line-height: 1.5;
+    padding: 0 12px;
+  }
+  .meta-row {
+    margin-top: 28px;
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    max-width: 100%;
+  }
+  .meta-cell {
+    padding: 10px clamp(12px, 2.5vw, 22px);
+    border-right: 1px solid var(--line-soft);
+  }
+  .meta-cell:last-child { border-right: none; }
+  .meta-cell .k {
+    font-family: "Cinzel", serif;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    font-size: 0.58rem;
+    color: var(--gold);
+  }
+  .meta-cell .v {
+    font-family: "Cinzel", serif;
+    font-size: 1rem;
+    color: var(--ink);
+    letter-spacing: 0.08em;
+    margin-top: 2px;
+  }
+
+  /* ---------- shelf ---------- */
+  .shelf-label {
+    display: flex; align-items: center;
+    gap: 18px;
+    margin: 0 0 22px;
+  }
+  .shelf-label .num {
+    font-family: "Cinzel", serif;
+    color: var(--gold);
+    font-size: 0.72rem;
+    letter-spacing: 0.3em;
+  }
+  .shelf-label .lbl {
+    font-family: "Cinzel", serif;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    font-size: 1rem;
+    color: var(--ink);
+  }
+  .shelf-label .rule {
+    flex: 1; height: 1px;
+    background: linear-gradient(to right, var(--gold-dim), transparent);
+  }
+  .shelf-label .count {
+    font-family: "Cinzel", serif;
+    color: var(--ink-mute);
+    font-size: 0.68rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+  }
+
+  /* ---------- folio grid ---------- */
+  .folio-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(16px, 2.2vw, 26px);
+  }
+
+  @media (max-width: 1100px) {
+    .folio-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+  @media (max-width: 820px) {
+    .folio-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 520px) {
+    .folio-grid { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+    .folio .pane { aspect-ratio: 3 / 4; }
+    .shelf-label { flex-wrap: wrap; row-gap: 8px; }
+    .shelf-label .rule { display: none; }
+    .meta-cell { flex: 1 1 auto; }
+  }
+
+  /* card frame with corner diamonds */
+  .folio {
+    position: relative;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(180deg, #14141c, #0c0c12);
+    border: 1px solid var(--line);
+    transition: transform 0.45s cubic-bezier(.2,.7,.2,1), border-color 0.4s, box-shadow 0.4s;
+    overflow: hidden;
+    cursor: pointer;
+  }
+  .folio::before, .folio::after,
+  .folio > .corner-bl, .folio > .corner-br {
+    content: "";
+    position: absolute;
+    width: 10px; height: 10px;
+    border: 1px solid var(--gold-dim);
+    background: var(--bg-deep);
+    transform: rotate(45deg);
+    z-index: 4;
+    pointer-events: none;
+    transition: border-color 0.4s, background 0.4s;
+  }
+  .folio::before { top: -5px; left: -5px; }
+  .folio::after  { top: -5px; right: -5px; }
+  .folio > .corner-bl { bottom: -5px; left: -5px; }
+  .folio > .corner-br { bottom: -5px; right: -5px; }
+  .folio:hover {
+    border-color: var(--gold);
+    transform: translateY(-4px);
+    box-shadow:
+      0 30px 60px -30px rgba(0,0,0,0.9),
+      0 0 0 1px rgba(201,164,92,0.15);
+  }
+  .folio:hover::before, .folio:hover::after,
+  .folio:hover > .corner-bl, .folio:hover > .corner-br {
+    border-color: var(--gold);
+  }
+
+  /* portrait pane */
+  .folio .pane {
+    position: relative;
+    aspect-ratio: 1 / 2;
+    overflow: hidden;
+    background: #000;
+  }
+  .folio .pane img {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: center center;
+    transition: transform 1.5s cubic-bezier(.2,.7,.2,1), filter 0.6s;
+    filter: contrast(1.05) saturate(0.85) brightness(0.92);
+  }
+  .folio:hover .pane img {
+    transform: scale(1.05);
+    filter: contrast(1.1) saturate(0.95) brightness(1);
+  }
+  .folio .pane::after {
+    content: "";
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(0,0,0,0.7) 100%),
+      radial-gradient(ellipse at center 30%, transparent 50%, rgba(0,0,0,0.4) 100%);
+    pointer-events: none;
+  }
+
+  /* folio number top-left + status top-right */
+  .folio-num {
+    position: absolute;
+    top: 12px; left: 14px;
+    z-index: 3;
+    font-family: "Cinzel", serif;
+    color: var(--gold);
+    font-size: 0.62rem;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    text-shadow: 0 1px 4px #000;
+  }
+  .folio-status {
+    position: absolute;
+    top: 12px; right: 14px;
+    z-index: 3;
+    font-family: "Cinzel", serif;
+    font-size: 0.56rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    padding: 4px 9px;
+    border: 1px solid var(--gold-dim);
+    background: rgba(7,7,10,0.7);
+    color: var(--gold);
+  }
+  .folio-status.peril { border-color: #5e1a1a; color: #d68a8a; }
+  .folio-status.locked { border-color: var(--line); color: var(--ink-faint); }
+
+  /* identity bar */
+  .folio .ident {
+    position: absolute;
+    bottom: 14px; left: 14px; right: 14px;
+    z-index: 3;
+  }
+  .folio .ident .race {
+    font-family: "Cinzel", serif;
+    text-transform: uppercase;
+    letter-spacing: 0.28em;
+    font-size: 0.58rem;
+    color: var(--gold);
+    margin-bottom: 4px;
+  }
+  .folio .ident .name {
+    font-family: "Cinzel", serif;
+    font-weight: 500;
+    font-size: 1.45rem;
+    color: var(--ink);
+    line-height: 1.05;
+    letter-spacing: 0.06em;
+    margin: 0;
+    text-shadow: 0 1px 6px rgba(0,0,0,0.9);
+  }
+  .folio .ident .epithet {
+    margin-top: 4px;
+    font-family: "Cormorant Garamond", serif;
+    font-style: italic;
+    color: var(--ink-soft);
+    font-size: 0.92rem;
+    line-height: 1.3;
+  }
+
+  /* lower stat block */
+  .folio .body {
+    padding: 16px 16px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex: 1;
+  }
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    border: 1px solid var(--line);
+    background: var(--bg-deep);
+  }
+  .stat-row .c {
+    padding: 8px 4px;
+    text-align: center;
+    border-right: 1px solid var(--line-soft);
+    min-width: 0;
+    overflow: hidden;
+  }
+  .stat-row .c:last-child { border-right: none; }
+  .stat-row .c .k {
+    font-family: "Cinzel", serif;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    font-size: 0.5rem;
+    color: var(--gold);
+    white-space: nowrap;
+  }
+  .stat-row .c .v {
+    font-family: "Cinzel", serif;
+    font-size: 0.78rem;
+    color: var(--ink);
+    margin-top: 3px;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .blurb {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 0.94rem;
+    color: var(--ink-soft);
+    line-height: 1.45;
+    font-style: italic;
+    flex: 1;
+  }
+
+  .open-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding-top: 12px;
+    border-top: 1px solid var(--line);
+  }
+  .open-row .vol {
+    font-family: "Cinzel", serif;
+    font-size: 0.58rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .open-row .open {
+    font-family: "Cinzel", serif;
+    font-size: 0.66rem;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--gold);
+    display: inline-flex; align-items: center; gap: 8px;
+    transition: gap 0.4s;
+  }
+  .folio:hover .open-row .open { gap: 14px; }
+  .open-row .open .arrow {
+    width: 22px; height: 1px;
+    background: var(--gold);
+    position: relative;
+  }
+  .open-row .open .arrow::after {
+    content: "";
+    position: absolute; right: 0; top: -3px;
+    width: 7px; height: 7px;
+    border-top: 1px solid var(--gold);
+    border-right: 1px solid var(--gold);
+    transform: rotate(45deg);
+  }
+
+  /* ----- empty / placeholder folio ----- */
+  .folio.empty {
+    cursor: default;
+    background:
+      repeating-linear-gradient(
+        135deg,
+        transparent 0 14px,
+        rgba(255,255,255,0.012) 14px 15px
+      ),
+      linear-gradient(180deg, #0e0e14, #0a0a10);
+    border-style: dashed;
+    border-color: var(--line);
+  }
+  .folio.empty:hover {
+    transform: none;
+    border-color: var(--gold-dim);
+    box-shadow: none;
+  }
+  .folio.empty:hover::before, .folio.empty:hover::after,
+  .folio.empty:hover > .corner-bl, .folio.empty:hover > .corner-br {
+    border-color: var(--gold-dim);
+  }
+  .folio.empty .pane {
+    background: var(--bg-deep);
+    display: grid; place-items: center;
+  }
+  .folio.empty .pane::after { display: none; }
+  .empty-mark {
+    width: 56%;
+    aspect-ratio: 1;
+    border: 1px solid var(--line);
+    transform: rotate(45deg);
+    display: grid; place-items: center;
+    opacity: 0.7;
+  }
+  .empty-mark span {
+    transform: rotate(-45deg);
+    font-family: "Cinzel", serif;
+    color: var(--ink-faint);
+    letter-spacing: 0.28em;
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    text-align: center;
+    line-height: 1.5;
+  }
+  .folio.empty .ident { display: none; }
+  .folio.empty .body .blurb {
+    color: var(--ink-faint);
+    text-align: center;
+  }
+  .folio.empty .open-row .open {
+    color: var(--ink-faint);
+  }
+  .folio.empty .open-row .open .arrow { background: var(--ink-faint); }
+  .folio.empty .open-row .open .arrow::after {
+    border-top-color: var(--ink-faint);
+    border-right-color: var(--ink-faint);
+  }
+  .folio.empty .stat-row .c .v { color: var(--ink-faint); }
+
+  /* peril vignette for Aurora card */
+  .folio.peril .pane::before {
+    content: "";
+    position: absolute; inset: 0; z-index: 2;
+    background: radial-gradient(ellipse at 80% 90%, rgba(176,26,26,0.22), transparent 60%);
+    pointer-events: none;
+  }
+
+  /* ornament */
+  .star-orn { color: var(--gold); }
+
+  /* footer */
+  .colophon {
+    margin-top: 64px;
+    text-align: center;
+    font-family: "Cinzel", serif;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    font-size: 0.58rem;
+    color: var(--ink-faint);
+  }
+  .colophon .sep { color: var(--gold-dim); margin: 0 12px; }
+
+  /* ---------- enter-game button ---------- */
+  .enter-game-btn {
+    position: fixed;
+    top: 22px; right: 28px;
+    z-index: 200;
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 10px 20px;
+    background: rgba(7,7,10,0.85);
+    border: 1px solid var(--gold-dim);
+    color: var(--gold);
+    font-family: "Cinzel", serif;
+    font-size: 0.64rem;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    text-decoration: none;
+    backdrop-filter: blur(6px);
+    transition: border-color 0.3s, color 0.3s, box-shadow 0.3s;
+  }
+  .enter-game-btn:hover {
+    border-color: var(--gold);
+    color: var(--ink);
+    box-shadow: 0 0 20px rgba(201,164,92,0.18);
+  }
+  .enter-game-btn .btn-arrow {
+    width: 18px; height: 1px;
+    background: currentColor;
+    position: relative;
+    transition: width 0.3s;
+  }
+  .enter-game-btn .btn-arrow::after {
+    content: "";
+    position: absolute;
+    right: 0; top: -3px;
+    width: 6px; height: 6px;
+    border-right: 1px solid currentColor;
+    border-top: 1px solid currentColor;
+    transform: rotate(45deg);
+  }
+  .enter-game-btn:hover .btn-arrow { width: 26px; }
+</style>
 </head>
-<body>
-  <div id="app">
-    <header id="header">
-      <div id="campaign-name">⚔️ D&D Dungeon Master</div>
-      <div id="header-actions">
-        <button id="campaign-btn" title="Campaigns &amp; Adventures">📋</button>
-        <div id="connection-status" class="status-dot disconnected" title="Connecting..."></div>
+<body style="">
+  <a class="enter-game-btn" href="game.html">
+    Enter the Game
+    <span class="btn-arrow"></span>
+  </a>
+  <div class="page">
+
+    <!-- ============== HEADER ============== -->
+    <header class="shelf-head" style="padding: 0px">
+      <div class="seal-rule">
+        <span class="line"></span>
+        <svg class="glyph" viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1">
+          <circle cx="30" cy="30" r="26"></circle>
+          <circle cx="30" cy="30" r="14"></circle>
+          <path d="M30 4 L34 30 L30 56 L26 30 Z" fill="currentColor" stroke="none" style="opacity:.2"></path>
+          <line x1="30" y1="2" x2="30" y2="58"></line>
+          <line x1="2" y1="30" x2="58" y2="30"></line>
+          <line x1="10" y1="10" x2="50" y2="50"></line>
+          <line x1="50" y1="10" x2="10" y2="50"></line>
+          <circle cx="30" cy="30" r="2.5" fill="currentColor" stroke="none"></circle>
+        </svg>
+        <span class="line"></span>
+      </div>
+      <div class="smallcaps">The Veiled Codex</div>
+      <h1 class="title">Roster of Folios</h1>
+      <div class="subtitle">
+        Bound and indexed in the chapter-house archive, each volume an oath, a name, a life set down by the Watcher's scribes.
+      </div>
+
+      <div class="meta-row">
+        <div class="meta-cell"><div class="k">Volumes Filed</div><div class="v">I of VIII</div></div>
+        <div class="meta-cell"><div class="k">Annum</div><div class="v">Helmus CC</div></div>
+        <div class="meta-cell"><div class="k">Archivist</div><div class="v">br. Aelwin</div></div>
+        <div class="meta-cell"><div class="k">Seal</div><div class="v">Veiled Watch</div></div>
       </div>
     </header>
 
-    <div id="layout">
-
-      <!-- LEFT: Party Roster -->
-      <aside id="left-panel" style="width:var(--left-w)">
-        <section id="party-section">
-          <div id="party-header">
-            <span class="party-title">⚔️ Party</span>
-            <button id="new-char-btn">+ New</button>
-          </div>
-          <div id="party-cards"></div>
-        </section>
-      </aside>
-
-      <div class="resize-handle v" id="rh-left" title="Drag to resize"></div>
-
-      <!-- CENTER: Scene · Map · Combat · Chat -->
-      <main id="center-panel">
-        <section id="scene-section">
-          <div id="location-bar">
-            <span id="location-icon">🗺️</span>
-            <span id="location-text">Unknown Location</span>
-            <span id="time-icon">🌙</span>
-            <span id="time-text">Night</span>
-            <span id="weather-icon">☁️</span>
-            <span id="weather-text">Clear</span>
-          </div>
-          <div id="scene-text">Awaiting the adventure to begin...</div>
-          <div id="active-effects"></div>
-        </section>
-
-        <div id="mood-bar">
-          <div id="mood-fill"></div>
-          <span id="mood-label">neutral</span>
-        </div>
-
-        <section id="map-section" style="display:none">
-          <div id="map-header">
-            <span id="map-title">🗺️ Map</span>
-            <div id="map-controls">
-              <button id="map-reset-btn" title="Reset view">⟳</button>
-              <button id="map-expand-btn" title="Expand map">⤢</button>
-              <button id="map-fullscreen-btn" title="Fullscreen">⛶</button>
-            </div>
-          </div>
-          <div id="map-viewport">
-            <div id="map-canvas">
-              <img id="map-img" src="" alt="Map" draggable="false" />
-              <div id="party-markers"></div>
-            </div>
-          </div>
-          <div id="map-hint">Scroll to zoom · Drag to pan · Double-click to reset</div>
-          <div class="resize-handle h" id="rh-map" title="Drag to resize map"></div>
-        </section>
-
-        <section class="panel" id="combat-panel" style="display:none">
-          <h2>⚔️ Combat</h2>
-          <div id="combat-round">Round 1</div>
-          <div id="combat-participants"></div>
-        </section>
-
-        <section id="chat-section">
-          <div id="chat-panel-header">
-            <span id="chat-title">💬 Chat with DM</span>
-            <div id="chat-header-right">
-              <select id="chat-provider">
-                <option value="default">⚔️ DM (Groq)</option>
-                <option value="mimo">🤖 DM2 (MiMo)</option>
-              </select>
-              <button id="dm-mode-btn" title="Switch DM mode">🤖 AI DM</button>
-            </div>
-          </div>
-          <div id="chat-messages">
-            <div class="chat-msg system"><span class="chat-text"><em>Adventure awaits — speak to your Dungeon Master...</em></span></div>
-          </div>
-          <div id="chat-roll-area"></div>
-          <div id="chat-input-area">
-            <select id="chat-character">
-              <option value="">— Character —</option>
-            </select>
-            <input id="chat-input" type="text" placeholder="What do you say or do?" autocomplete="off" />
-            <button id="chat-send-btn">⚔️ Send</button>
-          </div>
-        </section>
-      </main>
-
-      <div class="resize-handle v" id="rh-right" title="Drag to resize"></div>
-
-      <!-- RIGHT: Event Log · Atmosphere -->
-      <aside id="right-panel">
-        <section id="log-section">
-          <h2>📜 Event Log</h2>
-          <div id="event-log"></div>
-        </section>
-
-        <div class="resize-handle h" id="rh-log" title="Drag to resize log"></div>
-
-        <section class="panel" id="atmosphere-panel">
-          <h2>🌫️ Atmosphere</h2>
-          <div id="lighting-row" class="detail-row">
-            <span class="label">Lighting</span>
-            <span id="lighting-val">—</span>
-          </div>
-          <div id="sounds-container">
-            <div class="label">Ambient Sounds</div>
-            <div id="sounds-list"></div>
-          </div>
-        </section>
-      </aside>
-
-    </div><!-- /#layout -->
-
-    <!-- Mobile bottom tab bar -->
-    <nav id="mobile-nav">
-      <button class="mob-tab active" data-tab="dm">
-        <span class="mob-tab-icon">💬</span>
-        <span class="mob-tab-label">DM</span>
-      </button>
-      <button class="mob-tab" data-tab="party">
-        <span class="mob-tab-icon">⚔️</span>
-        <span class="mob-tab-label">Party</span>
-      </button>
-      <button class="mob-tab" data-tab="log">
-        <span class="mob-tab-icon">📜</span>
-        <span class="mob-tab-label">Log</span>
-      </button>
-      <button class="mob-tab" data-tab="atmos">
-        <span class="mob-tab-icon">🌫️</span>
-        <span class="mob-tab-label">Atmos</span>
-      </button>
-    </nav>
-
-  </div><!-- /#app -->
-
-  <!-- Fullscreen map overlay -->
-  <div id="map-fullscreen-overlay">
-    <button id="map-fullscreen-close">✕</button>
-    <img id="map-fullscreen-img" src="" alt="Map fullscreen" />
-  </div>
-
-  <!-- Character Sheet Modal -->
-  <div id="charsheet-overlay" class="modal-overlay">
-    <div class="modal-box" id="charsheet-modal">
-      <button class="modal-close" id="charsheet-close">✕</button>
-      <div id="charsheet-tabs">
-        <button class="cs-tab active" data-tab="sheet">📋 Sheet</button>
-        <button class="cs-tab" data-tab="abilities">📖 Spells &amp; Abilities</button>
-      </div>
-      <div id="charsheet-content"></div>
-      <div id="charsheet-abilities" style="display:none"></div>
+    <!-- ============== SHELF: ACTIVE ============== -->
+    <div class="shelf-label">
+      <span class="num">I</span>
+      <span class="lbl">Active Sworn</span>
+      <span class="rule"></span>
+      <span class="count">01 / 08 enscribed</span>
     </div>
-  </div>
 
-  <!-- Campaign Manager Modal -->
-  <div id="campaign-overlay" class="modal-overlay">
-    <div class="modal-box wide" id="campaign-modal">
-      <button class="modal-close" id="campaign-close">✕</button>
-      <h2 class="modal-title">📋 Campaigns &amp; Adventures</h2>
+    <div class="folio-grid">
 
-      <div id="campaign-tabs">
-        <button class="camp-tab active" data-tab="campaigns">Campaigns</button>
-        <button class="camp-tab" data-tab="adventures">Adventures</button>
-      </div>
+      <!-- ===== Aurora â€” filled ===== -->
+      <a class="folio peril" href="Aurora Elaris.html">
+        <i class="corner-bl"></i><i class="corner-br"></i>
 
-      <div id="tab-campaigns" class="tab-content">
-        <div id="campaigns-list"></div>
-        <div id="new-campaign-form">
-          <h3>New Campaign</h3>
-          <input id="new-camp-name" type="text" placeholder="Campaign name" />
-          <input id="new-camp-desc" type="text" placeholder="Description (optional)" />
-          <select id="new-camp-lang">
-            <option value="th">🇹🇭 Thai</option>
-            <option value="en">🇬🇧 English</option>
-          </select>
-          <button id="new-camp-btn">+ Create</button>
-        </div>
-      </div>
-
-      <div id="tab-adventures" class="tab-content" style="display:none">
-        <div id="adventures-list"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Character Creation Modal -->
-  <div id="create-char-overlay" class="modal-overlay">
-    <div class="modal-box wide" id="create-char-modal">
-      <button class="modal-close" id="create-char-close">✕</button>
-      <h2 class="modal-title">⚔️ Create Character</h2>
-
-      <div id="cc-progress">
-        <div class="cc-dot" data-step="0">1<span>Info</span></div>
-        <div class="cc-dot" data-step="1">2<span>Race</span></div>
-        <div class="cc-dot" data-step="2">3<span>Class</span></div>
-        <div class="cc-dot" data-step="3">4<span>Stats</span></div>
-        <div class="cc-dot" data-step="4">5<span>Skills</span></div>
-        <div class="cc-dot" data-step="5">6<span>Persona</span></div>
-        <div class="cc-dot" data-step="6">7<span>Equipment</span></div>
-        <div class="cc-dot" data-step="7">8<span>Review</span></div>
-      </div>
-
-      <div id="cc-body"></div>
-
-      <div id="cc-nav">
-        <button id="cc-back-btn">← Back</button>
-        <div id="cc-error"></div>
-        <button id="cc-next-btn">Next →</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Login / Register Modal -->
-  <div id="login-overlay" class="modal-overlay" style="display:flex">
-    <div class="modal-box" id="login-modal">
-      <h2 class="modal-title">⚔️ D&amp;D Dungeon Master</h2>
-
-      <!-- Step 1: Enter username -->
-      <div id="login-step1">
-        <p class="login-subtitle">เข้าสู่ระบบหรือสมัครสมาชิก</p>
-        <div class="login-form-inner">
-          <input id="login-username" type="text" placeholder="ชื่อของคุณ (Username)" autocomplete="username" />
-          <div id="login-step1-error" class="login-error-msg"></div>
-          <button id="login-check-btn" class="login-primary-btn">ต่อไป →</button>
-        </div>
-      </div>
-
-      <!-- Step 2: Password (existing user) -->
-      <div id="login-step2" style="display:none">
-        <p class="login-subtitle">ยินดีต้อนรับกลับ <strong id="login-name-display"></strong></p>
-        <div class="login-form-inner">
-          <input id="login-password" type="password" placeholder="รหัสผ่าน" autocomplete="current-password" />
-          <div id="login-step2-error" class="login-error-msg"></div>
-          <button id="login-submit-btn" class="login-primary-btn">เข้าสู่ระบบ</button>
-        </div>
-        <button class="login-back-btn" id="login-back1">← กลับ</button>
-      </div>
-
-      <!-- Step 3: Register (new user) -->
-      <div id="login-step3" style="display:none">
-        <p class="login-subtitle">สมัครสมาชิกใหม่ — <strong id="register-name-display"></strong></p>
-        <div class="login-form-inner">
-          <input id="reg-password" type="password" placeholder="รหัสผ่าน (อย่างน้อย 4 ตัว)" autocomplete="new-password" />
-          <input id="reg-confirm" type="password" placeholder="ยืนยันรหัสผ่าน" autocomplete="new-password" />
-          <div class="reg-role-section">
-            <p class="reg-role-label">เลือกบทบาท (เลือกได้มากกว่า 1)</p>
-            <label class="reg-role-check">
-              <input type="checkbox" id="reg-role-player" checked />
-              <span class="reg-check-box"></span>
-              <span class="reg-role-icon">🧙</span>
-              <span>Player — เล่นเป็นตัวละคร</span>
-            </label>
-            <label class="reg-role-check">
-              <input type="checkbox" id="reg-role-dm" />
-              <span class="reg-check-box"></span>
-              <span class="reg-role-icon">⚔️</span>
-              <span>Dungeon Master — จัดการเกม</span>
-            </label>
-            <div id="reg-access-code-row" style="display:none">
-              <input id="reg-access-code" type="password" placeholder="DM Access Code (ได้จาก Admin)" />
-            </div>
+        <div class="pane">
+          <div class="folio-num">Folio Â· I</div>
+          <img src="assets/aurora-card.jpg" alt="Aurora Elaris" style="object-fit: cover; opacity: 1; height: 588.5px; width: 269.25px">
+          <div class="ident">
+            <div class="race">Wood Elf Â· 200 yrs</div>
+            <h3 class="name">Aurora Elaris</h3>
+            <div class="epithet">â€” the Ice Queen of Caelthwyn</div>
           </div>
-          <div id="login-step3-error" class="login-error-msg"></div>
-          <button id="reg-submit-btn" class="login-primary-btn">สมัครสมาชิก</button>
         </div>
-        <button class="login-back-btn" id="login-back2">← กลับ</button>
+
+        <div class="body">
+          <div class="stat-row">
+            <div class="c"><div class="k">Class</div><div class="v">Paladin</div></div>
+            <div class="c"><div class="k">Oath</div><div class="v">Vengeance</div></div>
+            <div class="c"><div class="k">Order</div><div class="v">Watch</div></div>
+          </div>
+          <div class="blurb">
+            â€œIf justice requires sin, then I will become the sinner.â€ The chapel is silent. Her sword is not yet drawn.
+          </div>
+          <div class="open-row">
+            <span class="vol">Vol. I Â· 198 pp.</span>
+            <span class="open">Open Folio<span class="arrow"></span></span>
+          </div>
+        </div>
+      </a>
+
+      <!-- ===== Aython â€” filled ===== -->
+      <a class="folio" href="Aython Ashvail Aurelius.html">
+        <i class="corner-bl"></i><i class="corner-br"></i>
+
+        <div class="pane">
+          <div class="folio-num">Folio Â· II</div>
+          <img src="assets/aython-card.jpg" alt="Aython Ashvail Aurelius">
+          <div class="ident">
+            <div class="race">Human Â· 25 yrs</div>
+            <h3 class="name">Aython Aurelius</h3>
+            <div class="epithet">â€” the Prince of the Night</div>
+          </div>
+        </div>
+
+        <div class="body">
+          <div class="stat-row">
+            <div class="c"><div class="k">Class</div><div class="v">Bard</div></div>
+            <div class="c"><div class="k">House</div><div class="v">Aurelius</div></div>
+            <div class="c"><div class="k">Coin</div><div class="v">115 GP</div></div>
+          </div>
+          <div class="blurb">
+            â€œNo one is an enemy until they refuse the cup.â€ Disinherited, debt-chased, and still buying the next round.
+          </div>
+          <div class="open-row">
+            <span class="vol">Vol. II Â· 87 pp.</span>
+            <span class="open">Open Folio<span class="arrow"></span></span>
+          </div>
+        </div>
+      </a>
+
+      <div class="folio empty" aria-disabled="true">
+        <i class="corner-bl"></i><i class="corner-br"></i>
+        <div class="pane">
+          <div class="folio-num">Folio Â· III</div>
+          <div class="empty-mark"><span>Awaiting<br>the Oath</span></div>
+        </div>
+        <div class="body">
+          <div class="stat-row">
+            <div class="c"><div class="k">Class</div><div class="v">â€”</div></div>
+            <div class="c"><div class="k">Oath</div><div class="v">â€”</div></div>
+            <div class="c"><div class="k">Order</div><div class="v">â€”</div></div>
+          </div>
+          <div class="blurb">A blank vellum, ruled but unwritten. The next sworn shall claim this leaf.</div>
+          <div class="open-row">
+            <span class="vol">â€” pp.</span>
+            <span class="open">Unsealed<span class="arrow"></span></span>
+          </div>
+        </div>
       </div>
 
-      <!-- Step 4: Role picker -->
-      <div id="login-step4" style="display:none">
-        <p class="login-subtitle">สวัสดี <strong id="login-greeting-name"></strong> — เลือกบทบาทวันนี้</p>
-        <div id="login-role-btns">
-          <button id="login-dm-btn" class="role-btn" style="display:none">
-            <span class="role-icon">⚔️</span>
-            <span class="role-label">Dungeon Master</span>
-            <span class="role-desc">จัดการ Campaign<br/>และเล่าเรื่องราว</span>
-          </button>
-          <button id="login-player-btn" class="role-btn">
-            <span class="role-icon">🧙</span>
-            <span class="role-label">Player</span>
-            <span class="role-desc">สร้างตัวละครและ<br/>เข้าร่วมการผจญภัย</span>
-          </button>
+      <div class="folio empty" aria-disabled="true">
+        <i class="corner-bl"></i><i class="corner-br"></i>
+        <div class="pane">
+          <div class="folio-num">Folio Â· IV</div>
+          <div class="empty-mark"><span>Awaiting<br>the Oath</span></div>
         </div>
-        <div id="login-step4-error" class="login-error-msg"></div>
+        <div class="body">
+          <div class="stat-row">
+            <div class="c"><div class="k">Class</div><div class="v">â€”</div></div>
+            <div class="c"><div class="k">Oath</div><div class="v">â€”</div></div>
+            <div class="c"><div class="k">Order</div><div class="v">â€”</div></div>
+          </div>
+          <div class="blurb">A blank vellum, ruled but unwritten. The next sworn shall claim this leaf.</div>
+          <div class="open-row">
+            <span class="vol">â€” pp.</span>
+            <span class="open">Unsealed<span class="arrow"></span></span>
+          </div>
+        </div>
       </div>
 
     </div>
+
+    <!-- ============== SHELF: SEALED ============== -->
+    <div class="shelf-label" style="margin-top:56px">
+      <span class="num">II</span>
+      <span class="lbl">Sealed &amp; Yet to Come</span>
+      <span class="rule"></span>
+      <span class="count">04 vellums reserved</span>
+    </div>
+
+    <div class="folio-grid">
+      <div class="folio empty"><i class="corner-bl"></i><i class="corner-br"></i>
+        <div class="pane"><div class="folio-num">Folio Â· V</div><div class="empty-mark"><span>Awaiting<br>the Oath</span></div></div>
+        <div class="body">
+          <div class="stat-row"><div class="c"><div class="k">Class</div><div class="v">â€”</div></div><div class="c"><div class="k">Oath</div><div class="v">â€”</div></div><div class="c"><div class="k">Order</div><div class="v">â€”</div></div></div>
+          <div class="blurb">Reserved by the Archivist for a name yet to be uttered.</div>
+          <div class="open-row"><span class="vol">â€” pp.</span><span class="open">Sealed<span class="arrow"></span></span></div>
+        </div>
+      </div>
+      <div class="folio empty"><i class="corner-bl"></i><i class="corner-br"></i>
+        <div class="pane"><div class="folio-num">Folio Â· VI</div><div class="empty-mark"><span>Awaiting<br>the Oath</span></div></div>
+        <div class="body">
+          <div class="stat-row"><div class="c"><div class="k">Class</div><div class="v">â€”</div></div><div class="c"><div class="k">Oath</div><div class="v">â€”</div></div><div class="c"><div class="k">Order</div><div class="v">â€”</div></div></div>
+          <div class="blurb">Reserved by the Archivist for a name yet to be uttered.</div>
+          <div class="open-row"><span class="vol">â€” pp.</span><span class="open">Sealed<span class="arrow"></span></span></div>
+        </div>
+      </div>
+      <div class="folio empty"><i class="corner-bl"></i><i class="corner-br"></i>
+        <div class="pane"><div class="folio-num">Folio Â· VII</div><div class="empty-mark"><span>Awaiting<br>the Oath</span></div></div>
+        <div class="body">
+          <div class="stat-row"><div class="c"><div class="k">Class</div><div class="v">â€”</div></div><div class="c"><div class="k">Oath</div><div class="v">â€”</div></div><div class="c"><div class="k">Order</div><div class="v">â€”</div></div></div>
+          <div class="blurb">Reserved by the Archivist for a name yet to be uttered.</div>
+          <div class="open-row"><span class="vol">â€” pp.</span><span class="open">Sealed<span class="arrow"></span></span></div>
+        </div>
+      </div>
+      <div class="folio empty"><i class="corner-bl"></i><i class="corner-br"></i>
+        <div class="pane"><div class="folio-num">Folio Â· VIII</div><div class="empty-mark"><span>Awaiting<br>the Oath</span></div></div>
+        <div class="body">
+          <div class="stat-row"><div class="c"><div class="k">Class</div><div class="v">â€”</div></div><div class="c"><div class="k">Oath</div><div class="v">â€”</div></div><div class="c"><div class="k">Order</div><div class="v">â€”</div></div></div>
+          <div class="blurb">Reserved by the Archivist for a name yet to be uttered.</div>
+          <div class="open-row"><span class="vol">â€” pp.</span><span class="open">Sealed<span class="arrow"></span></span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============== FOOTER ============== -->
+    <div class="colophon">
+      The Veiled Codex <span class="sep">Â·</span> Roster of Folios <span class="sep">Â·</span> Annum Helmus CC
+    </div>
+
   </div>
 
-  <script src="app.js"></script>
-</body>
-</html>
+
+</body></html>

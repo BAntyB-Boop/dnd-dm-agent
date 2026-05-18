@@ -2,1494 +2,843 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<title>Aurora Elaris — Codex of the Veiled Watch</title>
+<title>Aurora Elaris — Altar of the Veiled Watch</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
-<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="shared.css">
 <style>
-  :root {
-    --bg-deep:    #07070a;
-    --bg-paper:   #0e0e13;
-    --bg-card:    #15151c;
-    --bg-card-2:  #1c1c25;
-    --line:       #2a2a35;
-    --line-soft:  #1d1d25;
-    --ink:        #e8e2cf;
-    --ink-soft:   #c9c2ad;
-    --ink-mute:   #7a7461;
-    --ink-faint:  #4a4636;
-    --gold:       #c9a45c;
-    --gold-dim:   #8a6f3a;
-    --gold-deep:  #5a4622;
-    --navy:       #1a2540;
-    --navy-soft:  #2a3454;
-    --blood:      #b01a1a;
-    --blood-soft: #6e1212;
-    --rune:       var(--gold);
-  }
-  html, body {
-    margin: 0;
-    padding: 0;
-    background: var(--bg-deep);
-    color: var(--ink);
-    font-family: "Cormorant Garamond", "EB Garamond", Georgia, serif;
-    font-weight: 400;
-    font-size: 17px;
-    line-height: 1.55;
-    -webkit-font-smoothing: antialiased;
-    text-rendering: optimizeLegibility;
-  }
-  body {
-    min-height: 100vh;
-    background:
-      radial-gradient(1200px 800px at 50% -10%, #14141d 0%, transparent 60%),
-      radial-gradient(900px 600px at 50% 110%, #110b0b 0%, transparent 65%),
-      var(--bg-deep);
-  }
-  /* film grain */
-  body::before {
-    content: "";
-    position: fixed; inset: 0;
-    pointer-events: none;
-    z-index: 100;
-    opacity: 0.06;
-    mix-blend-mode: overlay;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.7 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
-  }
-  /* oath-broken bleed */
-  body.oathbreaker::after {
-    content: "";
-    position: fixed; inset: 0;
-    pointer-events: none;
-    z-index: 99;
-    background:
-      radial-gradient(800px 600px at 10% 20%, rgba(176,26,26,0.18), transparent 60%),
-      radial-gradient(900px 700px at 95% 90%, rgba(176,26,26,0.22), transparent 60%),
-      radial-gradient(600px 500px at 50% 50%, rgba(120,15,15,0.10), transparent 70%);
-    animation: bleed 8s ease-in-out infinite alternate;
-  }
-  @keyframes bleed {
-    from { opacity: 0.7; }
-    to   { opacity: 1; }
-  }
+:root{
+  --bg-deep:#06070d;
+  --bg-paper:#0c0d15;
+  --bg-card:#12131c;
+  --bg-card-2:#1a1c28;
+  --line:#262838;
+  --line-soft:#1a1b26;
+  --ink:#e8e6f0;
+  --ink-soft:#bcbacd;
+  --ink-mute:#787890;
+  --ink-faint:#3f4055;
+  --gold:#d6b66a;
+  --gold-dim:#8a6f3a;
+  --gold-deep:#5a4622;
+  --halo:#fff5d0;
+  --silver:#a8b0c8;
+  --cobalt:#3854a8;
+  --cobalt-soft:#5a76c8;
+  --blood:#c41a1a;
+  --blood-deep:#7a0a0a;
+}
+html,body{background:var(--bg-deep);color:var(--ink)}
+body{
+  min-height:100vh;
+  background:
+    radial-gradient(1200px 800px at 50% 0%, rgba(56,84,168,0.10) 0%, transparent 60%),
+    radial-gradient(800px 500px at 50% 100%, rgba(0,0,0,0.5), transparent 60%),
+    var(--bg-deep);
+  transition: background 1.2s ease;
+  overflow-x:hidden;
+}
+body.broken{
+  background:
+    radial-gradient(1200px 800px at 50% 0%, rgba(196,26,26,0.18) 0%, transparent 60%),
+    radial-gradient(800px 500px at 50% 100%, rgba(122,10,10,0.18), transparent 60%),
+    #0a0506;
+}
+/* light-shafts descending */
+body::after{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:1;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(214,182,106,0.12) 0%, transparent 50%),
+    repeating-linear-gradient(85deg, transparent 0 80px, rgba(255,245,208,0.025) 80px 82px);
+  transition:opacity 1.2s, background 1.2s;
+}
+body.broken::after{
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(196,26,26,0.16) 0%, transparent 50%),
+    repeating-linear-gradient(85deg, transparent 0 80px, rgba(196,26,26,0.05) 80px 82px);
+}
 
-  h1, h2, h3, h4, .display {
-    font-family: "Cinzel", "Cormorant Garamond", serif;
-    font-weight: 500;
-    letter-spacing: 0.06em;
-    color: var(--ink);
-  }
-  em, i { font-family: "Cormorant Garamond", serif; font-style: italic; color: var(--ink-soft); }
-  .smallcaps {
-    font-family: "Cinzel", serif;
-    text-transform: uppercase;
-    letter-spacing: 0.22em;
-    font-weight: 500;
-    font-size: 0.72rem;
-    color: var(--gold);
-  }
-  .rule {
-    height: 1px;
-    background: linear-gradient(to right, transparent, var(--gold-dim) 20%, var(--gold-dim) 80%, transparent);
-    opacity: 0.55;
-  }
-  .v-rule {
-    width: 1px;
-    background: linear-gradient(to bottom, transparent, var(--gold-dim) 20%, var(--gold-dim) 80%, transparent);
-    opacity: 0.4;
-  }
+h1,h2,h3,h4{color:var(--ink)}
+em,i{font-style:italic;color:var(--ink-soft)}
 
-  .page {
-    max-width: 1240px;
-    margin: 0 auto;
-    padding: clamp(60px, 6vw, 80px) clamp(16px, 4vw, 40px) clamp(40px, 6vw, 80px);
-    position: relative;
-  }
+/* ===== BACK LINK — broken-oath colour override ===== */
+body.broken .back-link{color:var(--blood);border-color:var(--blood-deep)}
 
-  /* decorative corner frame */
-  .frame {
-    position: relative;
-    border: 1px solid var(--line);
-    background: linear-gradient(180deg, rgba(20,20,28,0.6), rgba(10,10,15,0.6));
-  }
-  .frame::before, .frame::after,
-  .frame > .corner-tl, .frame > .corner-tr,
-  .frame > .corner-bl, .frame > .corner-br {
-    content: "";
-    position: absolute;
-    width: 14px; height: 14px;
-    border: 1px solid var(--gold-dim);
-    background: var(--bg-deep);
-  }
-  .frame::before { top: -7px; left: -7px; transform: rotate(45deg); }
-  .frame::after  { top: -7px; right: -7px; transform: rotate(45deg); }
-  .frame > .corner-bl { bottom: -7px; left: -7px; transform: rotate(45deg); }
-  .frame > .corner-br { bottom: -7px; right: -7px; transform: rotate(45deg); }
+/* ===== OATH TOGGLE (top right) ===== */
+.oath-toggle{
+  position:fixed;top:22px;right:22px;z-index:300;
+  display:inline-flex;align-items:stretch;
+  border:1px solid var(--gold-dim);background:rgba(7,7,14,0.85);backdrop-filter:blur(6px);
+}
+.oath-toggle button{
+  background:transparent;border:none;color:var(--ink-mute);
+  padding:10px 18px;font-family:"Cinzel",serif;text-transform:uppercase;
+  letter-spacing:0.22em;font-size:0.65rem;cursor:pointer;
+  transition:color .4s, background .4s;
+}
+.oath-toggle button.active{color:#06070d;background:var(--gold)}
+.oath-toggle button.broken.active{background:var(--blood);color:#fff5e8}
+.oath-toggle .divider{width:1px;background:var(--gold-dim)}
+body.broken .oath-toggle{border-color:var(--blood-deep)}
 
-  .card {
-    background: var(--bg-card);
-    border: 1px solid var(--line);
-    padding: 22px 24px;
-    position: relative;
-  }
-  .card .label {
-    font-family: "Cinzel", serif;
-    text-transform: uppercase;
-    letter-spacing: 0.24em;
-    font-size: 0.7rem;
-    color: var(--gold);
-    margin-bottom: 14px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .card .label::before {
-    content: "";
-    width: 6px; height: 6px;
-    border: 1px solid var(--gold-dim);
-    transform: rotate(45deg);
-    display: inline-block;
-  }
-  .card .label::after {
-    content: "";
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(to right, var(--gold-deep), transparent);
-  }
+/* ============ HERO — STAINED GLASS ALTAR ============ */
+.altar{
+  position:relative;
+  display:grid;
+  grid-template-columns:1fr;
+  align-items:center;
+  padding:120px 24px 80px;
+  z-index:5;
+  min-height:100vh;
+}
+.altar-stage{
+  position:relative;
+  max-width:1240px;
+  margin:0 auto;
+  width:100%;
+  display:grid;
+  grid-template-columns:1fr 460px 1fr;
+  gap:48px;
+  align-items:center;
+}
 
-  /* ----- masthead ----- */
-  .masthead {
-    display: grid;
-    grid-template-columns: 1.05fr 1.4fr;
-    gap: clamp(20px, 3vw, 36px);
-    align-items: stretch;
-    margin-bottom: 28px;
-  }
-  .portrait {
-    position: relative;
-    overflow: hidden;
-    background: #000;
-    aspect-ratio: 1 / 1.8;
-  }
-  .portrait img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    object-position: center center;
-    transition: filter 1.2s ease, transform 6s ease;
-    filter: contrast(1.05) saturate(0.9);
-  }
-  .portrait:hover img { transform: scale(1.03); }
-  body.oathbreaker .portrait img {
-    filter: contrast(1.15) saturate(0.85) hue-rotate(-8deg) brightness(0.92);
-  }
-  .portrait .vignette {
-    position: absolute; inset: 0;
-    background:
-      linear-gradient(180deg, rgba(0,0,0,0) 50%, rgba(0,0,0,0.55) 100%),
-      radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.45) 100%);
-    pointer-events: none;
-  }
-  .portrait .badge {
-    position: absolute;
-    top: 18px; left: 18px;
-    font-family: "Cinzel", serif;
-    text-transform: uppercase;
-    letter-spacing: 0.3em;
-    font-size: 0.62rem;
-    color: var(--gold);
-    background: rgba(7,7,10,0.7);
-    border: 1px solid var(--gold-dim);
-    padding: 6px 12px;
-  }
-  .portrait .caption {
-    position: absolute;
-    bottom: 16px; left: 18px; right: 18px;
-    font-family: "Cormorant Garamond", serif;
-    font-style: italic;
-    color: var(--ink-soft);
-    font-size: 0.95rem;
-    letter-spacing: 0.04em;
-  }
+.altar .glass-frame{
+  position:relative;
+  width:100%;
+  aspect-ratio:5/9;
+  /* gothic arch shape via clip-path */
+  -webkit-mask-image: linear-gradient(180deg,black,black);
+  background:#000;
+  overflow:hidden;
+  border:1px solid var(--gold-dim);
+  /* Arched frame achieved via SVG below; here we shape with clip-path */
+  clip-path:path('M0 60 Q0 0 230 0 Q460 0 460 60 L460 828 L0 828 Z');
+  box-shadow:
+    0 60px 140px -40px rgba(214,182,106,0.25),
+    inset 0 0 0 1px rgba(255,245,208,0.06);
+}
+.altar .glass-frame img{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 12%;
+  filter:contrast(1.05) saturate(0.92);
+  transition:filter 1.2s ease;
+}
+body.broken .altar .glass-frame img{
+  filter:contrast(1.12) saturate(0.85) hue-rotate(-8deg) brightness(0.94);
+}
+.altar .glass-frame::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse at 50% 18%, rgba(255,245,208,0.18) 0%, transparent 45%),
+    linear-gradient(180deg, transparent 65%, rgba(7,7,14,0.65) 100%);
+  transition:background 1.2s;
+}
+body.broken .altar .glass-frame::after{
+  background:
+    radial-gradient(ellipse at 50% 18%, rgba(196,26,26,0.22) 0%, transparent 45%),
+    linear-gradient(180deg, transparent 65%, rgba(10,4,5,0.7) 100%);
+}
+/* gothic SVG arch overlay */
+.altar .arch-svg{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:520px;height:920px;color:var(--gold-dim);pointer-events:none;z-index:3;
+  transition:color 1.2s;
+}
+body.broken .altar .arch-svg{color:var(--blood-deep)}
 
-  .titleblock {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding-left: 8px;
-  }
-  .titleblock .seal {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    margin-bottom: 18px;
-  }
-  .titleblock .seal-line {
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(to right, var(--gold-dim), transparent);
-  }
-  .name {
-    font-family: "Cinzel", serif;
-    font-weight: 600;
-    font-size: clamp(48px, 5.4vw, 76px);
-    letter-spacing: 0.08em;
-    line-height: 0.95;
-    margin: 0;
-    color: var(--ink);
-    text-shadow: 0 0 30px rgba(201,164,92,0.06);
-  }
-  .name .ampersand {
-    color: var(--gold);
-    font-weight: 400;
-    font-style: italic;
-    font-family: "Cormorant Garamond", serif;
-    margin: 0 0.15em;
-  }
-  .subtitle {
-    margin-top: 18px;
-    font-family: "Cinzel", serif;
-    font-weight: 400;
-    letter-spacing: 0.32em;
-    text-transform: uppercase;
-    font-size: 0.85rem;
-    color: var(--ink-soft);
-  }
-  .subtitle .sep { color: var(--gold-dim); margin: 0 0.6em; }
-  .epitaph {
-    margin-top: 12px;
-    font-family: "Cormorant Garamond", serif;
-    font-style: italic;
-    color: var(--ink-mute);
-    font-size: 1.15rem;
-    letter-spacing: 0.02em;
-  }
-  .epitaph .ob {
-    color: var(--blood);
-    font-style: normal;
-    font-family: "Cinzel", serif;
-    letter-spacing: 0.24em;
-    font-size: 0.85em;
-    text-transform: uppercase;
-  }
+/* light rays behind the altar */
+.altar .rays{
+  position:absolute;left:50%;top:0;transform:translateX(-50%);
+  width:760px;height:120%;pointer-events:none;z-index:0;opacity:.55;
+  background:
+    conic-gradient(from 270deg at 50% 100%,
+      transparent 0deg,
+      rgba(255,245,208,0.08) 60deg,
+      transparent 120deg,
+      rgba(255,245,208,0.08) 180deg,
+      transparent 240deg,
+      rgba(255,245,208,0.08) 300deg,
+      transparent 360deg
+    );
+  filter:blur(20px);
+  transition:opacity 1.2s, background 1.2s;
+}
+body.broken .altar .rays{
+  background:
+    conic-gradient(from 270deg at 50% 100%,
+      transparent 0deg,
+      rgba(196,26,26,0.10) 60deg,
+      transparent 120deg,
+      rgba(196,26,26,0.10) 180deg,
+      transparent 240deg,
+      rgba(196,26,26,0.10) 300deg,
+      transparent 360deg
+    );
+}
 
-  .quickbar {
-    margin-top: 28px;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 0;
-    border-top: 1px solid var(--line);
-    border-bottom: 1px solid var(--line);
-  }
-  .quickbar .qcell {
-    padding: 14px 16px;
-    border-right: 1px solid var(--line-soft);
-  }
-  .quickbar .qcell:last-child { border-right: none; }
-  .quickbar .qkey {
-    font-family: "Cinzel", serif;
-    text-transform: uppercase;
-    letter-spacing: 0.22em;
-    font-size: 0.62rem;
-    color: var(--gold);
-    margin-bottom: 4px;
-  }
-  .quickbar .qval {
-    font-family: "Cinzel", serif;
-    font-size: 1.15rem;
-    color: var(--ink);
-    letter-spacing: 0.06em;
-  }
+/* ----- LEFT WING ----- */
+.altar-wing-l, .altar-wing-r{position:relative;z-index:3}
+.altar-wing-l{text-align:right}
+.kicker{
+  font-family:"Cinzel",serif;letter-spacing:0.36em;text-transform:uppercase;font-size:0.68rem;color:var(--gold);
+  margin-bottom:18px;
+}
+body.broken .kicker{color:var(--blood)}
+.altar-wing-l .kicker::after,
+.altar-wing-r .kicker::before{
+  content:"";display:inline-block;width:36px;height:1px;background:currentColor;vertical-align:middle;margin:0 12px;
+}
+.altar-name{
+  font-family:"Cinzel Decorative","Cinzel",serif;font-weight:700;
+  font-size:clamp(40px,5.4vw,82px);
+  letter-spacing:0.05em;line-height:0.95;margin:0;color:var(--ink);
+  background:linear-gradient(180deg,#fff5d0 0%,#e8e6f0 30%,#a8b0c8 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  -webkit-text-fill-color:transparent;
+  text-shadow:0 0 50px rgba(214,182,106,0.18);
+  transition:background 1.2s;
+}
+body.broken .altar-name{
+  background:linear-gradient(180deg,#fff5d0 0%,#f0c8c8 30%,#7a0a0a 100%);
+  -webkit-background-clip:text;background-clip:text;
+}
+.altar-sub{
+  margin-top:24px;font-family:"Cinzel",serif;letter-spacing:0.28em;text-transform:uppercase;font-size:0.82rem;color:var(--ink-soft);
+}
+.altar-sub .sep{color:var(--gold);margin:0 .6em;transition:color 1.2s}
+body.broken .altar-sub .sep{color:var(--blood)}
 
-  /* oath toggle */
-  .oathtoggle {
-    margin-top: 22px;
-    display: inline-flex;
-    align-items: stretch;
-    border: 1px solid var(--gold-dim);
-    background: rgba(0,0,0,0.4);
-    user-select: none;
-  }
-  .oathtoggle button {
-    background: transparent;
-    border: none;
-    color: var(--ink-mute);
-    padding: 12px 22px;
-    font-family: "Cinzel", serif;
-    text-transform: uppercase;
-    letter-spacing: 0.24em;
-    font-size: 0.72rem;
-    cursor: pointer;
-    transition: all 0.4s ease;
-    position: relative;
-  }
-  .oathtoggle button.active {
-    color: var(--bg-deep);
-    background: var(--gold);
-  }
-  .oathtoggle button.broken.active {
-    background: var(--blood);
-    color: #f8e9e9;
-  }
-  .oathtoggle .divider {
-    width: 1px;
-    background: var(--gold-dim);
-  }
+.altar-epi{
+  margin-top:16px;font-style:italic;color:var(--ink-mute);font-size:1.1rem;line-height:1.5;
+}
+.altar-epi .ob{
+  color:var(--blood);font-style:normal;font-family:"Cinzel",serif;letter-spacing:0.24em;font-size:0.82em;text-transform:uppercase;
+}
 
-  /* ----- main grid ----- */
-  .grid {
-    display: grid;
-    grid-template-columns: 1.1fr 1fr 1fr;
-    gap: clamp(14px, 1.8vw, 22px);
-    align-items: start;
-  }
-  .span-2 { grid-column: span 2; }
-  .span-3 { grid-column: span 3; }
+.altar-quote{
+  margin-top:32px;max-width:380px;font-family:"Cormorant Garamond",serif;font-style:italic;font-size:1.2rem;line-height:1.5;color:var(--ink-soft);
+  padding-right:20px;border-right:2px solid var(--gold-dim);
+  transition:border-color 1.2s;
+}
+.altar-wing-r .altar-quote{padding-right:0;padding-left:20px;border-right:none;border-left:2px solid var(--gold-dim);text-align:left}
+body.broken .altar-quote{border-color:var(--blood-deep)}
 
-  /* abilities */
-  .abilities {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 14px;
-  }
-  .ability {
-    border: 1px solid var(--line);
-    background: var(--bg-card-2);
-    padding: 14px 12px 12px;
-    text-align: center;
-    position: relative;
-  }
-  .ability .ab-name {
-    font-family: "Cinzel", serif;
-    font-size: 0.65rem;
-    letter-spacing: 0.28em;
-    text-transform: uppercase;
-    color: var(--gold);
-  }
-  .ability .ab-mod {
-    font-family: "Cinzel", serif;
-    font-weight: 600;
-    font-size: 2.2rem;
-    color: var(--ink);
-    line-height: 1;
-    margin: 8px 0 4px;
-  }
-  .ability .ab-score {
-    display: inline-block;
-    border: 1px solid var(--gold-dim);
-    background: var(--bg-deep);
-    padding: 2px 12px;
-    font-family: "Cinzel", serif;
-    font-size: 0.78rem;
-    color: var(--ink-soft);
-    letter-spacing: 0.1em;
-  }
+/* ----- RIGHT WING content ----- */
+.altar-wing-r{text-align:left}
+.altar-wing-r .kicker{text-align:left}
 
-  /* combat stat row */
-  .combat-row {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-    margin-top: 16px;
-  }
-  .stat-tile {
-    border: 1px solid var(--line);
-    background: var(--bg-deep);
-    padding: 10px;
-    text-align: center;
-  }
-  .stat-tile .sk { font-family: "Cinzel", serif; font-size: 0.58rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); }
-  .stat-tile .sv { font-family: "Cinzel", serif; font-weight: 600; font-size: 1.4rem; color: var(--ink); margin-top: 4px; }
+.altar-stats{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:1px;
+  background:var(--gold-dim);margin-top:36px;
+  border:1px solid var(--gold-dim);
+  transition:background 1.2s, border-color 1.2s;
+}
+body.broken .altar-stats{background:var(--blood-deep);border-color:var(--blood-deep)}
+.altar-stats .cell{padding:14px 18px;background:var(--bg-paper);text-align:left}
+.altar-stats .k{font-family:"Cinzel",serif;letter-spacing:0.24em;text-transform:uppercase;font-size:0.56rem;color:var(--gold)}
+body.broken .altar-stats .k{color:var(--blood)}
+.altar-stats .v{font-family:"Cinzel",serif;font-size:1rem;color:var(--ink);margin-top:4px;letter-spacing:0.06em}
 
-  /* skill list */
-  .skill-list {
-    list-style: none;
-    margin: 0; padding: 0;
-    columns: 1;
-    column-gap: 18px;
-  }
-  .skill-list li {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 4px 0;
-    border-bottom: 1px dashed var(--line-soft);
-    break-inside: avoid;
-    font-family: "Cormorant Garamond", serif;
-    font-size: 0.92rem;
-    color: var(--ink-soft);
-  }
-  .pip {
-    width: 8px; height: 8px;
-    border: 1px solid var(--gold-dim);
-    transform: rotate(45deg);
-    flex-shrink: 0;
-  }
-  .pip.filled { background: var(--gold); border-color: var(--gold); }
-  .pip.expert {
-    background: var(--gold);
-    border-color: var(--gold);
-    box-shadow: inset 0 0 0 2px var(--bg-card);
-  }
-  .skill-list li .name { flex: 1; }
-  .skill-list li .mod {
-    font-family: "Cinzel", serif;
-    font-size: 0.7rem;
-    color: var(--ink);
-    letter-spacing: 0.06em;
-    min-width: 28px;
-    text-align: right;
-  }
+/* ============ STORY CONTAINER ============ */
+.codex{
+  position:relative;z-index:5;
+  max-width:1240px;margin:0 auto;
+  padding:32px 32px 80px;
+}
 
-  /* equipment */
-  .equipment-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-  }
-  .eq-item {
-    display: flex;
-    gap: 12px;
-    padding: 10px;
-    border: 1px solid var(--line);
-    background: var(--bg-deep);
-    align-items: flex-start;
-    transition: all 0.3s ease;
-  }
-  .eq-item.hero { grid-column: span 2; background: linear-gradient(135deg, rgba(201,164,92,0.06), transparent 60%), var(--bg-deep); }
-  .eq-item:hover {
-    border-color: var(--gold-dim);
-    transform: translateY(-1px);
-  }
-  .eq-glyph {
-    width: 42px; height: 42px;
-    flex-shrink: 0;
-    border: 1px solid var(--gold-dim);
-    background: var(--bg-card-2);
-    display: grid;
-    place-items: center;
-    color: var(--gold);
-  }
-  .eq-name {
-    font-family: "Cinzel", serif;
-    font-size: 0.78rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--ink);
-    margin-bottom: 3px;
-  }
-  .eq-meta {
-    font-family: "Cormorant Garamond", serif;
-    font-style: italic;
-    font-size: 0.92rem;
-    color: var(--ink-mute);
-    line-height: 1.35;
-  }
+.sec{margin-bottom:90px}
+.sec-head{
+  display:flex;align-items:center;gap:16px;margin-bottom:30px;
+}
+.sec-num{
+  font-family:"Cinzel Decorative",serif;font-weight:700;font-size:3.8rem;line-height:1;
+  color:transparent;-webkit-text-stroke:1px var(--gold-dim);
+  transition:-webkit-text-stroke 1.2s;
+}
+body.broken .sec-num{-webkit-text-stroke:1px var(--blood-deep)}
+.sec-meta{flex:1}
+.sec-tag{font-family:"Cinzel",serif;letter-spacing:0.34em;text-transform:uppercase;font-size:0.68rem;color:var(--gold);margin-bottom:6px;transition:color 1.2s}
+body.broken .sec-tag{color:var(--blood)}
+.sec-title{
+  font-family:"Cinzel Decorative",serif;font-weight:400;font-size:2.2rem;line-height:1.05;color:var(--ink);
+}
+.sec-rule{flex:0 0 80px;height:1px;background:linear-gradient(to right,var(--gold-dim),transparent);transition:background 1.2s}
+body.broken .sec-rule{background:linear-gradient(to right,var(--blood-deep),transparent)}
 
-  /* palette */
-  .palette {
-    display: grid;
-    grid-template-columns: repeat(8, 1fr);
-    gap: 6px;
-    margin-bottom: 12px;
-  }
-  .swatch {
-    aspect-ratio: 1 / 1.25;
-    border: 1px solid var(--line);
-    position: relative;
-  }
-  .swatch::after {
-    content: attr(data-name);
-    position: absolute;
-    bottom: -16px; left: 0; right: 0;
-    text-align: center;
-    font-family: "Cinzel", serif;
-    font-size: 0.52rem;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--ink-mute);
-    opacity: 0;
-    transition: opacity 0.3s;
-    white-space: nowrap;
-  }
-  .swatch:hover::after { opacity: 1; }
+/* ============ CARDS ============ */
+.card{
+  border:1px solid var(--line);background:linear-gradient(180deg, rgba(26,28,40,0.6), rgba(15,16,28,0.4));
+  padding:24px 28px;position:relative;
+  transition:border-color 1.2s;
+}
+body.broken .card{border-color:#2a1414}
 
-  /* likes/dislikes */
-  .like-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 18px;
-  }
-  .like-col h4 {
-    font-family: "Cinzel", serif;
-    font-size: 0.72rem;
-    letter-spacing: 0.26em;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin: 0 0 12px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid var(--line);
-  }
-  .like-col.dislikes h4 { color: #d68a8a; }
-  .like-col ul { list-style: none; margin: 0; padding: 0; }
-  .like-col li {
-    position: relative;
-    padding: 4px 0 4px 18px;
-    font-family: "Cormorant Garamond", serif;
-    font-size: 1.04rem;
-    color: var(--ink-soft);
-    line-height: 1.4;
-  }
-  .like-col li::before {
-    content: "";
-    position: absolute;
-    left: 0; top: 12px;
-    width: 8px; height: 1px;
-    background: var(--gold-dim);
-  }
-  .like-col.dislikes li::before { background: #6e3030; }
+.card::before,.card::after{
+  content:"";position:absolute;width:10px;height:10px;background:var(--bg-deep);border:1px solid var(--gold-dim);transform:rotate(45deg);
+  transition:border-color 1.2s, background 1.2s;
+}
+body.broken .card::before, body.broken .card::after{border-color:var(--blood-deep)}
+.card::before{top:-5px;left:-5px}
+.card::after{top:-5px;right:-5px}
 
-  /* backstory */
-  .backstory {
-    display: grid;
-    grid-template-columns: 1.6fr 1fr;
-    gap: 28px;
-    align-items: start;
-  }
-  .story-text {
-    font-family: "Cormorant Garamond", serif;
-    font-size: 1.08rem;
-    color: var(--ink-soft);
-    line-height: 1.65;
-    max-width: 58ch;
-  }
-  .story-text p { margin: 0 0 12px; }
-  .story-text p.drop::first-letter {
-    font-family: "Cinzel", serif;
-    font-weight: 600;
-    font-size: 3.4em;
-    float: left;
-    line-height: 0.85;
-    padding: 4px 12px 0 0;
-    color: var(--gold);
-  }
-  .timeline {
-    border-left: 1px solid var(--gold-dim);
-    padding-left: 22px;
-    margin-left: 8px;
-  }
-  .tl-item { position: relative; margin-bottom: 22px; }
-  .tl-item::before {
-    content: "";
-    position: absolute;
-    left: -29px;
-    top: 6px;
-    width: 11px; height: 11px;
-    background: var(--bg-card);
-    border: 1px solid var(--gold-dim);
-    transform: rotate(45deg);
-  }
-  .tl-item.fall::before {
-    background: var(--blood);
-    border-color: var(--blood);
-    box-shadow: 0 0 12px rgba(176,26,26,0.6);
-  }
-  .tl-age {
-    font-family: "Cinzel", serif;
-    font-size: 0.68rem;
-    letter-spacing: 0.24em;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 4px;
-  }
-  .tl-event {
-    font-family: "Cormorant Garamond", serif;
-    color: var(--ink-soft);
-    font-size: 1.02rem;
-    line-height: 1.4;
-  }
+.card-title{font-family:"Cinzel",serif;letter-spacing:0.24em;text-transform:uppercase;font-size:0.72rem;color:var(--gold);margin-bottom:18px;display:flex;align-items:center;gap:10px;transition:color 1.2s}
+body.broken .card-title{color:var(--blood)}
+.card-title::before{content:"";width:8px;height:8px;border:1px solid currentColor;transform:rotate(45deg)}
+.card-title::after{content:"";flex:1;height:1px;background:linear-gradient(to right,var(--gold-deep),transparent)}
 
-  /* views tabs */
-  .viewstack {
-    display: grid;
-    grid-template-columns: 240px 1fr;
-    gap: 18px;
-  }
-  .view-tabs {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-  .view-tabs button {
-    background: transparent;
-    border: 1px solid var(--line);
-    color: var(--ink-mute);
-    padding: 10px 14px;
-    font-family: "Cinzel", serif;
-    font-size: 0.72rem;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    cursor: pointer;
-    text-align: left;
-    transition: all 0.25s;
-    position: relative;
-  }
-  .view-tabs button .vk {
-    font-family: "Cormorant Garamond", serif;
-    font-style: italic;
-    color: var(--ink-faint);
-    font-size: 0.92rem;
-    letter-spacing: normal;
-    text-transform: none;
-    margin-left: 6px;
-  }
-  .view-tabs button:hover { color: var(--ink); border-color: var(--gold-dim); }
-  .view-tabs button.active {
-    color: var(--gold);
-    border-color: var(--gold-dim);
-    background: rgba(201,164,92,0.06);
-  }
-  .view-tabs button.active::before {
-    content: "";
-    position: absolute;
-    left: -1px; top: -1px; bottom: -1px;
-    width: 3px;
-    background: var(--gold);
-  }
-  .view-art {
-    border: 1px solid var(--line);
-    background:
-      radial-gradient(ellipse at center 38%, rgba(40,40,50,0.5), transparent 65%),
-      #000;
-    position: relative;
-    overflow: hidden;
-    height: clamp(480px, 78vh, 860px);
-    aspect-ratio: 9 / 16;
-    justify-self: center;
-    max-width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .view-art .view-image {
-    display: block;
-    max-width: 100%;
-    max-height: 100%;
-    width: auto;
-    height: 100%;
-    object-fit: contain;
-    animation: viewfade 0.55s ease;
-  }
-  @keyframes viewfade {
-    from { opacity: 0; transform: translateY(8px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-  .view-art .legend {
-    position: absolute;
-    bottom: 10px; left: 14px; right: 14px;
-    display: flex;
-    justify-content: space-between;
-    font-family: "Cinzel", serif;
-    font-size: 0.62rem;
-    letter-spacing: 0.28em;
-    text-transform: uppercase;
-    color: var(--gold);
-    text-shadow: 0 1px 2px #000;
-  }
+/* ============ STATS LAYOUT ============ */
+.stats-row{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:18px;align-items:stretch}
 
-  /* oathbreaker reveal */
-  .ob-card {
-    position: relative;
-    overflow: hidden;
-    border: 1px solid var(--line);
-    background: var(--bg-card);
-    min-height: 360px;
-    display: grid;
-    grid-template-columns: 1.1fr 1fr;
-    gap: 0;
-  }
-  .ob-art {
-    background-color: #000;
-    background-image: url("assets/aurora-views.jpg");
-    background-repeat: no-repeat;
-    /* zoom into the lower-right region (Oathbreaker portrait) of the full sheet */
-    background-size: auto 260%;
-    background-position: 92% 78%;
-    position: relative;
-    overflow: hidden;
-    filter: contrast(1.05) saturate(0.9);
-    min-height: 460px;
-  }
-  .ob-art::after {
-    content: "";
-    position: absolute; inset: 0;
-    background: linear-gradient(90deg, transparent 40%, rgba(15,8,8,0.55) 78%, var(--bg-card) 100%);
-  }
-  .ob-body {
-    padding: 26px 28px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-  .ob-head {
-    font-family: "Cinzel", serif;
-    color: var(--blood);
-    letter-spacing: 0.28em;
-    text-transform: uppercase;
-    font-size: 0.78rem;
-    margin-bottom: 14px;
-  }
-  .ob-title {
-    font-family: "Cinzel", serif;
-    font-size: 1.9rem;
-    color: var(--ink);
-    letter-spacing: 0.08em;
-    margin-bottom: 12px;
-  }
-  .ob-body p {
-    color: var(--ink-soft);
-    font-family: "Cormorant Garamond", serif;
-    font-size: 1.06rem;
-    margin: 0 0 14px;
-  }
-  .ob-stats {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    margin-top: 8px;
-  }
-  .ob-stat {
-    padding: 10px 12px;
-    border: 1px solid #3a1818;
-    background: rgba(120,18,18,0.07);
-  }
-  .ob-stat .k {
-    font-family: "Cinzel", serif;
-    font-size: 0.58rem;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: var(--blood);
-  }
-  .ob-stat .v {
-    font-family: "Cinzel", serif;
-    color: var(--ink);
-    font-size: 0.95rem;
-    margin-top: 4px;
-  }
+.scores{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.score{
+  position:relative;aspect-ratio:1/1.15;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
+  background:radial-gradient(circle at center, rgba(214,182,106,0.10), transparent 70%), var(--bg-card);
+  border:1px solid var(--line);
+  clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);
+  transition:border-color 1.2s, background 1.2s;
+}
+body.broken .score{
+  background:radial-gradient(circle at center, rgba(196,26,26,0.12), transparent 70%), var(--bg-card);
+}
+.score .ab{font-family:"Cinzel",serif;font-size:0.55rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);transition:color 1.2s}
+body.broken .score .ab{color:var(--blood)}
+.score .mod{font-family:"Cinzel Decorative",serif;font-weight:700;font-size:1.7rem;color:var(--ink);line-height:1;margin:5px 0 2px}
+.score .sc{font-family:"Cinzel",serif;font-size:0.72rem;color:var(--ink-mute)}
 
-  /* footer quote */
-  .quote-block {
-    margin-top: 36px;
-    text-align: center;
-    padding: 36px 24px;
-    border-top: 1px solid var(--line);
-    border-bottom: 1px solid var(--line);
-    background: linear-gradient(180deg, transparent, rgba(0,0,0,0.4));
-  }
-  .quote {
-    font-family: "Cormorant Garamond", serif;
-    font-style: italic;
-    font-size: 1.7rem;
-    color: var(--ink-soft);
-    max-width: 720px;
-    margin: 0 auto;
-    line-height: 1.4;
-    letter-spacing: 0.02em;
-  }
-  body.oathbreaker .quote { color: #e8c4c4; }
-  .quote .blood { color: var(--blood); font-style: normal; font-family: "Cinzel", serif; letter-spacing: 0.2em; text-transform: uppercase; font-size: 0.82em; }
-  .quote-attribution {
-    margin-top: 16px;
-    font-family: "Cinzel", serif;
-    text-transform: uppercase;
-    letter-spacing: 0.36em;
-    font-size: 0.62rem;
-    color: var(--gold);
-  }
-  .colophon {
-    margin-top: 28px;
-    text-align: center;
-    font-family: "Cinzel", serif;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    font-size: 0.58rem;
-    color: var(--ink-faint);
-  }
+.combat-strip{margin-top:18px;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding-top:14px;border-top:1px solid var(--line-soft)}
+.cmb{text-align:center}
+.cmb .k{font-family:"Cinzel",serif;letter-spacing:0.22em;text-transform:uppercase;font-size:0.55rem;color:var(--gold);transition:color 1.2s}
+body.broken .cmb .k{color:var(--blood)}
+.cmb .v{font-family:"Cinzel",serif;font-size:1.3rem;color:var(--ink);margin-top:3px}
 
-  /* compass star ornament */
-  .ornament {
-    width: 28px;
-    height: 28px;
-    flex-shrink: 0;
-  }
-  .ornament path, .ornament line, .ornament circle { stroke: var(--gold); fill: none; stroke-width: 1; }
+/* skill list */
+.skill-list{margin:0;padding:0;list-style:none}
+.skill-list li{
+  display:flex;align-items:center;gap:10px;
+  padding:5px 0;border-bottom:1px dashed var(--line-soft);
+  font-size:0.95rem;color:var(--ink-soft);
+}
+.pip{width:9px;height:9px;border:1px solid var(--gold-dim);transform:rotate(45deg);flex-shrink:0;transition:background 1.2s,border-color 1.2s}
+.pip.filled{background:var(--gold);border-color:var(--gold)}
+.pip.expert{background:var(--gold);border-color:var(--gold);box-shadow:inset 0 0 0 2px var(--bg-card)}
+body.broken .pip.filled, body.broken .pip.expert{background:var(--blood);border-color:var(--blood)}
+.skill-list li .nm{flex:1}
+.skill-list li .md{font-family:"Cinzel",serif;font-size:0.72rem;color:var(--ink);letter-spacing:0.06em;min-width:28px;text-align:right}
 
-  body.oathbreaker .pip.filled,
-  body.oathbreaker .pip.expert { background: var(--blood); border-color: var(--blood); }
-  body.oathbreaker .ornament path,
-  body.oathbreaker .ornament line,
-  body.oathbreaker .ornament circle { stroke: var(--blood); }
-  body.oathbreaker .smallcaps,
-  body.oathbreaker .card .label,
-  body.oathbreaker .quickbar .qkey,
-  body.oathbreaker .ability .ab-name,
-  body.oathbreaker .stat-tile .sk,
-  body.oathbreaker .eq-glyph,
-  body.oathbreaker .like-col h4,
-  body.oathbreaker .tl-age,
-  body.oathbreaker .view-tabs button.active,
-  body.oathbreaker .view-art .legend,
-  body.oathbreaker .quote-attribution {
-    color: var(--blood);
-  }
-  body.oathbreaker .ability,
-  body.oathbreaker .stat-tile { border-color: #3a1818; }
-  body.oathbreaker .story-text p.drop::first-letter { color: var(--blood); }
+/* oath feature list */
+.feat-list{margin:0;padding:0;list-style:none;font-size:0.95rem}
+.feat-list li{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:7px 0;border-bottom:1px dashed var(--line-soft);
+  color:var(--ink-soft);
+}
+.feat-list li em{color:var(--ink-mute)}
 
-  /* sections */
-  section { margin-bottom: 32px; }
-  section > .sec-head {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    margin-bottom: 18px;
-    flex-wrap: wrap;
-  }
-  section > .sec-head .sec-title {
-    font-family: "Cinzel", serif;
-    font-size: clamp(1.05rem, 1.8vw, 1.4rem);
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--ink);
-  }
-  section > .sec-head .num {
-    font-family: "Cinzel", serif;
-    color: var(--gold);
-    font-size: 0.7rem;
-    letter-spacing: 0.3em;
-  }
-  section > .sec-head .seal-line {
-    flex: 1;
-    min-width: 40px;
-    height: 1px;
-    background: linear-gradient(to right, var(--gold-dim), transparent);
-  }
+/* ============ EQUIPMENT (medallion grid) ============ */
+.eq-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.eq-cell{
+  display:flex;flex-direction:column;align-items:center;text-align:center;
+  padding:18px 12px;border:1px solid var(--line);background:var(--bg-card-2);
+  transition:border-color .3s,transform .3s;
+}
+.eq-cell.hero{grid-column:span 2;background:linear-gradient(135deg, rgba(214,182,106,0.08), transparent), var(--bg-card-2)}
+.eq-cell:hover{border-color:var(--gold-dim);transform:translateY(-2px)}
+.eq-cell .gl{
+  width:46px;height:46px;display:grid;place-items:center;color:var(--gold);
+  border:1px solid var(--gold-dim);background:var(--bg-deep);
+  margin-bottom:10px;
+  transition:color 1.2s,border-color 1.2s;
+}
+body.broken .eq-cell .gl{color:var(--blood);border-color:var(--blood-deep)}
+.eq-cell .gl svg{width:24px;height:24px}
+.eq-cell .nm{font-family:"Cinzel",serif;letter-spacing:0.14em;text-transform:uppercase;font-size:0.7rem;color:var(--ink);line-height:1.3;margin-bottom:3px}
+.eq-cell .mt{font-family:"Cormorant Garamond",serif;font-style:italic;color:var(--ink-mute);font-size:0.86rem;line-height:1.35}
 
-  /* =================== RESPONSIVE =================== */
-  @media (max-width: 1024px) {
-    .grid {
-      grid-template-columns: 1fr 1fr;
-    }
-    .grid .card.span-2 { grid-column: span 2; }
-  }
+/* ============ HEART (likes / dislikes) ============ */
+.dual{display:grid;grid-template-columns:1fr 1fr;gap:36px;align-items:start}
+.dual h4{font-family:"Cinzel",serif;letter-spacing:0.24em;text-transform:uppercase;font-size:0.76rem;color:var(--gold);margin:0 0 14px;padding-bottom:10px;border-bottom:1px solid var(--line);transition:color 1.2s}
+body.broken .dual h4{color:var(--blood)}
+.dual.refuse h4{color:#d68a8a}
+.dual ul{margin:0;padding:0;list-style:none}
+.dual li{padding:6px 0 6px 18px;position:relative;color:var(--ink-soft);font-size:1rem;line-height:1.45}
+.dual li::before{content:"";position:absolute;left:0;top:14px;width:10px;height:1px;background:var(--gold-dim);transition:background 1.2s}
+body.broken .dual li::before{background:var(--blood-deep)}
+.dual.refuse li::before{background:#6e3030}
 
-  @media (max-width: 880px) {
-    .masthead {
-      grid-template-columns: 1fr;
-    }
-    .portrait { aspect-ratio: 4 / 5; max-width: 460px; margin: 0 auto; width: 100%; }
-    .titleblock { padding-left: 0; text-align: center; }
-    .titleblock .seal { justify-content: center; }
-    .quickbar { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-    .oathtoggle { align-self: center; margin-left: auto; margin-right: auto; }
+/* ============ BACKSTORY + TIMELINE ============ */
+.story{display:grid;grid-template-columns:1.5fr 1fr;gap:36px;align-items:start}
+.story-text{font-family:"Cormorant Garamond",serif;font-size:1.08rem;color:var(--ink-soft);line-height:1.7;max-width:58ch}
+.story-text p{margin:0 0 14px}
+.story-text p:first-child::first-letter{font-family:"Cinzel Decorative",serif;font-weight:700;font-size:3.6em;float:left;line-height:0.85;padding:4px 12px 0 0;color:var(--gold);transition:color 1.2s}
+body.broken .story-text p:first-child::first-letter{color:var(--blood)}
 
-    .viewstack {
-      grid-template-columns: 1fr;
-    }
-    .view-art {
-      width: 100%;
-      max-width: 480px;
-      justify-self: center;
-      height: auto;
-      aspect-ratio: 9 / 16;
-    }
-    .view-tabs {
-      flex-direction: row;
-      flex-wrap: wrap;
-    }
-    .view-tabs button { flex: 1 1 calc(50% - 4px); }
-    .view-tabs button.active::before { display: none; }
+.timeline{border-left:1px solid var(--gold-dim);padding-left:22px;transition:border-color 1.2s}
+body.broken .timeline{border-color:var(--blood-deep)}
+.tl-item{position:relative;margin-bottom:20px}
+.tl-item::before{content:"";position:absolute;left:-29px;top:6px;width:11px;height:11px;background:var(--bg-card);border:1px solid var(--gold-dim);transform:rotate(45deg);transition:background 1.2s,border-color 1.2s}
+.tl-item.fall::before{background:var(--blood);border-color:var(--blood);box-shadow:0 0 12px rgba(196,26,26,0.6)}
+.tl-age{font-family:"Cinzel",serif;letter-spacing:0.24em;text-transform:uppercase;font-size:0.68rem;color:var(--gold);margin-bottom:4px;transition:color 1.2s}
+body.broken .tl-age{color:var(--blood)}
+.tl-event{font-family:"Cormorant Garamond",serif;color:var(--ink-soft);font-size:1.02rem;line-height:1.45}
 
-    .backstory {
-      grid-template-columns: 1fr;
-      gap: 24px;
-    }
+/* ============ OATHBREAKER CARD ============ */
+.fall-card{
+  display:grid;grid-template-columns:1.05fr 1fr;gap:0;
+  border:1px solid var(--line);background:var(--bg-card);
+  position:relative;overflow:hidden;min-height:380px;
+  transition:border-color 1.2s, background 1.2s;
+}
+body.broken .fall-card{border-color:#3a1010}
+.fall-art{
+  background-color:#000;
+  background-image:url("assets/aurora-portrait.jpg");
+  background-repeat:no-repeat;background-size:cover;background-position:center 8%;
+  filter:contrast(1.08) saturate(0.95);position:relative;min-height:380px;
+  transition:filter 1.2s;
+}
+body.broken .fall-art{filter:contrast(1.18) saturate(0.85) hue-rotate(-12deg) brightness(0.9)}
+.fall-art::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(90deg, transparent 30%, rgba(20,8,8,0.55) 70%, var(--bg-card) 100%);
+}
+.fall-body{padding:30px 32px;display:flex;flex-direction:column;justify-content:center}
+.fall-head{font-family:"Cinzel",serif;letter-spacing:0.3em;text-transform:uppercase;font-size:0.74rem;color:var(--blood);margin-bottom:14px}
+.fall-title{font-family:"Cinzel Decorative",serif;font-size:2rem;color:var(--ink);letter-spacing:0.06em;margin-bottom:14px}
+.fall-body p{color:var(--ink-soft);font-size:1.05rem;line-height:1.5;margin:0 0 14px}
+.fall-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px}
+.fall-stat{padding:10px 14px;border:1px solid #3a1010;background:rgba(122,10,10,0.08)}
+.fall-stat .k{font-family:"Cinzel",serif;letter-spacing:0.22em;text-transform:uppercase;font-size:0.58rem;color:var(--blood)}
+.fall-stat .v{font-family:"Cinzel",serif;color:var(--ink);font-size:0.96rem;margin-top:4px}
 
-    .ob-card {
-      grid-template-columns: 1fr;
-    }
-    .ob-art { min-height: 320px; background-size: auto 200% !important; background-position: center 30% !important; }
-    .ob-art::after {
-      background: linear-gradient(180deg, transparent 50%, rgba(15,8,8,0.55) 85%, var(--bg-card) 100%) !important;
-    }
-  }
+/* ============ ENDING ============ */
+.end-block{
+  margin-top:80px;padding:60px 24px;text-align:center;
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  position:relative;background:linear-gradient(180deg, transparent, rgba(0,0,0,0.4));
+  transition:border-color 1.2s;
+}
+body.broken .end-block{border-color:#3a1010}
+.end-q{font-family:"Cinzel Decorative",serif;font-weight:400;font-size:2rem;line-height:1.4;color:var(--ink);max-width:720px;margin:0 auto;
+  background:linear-gradient(180deg,#fff5d0 0%,#e8e6f0 50%,#a8b0c8 100%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;
+  transition:background 1.2s;
+}
+body.broken .end-q{
+  background:linear-gradient(180deg,#fff5d0 0%,#f0c8c8 40%,#7a0a0a 100%);-webkit-background-clip:text;background-clip:text;
+}
+.end-q .bld{color:var(--blood);-webkit-text-fill-color:var(--blood);font-family:"Cinzel",serif;letter-spacing:0.2em;font-size:0.82em;text-transform:uppercase}
+.end-attr{margin-top:16px;font-family:"Cinzel",serif;letter-spacing:0.34em;text-transform:uppercase;font-size:0.62rem;color:var(--gold);transition:color 1.2s}
+body.broken .end-attr{color:var(--blood)}
 
-  @media (max-width: 680px) {
-    .grid {
-      grid-template-columns: 1fr;
-    }
-    .grid .card.span-2,
-    .grid .card.span-3 { grid-column: span 1; }
+.colophon{margin-top:30px;text-align:center;font-family:"Cinzel",serif;letter-spacing:0.3em;text-transform:uppercase;font-size:0.58rem;color:var(--ink-faint)}
 
-    .equipment-grid {
-      grid-template-columns: 1fr;
-    }
-    .equipment-grid .eq-item.hero { grid-column: span 1; }
+/* ============ ASPECT VIEWS ============ */
+.views-strip{
+  position:relative;
+  margin:32px -32px;
+  background:#000;border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  display:grid;grid-template-columns:repeat(4,1fr);gap:0;
+}
+.view-cell{position:relative;aspect-ratio:9/16;overflow:hidden;cursor:pointer;background:#000;transition:opacity .4s}
+.view-cell img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:contrast(1.05) saturate(0.95);transition:transform .6s, filter 1.2s}
+.view-cell:hover img{transform:scale(1.06)}
+.view-cell:hover{box-shadow:inset 0 0 0 1px var(--gold)}
+body.broken .view-cell img{filter:contrast(1.12) saturate(0.88) hue-rotate(-6deg) brightness(0.94)}
+.view-cell::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg, transparent 60%, rgba(0,0,0,0.7) 100%);pointer-events:none}
+.view-cell .lbl{
+  position:absolute;left:0;right:0;bottom:14px;text-align:center;
+  font-family:"Cinzel",serif;letter-spacing:0.26em;text-transform:uppercase;font-size:0.62rem;color:var(--gold);z-index:2;
+  text-shadow:0 1px 4px #000;transition:color 1.2s;
+}
+body.broken .view-cell .lbl{color:#ffb4b4}
 
-    .like-grid {
-      grid-template-columns: 1fr;
-      gap: 24px;
-    }
-
-    .name { font-size: clamp(40px, 11vw, 64px) !important; }
-    .subtitle { font-size: 0.74rem !important; letter-spacing: 0.22em !important; }
-
-    .quickbar { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .quickbar .qcell:nth-child(2) { border-right: none; }
-    .quickbar .qcell:nth-child(1),
-    .quickbar .qcell:nth-child(2) { border-bottom: 1px solid var(--line-soft); }
-
-    .combat-row {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-    .abilities {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 8px;
-    }
-    .ability .ab-mod { font-size: 1.7rem; }
-
-    .card { padding: 18px 16px; }
-
-    .palette { grid-template-columns: repeat(4, 1fr); }
-
-    .view-tabs button { flex: 1 1 calc(50% - 4px); font-size: 0.66rem; padding: 9px 10px; }
-
-    .ob-stats { grid-template-columns: 1fr; }
-
-    .quote { font-size: 1.3rem; }
-  }
-
-  @media (max-width: 420px) {
-    .abilities { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .palette { grid-template-columns: repeat(4, 1fr); }
-    .view-tabs button { flex: 1 1 100%; }
-  }
+/* ============ RESPONSIVE ============ */
+@media (max-width:1024px){
+  .altar-stage{grid-template-columns:1fr;gap:36px;max-width:520px}
+  .altar .glass-frame{margin:0 auto;max-width:420px}
+  .altar .arch-svg{display:none}
+  .altar-wing-l{text-align:center;order:2}
+  .altar-wing-r{text-align:center;order:3}
+  .altar-wing-l .kicker,.altar-wing-r .kicker{text-align:center}
+  .altar-wing-l .kicker::after,.altar-wing-r .kicker::before{display:none}
+  .altar-quote, .altar-wing-r .altar-quote{padding:0;border:none;margin:24px auto 0}
+  .stats-row{grid-template-columns:1fr}
+  .story{grid-template-columns:1fr;gap:24px}
+  .fall-card{grid-template-columns:1fr}
+  .fall-art{min-height:300px;background-position:center 5%}
+  .fall-art::after{background:linear-gradient(180deg, transparent 55%, rgba(20,8,8,0.55) 85%, var(--bg-card) 100%)}
+  .views-strip{margin:24px -16px}
+}
+@media (max-width:680px){
+  .altar{padding:90px 16px 56px}
+  .codex{padding:24px 16px 48px}
+  .eq-grid{grid-template-columns:repeat(2,1fr)}
+  .eq-cell.hero{grid-column:span 2}
+  .dual{grid-template-columns:1fr;gap:24px}
+  .views-strip{grid-template-columns:repeat(2,1fr)}
+  .sec-num{font-size:2.8rem}
+  .sec-title{font-size:1.6rem}
+  .scores{grid-template-columns:repeat(3,1fr)}
+  .combat-strip{grid-template-columns:repeat(2,1fr);gap:12px}
+  .oath-toggle{right:10px;top:60px}
+  .oath-toggle button{padding:8px 12px;font-size:0.58rem;letter-spacing:0.18em}
+}
+@media (max-width:420px){
+  .end-q{font-size:1.4rem}
+  .altar-name{font-size:42px}
+}
 </style>
 </head>
 <body>
-  <div id="root"></div>
 
-  <a href="index.html" style="
-      position: fixed;
-      top: 22px; left: 22px;
-      z-index: 200;
-      font-family: 'Cinzel', serif;
-      font-size: 0.62rem;
-      letter-spacing: 0.32em;
-      text-transform: uppercase;
-      color: #c9a45c;
-      text-decoration: none;
-      padding: 8px 14px;
-      border: 1px solid #8a6f3a;
-      background: rgba(7,7,10,0.75);
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      backdrop-filter: blur(4px);
-      transition: gap 0.3s, border-color 0.3s, color 0.3s;
-    "
-    onmouseover="this.style.gap='16px'; this.style.borderColor='#c9a45c'; this.style.color='#e8e2cf'"
-    onmouseout="this.style.gap='10px'; this.style.borderColor='#8a6f3a'; this.style.color='#c9a45c'">
-    <span style="width:16px; height:1px; background:currentColor; position:relative; display:inline-block;">
-      <span style="position:absolute; left:0; top:-3px; width:7px; height:7px; border-top:1px solid currentColor; border-left:1px solid currentColor; transform:rotate(-45deg); display:block;"></span>
-    </span>
-    Back to Codex
-  </a>
+<a class="back-link" href="index.html"><span class="arr"></span>Back to Codex</a>
 
-  <script type="text/babel" data-presets="env,react">
+<div class="oath-toggle" role="tablist" aria-label="oath state">
+  <button id="btn-keeper" class="active">Oath · Kept</button>
+  <div class="divider"></div>
+  <button id="btn-broken" class="broken">Oath · Broken</button>
+</div>
 
+<!-- ============ ALTAR ============ -->
+<section class="altar">
+  <div class="rays" aria-hidden="true"></div>
+  <div class="altar-stage">
 
-const { useState, useEffect, useMemo } = React;
+    <div class="altar-wing-l">
+      <div class="kicker">Folio · I · Veiled Watch</div>
+      <h1 class="altar-name">Aurora<br/>Elaris</h1>
+      <div class="altar-sub">Wood&nbsp;Elf <span class="sep">·</span> Paladin <span class="sep">·</span> Vengeance</div>
+      <div class="altar-epi">on the edge of breaking into <span class="ob">Oathbreaker</span>.</div>
+      <div class="altar-quote">"The chapel is silent. Her sword is not yet drawn."</div>
+    </div>
 
-// ----- compass / star ornament SVGs (simple geometric) -----
-const CompassStar = ({ size = 28 }) =>
-<svg className="ornament" viewBox="0 0 60 60" width={size} height={size}>
-      <circle cx="30" cy="30" r="26" />
-      <circle cx="30" cy="30" r="14" />
-      <path d="M30 4 L34 30 L30 56 L26 30 Z" fill="currentColor" stroke="none" style={{ opacity: 0.18 }} />
-      <line x1="30" y1="2" x2="30" y2="58" />
-      <line x1="2" y1="30" x2="58" y2="30" />
-      <line x1="10" y1="10" x2="50" y2="50" />
-      <line x1="50" y1="10" x2="10" y2="50" />
-      <circle cx="30" cy="30" r="2.5" fill="currentColor" stroke="none" />
-    </svg>;
+    <div class="glass-frame">
+      <img src="assets/aurora-portrait.jpg" alt="Aurora Elaris" />
+      <svg class="arch-svg" viewBox="0 0 520 920" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true">
+        <path d="M30 60 Q30 30 60 30 L460 30 Q490 30 490 60 L490 880 L30 880 Z"/>
+        <path d="M60 60 Q60 0 260 0 Q460 0 460 60"/>
+        <!-- mullion -->
+        <line x1="260" y1="0" x2="260" y2="880" stroke-dasharray="2 4" opacity="0.5"/>
+        <!-- horizontal bands -->
+        <line x1="30" y1="220" x2="490" y2="220" opacity="0.5"/>
+        <line x1="30" y1="480" x2="490" y2="480" opacity="0.5"/>
+        <line x1="30" y1="700" x2="490" y2="700" opacity="0.5"/>
+        <!-- corner trim diamonds -->
+        <g fill="currentColor"><circle cx="60" cy="60" r="3"/><circle cx="460" cy="60" r="3"/><circle cx="60" cy="880" r="3"/><circle cx="460" cy="880" r="3"/></g>
+      </svg>
+    </div>
 
+    <div class="altar-wing-r">
+      <div class="kicker">Codex · I · 200 a.r.</div>
+      <h2 style="font-family:'Cinzel Decorative',serif;font-size:1.6rem;color:var(--ink);letter-spacing:0.04em;margin:0;line-height:1.1">Of the Ice Queen<br/><span style="color:var(--gold);font-style:italic;font-family:'Cormorant Garamond',serif;font-weight:400">of Caelthwyn</span></h2>
+      <div class="altar-quote">"If justice requires sin, then I will become the sinner."</div>
 
-const Diamond = ({ size = 10 }) =>
-<span style={{
-  display: "inline-block", width: size, height: size,
-  border: "1px solid var(--gold-dim)",
-  transform: "rotate(45deg)"
-}} />;
+      <div class="altar-stats">
+        <div class="cell"><div class="k">Race</div><div class="v">Wood Elf</div></div>
+        <div class="cell"><div class="k">Age</div><div class="v">200 yrs</div></div>
+        <div class="cell"><div class="k">Height</div><div class="v">175 cm</div></div>
+        <div class="cell"><div class="k">Weight</div><div class="v">55 kg</div></div>
+        <div class="cell"><div class="k">Order</div><div class="v">Veiled Watch</div></div>
+        <div class="cell"><div class="k">Alignment</div><div class="v">Lawful · Falling</div></div>
+      </div>
+    </div>
 
+  </div>
+</section>
 
-// ----- equipment glyphs (very simple) -----
-const Glyph = ({ kind }) => {
-  const props = { fill: "none", stroke: "currentColor", strokeWidth: 1.2, strokeLinecap: "round", strokeLinejoin: "round" };
-  switch (kind) {
-    case "sword":
-      return <svg viewBox="0 0 24 24" width="22" height="22" {...props}>
-          <path d="M12 2 L12 16 M9 16 H15 M10 16 V19 H14 V16 M11 19 V22 H13 V19" />
-          <path d="M7 5 L12 2 L17 5" />
-        </svg>;
-    case "amulet":
-      return <svg viewBox="0 0 24 24" width="22" height="22" {...props}>
-          <path d="M4 3 L12 8 L20 3" />
-          <circle cx="12" cy="15" r="6" />
-          <line x1="12" y1="9" x2="12" y2="21" />
-          <line x1="6" y1="15" x2="18" y2="15" />
-        </svg>;
-    case "armor":
-      return <svg viewBox="0 0 24 24" width="22" height="22" {...props}>
-          <path d="M5 4 L12 6 L19 4 V14 C19 18 16 21 12 22 C8 21 5 18 5 14 Z" />
-          <path d="M12 6 V22" />
-          <path d="M5 10 H19" />
-        </svg>;
-    case "potion":
-      return <svg viewBox="0 0 24 24" width="22" height="22" {...props}>
-          <path d="M10 2 H14 V6 L17 11 V20 A2 2 0 0 1 15 22 H9 A2 2 0 0 1 7 20 V11 Z" />
-          <line x1="7" y1="14" x2="17" y2="14" />
-        </svg>;
-    case "pack":
-      return <svg viewBox="0 0 24 24" width="22" height="22" {...props}>
-          <path d="M8 5 V3 H16 V5 M5 5 H19 V21 H5 Z" />
-          <line x1="9" y1="11" x2="15" y2="11" />
-        </svg>;
-    case "bedroll":
-      return <svg viewBox="0 0 24 24" width="22" height="22" {...props}>
-          <ellipse cx="12" cy="12" rx="9" ry="3" />
-          <ellipse cx="12" cy="12" rx="5" ry="1.5" />
-        </svg>;
-    case "lantern":
-      return <svg viewBox="0 0 24 24" width="22" height="22" {...props}>
-          <path d="M12 2 V4 M9 4 H15 V6 H9 Z" />
-          <path d="M8 6 L7 9 V18 A2 2 0 0 0 9 20 H15 A2 2 0 0 0 17 18 V9 L16 6" />
-          <circle cx="12" cy="13" r="2" />
-        </svg>;
-    case "tinder":
-      return <svg viewBox="0 0 24 24" width="22" height="22" {...props}>
-          <rect x="4" y="7" width="16" height="11" />
-          <line x1="4" y1="11" x2="20" y2="11" />
-          <path d="M10 14 L12 17 L14 14" />
-        </svg>;
-    default:return null;
-  }
-};
+<!-- ============ CODEX BODY ============ -->
+<div class="codex">
 
-// ----- data -----
-const abilities = [
-{ code: "STR", score: 16, mod: "+3" },
-{ code: "DEX", score: 12, mod: "+1" },
-{ code: "CON", score: 15, mod: "+2" },
-{ code: "INT", score: 11, mod: "+0" },
-{ code: "WIS", score: 14, mod: "+2" },
-{ code: "CHA", score: 17, mod: "+3" }];
+  <!-- =========== STATS / ABILITIES =========== -->
+  <section class="sec">
+    <div class="sec-head">
+      <div class="sec-num">I</div>
+      <div class="sec-meta">
+        <div class="sec-tag">The Vow's Inventory</div>
+        <div class="sec-title">Of Body, Skill &amp; Vow</div>
+      </div>
+      <div class="sec-rule"></div>
+    </div>
 
+    <div class="stats-row">
 
-const skills = [
-{ name: "Athletics", mod: "+6", level: 2 },
-{ name: "Insight", mod: "+5", level: 2 },
-{ name: "Intimidation", mod: "+6", level: 1 },
-{ name: "Investigation", mod: "+3", level: 1 },
-{ name: "Perception", mod: "+5", level: 2 },
-{ name: "Persuasion", mod: "+6", level: 1 },
-{ name: "Religion", mod: "+3", level: 1 },
-{ name: "Stealth", mod: "+4", level: 1 }];
+      <div class="card">
+        <div class="card-title">Ability &amp; Combat</div>
+        <div class="scores">
+          <div class="score"><div class="ab">STR</div><div class="mod">+3</div><div class="sc">16</div></div>
+          <div class="score"><div class="ab">DEX</div><div class="mod">+1</div><div class="sc">12</div></div>
+          <div class="score"><div class="ab">CON</div><div class="mod">+2</div><div class="sc">15</div></div>
+          <div class="score"><div class="ab">INT</div><div class="mod">+0</div><div class="sc">11</div></div>
+          <div class="score"><div class="ab">WIS</div><div class="mod">+2</div><div class="sc">14</div></div>
+          <div class="score"><div class="ab">CHA</div><div class="mod">+3</div><div class="sc">17</div></div>
+        </div>
+        <div class="combat-strip">
+          <div class="cmb"><div class="k">AC</div><div class="v">18</div></div>
+          <div class="cmb"><div class="k">HP</div><div class="v">98</div></div>
+          <div class="cmb"><div class="k">Init</div><div class="v">+1</div></div>
+          <div class="cmb"><div class="k">Spd</div><div class="v">30</div></div>
+        </div>
+      </div>
 
+      <div class="card">
+        <div class="card-title">Proficient Skills</div>
+        <ul class="skill-list">
+          <li><span class="pip expert"></span><span class="nm">Athletics</span><span class="md">+6</span></li>
+          <li><span class="pip expert"></span><span class="nm">Insight</span><span class="md">+5</span></li>
+          <li><span class="pip filled"></span><span class="nm">Intimidation</span><span class="md">+6</span></li>
+          <li><span class="pip filled"></span><span class="nm">Investigation</span><span class="md">+3</span></li>
+          <li><span class="pip expert"></span><span class="nm">Perception</span><span class="md">+5</span></li>
+          <li><span class="pip filled"></span><span class="nm">Persuasion</span><span class="md">+6</span></li>
+          <li><span class="pip filled"></span><span class="nm">Religion</span><span class="md">+3</span></li>
+          <li><span class="pip filled"></span><span class="nm">Stealth</span><span class="md">+4</span></li>
+        </ul>
+      </div>
 
-const palette = [
-{ c: "#e6e2d4", n: "Bone" },
-{ c: "#7a7a80", n: "Pewter" },
-{ c: "#3a4258", n: "Storm" },
-{ c: "#1a2540", n: "Cobalt" },
-{ c: "#0c0c12", n: "Ink" },
-{ c: "#2d2218", n: "Pitch" },
-{ c: "#b0883a", n: "Aureate" },
-{ c: "#8b1a1a", n: "Vow-Blood" }];
+      <div class="card">
+        <div class="card-title">Oath of Vengeance</div>
+        <p style="margin:0 0 14px;font-style:italic;color:var(--ink-soft);font-size:0.98rem">"Fight the greater evil. Show no mercy to the wicked. By any means."</p>
+        <ul class="feat-list">
+          <li><span>Abjure Enemy</span><em>1 / rest</em></li>
+          <li><span>Vow of Enmity</span><em>BA · 1 min</em></li>
+          <li><span>Relentless Avenger</span><em>passive</em></li>
+          <li><span>Soul of Vengeance</span><em>reaction</em></li>
+          <li><span>Avenging Angel</span><em>1 hr · once</em></li>
+        </ul>
+      </div>
 
+    </div>
+  </section>
 
-const equipment = [
-{ kind: "sword", name: "Greatsword of Justice", meta: "2d6 slashing · radiant brand · attuned", hero: true },
-{ kind: "amulet", name: "Helm Pendant", meta: "holy symbol of the All-Seeing Watcher" },
-{ kind: "armor", name: "Chain Mail", meta: "granted by the Church of Helm" },
-{ kind: "potion", name: "Holy Water", meta: "1 bottle · 2d6 radiant vs. undead" },
-{ kind: "pack", name: "Traveler's Kit", meta: "7 days rations · waterskin · rope" },
-{ kind: "bedroll", name: "Bedroll", meta: "wool over oiled canvas" },
-{ kind: "lantern", name: "Hooded Lantern", meta: "6 hours per flask" },
-{ kind: "tinder", name: "Tinder Box", meta: "flint · char-cloth · steel" }];
+  <!-- =========== ASPECT VIEWS =========== -->
+  <section class="sec">
+    <div class="sec-head">
+      <div class="sec-num">II</div>
+      <div class="sec-meta">
+        <div class="sec-tag">Plate I—IV</div>
+        <div class="sec-title">Aspect &amp; Bearing</div>
+      </div>
+      <div class="sec-rule"></div>
+    </div>
 
+    <div class="views-strip">
+      <div class="view-cell"><img src="assets/aurora-front.jpg" alt="front"><span class="lbl">Front · 01</span></div>
+      <div class="view-cell"><img src="assets/aurora-three.jpg" alt="three-quarter"><span class="lbl">3/4 · 02</span></div>
+      <div class="view-cell"><img src="assets/aurora-side.jpg" alt="side"><span class="lbl">Side · 03</span></div>
+      <div class="view-cell"><img src="assets/aurora-back.jpg" alt="back"><span class="lbl">Back · 04</span></div>
+    </div>
+    <div style="margin-top:18px;text-align:center;font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--ink-mute);font-size:0.98rem">
+      Plate-and-mail of the Veiled Watch, embroidered with cobalt-thread sigils of Helm. The greatsword <em style="color:var(--ink-soft)">Iustitia</em> hangs always at her hip.
+    </div>
+  </section>
 
-const likes = [
-"Justice, righteousness, protecting the weak.",
-"Silence and solitude for prayer.",
-"Sharing stories of her faith with those she trusts.",
-"Kaelen — her first and only love."];
+  <!-- =========== EQUIPMENT =========== -->
+  <section class="sec">
+    <div class="sec-head">
+      <div class="sec-num">III</div>
+      <div class="sec-meta">
+        <div class="sec-tag">Implements of Office</div>
+        <div class="sec-title">What She Carries Into the Chapel</div>
+      </div>
+      <div class="sec-rule"></div>
+    </div>
 
-const dislikes = [
-"The undead, and all that opposes Helm.",
-"Injustice and discrimination.",
-"Lies and betrayal.",
-"The abuse of power."];
+    <div class="card">
+      <div class="eq-grid">
+        <div class="eq-cell hero">
+          <div class="gl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 2 L12 16 M9 16 H15 M10 16 V19 H14 V16 M11 19 V22 H13 V19"/><path d="M7 5 L12 2 L17 5"/></svg></div>
+          <div class="nm">Iustitia — Greatsword of Justice</div>
+          <div class="mt">2d6 slashing · radiant brand · attuned</div>
+        </div>
+        <div class="eq-cell">
+          <div class="gl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4 3 L12 8 L20 3"/><circle cx="12" cy="15" r="6"/><line x1="12" y1="9" x2="12" y2="21"/><line x1="6" y1="15" x2="18" y2="15"/></svg></div>
+          <div class="nm">Helm Pendant</div>
+          <div class="mt">holy symbol of the All-Seeing Watcher</div>
+        </div>
+        <div class="eq-cell">
+          <div class="gl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M5 4 L12 6 L19 4 V14 C19 18 16 21 12 22 C8 21 5 18 5 14 Z"/><path d="M12 6 V22"/><path d="M5 10 H19"/></svg></div>
+          <div class="nm">Chain Mail</div>
+          <div class="mt">granted by the Church of Helm</div>
+        </div>
+        <div class="eq-cell">
+          <div class="gl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M10 2 H14 V6 L17 11 V20 A2 2 0 0 1 15 22 H9 A2 2 0 0 1 7 20 V11 Z"/><line x1="7" y1="14" x2="17" y2="14"/></svg></div>
+          <div class="nm">Holy Water</div>
+          <div class="mt">1 bottle · 2d6 radiant vs. undead</div>
+        </div>
+        <div class="eq-cell">
+          <div class="gl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 5 V3 H16 V5 M5 5 H19 V21 H5 Z"/><line x1="9" y1="11" x2="15" y2="11"/></svg></div>
+          <div class="nm">Traveler's Kit</div>
+          <div class="mt">7 days rations · waterskin · rope</div>
+        </div>
+        <div class="eq-cell">
+          <div class="gl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><ellipse cx="12" cy="12" rx="9" ry="3"/><ellipse cx="12" cy="12" rx="5" ry="1.5"/></svg></div>
+          <div class="nm">Bedroll</div>
+          <div class="mt">wool over oiled canvas</div>
+        </div>
+        <div class="eq-cell">
+          <div class="gl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 2 V4 M9 4 H15 V6 H9 Z"/><path d="M8 6 L7 9 V18 A2 2 0 0 0 9 20 H15 A2 2 0 0 0 17 18 V9 L16 6"/><circle cx="12" cy="13" r="2"/></svg></div>
+          <div class="nm">Hooded Lantern</div>
+          <div class="mt">6 hours per flask</div>
+        </div>
+        <div class="eq-cell">
+          <div class="gl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="4" y="7" width="16" height="11"/><line x1="4" y1="11" x2="20" y2="11"/><path d="M10 14 L12 17 L14 14"/></svg></div>
+          <div class="nm">Tinder Box</div>
+          <div class="mt">flint · char-cloth · steel</div>
+        </div>
+      </div>
+    </div>
+  </section>
 
+  <!-- =========== HEART =========== -->
+  <section class="sec">
+    <div class="sec-head">
+      <div class="sec-num">IV</div>
+      <div class="sec-meta">
+        <div class="sec-tag">Heart &amp; Holdings</div>
+        <div class="sec-title">What She Loves, What She Refuses</div>
+      </div>
+      <div class="sec-rule"></div>
+    </div>
 
-const timeline = [
-{ age: "Year 0", event: "Born among the spires of Caelthwyn, raised in the light of Helm the Watcher." },
-{ age: "Year 80", event: "Chosen for the Order of the Veiled Watch. Earns the name “Ice Queen” in silence." },
-{ age: "Year 142", event: "Meets Kaelen, a fellow paladin. The frost in her heart breaks. She smiles again." },
-{ age: "Year 198", event: "A sealed letter from the High Priest. A final mission of faith." },
-{ age: "Year 200", event: "What was found in the chapel cannot be unseen. The oath begins to bleed.", fall: true }];
-
-
-const views = [
-{ key: "front", label: "Front", cap: "01", src: "assets/aurora-front.jpg" },
-{ key: "three", label: "3/4", cap: "02", src: "assets/aurora-three.jpg" },
-{ key: "side", label: "Side", cap: "03", src: "assets/aurora-side.jpg" },
-{ key: "back", label: "Back", cap: "04", src: "assets/aurora-back.jpg" }];
-
-
-function App() {
-  const [oath, setOath] = useState("keeper"); // "keeper" | "broken"
-  const [view, setView] = useState("front");
-
-  useEffect(() => {
-    document.body.classList.toggle("oathbreaker", oath === "broken");
-  }, [oath]);
-
-  // selected view metadata
-  const currentView = useMemo(() => views.find(v => v.key === view), [view]);
-
-  return (
-    <div className="page">
-
-        {/* ======== MASTHEAD ======== */}
-        <header className="masthead">
-          <div className="portrait frame">
-            <i className="corner-bl" /><i className="corner-br" />
-                        <img src="assets/aurora-portrait.jpg" alt="Aurora Elaris" />
-            <div className="vignette" />
-            <div className="badge">Codex · I</div>
-            <div className="caption">
-              <span style={{ color: "var(--gold)" }}>«</span> the Ice Queen of Caelthwyn <span style={{ color: "var(--gold)" }}>»</span>
-            </div>
+    <div class="card">
+      <div class="dual">
+        <div>
+          <h4>Beloved</h4>
+          <ul>
+            <li>Justice, righteousness, protecting the weak.</li>
+            <li>Silence and solitude for prayer.</li>
+            <li>Sharing stories of her faith with those she trusts.</li>
+            <li><em>Kaelen</em> — her first and only love.</li>
+          </ul>
+        </div>
+        <div class="dual refuse" style="display:contents">
+          <div>
+            <h4 style="color:#d68a8a">Abhorred</h4>
+            <ul>
+              <li>The undead, and all that opposes Helm.</li>
+              <li>Injustice and discrimination.</li>
+              <li>Lies and betrayal.</li>
+              <li>The abuse of power.</li>
+            </ul>
           </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-          <div className="titleblock">
-            <div>
-              <div className="seal">
-                <CompassStar size={28} />
-                <span className="smallcaps">The Order of the Veiled Watch</span>
-                <span className="seal-line" />
-                <span className="smallcaps" style={{ color: "var(--ink-mute)" }}>folio · 200 a.r.</span>
-              </div>
+  <!-- =========== ANNALS =========== -->
+  <section class="sec">
+    <div class="sec-head">
+      <div class="sec-num">V</div>
+      <div class="sec-meta">
+        <div class="sec-tag">Annals of a Faith</div>
+        <div class="sec-title">From Caelthwyn to the Chapel</div>
+      </div>
+      <div class="sec-rule"></div>
+    </div>
 
-              <h1 className="name">
-                Aurora<br />
-                <span style={{ color: "var(--gold)", fontStyle: "italic", fontFamily: "'Cormorant Garamond',serif", fontWeight: 400, fontSize: "0.78em" }}>—</span>
-                {" "}Elaris
-              </h1>
+    <div class="card">
+      <div class="story">
 
-              <div className="subtitle">
-                Wood&nbsp;Elf <span className="sep">·</span> Paladin <span className="sep">·</span> Oath&nbsp;of&nbsp;Vengeance
-              </div>
-              <div className="epitaph">
-                on the edge of breaking into <span className="ob">Oathbreaker</span>.
-              </div>
-
-              <div className="oathtoggle" role="tablist" aria-label="oath state">
-                <button className={oath === "keeper" ? "active" : ""} onClick={() => setOath("keeper")}>Oath · Kept</button>
-                <div className="divider" />
-                <button className={"broken " + (oath === "broken" ? "active" : "")} onClick={() => setOath("broken")}>Oath · Broken</button>
-              </div>
-            </div>
-
-            <div className="quickbar">
-              <div className="qcell"><div className="qkey">Race</div><div className="qval">Wood Elf</div></div>
-              <div className="qcell"><div className="qkey">Age</div><div className="qval">200</div></div>
-              <div className="qcell"><div className="qkey">Height</div><div className="qval">175 cm</div></div>
-              <div className="qcell"><div className="qkey">Weight</div><div className="qval">55 kg</div></div>
-            </div>
-          </div>
-        </header>
-
-        {/* ======== STATS ======== */}
-        <section>
-          <div className="sec-head">
-            <CompassStar size={20} />
-            <span className="num">I</span>
-            <span className="sec-title">Vitals &amp; Sworn Aptitudes</span>
-            <span className="seal-line" />
-          </div>
-
-          <div className="grid">
-            {/* abilities */}
-            <div className="card">
-              <div className="label">Ability Scores</div>
-              <div className="abilities">
-                {abilities.map((a) =>
-              <div className="ability" key={a.code}>
-                    <div className="ab-name">{a.code}</div>
-                    <div className="ab-mod">{a.mod}</div>
-                    <div className="ab-score">{a.score}</div>
-                  </div>
-              )}
-              </div>
-              <div className="combat-row">
-                <div className="stat-tile"><div className="sk">AC</div><div className="sv">18</div></div>
-                <div className="stat-tile"><div className="sk">HP</div><div className="sv">98</div></div>
-                <div className="stat-tile"><div className="sk">Init</div><div className="sv">+1</div></div>
-                <div className="stat-tile"><div className="sk">Spd</div><div className="sv">30</div></div>
-              </div>
-            </div>
-
-            {/* skills */}
-            <div className="card">
-              <div className="label">Proficient Skills</div>
-              <ul className="skill-list">
-                {skills.map((s) =>
-              <li key={s.name}>
-                    <span className={"pip " + (s.level === 2 ? "expert" : "filled")} />
-                    <span className="name" style={{ fontSize: "46px" }}>{s.name}</span>
-                    <span className="mod">{s.mod}</span>
-                  </li>
-              )}
-              </ul>
-              <div style={{ marginTop: 14, fontSize: "0.78rem", color: "var(--ink-mute)", fontFamily: "'Cinzel',serif", letterSpacing: "0.16em", textTransform: "uppercase" }}>
-                <span style={{ display: "inline-block", width: 8, height: 8, background: "var(--gold)", marginRight: 8, transform: "rotate(45deg)" }} />
-                proficient
-                <span style={{ display: "inline-block", width: 8, height: 8, background: "var(--gold)", boxShadow: "inset 0 0 0 2px var(--bg-card)", margin: "0 8px 0 18px", transform: "rotate(45deg)" }} />
-                expertise
-              </div>
-            </div>
-
-            {/* oath / class features */}
-            <div className="card">
-              <div className="label">Oath of Vengeance</div>
-              <p style={{ margin: "0 0 14px", color: "var(--ink-soft)", fontSize: "1.02rem", fontStyle: "italic" }}>
-                "Fight the greater evil. Show no mercy to the wicked. By any means."
-              </p>
-              <ul style={{ listStyle: "none", margin: 0, padding: 0, fontSize: "0.96rem" }}>
-                <li style={{ padding: "7px 0", borderBottom: "1px dashed var(--line-soft)", display: "flex", justifyContent: "space-between" }}><span>Abjure Enemy</span><em style={{ color: "var(--ink-mute)" }}>1 / rest</em></li>
-                <li style={{ padding: "7px 0", borderBottom: "1px dashed var(--line-soft)", display: "flex", justifyContent: "space-between" }}><span>Vow of Enmity</span><em style={{ color: "var(--ink-mute)" }}>BA · 1 min</em></li>
-                <li style={{ padding: "7px 0", borderBottom: "1px dashed var(--line-soft)", display: "flex", justifyContent: "space-between" }}><span>Relentless Avenger</span><em style={{ color: "var(--ink-mute)" }}>passive</em></li>
-                <li style={{ padding: "7px 0", borderBottom: "1px dashed var(--line-soft)", display: "flex", justifyContent: "space-between" }}><span>Soul of Vengeance</span><em style={{ color: "var(--ink-mute)" }}>reaction</em></li>
-                <li style={{ padding: "7px 0", display: "flex", justifyContent: "space-between" }}><span>Avenging Angel</span><em style={{ color: "var(--ink-mute)" }}>1 hr · once</em></li>
-              </ul>
-            </div>
-          </div>
-        </section>
-
-        {/* ======== VIEWS ======== */}
-        <section>
-          <div className="sec-head">
-            <CompassStar size={20} />
-            <span className="num">II</span>
-            <span className="sec-title">Aspect &amp; Bearing</span>
-            <span className="seal-line" />
-          </div>
-
-          <div className="viewstack">
-            <div className="view-tabs">
-              {views.map((v) =>
-            <button key={v.key}
-            className={view === v.key ? "active" : ""}
-            onClick={() => setView(v.key)}>
-                  {v.label}<span className="vk">— plate {v.cap}</span>
-                </button>
-            )}
-              <div style={{ marginTop: 14, fontFamily: "'Cormorant Garamond',serif", fontStyle: "italic", color: "var(--ink-mute)", fontSize: "0.95rem", lineHeight: 1.5 }}>
-                Plate-and-mail of the Veiled Watch, embroidered with cobalt-thread sigils of Helm.
-                The greatsword <em style={{ color: "var(--ink-soft)" }}>Iustitia</em> hangs always at her hip.
-              </div>
-            </div>
-            <div className="view-art frame">
-              <i className="corner-bl" /><i className="corner-br" />
-              <img
-                key={currentView.key}
-                src={currentView.src}
-                alt={currentView.label + ' view'}
-                className="view-image"
-              />
-              <div className="legend">
-                <span>{currentView.label}</span>
-                <span>plate · {currentView.cap}</span>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ======== EQUIPMENT & PALETTE ======== */}
-        <section>
-          <div className="sec-head">
-            <CompassStar size={20} />
-            <span className="num">III</span>
-            <span className="sec-title">Implements &amp; Hues</span>
-            <span className="seal-line" />
-          </div>
-
-          <div className="grid">
-            <div className="card span-2">
-              <div className="label">Equipment Carried</div>
-              <div className="equipment-grid">
-                {equipment.map((e, i) =>
-              <div className={"eq-item " + (e.hero ? "hero" : "")} key={i}>
-                    <div className="eq-glyph"><Glyph kind={e.kind} /></div>
-                    <div>
-                      <div className="eq-name">{e.name}</div>
-                      <div className="eq-meta">{e.meta}</div>
-                    </div>
-                  </div>
-              )}
-              </div>
-            </div>
-
-            <div className="card">
-              <div className="label">Color Palette</div>
-              <div className="palette">
-                {palette.map((p) =>
-              <div className="swatch" key={p.c}
-              data-name={p.n}
-              style={{ background: p.c, borderColor: p.c === "#0c0c12" ? "var(--line)" : "transparent" }} />
-              )}
-              </div>
-              <div style={{ marginTop: 24, fontFamily: "'Cormorant Garamond',serif", fontStyle: "italic", color: "var(--ink-mute)", fontSize: "0.98rem", lineHeight: 1.5 }}>
-                Bone and pewter for her plate. Cobalt threads woven into the cloak that the Order issues at vigil.
-                Aureate filigree for sanctified items. When the oath breaks, the bone reddens to <span style={{ color: "var(--blood)" }}>vow-blood</span>.
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ======== LIKES / DISLIKES ======== */}
-        <section>
-          <div className="sec-head">
-            <CompassStar size={20} />
-            <span className="num">IV</span>
-            <span className="sec-title">Heart &amp; Holdings</span>
-            <span className="seal-line" />
-          </div>
-
-          <div className="card">
-            <div className="like-grid">
-              <div className="like-col">
-                <h4>Beloved</h4>
-                <ul>{likes.map((l, i) => <li key={i}>{l}</li>)}</ul>
-              </div>
-              <div className="like-col dislikes">
-                <h4>Abhorred</h4>
-                <ul>{dislikes.map((l, i) => <li key={i}>{l}</li>)}</ul>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ======== BACKSTORY ======== */}
-        <section>
-          <div className="sec-head">
-            <CompassStar size={20} />
-            <span className="num">V</span>
-            <span className="sec-title">Annals of a Faith</span>
-            <span className="seal-line" />
-          </div>
-
-          <div className="card">
-            <div className="backstory">
-              <div className="story-text">
-                <p className="drop">
-                  Aurora was born and raised in the holy city of <em>Caelthwyn</em>, built high among the mountains in devotion to Helm the Watcher. As a child she was bright, cheerful, and full of faith — a small candle in a city of grey light.
-                </p>
-                <p>
-                  At the age of eighty she was chosen to join the <em>Order of the Veiled Watch</em>, the warriors of light under Helm's command. During her long training she was silent and solitary, and so they named her the <strong style={{ color: "var(--ink)" }}>Ice Queen</strong>.
-                </p>
-                <p>
-                  Until she met <em>Kaelen</em>, a fellow paladin — charismatic, resolute, kind. His love melted the ice in her heart. She smiled again. They became the admired pair of the Order, the bright and the brighter.
-                </p>
-                <p>
-                  Then one day a letter from the High Priest arrived, summoning her on a final mission to prove her faith in Helm. She left Kaelen behind at the chapel gate. He waved, and she did not look back.
-                </p>
-                <p style={{ color: "var(--ink-soft)" }}>
-                  <em>And that</em> — was the beginning of the end.
-                </p>
-              </div>
-
-              <div>
-                <div className="smallcaps" style={{ marginBottom: 14 }}>The Reckoning</div>
-                <div className="timeline">
-                  {timeline.map((t, i) =>
-                <div className={"tl-item " + (t.fall ? "fall" : "")} key={i}>
-                      <div className="tl-age">{t.age}</div>
-                      <div className="tl-event">{t.event}</div>
-                    </div>
-                )}
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ======== OATHBREAKER ======== */}
-        <section>
-          <div className="sec-head">
-            <CompassStar size={20} />
-            <span className="num">VI</span>
-            <span className="sec-title">Should the Oath Break</span>
-            <span className="seal-line" />
-          </div>
-
-          <div className="ob-card frame">
-            <i className="corner-bl" /><i className="corner-br" />
-            <div className="ob-art" role="img" aria-label="Oathbreaker form portrait" />
-            <div className="ob-body">
-              <div className="ob-head">— Form II · Oathbreaker —</div>
-              <div className="ob-title">The Sinner's Edge</div>
-              <p>
-                When justice is denied her by the very church that forged her, the cobalt of her cloak runs to <span style={{ color: "var(--blood)" }}>vow-blood</span> and the runes upon her sword learn a darker tongue.
-                She does not lay it down. She <em>becomes</em> it.
-              </p>
-              <div className="ob-stats">
-                <div className="ob-stat"><div className="k">Aura</div><div className="v">Hate · 10 ft</div></div>
-                <div className="ob-stat"><div className="k">Channel</div><div className="v">Control Undead</div></div>
-                <div className="ob-stat"><div className="k">Channel</div><div className="v">Dreadful Aspect</div></div>
-                <div className="ob-stat"><div className="k">Spells</div><div className="v">Hellish Rebuke · Inflict</div></div>
-              </div>
-              <div style={{ marginTop: 18, fontFamily: "'Cormorant Garamond',serif", fontStyle: "italic", color: "var(--ink-mute)", fontSize: "0.98rem" }}>
-                Toggle <span style={{ color: "var(--blood)" }}>Oath · Broken</span> at the top of the codex to read this folio in its true colour.
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ======== FOOTER ======== */}
-        <div className="quote-block">
-          <div className="quote">
-            <span className="blood">“</span> If justice requires sin <span style={{ color: "var(--gold)" }}>…</span>
-            <br />
-            then I will become the sinner. <span className="blood">”</span>
-          </div>
-          <div className="quote-attribution">— Aurora Elaris · last entry, folio VI</div>
+        <div class="story-text">
+          <p>Aurora was born and raised in the holy city of <em>Caelthwyn</em>, built high among the mountains in devotion to Helm the Watcher. As a child she was bright, cheerful, and full of faith — a small candle in a city of grey light.</p>
+          <p>At eighty she was chosen to join the <em>Order of the Veiled Watch</em>. During her long training she was silent and solitary, and so they named her the <strong style="color:var(--ink)">Ice Queen</strong>.</p>
+          <p>Until she met <em>Kaelen</em>, a fellow paladin — charismatic, resolute, kind. His love melted the ice in her heart. She smiled again. They became the admired pair of the Order, the bright and the brighter.</p>
+          <p>Then one day a letter from the High Priest summoned her on a final mission to prove her faith. She left Kaelen at the chapel gate. He waved, and she did not look back.</p>
+          <p style="color:var(--ink-soft)"><em>And that</em> — was the beginning of the end.</p>
         </div>
 
-        <div className="colophon">
-          Codex of the Veiled Watch · Folio I of I · Annum Helmus CC
+        <div>
+          <div style="font-family:'Cinzel',serif;letter-spacing:0.26em;text-transform:uppercase;font-size:0.7rem;color:var(--gold);margin-bottom:14px">— The Reckoning —</div>
+          <div class="timeline">
+            <div class="tl-item">
+              <div class="tl-age">Year 0</div>
+              <div class="tl-event">Born among the spires of Caelthwyn, raised in the light of Helm.</div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-age">Year 80</div>
+              <div class="tl-event">Chosen for the Order of the Veiled Watch. Earns "Ice Queen" in silence.</div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-age">Year 142</div>
+              <div class="tl-event">Meets Kaelen, a fellow paladin. The frost in her heart breaks. She smiles again.</div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-age">Year 198</div>
+              <div class="tl-event">A sealed letter from the High Priest. A final mission of faith.</div>
+            </div>
+            <div class="tl-item fall">
+              <div class="tl-age">Year 200</div>
+              <div class="tl-event">What was found in the chapel cannot be unseen. The oath begins to bleed.</div>
+            </div>
+          </div>
         </div>
-      </div>);
 
-}
+      </div>
+    </div>
+  </section>
 
-ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+  <!-- =========== OATHBREAKER =========== -->
+  <section class="sec">
+    <div class="sec-head">
+      <div class="sec-num">VI</div>
+      <div class="sec-meta">
+        <div class="sec-tag">Should the Oath Break</div>
+        <div class="sec-title">The Sinner's Edge</div>
+      </div>
+      <div class="sec-rule"></div>
+    </div>
+
+    <div class="fall-card">
+      <div class="fall-art" role="img" aria-label="Oathbreaker form"></div>
+      <div class="fall-body">
+        <div class="fall-head">— Form II · Oathbreaker —</div>
+        <div class="fall-title">When the Cobalt Runs to Vow-Blood</div>
+        <p>When justice is denied her by the very church that forged her, the cobalt of her cloak runs to <span style="color:var(--blood)">vow-blood</span> and the runes upon her sword learn a darker tongue. She does not lay it down. She <em>becomes</em> it.</p>
+        <div class="fall-stats">
+          <div class="fall-stat"><div class="k">Aura</div><div class="v">Hate · 10 ft</div></div>
+          <div class="fall-stat"><div class="k">Channel</div><div class="v">Control Undead</div></div>
+          <div class="fall-stat"><div class="k">Channel</div><div class="v">Dreadful Aspect</div></div>
+          <div class="fall-stat"><div class="k">Spells</div><div class="v">Hellish Rebuke · Inflict</div></div>
+        </div>
+        <div style="margin-top:18px;font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--ink-mute);font-size:0.96rem">
+          Toggle <span style="color:var(--blood)">Oath · Broken</span> at the corner of the codex to read this folio in its true colour.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========== END =========== -->
+  <div class="end-block">
+    <div class="end-q">
+      <span class="bld">"</span> If justice requires sin <span style="color:var(--gold)">…</span><br/>
+      then I will become the sinner. <span class="bld">"</span>
+    </div>
+    <div class="end-attr">— Aurora Elaris · last entry, folio I</div>
+  </div>
+
+  <div class="colophon">Codex of the Veiled Watch · Folio I of VIII · Annum Helmus CC</div>
+
+</div>
+
+<script>
+  // Oath toggle
+  (function(){
+    const body = document.body;
+    const keep = document.getElementById('btn-keeper');
+    const brk  = document.getElementById('btn-broken');
+    function set(state){
+      if(state === 'broken'){
+        body.classList.add('broken');
+        keep.classList.remove('active');
+        brk.classList.add('active');
+      } else {
+        body.classList.remove('broken');
+        brk.classList.remove('active');
+        keep.classList.add('active');
+      }
+    }
+    keep.addEventListener('click', () => set('keeper'));
+    brk .addEventListener('click', () => set('broken'));
+  })();
 </script>
+
 </body>
 </html>

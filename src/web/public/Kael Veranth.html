@@ -1,0 +1,725 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Kael Veranth — Ashen Chronicle</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" href="shared.css">
+<style>
+:root{
+  --bg-deep:#070405;
+  --bg-paper:#0e0a0b;
+  --bg-card:#16100f;
+  --line:#3a2620;
+  --line-soft:#241817;
+  --ink:#f1e6d8;
+  --ink-soft:#d1c2ad;
+  --ink-mute:#8a7461;
+  --ink-faint:#4a3a30;
+  --gold:#d9a060;
+  --gold-dim:#8a6035;
+  --ember:#ff7a3a;
+  --ember-deep:#a8341a;
+  --blood:#b01a1a;
+  --scale:#241510;
+}
+html,body{background:var(--bg-deep);color:var(--ink)}
+body{
+  min-height:100vh;
+  background:
+    radial-gradient(1200px 800px at 20% -10%, rgba(168,52,26,0.16) 0%, transparent 60%),
+    radial-gradient(800px 500px at 80% 100%, rgba(168,52,26,0.12) 0%, transparent 65%),
+    var(--bg-deep);
+  overflow-x:hidden;
+}
+
+h1,h2,h3,h4,.disp{color:var(--ink)}
+em,i{font-style:italic;color:var(--ink-soft)}
+
+/* ===== EMBER PARTICLES ===== */
+.embers{position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden}
+.ember{position:absolute;bottom:-20px;width:3px;height:3px;border-radius:50%;
+  background:radial-gradient(circle,#ffb070,#ff7a3a 60%,transparent 80%);
+  box-shadow:0 0 8px rgba(255,122,58,0.8),0 0 16px rgba(255,122,58,0.5);
+  animation:rise linear infinite;
+  opacity:0;
+}
+@keyframes rise{
+  0%{transform:translate(0,0) scale(0.7);opacity:0}
+  10%{opacity:.9}
+  60%{opacity:.6}
+  100%{transform:translate(var(--dx,40px),-110vh) scale(0.3);opacity:0}
+}
+
+/* ===== HERO ===== */
+.hero{
+  position:relative;
+  min-height:100vh;
+  display:grid;
+  grid-template-columns:1.05fr 1fr;
+  gap:0;
+  overflow:hidden;
+  z-index:5;
+}
+.hero-portrait{
+  position:relative;
+  overflow:hidden;
+  border-right:1px solid var(--line);
+}
+.hero-portrait img{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  object-position:50% 18%;
+  filter:contrast(1.08) saturate(0.92);
+}
+.hero-portrait::after{
+  content:"";position:absolute;inset:0;
+  background:
+    linear-gradient(90deg,transparent 60%,var(--bg-deep) 100%),
+    linear-gradient(180deg,transparent 60%,rgba(7,4,5,0.7) 100%),
+    radial-gradient(ellipse at 30% 30%, rgba(255,122,58,0.10), transparent 50%);
+  pointer-events:none;
+}
+
+.hero-text{
+  position:relative;
+  padding:14vh 7vw 6vh 5vw;
+  display:flex;flex-direction:column;justify-content:center;
+}
+.kicker{
+  display:flex;align-items:center;gap:14px;margin-bottom:18px;
+}
+.kicker .glyph-flame{width:24px;height:24px;color:var(--ember)}
+.kicker .lbl{
+  font-family:"Cinzel",serif;text-transform:uppercase;letter-spacing:0.34em;font-size:0.7rem;color:var(--ember);
+}
+.kicker .line{flex:1;max-width:120px;height:1px;background:linear-gradient(to right,var(--ember-deep),transparent)}
+
+.hero-name{
+  font-family:"Cinzel Decorative","Cinzel",serif;
+  font-weight:700;
+  font-size:clamp(56px,7vw,108px);
+  letter-spacing:0.04em;
+  line-height:0.95;
+  margin:0;
+  background:linear-gradient(180deg,#f5e6cf 30%,#d9a060 60%,#a8341a 95%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  -webkit-text-fill-color:transparent;
+  text-shadow:0 0 60px rgba(255,122,58,0.15);
+}
+.hero-sub{
+  margin-top:24px;
+  font-family:"Cinzel",serif;font-weight:400;letter-spacing:0.28em;text-transform:uppercase;
+  font-size:0.92rem;color:var(--ink-soft);
+}
+.hero-sub .sep{color:var(--ember);margin:0 0.6em}
+
+.hero-quote{
+  margin-top:34px;
+  max-width:520px;
+  font-family:"Cormorant Garamond",serif;font-style:italic;
+  font-size:1.4rem;line-height:1.5;color:var(--ink-soft);
+  padding-left:18px;border-left:2px solid var(--ember-deep);
+}
+.hero-quote span{color:var(--ember);font-style:normal;font-family:"Cinzel",serif;letter-spacing:0.18em;font-size:0.82em;}
+
+.hero-cta{
+  margin-top:44px;display:flex;align-items:center;gap:12px;
+  font-family:"Cinzel",serif;letter-spacing:0.3em;text-transform:uppercase;font-size:0.7rem;color:var(--ember);
+  animation:pulse 2.4s ease-in-out infinite;
+}
+.hero-cta::after{
+  content:"";width:22px;height:1px;background:var(--ember);position:relative;
+}
+.hero-cta::before{
+  content:"";width:1px;height:14px;background:var(--ember);
+  margin-right:4px;
+}
+@keyframes pulse{0%,100%{opacity:.6}50%{opacity:1}}
+
+/* ===== CONTAINER ===== */
+.story{
+  position:relative;z-index:5;
+  max-width:1240px;
+  margin:0 auto;
+  padding:120px 32px 64px;
+}
+
+.chap{
+  margin-bottom:96px;
+  display:grid;
+  grid-template-columns:1fr 2.2fr;
+  gap:48px;
+}
+.chap.flip{grid-template-columns:2.2fr 1fr}
+.chap-aside{position:sticky;top:80px;align-self:start;}
+
+.chap-num{
+  font-family:"Cinzel Decorative",serif;font-weight:700;
+  font-size:7rem;line-height:1;
+  color:transparent;-webkit-text-stroke:1px var(--ember-deep);
+  margin-bottom:18px;
+  display:block;
+}
+.chap-tag{
+  font-family:"Cinzel",serif;text-transform:uppercase;letter-spacing:0.3em;font-size:0.7rem;color:var(--ember);margin-bottom:10px;
+}
+.chap-title{
+  font-family:"Cinzel Decorative",serif;font-weight:400;font-size:2.6rem;line-height:1.05;letter-spacing:0.02em;color:var(--ink);margin:0;
+}
+.chap-flair{
+  margin-top:18px;font-style:italic;color:var(--ink-mute);font-size:1.04rem;max-width:240px;
+}
+
+.chap-body{font-size:1.06rem;color:var(--ink-soft);line-height:1.7}
+.chap-body p{margin:0 0 16px}
+.chap-body p.drop::first-letter{
+  font-family:"Cinzel Decorative",serif;font-weight:700;
+  font-size:4em;float:left;line-height:.85;padding:6px 12px 0 0;color:var(--ember);
+}
+
+/* ===== INFO CARD ===== */
+.info-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:14px;
+}
+.info-cell{
+  border:1px solid var(--line);background:linear-gradient(180deg,rgba(255,122,58,0.04),transparent);
+  padding:14px 16px;
+}
+.info-cell .k{
+  font-family:"Cinzel",serif;text-transform:uppercase;letter-spacing:0.24em;font-size:0.58rem;color:var(--ember);margin-bottom:6px;
+}
+.info-cell .v{
+  font-family:"Cinzel",serif;font-size:1rem;color:var(--ink);letter-spacing:0.06em;
+}
+
+/* ===== ABILITY SCORE HEX ===== */
+.scores{
+  display:grid;grid-template-columns:repeat(6,1fr);gap:8px;
+}
+.score{
+  position:relative;
+  aspect-ratio:1/1.15;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;
+  background:
+    radial-gradient(circle at center, rgba(168,52,26,0.18) 0%, transparent 70%),
+    var(--bg-card);
+  border:1px solid var(--line);
+  clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);
+  padding:0 8px;
+}
+.score .ab{font-family:"Cinzel",serif;font-size:0.55rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--ember)}
+.score .mod{font-family:"Cinzel Decorative",serif;font-weight:700;font-size:1.8rem;color:var(--ink);line-height:1;margin:4px 0 2px}
+.score .sc{font-family:"Cinzel",serif;font-size:0.7rem;color:var(--ink-mute)}
+
+.combat-strip{
+  margin-top:18px;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;
+  border-top:1px solid var(--line-soft);padding-top:14px;
+}
+.combat-cell{text-align:center}
+.combat-cell .k{font-family:"Cinzel",serif;text-transform:uppercase;letter-spacing:0.22em;font-size:0.55rem;color:var(--ember)}
+.combat-cell .v{font-family:"Cinzel",serif;font-size:1.3rem;color:var(--ink);margin-top:4px}
+
+/* ===== SPELLS — FLIPBOOK ===== */
+.spells{
+  display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px;
+  margin-top:8px;
+}
+.spell{
+  position:relative;
+  aspect-ratio:3/4;
+  border:1px solid var(--line);
+  background:linear-gradient(180deg,rgba(40,20,16,0.6),rgba(15,8,8,0.9));
+  overflow:hidden;
+  cursor:pointer;
+  transition:transform .5s cubic-bezier(.2,.7,.2,1), border-color .4s, box-shadow .4s;
+}
+.spell:hover{
+  transform:translateY(-6px) scale(1.03);
+  border-color:var(--ember);
+  box-shadow:0 20px 40px -10px rgba(168,52,26,0.4), 0 0 0 1px rgba(255,122,58,0.2);
+  z-index:2;
+}
+.spell .icon{
+  position:absolute;top:18px;left:0;right:0;display:flex;justify-content:center;
+  color:var(--ember);
+  filter:drop-shadow(0 0 12px rgba(255,122,58,0.6));
+}
+.spell .icon svg{width:48px;height:48px}
+.spell .nm{
+  position:absolute;left:0;right:0;bottom:14px;text-align:center;
+  font-family:"Cinzel",serif;font-size:0.78rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--ink);
+}
+.spell .lv{
+  position:absolute;top:8px;right:10px;
+  font-family:"Cinzel",serif;font-size:0.52rem;letter-spacing:0.2em;color:var(--ember-deep);
+}
+.spell .desc{
+  position:absolute;inset:0;padding:18px;
+  background:linear-gradient(180deg,rgba(168,52,26,0.95),rgba(15,8,8,0.95));
+  color:var(--ink);
+  opacity:0;transition:opacity .4s;
+  font-family:"Cormorant Garamond",serif;font-style:italic;font-size:0.95rem;line-height:1.4;
+  display:flex;flex-direction:column;justify-content:center;text-align:center;
+}
+.spell:hover .desc{opacity:1}
+.spell .desc .t{font-family:"Cinzel",serif;font-style:normal;font-size:0.78rem;letter-spacing:0.18em;text-transform:uppercase;color:#ffd0a0;margin-bottom:10px}
+
+/* ===== ABILITY LIST ===== */
+.ability-list{margin:0;padding:0;list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:10px 24px}
+.ability-list li{display:flex;align-items:flex-start;gap:12px;padding:6px 0;font-size:1.02rem;color:var(--ink-soft)}
+.ability-list li .gl{
+  width:32px;height:32px;flex-shrink:0;display:grid;place-items:center;
+  border:1px solid var(--gold-dim);background:var(--bg-card);color:var(--ember);
+  clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);
+}
+.ability-list li .gl svg{width:16px;height:16px}
+
+/* ===== EQUIPMENT — TIMELINE LIST ===== */
+.eq-list{margin:0;padding:0;list-style:none}
+.eq-list li{
+  display:flex;gap:18px;padding:14px 0;border-bottom:1px solid var(--line-soft);align-items:center;
+}
+.eq-list li:last-child{border-bottom:none}
+.eq-list .ix{
+  font-family:"Cinzel Decorative",serif;font-weight:700;font-size:1.6rem;color:var(--ember-deep);
+  width:48px;flex-shrink:0;text-align:right;
+}
+.eq-list .body-eq{flex:1}
+.eq-list .nm{font-family:"Cinzel",serif;text-transform:uppercase;letter-spacing:0.14em;font-size:0.82rem;color:var(--ink)}
+.eq-list .mt{font-family:"Cormorant Garamond",serif;font-style:italic;color:var(--ink-mute);font-size:0.98rem;margin-top:3px}
+.eq-list .tag{
+  font-family:"Cinzel",serif;font-size:0.58rem;letter-spacing:0.24em;color:var(--ember);
+  border:1px solid var(--ember-deep);padding:4px 9px;
+  flex-shrink:0;
+}
+
+/* ===== TWO COL BLOCK ===== */
+.dual{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
+.dual h4{
+  font-family:"Cinzel",serif;text-transform:uppercase;letter-spacing:0.24em;font-size:0.78rem;
+  color:var(--ember);margin:0 0 14px;padding-bottom:10px;border-bottom:1px solid var(--line);
+}
+.dual.weak h4{color:#d68a8a;}
+.dual ul{margin:0;padding:0;list-style:none}
+.dual li{padding:6px 0 6px 16px;position:relative;color:var(--ink-soft);font-size:1.04rem;line-height:1.45}
+.dual li::before{
+  content:"";position:absolute;left:0;top:14px;width:8px;height:1px;background:var(--ember-deep);
+}
+.dual.weak li::before{background:#6e2424}
+
+/* ===== HERO FOOTER QUOTE ===== */
+.cinema-end{
+  position:relative;margin:90px 0 24px;text-align:center;
+  padding:60px 24px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+}
+.cinema-end::before, .cinema-end::after{
+  content:"";position:absolute;left:50%;width:60px;height:60px;border:1px solid var(--ember-deep);transform:translateX(-50%) rotate(45deg);
+}
+.cinema-end::before{top:-30px;background:var(--bg-deep)}
+.cinema-end::after{bottom:-30px;background:var(--bg-deep)}
+.end-quote{font-style:italic;font-size:2rem;line-height:1.4;color:var(--ink);max-width:760px;margin:0 auto;
+  background:linear-gradient(180deg,#f5e6cf 30%,#d9a060 70%,#a8341a 100%);-webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.end-attribution{margin-top:18px;font-family:"Cinzel",serif;letter-spacing:0.34em;text-transform:uppercase;font-size:0.64rem;color:var(--ember)}
+
+.colophon{
+  margin-top:30px;text-align:center;font-family:"Cinzel",serif;letter-spacing:0.3em;text-transform:uppercase;font-size:0.58rem;color:var(--ink-faint);
+}
+
+/* ===== INLINE CINEMA STRIP (3 view + flame) ===== */
+.viewstrip{
+  position:relative;margin:32px -32px;height:clamp(380px,55vh,560px);
+  background:#000;border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  overflow:hidden;
+}
+.viewstrip img{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 30%;
+  filter:contrast(1.05) saturate(0.95);
+}
+.viewstrip::after{
+  content:"";position:absolute;inset:0;
+  background:
+    linear-gradient(90deg,rgba(7,4,5,0.6) 0%,transparent 30%,transparent 70%,rgba(7,4,5,0.6) 100%),
+    linear-gradient(180deg,rgba(7,4,5,0.4) 0%,transparent 30%,transparent 70%,rgba(7,4,5,0.4) 100%);
+}
+.viewstrip .caption{
+  position:absolute;left:32px;bottom:28px;z-index:2;max-width:520px;
+}
+.viewstrip .caption .lbl{
+  font-family:"Cinzel",serif;letter-spacing:0.34em;text-transform:uppercase;font-size:0.62rem;color:var(--ember);margin-bottom:8px;
+}
+.viewstrip .caption .txt{
+  font-family:"Cormorant Garamond",serif;font-style:italic;font-size:1.3rem;line-height:1.4;color:var(--ink);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width:920px){
+  .hero{grid-template-columns:1fr;min-height:auto}
+  .hero-portrait{aspect-ratio:4/5;border-right:none;border-bottom:1px solid var(--line)}
+  .hero-text{padding:8vh 6vw}
+  .chap, .chap.flip{grid-template-columns:1fr;gap:24px}
+  .chap-aside{position:relative;top:auto}
+  .chap-num{font-size:5rem}
+  .info-grid{grid-template-columns:repeat(2,1fr)}
+  .ability-list{grid-template-columns:1fr}
+  .spells{grid-template-columns:repeat(2,1fr)}
+  .scores{grid-template-columns:repeat(3,1fr)}
+  .combat-strip{grid-template-columns:repeat(2,1fr);gap:14px}
+  .dual{grid-template-columns:1fr;gap:24px}
+  .viewstrip{margin:24px -24px;height:clamp(280px,40vh,420px)}
+  .viewstrip .caption{left:24px;bottom:18px}
+}
+@media (max-width:520px){
+  .hero-name{font-size:48px}
+  .end-quote{font-size:1.3rem}
+  .story{padding:80px 18px 48px}
+}
+</style>
+</head>
+<body>
+
+<a class="back-link" href="index.html"><span class="arr"></span>Back to Codex</a>
+
+<div class="embers" id="embers"></div>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="hero-portrait">
+    <img src="assets/kael-veranth-portrait.jpg" alt="Kael Veranth" />
+  </div>
+  <div class="hero-text">
+    <div class="kicker">
+      <svg class="glyph-flame" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2 C8 6 6 9 6 13 a6 6 0 0 0 12 0 c0 -3 -2 -6 -6 -11 z M12 8 C10 10 9 12 9 14 a3 3 0 0 0 6 0 c0 -2 -2 -4 -3 -6 z"/></svg>
+      <span class="lbl">Folio · III · Ashen Chronicle</span>
+      <span class="line"></span>
+    </div>
+
+    <h1 class="hero-name">Kael<br/>Veranth</h1>
+
+    <div class="hero-sub">Human <span class="sep">·</span> Sorcerer <span class="sep">·</span> Draconic Bloodline</div>
+
+    <div class="hero-quote">
+      <span>"</span> I burned everything I loved <em>…</em> so I could learn how to protect what remains. <span>"</span>
+    </div>
+
+    <div class="hero-cta">Scroll to descend</div>
+  </div>
+</section>
+
+<!-- ============ STORY ============ -->
+<div class="story">
+
+  <!-- ========== CHAPTER I — BASIC INFO ========== -->
+  <section class="chap">
+    <div class="chap-aside">
+      <span class="chap-num">I</span>
+      <div class="chap-tag">The Catalogue</div>
+      <h2 class="chap-title">Of His Flesh<br/>&amp; Bearing</h2>
+      <div class="chap-flair">A boy with embers under the skin. The catalogue cannot say what burns him.</div>
+    </div>
+    <div class="chap-body">
+      <div class="info-grid">
+        <div class="info-cell"><div class="k">Race</div><div class="v">Human</div></div>
+        <div class="info-cell"><div class="k">Class</div><div class="v">Sorcerer</div></div>
+        <div class="info-cell"><div class="k">Bloodline</div><div class="v">Draconic</div></div>
+        <div class="info-cell"><div class="k">Age</div><div class="v">21</div></div>
+        <div class="info-cell"><div class="k">Height</div><div class="v">178 cm</div></div>
+        <div class="info-cell"><div class="k">Weight</div><div class="v">68 kg</div></div>
+        <div class="info-cell"><div class="k">Background</div><div class="v">Hermit</div></div>
+        <div class="info-cell"><div class="k">Alignment</div><div class="v">Chaotic N</div></div>
+        <div class="info-cell"><div class="k">Tongue</div><div class="v">Draconic</div></div>
+      </div>
+
+      <div style="margin-top:24px;font-style:italic;color:var(--ink-mute);font-size:1rem;line-height:1.55">
+        Black hair shot through with ash. Amber-gold eyes that faintly glow when the lantern dies.
+        Pale skin warmed underneath as if a coal sleeps in the chest. Faint draconic scales lattice the cheeks,
+        the temples, the throat. A gentle smile that does not reach the eyes — kind to look at,
+        and carrying an invisible sorrow.
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== VIEW STRIP — 3 VIEWS ========== -->
+  <div class="viewstrip">
+    <img src="assets/kael-veranth-views.jpg" alt="Three views — front, three-quarter, back"/>
+    <div class="caption">
+      <div class="lbl">Plate · 01 — Three Faces, One Wound</div>
+      <div class="txt">Front, three-quarter, back. He wears the same coat in every weather; he has, in the end, only one wardrobe.</div>
+    </div>
+  </div>
+
+  <!-- ========== CHAPTER II — ABILITY SCORES ========== -->
+  <section class="chap flip">
+    <div class="chap-body">
+      <div class="scores">
+        <div class="score"><div class="ab">STR</div><div class="mod">+0</div><div class="sc">10</div></div>
+        <div class="score"><div class="ab">DEX</div><div class="mod">+1</div><div class="sc">12</div></div>
+        <div class="score"><div class="ab">CON</div><div class="mod">+2</div><div class="sc">14</div></div>
+        <div class="score"><div class="ab">INT</div><div class="mod">+1</div><div class="sc">13</div></div>
+        <div class="score"><div class="ab">WIS</div><div class="mod">+2</div><div class="sc">14</div></div>
+        <div class="score"><div class="ab">CHA</div><div class="mod">+4</div><div class="sc">18</div></div>
+      </div>
+      <div class="combat-strip">
+        <div class="combat-cell"><div class="k">AC</div><div class="v">13</div></div>
+        <div class="combat-cell"><div class="k">HP</div><div class="v">9 / 14</div></div>
+        <div class="combat-cell"><div class="k">Speed</div><div class="v">30</div></div>
+        <div class="combat-cell"><div class="k">Spell DC</div><div class="v">14</div></div>
+      </div>
+
+      <h4 style="margin:36px 0 14px;font-family:'Cinzel',serif;letter-spacing:0.24em;font-size:0.78rem;text-transform:uppercase;color:var(--ember);padding-bottom:10px;border-bottom:1px solid var(--line)">Abilities</h4>
+      <ul class="ability-list">
+        <li><span class="gl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 2 C8 7 7 10 7 13 a5 5 0 0 0 10 0 c0 -3 -1 -6 -5 -11 z"/></svg></span>Draconic Magic — Dragon's Breath, Scales, Wings of Shadow</li>
+        <li><span class="gl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4 12 L12 4 L20 12 L12 20 Z"/><circle cx="12" cy="12" r="3"/></svg></span>Spellcasting (Sorcerer · CHA-based)</li>
+        <li><span class="gl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 3 V21 M3 12 H21 M6 6 L18 18 M18 6 L6 18"/></svg></span>Healing &amp; Herbalism</li>
+        <li><span class="gl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="9" r="4"/><path d="M5 21 C5 16 8 14 12 14 C16 14 19 16 19 21"/></svg></span>Charismatic Presence (Persuasion · Deception · Insight)</li>
+        <li><span class="gl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="12" r="8"/><path d="M9 12 a3 3 0 0 1 6 0"/></svg></span>Minor Illusion</li>
+        <li><span class="gl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 3 L7 12 L12 21 L17 12 Z"/></svg></span>Heat Resistance</li>
+      </ul>
+    </div>
+
+    <div class="chap-aside">
+      <span class="chap-num">II</span>
+      <div class="chap-tag">The Forge</div>
+      <h2 class="chap-title">Powers &amp;<br/>Proficiencies</h2>
+      <div class="chap-flair">High Charisma is a mercy. It lets him lie about the rest.</div>
+    </div>
+  </section>
+
+  <!-- ========== CHAPTER III — SPELLBOOK ========== -->
+  <section class="chap">
+    <div class="chap-aside">
+      <span class="chap-num">III</span>
+      <div class="chap-tag">The Grimoire</div>
+      <h2 class="chap-title">Spells<br/>&amp; Powers</h2>
+      <div class="chap-flair">Hover the cards. Each one was paid for in something he refuses to name.</div>
+    </div>
+    <div class="chap-body">
+      <div class="spells">
+        <div class="spell">
+          <div class="lv">Lv. 1</div>
+          <div class="icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 14 Q6 8 12 10 Q18 12 21 8 Q19 13 14 14 Q9 15 5 19 Q3 17 3 14 Z"/></svg></div>
+          <div class="nm">Dragon's Breath</div>
+          <div class="desc"><div class="t">5d6 · 15 ft cone</div>The first spell he learned. The only one whose recoil he still feels in his teeth.</div>
+        </div>
+        <div class="spell">
+          <div class="lv">Cantrip</div>
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2 L20 6 V12 C20 17 16 21 12 22 C8 21 4 17 4 12 V6 Z"/><path d="M12 8 V16"/><path d="M8 12 H16"/></svg></div>
+          <div class="nm">Shield</div>
+          <div class="desc"><div class="t">Reaction · +5 AC</div>An old reflex from the night he could not save anyone. Now it saves him.</div>
+        </div>
+        <div class="spell">
+          <div class="lv">Lv. 2</div>
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 12 L9 9 L21 3 L18 11 L11 15 L4 18 Z"/><path d="M9 9 L11 15"/></svg></div>
+          <div class="nm">Scorching Ray</div>
+          <div class="desc"><div class="t">3 × 2d6 fire</div>Three lines drawn through whatever stood. He aims for the chestpiece, always.</div>
+        </div>
+        <div class="spell">
+          <div class="lv">Lv. 1</div>
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 21 V3 M5 10 L12 3 L19 10 M9 18 H15"/></svg></div>
+          <div class="nm">Healing Word</div>
+          <div class="desc"><div class="t">Bonus · 1d4 + 4</div>The kindest spell he knows. He casts it as if apologising for the others.</div>
+        </div>
+        <div class="spell">
+          <div class="lv">Cantrip</div>
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9" stroke-dasharray="2 3"/><circle cx="12" cy="12" r="4"/></svg></div>
+          <div class="nm">Minor Illusion</div>
+          <div class="desc"><div class="t">1 min</div>A laugh in an empty room. A second silhouette in the dark. He uses it to feel watched-over.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== VIEW STRIP 2 — FLAME ========== -->
+  <div class="viewstrip">
+    <img src="assets/kael-veranth-flame.jpg" alt="Kael holding flame in palm"/>
+    <div class="caption">
+      <div class="lbl">Plate · 02 — The Coal in the Hand</div>
+      <div class="txt">"It does not burn me. The dragons inside know my face. That, in itself, is the wound."</div>
+    </div>
+  </div>
+
+  <!-- ========== CHAPTER IV — EQUIPMENT ========== -->
+  <section class="chap flip">
+    <div class="chap-body">
+      <ul class="eq-list">
+        <li>
+          <span class="ix">01</span>
+          <div class="body-eq">
+            <div class="nm">Dragon-etched Wand</div>
+            <div class="mt">Spell focus. The grain of the wood has, lately, begun to glow when he is angry.</div>
+          </div>
+          <span class="tag">attuned</span>
+        </li>
+        <li>
+          <span class="ix">02</span>
+          <div class="body-eq">
+            <div class="nm">Silver Ring</div>
+            <div class="mt">Family heirloom. From a father he never met. He wears it on the wrong hand on purpose.</div>
+          </div>
+          <span class="tag">heirloom</span>
+        </li>
+        <li>
+          <span class="ix">03</span>
+          <div class="body-eq">
+            <div class="nm">Vial of Ashes</div>
+            <div class="mt">The village he burned by accident. Kept close so he can lie about nothing.</div>
+          </div>
+          <span class="tag">relic</span>
+        </li>
+        <li>
+          <span class="ix">04</span>
+          <div class="body-eq">
+            <div class="nm">Old Journal</div>
+            <div class="mt">The hermit's handwriting in the margins. Recipes. Three prayers. A drawing of a smile.</div>
+          </div>
+          <span class="tag">journal</span>
+        </li>
+        <li>
+          <span class="ix">05</span>
+          <div class="body-eq">
+            <div class="nm">Herbalism Kit</div>
+            <div class="mt">Cures more than it kills. He insists on this, mostly to himself.</div>
+          </div>
+          <span class="tag">kit</span>
+        </li>
+        <li>
+          <span class="ix">06</span>
+          <div class="body-eq">
+            <div class="nm">Travel Pack &amp; Lantern</div>
+            <div class="mt">Bedroll, tinder box, herbal tea — the small civilisations of a long road.</div>
+          </div>
+          <span class="tag">camp</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="chap-aside">
+      <span class="chap-num">IV</span>
+      <div class="chap-tag">The Inventory</div>
+      <h2 class="chap-title">What He Carries<br/>From the Fire</h2>
+      <div class="chap-flair">Six objects. None of them weigh as much as the seventh, which he keeps in his chest.</div>
+    </div>
+  </section>
+
+  <!-- ========== CHAPTER V — HEART (likes + weaknesses) ========== -->
+  <section class="chap">
+    <div class="chap-aside">
+      <span class="chap-num">V</span>
+      <div class="chap-tag">The Heart</div>
+      <h2 class="chap-title">What He Loves<br/>&amp; What Unmakes Him</h2>
+      <div class="chap-flair">The dragon in his mind has a quiet voice. The boy underneath has a louder one, sometimes.</div>
+    </div>
+    <div class="chap-body">
+      <div class="dual">
+        <div>
+          <h4>Loved · Quietly</h4>
+          <ul>
+            <li>Listening to other people's stories.</li>
+            <li>The silence of the forest and the stars.</li>
+            <li>Helping strangers without expecting anything.</li>
+            <li>Herbal tea on cold nights.</li>
+            <li>Ancient books and forgotten legends.</li>
+          </ul>
+        </div>
+        <div>
+          <h4 style="color:#d68a8a">Refused</h4>
+          <ul>
+            <li>Compliments, thanks, and attention.</li>
+            <li>Being asked about his past.</li>
+            <li>Large fires. (Predictably.)</li>
+            <li>Dragon worship and religious cults.</li>
+            <li>Being touched unexpectedly.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="dual weak" style="margin-top:36px">
+        <div>
+          <h4>Weaknesses</h4>
+          <ul>
+            <li>Unstable emotions — when he loses control, his draconic power destroys what is near him.</li>
+            <li>Physically fragile. The body is the wood the fire eats first.</li>
+            <li>Afraid of being loved — pushes people away before they get close enough to be burned.</li>
+            <li>The whisper of the dragon in his mind, in a voice he has never asked the name of.</li>
+            <li>Carries guilt he can never forgive himself for.</li>
+          </ul>
+        </div>
+        <div>
+          <h4>The Hunters</h4>
+          <ul>
+            <li>The Cult of Auralyx — the Amber Wyrm — believe him to be their chosen heir.</li>
+            <li>They do not wish him dead. They wish him <em>theirs</em>. That is, often, worse.</li>
+            <li>Three runners on his trail at the time of writing. He has counted four sets of footsteps.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== CHAPTER VI — BACKSTORY ========== -->
+  <section class="chap flip">
+    <div class="chap-body">
+      <p class="drop">
+        Kael was born in a small rural village, unaware of his draconic heritage. He has no memory of his father — only that his mother, in one of her quiet moods, once spoke of a stranger with eyes like fire.
+      </p>
+      <p>
+        At fifteen, a surge of uncontrollable power erupted in a moment of rage. The village burned. His mother burned. The wind carried him, in the end, as far as he could walk before the legs gave.
+      </p>
+      <p>
+        He lived in isolation with an old hermit for six years, learning healing, self-control, and how to wear the mask of kindness so well that he, too, sometimes forgets it is one. The hermit died on a cold morning. There was no fire that time.
+      </p>
+      <p>
+        He prayed, in those years, to every god whose name he had ever heard. None answered. So he stopped believing — but he kept the prayers, the way he kept the ashes, in a small bottle under his coat.
+      </p>
+      <p>
+        Now he travels as an adventurer, carrying the ashes of his past, seeking the truth about the dragon within him — while being hunted by dragon cultists who see him as their chosen heir. He does not know which of those two fates would unmake him faster.
+      </p>
+    </div>
+
+    <div class="chap-aside">
+      <span class="chap-num">VI</span>
+      <div class="chap-tag">The Annals</div>
+      <h2 class="chap-title">Annals of<br/>the Ash-Born</h2>
+      <div class="chap-flair">Six years of silence. One coat. One vial. One name he refuses to pray to anymore.</div>
+    </div>
+  </section>
+
+  <!-- ========== END ========== -->
+  <div class="cinema-end">
+    <div class="end-quote">
+      "I burned everything I loved.<br/>So I could learn how to protect what remains."
+    </div>
+    <div class="end-attribution">— Kael Veranth · Folio III · the Ashen Chronicle</div>
+  </div>
+
+  <div class="colophon">Codex of the Veiled Watch · Folio III of VIII · Ashen Chronicle</div>
+</div>
+
+<script>
+  // Generate ember particles
+  (function(){
+    const container = document.getElementById('embers');
+    if(!container) return;
+    const N = 28;
+    for(let i=0;i<N;i++){
+      const e = document.createElement('div');
+      e.className = 'ember';
+      const left = Math.random()*100;
+      const dur  = 9 + Math.random()*10;
+      const del  = Math.random() * dur;
+      const dx   = (Math.random()*120 - 60) + 'px';
+      const sz   = 2 + Math.random()*4;
+      e.style.left = left + '%';
+      e.style.animationDuration = dur + 's';
+      e.style.animationDelay = '-' + del + 's';
+      e.style.setProperty('--dx', dx);
+      e.style.width = sz + 'px';
+      e.style.height = sz + 'px';
+      container.appendChild(e);
+    }
+  })();
+</script>
+
+</body>
+</html>

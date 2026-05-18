@@ -1,0 +1,1090 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Kael Vorn — Infernal Registry · Dossier 05</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" href="shared.css">
+<style>
+:root{
+  --bg-deep:#060304;
+  --bg-card:#120808;
+  --bg-card-2:#1c0c0c;
+  --line:#3a1414;
+  --line-soft:#220a0a;
+  --ink:#f0e2d4;
+  --ink-soft:#cdb8a3;
+  --ink-mute:#8a6e5c;
+  --ink-faint:#503830;
+  --ember:#c93a2a;
+  --ember-deep:#7a1818;
+  --hellfire:#ff5a30;
+  --rust:#9a4a28;
+  --redact:#3a0606;
+}
+html,body{background:var(--bg-deep);color:var(--ink);font-size:16px;line-height:1.55}
+body{
+  min-height:100vh;
+  background:
+    radial-gradient(900px 700px at 20% 0%, rgba(201,58,42,0.15), transparent 60%),
+    radial-gradient(800px 500px at 100% 100%, rgba(201,58,42,0.10), transparent 60%),
+    var(--bg-deep);
+  overflow-x:hidden;
+  cursor:crosshair;
+}
+/* surveillance scan lines */
+body::after{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:201;
+  background:repeating-linear-gradient(0deg, rgba(0,0,0,0.06) 0 1px, transparent 1px 4px);
+  opacity:.4;mix-blend-mode:multiply;
+  animation:scan-roll 8s linear infinite;
+}
+@keyframes scan-roll{
+  0%  { background-position:0 0 }
+  100%{ background-position:0 16px }
+}
+
+h1,h2,h3,h4{letter-spacing:0.04em;color:var(--ink)}
+em,i{font-style:italic;color:var(--ink-soft)}
+.mono{font-family:"IBM Plex Mono",monospace;letter-spacing:0.04em}
+
+/* ===== BACK LINK — Infernal Registry colour + cursor override ===== */
+.back-link{color:var(--ember);border-color:var(--ember-deep);cursor:crosshair}
+.back-link:hover{border-color:var(--ember)}
+
+.page{max-width:1320px;margin:0 auto;padding:64px 28px 64px;position:relative}
+
+/* ============ DOSSIER HEADER ============ */
+.doss-head{
+  position:relative;
+  border:2px solid var(--ember-deep);
+  padding:18px 28px;
+  margin-bottom:24px;
+  background:linear-gradient(90deg, rgba(122,24,24,0.18), rgba(122,24,24,0.04));
+  display:grid;grid-template-columns:auto 1fr auto;gap:24px;align-items:center;
+}
+.doss-head::before{
+  content:"INFERNAL REGISTRY";
+  position:absolute;top:-9px;left:24px;background:var(--bg-deep);
+  padding:0 12px;color:var(--ember);
+  font-family:"IBM Plex Mono",monospace;font-size:0.62rem;letter-spacing:0.32em;font-weight:500;
+}
+.doss-head .seal{
+  width:54px;height:54px;border:1px solid var(--ember-deep);
+  display:grid;place-items:center;color:var(--ember);
+  background:radial-gradient(circle, rgba(201,58,42,0.18), transparent 70%);
+  animation:skull-pulse 3.4s ease-in-out infinite;
+}
+@keyframes skull-pulse{
+  0%,100%{box-shadow:0 0 0 0 rgba(201,58,42,0.0), inset 0 0 0 0 rgba(201,58,42,0.0)}
+  50%   {box-shadow:0 0 24px 2px rgba(201,58,42,0.25), inset 0 0 12px rgba(201,58,42,0.12)}
+}
+.doss-head .seal svg{width:34px;height:34px;animation:skull-jitter 5s steps(8) infinite}
+@keyframes skull-jitter{
+  0%,90%,100%{transform:translate(0,0)}
+  92%{transform:translate(-0.5px,0.5px)}
+  94%{transform:translate(0.5px,-0.5px)}
+  96%{transform:translate(0,0.5px)}
+}
+.doss-head .titlebar{display:flex;flex-direction:column;gap:4px}
+.doss-head .titlebar .ttl{
+  font-family:"Cinzel",serif;font-size:1.1rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--ink);
+  white-space:nowrap;overflow:hidden;
+  border-right:2px solid var(--ember);
+  width:0;
+  animation:type-title 1.6s steps(38) 0.3s forwards, caret-stop 0s linear 1.9s forwards;
+}
+@keyframes type-title{
+  0%{width:0}
+  100%{width:32ch}
+}
+@keyframes caret-stop{
+  to{border-right-color:transparent}
+}
+.doss-head .titlebar .sub{
+  font-family:"IBM Plex Mono",monospace;font-size:0.7rem;letter-spacing:0.18em;color:var(--ink-mute);
+  opacity:0;
+  animation:fade-up 0.6s ease-out 2.0s forwards;
+}
+@keyframes fade-up{
+  0%{opacity:0;transform:translateY(6px)}
+  100%{opacity:1;transform:translateY(0)}
+}
+.doss-head .meta{
+  display:grid;grid-template-columns:auto auto;gap:2px 14px;
+  font-family:"IBM Plex Mono",monospace;font-size:0.66rem;color:var(--ink-mute);letter-spacing:0.06em;
+  text-align:right;
+  opacity:0;
+  animation:fade-up 0.6s ease-out 2.4s forwards;
+}
+.doss-head .meta .k{color:var(--ember-deep)}
+.doss-head .meta #live-clock{color:var(--ember);font-variant-numeric:tabular-nums}
+
+/* REC + live indicator */
+.rec-dot{
+  position:absolute;top:14px;right:30px;
+  font-family:"IBM Plex Mono",monospace;letter-spacing:0.24em;font-size:0.58rem;color:var(--ember);
+  display:flex;align-items:center;gap:8px;
+  opacity:0;animation:fade-up 0.6s ease-out 2.4s forwards;
+}
+.rec-dot::before{
+  content:"";width:8px;height:8px;border-radius:50%;background:var(--hellfire);
+  box-shadow:0 0 8px var(--hellfire);
+  animation:rec-blink 1.4s ease-in-out infinite;
+}
+@keyframes rec-blink{
+  0%,100%{opacity:1}
+  50%{opacity:0.2}
+}
+
+/* ============ MAIN GRID — 12 cols ============ */
+.grid{display:grid;grid-template-columns:repeat(12, minmax(0, 1fr));gap:14px;}
+
+.panel{
+  border:1px solid var(--line);
+  background:linear-gradient(180deg, rgba(28,12,12,0.6), rgba(15,8,8,0.9));
+  position:relative;
+  padding:18px 20px;
+  /* scroll reveal */
+  opacity:0;
+  transform:translateY(14px);
+  transition:opacity .6s ease-out, transform .6s cubic-bezier(.2,.7,.2,1), border-color .3s;
+}
+.panel.in{opacity:1;transform:translateY(0)}
+.panel.in::after{animation:panel-scan 1.3s ease-out 0.05s forwards}
+.panel::before, .panel::after{
+  content:"";position:absolute;width:10px;height:10px;border:1px solid var(--ember-deep);background:var(--bg-deep);transform:rotate(45deg);
+}
+.panel::before{top:-5px;left:-5px}
+.panel::after{top:-5px;right:-5px}
+
+/* scan-in sweep */
+.panel .scan-sweep{
+  position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(90deg, transparent 0%, rgba(255,90,48,0.20) 50%, transparent 100%);
+  transform:translateX(-100%);
+  opacity:0;
+  z-index:1;
+}
+.panel.in .scan-sweep{
+  animation:sweep 0.9s ease-out forwards;
+}
+@keyframes sweep{
+  0%  {transform:translateX(-100%);opacity:0}
+  20% {opacity:1}
+  80% {opacity:1}
+  100%{transform:translateX(100%);opacity:0}
+}
+
+.panel-head{
+  display:flex;align-items:center;gap:10px;margin-bottom:14px;
+  border-bottom:1px solid var(--line);padding-bottom:10px;
+}
+.panel-head .num{
+  font-family:"IBM Plex Mono",monospace;font-size:0.62rem;letter-spacing:0.18em;color:var(--ember);
+  padding:2px 7px;border:1px solid var(--ember-deep);
+}
+.panel-head .ttl{font-family:"Cinzel",serif;font-size:0.78rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--ink)}
+.panel-head .subline{font-family:"IBM Plex Mono",monospace;color:var(--ink-mute);font-size:0.6rem;letter-spacing:0.18em;margin-left:auto;text-transform:uppercase}
+
+/* span helpers */
+.c-3{grid-column:span 3}.c-4{grid-column:span 4}.c-5{grid-column:span 5}.c-6{grid-column:span 6}.c-7{grid-column:span 7}.c-8{grid-column:span 8}.c-9{grid-column:span 9}.c-12{grid-column:span 12}
+
+/* ============ PORTRAIT PANEL ============ */
+.portrait-panel{
+  position:relative;
+  padding:0;overflow:hidden;
+  aspect-ratio:1/1.45;
+}
+.portrait-panel img{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 15%;
+  filter:contrast(1.08) saturate(0.92);
+  transition:filter 1.2s;
+}
+.portrait-panel:hover img{filter:contrast(1.12) saturate(1) brightness(1.04)}
+.portrait-panel::after{
+  content:"";position:absolute;inset:0;
+  background:
+    linear-gradient(180deg, transparent 50%, rgba(7,3,3,0.85) 100%),
+    radial-gradient(ellipse at 30% 30%, rgba(201,58,42,0.12), transparent 50%);
+  pointer-events:none;
+  z-index:1;
+}
+.portrait-panel .id-bar{
+  position:absolute;top:0;left:0;right:0;z-index:3;
+  display:flex;justify-content:space-between;align-items:center;
+  background:rgba(7,3,3,0.85);
+  border-bottom:1px solid var(--ember-deep);
+  padding:8px 14px;
+}
+.portrait-panel .id-bar .lbl{font-family:"IBM Plex Mono",monospace;font-size:0.62rem;letter-spacing:0.18em;color:var(--ember)}
+.portrait-panel .id-bar .id{font-family:"IBM Plex Mono",monospace;font-size:0.62rem;color:var(--ink-soft)}
+.portrait-panel .subject{
+  position:absolute;left:18px;bottom:14px;right:18px;z-index:3;
+}
+.portrait-panel .subject .nm-en{
+  font-family:"Cinzel",serif;font-size:1.85rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink);line-height:1;text-shadow:0 2px 6px #000;
+}
+.portrait-panel .subject .alias{
+  margin-top:8px;font-family:"IBM Plex Mono",monospace;font-size:0.7rem;color:var(--ember);letter-spacing:0.22em;text-shadow:0 1px 4px #000;
+}
+.portrait-panel .subject .epi{
+  margin-top:6px;font-family:"Cormorant Garamond",serif;font-style:italic;font-size:0.95rem;color:var(--ink-soft);text-shadow:0 1px 4px #000;
+}
+
+/* Scope reticule overlay — rotates slowly */
+.reticule{
+  position:absolute;inset:0;z-index:2;pointer-events:none;
+  display:grid;place-items:center;
+}
+.reticule svg{
+  width:62%;height:62%;color:var(--ember);
+  animation:reticule-spin 30s linear infinite;
+  filter:drop-shadow(0 0 6px rgba(201,58,42,0.4));
+  opacity:0.42;
+}
+@keyframes reticule-spin{
+  0%  {transform:rotate(0deg)}
+  100%{transform:rotate(360deg)}
+}
+/* counter-rotate the labels inside scope so they remain readable */
+.reticule .labels{
+  position:absolute;inset:0;display:grid;place-items:center;color:var(--ember);
+  font-family:"IBM Plex Mono",monospace;font-size:0.55rem;letter-spacing:0.22em;
+  text-shadow:0 0 4px rgba(201,58,42,0.5);
+  opacity:0.7;
+}
+.reticule .labels span{position:absolute;padding:4px 8px}
+.reticule .labels .top{top:8%}
+.reticule .labels .bot{bottom:8%}
+.reticule .labels .lft{left:6%;writing-mode:vertical-rl;transform:rotate(180deg)}
+.reticule .labels .rgt{right:6%;writing-mode:vertical-rl}
+
+/* CLASSIFIED stamps — slam in */
+.stamp{
+  position:absolute;
+  top:30%;right:-8px;
+  transform:rotate(8deg) scale(0.4);
+  z-index:4;
+  border:3px solid var(--ember);
+  color:var(--ember);
+  font-family:"Cinzel",serif;font-weight:700;
+  letter-spacing:0.3em;text-transform:uppercase;
+  font-size:0.78rem;
+  padding:8px 14px;
+  background:rgba(60,8,8,0.5);
+  opacity:0;
+  box-shadow:0 0 0 1px rgba(201,58,42,0.4);
+  animation:stamp-slam 0.5s cubic-bezier(.5,.2,.3,1.3) 1.6s forwards;
+}
+.stamp.small{font-size:0.6rem;padding:5px 10px;border-width:2px;letter-spacing:0.25em}
+.stamp.hunted{top:auto;bottom:6%;right:auto;left:-8px;transform:rotate(-6deg) scale(0.4);animation-delay:2s}
+@keyframes stamp-slam{
+  0%   {opacity:0;transform:rotate(0deg) scale(1.8)}
+  60%  {opacity:0.95;transform:rotate(8deg) scale(0.9)}
+  75%  {transform:rotate(7deg) scale(1.06)}
+  100% {opacity:0.78;transform:rotate(8deg) scale(1)}
+}
+.stamp.hunted{animation-name:stamp-slam-left}
+@keyframes stamp-slam-left{
+  0%   {opacity:0;transform:rotate(0deg) scale(1.8)}
+  60%  {opacity:0.95;transform:rotate(-6deg) scale(0.9)}
+  75%  {transform:rotate(-7deg) scale(1.06)}
+  100% {opacity:0.78;transform:rotate(-6deg) scale(1)}
+}
+
+/* ============ BASIC INFO GRID ============ */
+.kv-list{display:grid;grid-template-columns:auto 1fr;gap:6px 18px;font-size:0.95rem}
+.kv-list .k{
+  font-family:"IBM Plex Mono",monospace;text-transform:uppercase;letter-spacing:0.14em;font-size:0.6rem;color:var(--ember);
+  align-self:center;
+}
+.kv-list .v{color:var(--ink-soft);font-family:"Cormorant Garamond",serif}
+.kv-list .v em{color:var(--ink-mute);font-size:0.88rem;margin-left:6px}
+
+/* ============ ABILITY HEX TABLE ============ */
+.hex-row{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.hex{
+  position:relative;
+  aspect-ratio:1/1.1;
+  background:radial-gradient(circle at center, rgba(201,58,42,0.18) 0%, transparent 70%), var(--bg-card-2);
+  clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;border:1px solid transparent;
+  transition:transform .3s, background .3s;
+}
+.hex:hover{transform:translateY(-2px);background:radial-gradient(circle at center, rgba(255,90,48,0.30) 0%, transparent 70%), var(--bg-card-2)}
+.hex .ab{font-family:"IBM Plex Mono",monospace;font-size:0.55rem;letter-spacing:0.18em;color:var(--ember)}
+.hex .sc{font-family:"Cinzel",serif;font-weight:700;font-size:1.7rem;color:var(--ink);line-height:1;margin:4px 0 2px}
+.hex .mod{font-family:"IBM Plex Mono",monospace;font-size:0.7rem;color:var(--ink-mute)}
+
+.combat-row{
+  margin-top:12px;display:grid;grid-template-columns:repeat(4,1fr);gap:4px;border-top:1px dashed var(--line);padding-top:10px;
+}
+.cmb{text-align:center}
+.cmb .k{font-family:"IBM Plex Mono",monospace;font-size:0.56rem;letter-spacing:0.16em;color:var(--ember)}
+.cmb .v{font-family:"Cinzel",serif;font-size:1.05rem;color:var(--ink);margin-top:2px}
+
+.aux-row{
+  margin-top:10px;display:flex;flex-wrap:wrap;gap:8px 18px;font-family:"IBM Plex Mono",monospace;font-size:0.66rem;color:var(--ink-mute);
+}
+.aux-row span b{color:var(--ember);font-weight:500;margin-right:4px}
+
+/* ============ DATA LIST ============ */
+.data-list{margin:0;padding:0;list-style:none;font-size:0.95rem}
+.data-list li{
+  display:flex;gap:12px;align-items:flex-start;
+  padding:6px 0;border-bottom:1px dashed var(--line-soft);
+  color:var(--ink-soft);
+  opacity:0;transform:translateX(-6px);
+  transition:opacity .4s ease-out, transform .4s ease-out, color .25s;
+}
+.panel.in .data-list li{opacity:1;transform:translateX(0)}
+/* stagger */
+.panel.in .data-list li:nth-child(1){transition-delay:0.05s}
+.panel.in .data-list li:nth-child(2){transition-delay:0.10s}
+.panel.in .data-list li:nth-child(3){transition-delay:0.15s}
+.panel.in .data-list li:nth-child(4){transition-delay:0.20s}
+.panel.in .data-list li:nth-child(5){transition-delay:0.25s}
+.panel.in .data-list li:nth-child(6){transition-delay:0.30s}
+.panel.in .data-list li:nth-child(7){transition-delay:0.35s}
+.panel.in .data-list li:nth-child(8){transition-delay:0.40s}
+.data-list li:hover{color:var(--ink)}
+.data-list li:last-child{border-bottom:none}
+.data-list .ix{font-family:"IBM Plex Mono",monospace;font-size:0.7rem;color:var(--ember-deep);min-width:24px}
+.data-list .tx{flex:1;line-height:1.4}
+.data-list .tx em{color:var(--ink);font-style:italic}
+
+/* fire-tag glyph next to ability lines with fire keyword */
+.firetag{
+  display:inline-block;width:12px;height:12px;vertical-align:-2px;margin-left:6px;
+  color:var(--hellfire);
+}
+.firetag svg{width:100%;height:100%;animation:fire-flicker 1.4s ease-in-out infinite alternate;filter:drop-shadow(0 0 4px rgba(255,90,48,0.7))}
+@keyframes fire-flicker{
+  0%{transform:scale(1) rotate(-2deg);opacity:0.85}
+  100%{transform:scale(1.15) rotate(2deg);opacity:1}
+}
+
+/* ============ EQUIPMENT MATRIX ============ */
+.eq-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.eq-cell{
+  position:relative;
+  border:1px solid var(--line);background:var(--bg-card-2);
+  padding:14px 10px 10px;text-align:center;
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  transition:border-color .3s,background .3s,transform .3s, box-shadow .3s;
+}
+.eq-cell:hover{
+  border-color:var(--ember);
+  background:linear-gradient(180deg, rgba(255,90,48,0.05), var(--bg-card-2));
+  transform:translateY(-3px);
+  box-shadow:0 14px 24px -12px rgba(201,58,42,0.5);
+  z-index:2;
+}
+.eq-cell .gl{
+  width:42px;height:42px;display:grid;place-items:center;color:var(--ember);
+  border:1px solid var(--ember-deep);background:var(--bg-deep);
+  transition:color .3s, border-color .3s, transform .3s;
+}
+.eq-cell:hover .gl{color:var(--hellfire);border-color:var(--hellfire);transform:scale(1.08) rotate(4deg)}
+.eq-cell .gl svg{width:22px;height:22px}
+.eq-cell .nm{font-family:"Cinzel",serif;font-size:0.62rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink)}
+.eq-cell .qty{
+  position:absolute;top:6px;right:8px;
+  font-family:"IBM Plex Mono",monospace;font-size:0.55rem;color:var(--ember);
+}
+
+/* arrow trajectory line drawn on hover of longbow */
+.eq-cell.bow{position:relative;overflow:hidden}
+.eq-cell.bow .arc{
+  position:absolute;inset:0;pointer-events:none;
+  opacity:0;
+}
+.eq-cell.bow:hover .arc{
+  opacity:1;
+  animation:arc-flight 0.9s ease-out forwards;
+}
+.eq-cell.bow .arc svg{width:100%;height:100%}
+.eq-cell.bow .arc path{
+  stroke:var(--hellfire);stroke-width:1.4;fill:none;
+  stroke-dasharray:140;stroke-dashoffset:140;
+  filter:drop-shadow(0 0 4px rgba(255,90,48,0.7));
+}
+.eq-cell.bow:hover .arc path{animation:arc-draw 0.9s ease-out forwards}
+@keyframes arc-draw{
+  0%  {stroke-dashoffset:140}
+  100%{stroke-dashoffset:0}
+}
+@keyframes arc-flight{
+  0%  {opacity:0}
+  10% {opacity:1}
+  100%{opacity:0.7}
+}
+
+/* dice tumble */
+.eq-cell.dice:hover .gl svg{animation:dice-tumble 1.2s ease-out}
+@keyframes dice-tumble{
+  0%  {transform:scale(1.08) rotate(4deg)}
+  30% {transform:scale(1.15) rotate(180deg)}
+  60% {transform:scale(1.1) rotate(330deg)}
+  100%{transform:scale(1.08) rotate(360deg)}
+}
+
+/* coin spin */
+.eq-cell.coin:hover .gl svg{animation:coin-spin 1.2s linear infinite}
+@keyframes coin-spin{
+  0%  {transform:rotateY(0deg)}
+  100%{transform:rotateY(360deg)}
+}
+
+/* ============ ASSOCIATE ============ */
+.assoc{display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:flex-start}
+.assoc .pf{
+  width:120px;height:160px;border:1px solid var(--line);overflow:hidden;background:#000;flex-shrink:0;
+  position:relative;
+}
+.assoc .pf img{width:100%;height:100%;object-fit:cover;object-position:center 18%;filter:contrast(1.08) saturate(0.92);transition:filter .4s}
+.assoc:hover .pf img{filter:contrast(1.14) saturate(1)}
+.assoc .pf::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg, transparent 60%, rgba(7,3,3,0.7) 100%);
+  pointer-events:none;
+}
+.assoc .info .nm{font-family:"Cinzel",serif;font-size:0.86rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink);margin-bottom:4px}
+.assoc .info .role{font-family:"IBM Plex Mono",monospace;font-size:0.6rem;letter-spacing:0.16em;color:var(--ember);margin-bottom:10px}
+.assoc .info .desc{font-family:"Cormorant Garamond",serif;color:var(--ink-soft);font-size:0.96rem;line-height:1.55}
+.assoc .info .desc em{color:var(--ink)}
+
+/* ============ FIELD SUMMATION ============ */
+.summation{
+  margin-top:24px;border:2px solid var(--ember-deep);padding:24px 28px;
+  background:linear-gradient(135deg, rgba(122,24,24,0.18), rgba(122,24,24,0.04));
+  position:relative;
+  opacity:0;transform:translateY(12px);
+  transition:opacity .8s ease-out, transform .8s cubic-bezier(.2,.7,.2,1);
+}
+.summation.in{opacity:1;transform:translateY(0)}
+.summation::before{
+  content:"FIELD SUMMATION";
+  position:absolute;top:-9px;left:24px;background:var(--bg-deep);padding:0 12px;
+  font-family:"IBM Plex Mono",monospace;font-size:0.62rem;letter-spacing:0.3em;color:var(--ember);
+}
+.summation .quote{
+  font-family:"Cormorant Garamond",serif;font-style:italic;font-size:1.5rem;color:var(--ink);line-height:1.5;max-width:820px;
+}
+.summation .quote em{color:var(--hellfire);font-style:normal;font-family:"Cinzel",serif;letter-spacing:0.06em;text-transform:uppercase;font-size:0.85em}
+.summation .quote-attr{margin-top:14px;font-family:"IBM Plex Mono",monospace;letter-spacing:0.22em;font-size:0.7rem;color:var(--ember);text-transform:uppercase}
+
+/* signature mark */
+.signature{
+  display:flex;align-items:center;gap:14px;margin-top:18px;padding-top:18px;border-top:1px dashed var(--line);
+}
+.signature .glyph{
+  width:34px;height:34px;color:var(--ember);flex-shrink:0;
+  animation:signature-pulse 4s ease-in-out infinite;
+}
+.signature .glyph svg{width:100%;height:100%}
+@keyframes signature-pulse{
+  0%,100%{filter:drop-shadow(0 0 0 rgba(201,58,42,0))}
+  50%   {filter:drop-shadow(0 0 8px rgba(255,90,48,0.7))}
+}
+.signature .scribed{
+  font-family:"Cormorant Garamond",serif;font-style:italic;font-size:0.95rem;color:var(--ink-mute);
+}
+.signature .scribed strong{color:var(--ember);font-style:normal;font-family:"IBM Plex Mono",monospace;letter-spacing:0.16em;font-size:0.78rem;text-transform:uppercase;margin-right:6px}
+
+/* ============ COLOPHON ============ */
+.colophon{margin-top:24px;text-align:center;font-family:"IBM Plex Mono",monospace;letter-spacing:0.3em;text-transform:uppercase;font-size:0.58rem;color:var(--ink-faint)}
+
+/* ============ FLOATING EMBERS (hellfire) ============ */
+.embers{position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden}
+.ember{
+  position:absolute;bottom:-10px;width:3px;height:3px;border-radius:50%;
+  background:radial-gradient(circle, #ffa070, #ff5a30 50%, transparent 80%);
+  box-shadow:0 0 8px rgba(255,90,48,0.7), 0 0 16px rgba(255,90,48,0.35);
+  animation:ember-rise linear infinite;
+  opacity:0;
+}
+@keyframes ember-rise{
+  0%  {transform:translate(0,0) scale(0.7);opacity:0}
+  10% {opacity:0.9}
+  60% {opacity:0.5}
+  100%{transform:translate(var(--dx,30px),-110vh) scale(0.2);opacity:0}
+}
+
+/* ============ CURSOR CROSSHAIR ============ */
+.xhair{
+  position:fixed;top:0;left:0;width:60px;height:60px;
+  pointer-events:none;z-index:250;
+  transform:translate(-50%,-50%);
+  color:var(--ember);
+  opacity:0;
+  transition:opacity .3s, color .3s;
+  mix-blend-mode:screen;
+}
+.xhair.on{opacity:0.72}
+.xhair.lock{color:var(--hellfire);opacity:1}
+.xhair svg{width:100%;height:100%}
+.xhair .ring{transform-origin:center;animation:xhair-spin 12s linear infinite}
+.xhair.lock .ring{animation-duration:3s}
+@keyframes xhair-spin{
+  0%{transform:rotate(0deg)}
+  100%{transform:rotate(360deg)}
+}
+
+/* ============ OCCASIONAL GLITCH FLASH ============ */
+.glitch-flash{
+  position:fixed;inset:0;pointer-events:none;z-index:202;
+  background:linear-gradient(180deg, rgba(255,90,48,0.0) 0%, rgba(255,90,48,0.04) 50%, rgba(255,90,48,0.0) 100%);
+  opacity:0;
+  animation:glitch-blink 11s ease-in-out infinite;
+}
+@keyframes glitch-blink{
+  0%, 88%, 100% {opacity:0}
+  89% {opacity:0.9}
+  90% {opacity:0.2}
+  91% {opacity:0.7}
+  92% {opacity:0}
+}
+
+/* REDUCE MOTION */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:0.001ms !important;animation-iteration-count:1 !important;transition-duration:0.001ms !important}
+  .xhair,.ember,.glitch-flash,.reticule svg{display:none}
+  body{cursor:auto}
+}
+
+/* RESPONSIVE */
+@media (max-width:1100px){
+  .c-3{grid-column:span 6}.c-4{grid-column:span 6}.c-5{grid-column:span 6}.c-6{grid-column:span 12}.c-7{grid-column:span 12}.c-8{grid-column:span 12}.c-9{grid-column:span 12}
+  .eq-grid{grid-template-columns:repeat(4,1fr)}
+}
+@media (max-width:780px){
+  body{cursor:auto}
+  .xhair{display:none}
+  .doss-head{grid-template-columns:1fr;text-align:left}
+  .doss-head .meta{text-align:left}
+  .doss-head .titlebar .ttl{animation:none;width:auto;border-right:none}
+  .rec-dot{position:relative;top:auto;right:auto;justify-content:flex-start;margin-top:8px}
+  .c-3,.c-4,.c-5{grid-column:span 12}
+  .eq-grid{grid-template-columns:repeat(3,1fr)}
+  .hex-row{grid-template-columns:repeat(3,1fr)}
+  .combat-row{grid-template-columns:repeat(2,1fr);gap:10px}
+  .assoc{grid-template-columns:1fr}
+  .assoc .pf{width:100%;height:200px}
+}
+@media (max-width:480px){
+  .eq-grid{grid-template-columns:repeat(2,1fr)}
+  .portrait-panel .subject .nm-en{font-size:1.3rem}
+  .summation .quote{font-size:1.2rem}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ FLOATING EMBERS ============ -->
+<div class="embers" id="embers" aria-hidden="true"></div>
+
+<!-- ============ GLITCH FLASH OVERLAY ============ -->
+<div class="glitch-flash" aria-hidden="true"></div>
+
+<!-- ============ CURSOR CROSSHAIR ============ -->
+<div class="xhair" id="xhair" aria-hidden="true">
+  <svg viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.1">
+    <g class="ring">
+      <circle cx="30" cy="30" r="26" stroke-dasharray="3 3"/>
+      <circle cx="30" cy="30" r="18"/>
+      <path d="M30 4 V12 M30 48 V56 M4 30 H12 M48 30 H56"/>
+    </g>
+    <line x1="30" y1="22" x2="30" y2="38"/>
+    <line x1="22" y1="30" x2="38" y2="30"/>
+    <circle cx="30" cy="30" r="1.5" fill="currentColor"/>
+  </svg>
+</div>
+
+<a class="back-link" href="index.html"><span class="arr"></span>Back to Codex</a>
+
+<div class="page">
+
+  <!-- ============ DOSSIER HEAD ============ -->
+  <div class="doss-head">
+    <div class="seal">
+      <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.2">
+        <path d="M8 4 L12 10 L16 6 L20 10 L24 4 L24 16 C24 22 16 28 16 28 C16 28 8 22 8 16 Z"/>
+        <path d="M14 14 L16 18 L18 14"/>
+        <circle cx="13" cy="11" r="0.8" fill="currentColor"/>
+        <circle cx="19" cy="11" r="0.8" fill="currentColor"/>
+      </svg>
+    </div>
+    <div class="titlebar">
+      <div class="ttl">Dossier · 05 — Subject Kael Vorn</div>
+      <div class="sub">FILE / KV-1187 · CLASSIFICATION: WATCHED · BLOODLINE: INFERNAL LEGACY</div>
+    </div>
+    <div class="meta">
+      <span class="k">FILED</span><span>57·VII·CC</span>
+      <span class="k">SECT.</span><span>VEILED WATCH</span>
+      <span class="k">SCRIBE</span><span>br. AELWIN</span>
+      <span class="k">REV.</span><span>02</span>
+      <span class="k">TIME</span><span id="live-clock">--:--:--</span>
+    </div>
+    <div class="rec-dot">REC · LIVE</div>
+  </div>
+
+  <!-- ============ MAIN GRID ============ -->
+  <div class="grid">
+
+    <!-- Portrait + identity -->
+    <div class="c-4">
+      <div class="panel portrait-panel">
+        <div class="scan-sweep"></div>
+        <div class="id-bar">
+          <span class="lbl">SUBJECT · KV-1187</span>
+          <span class="id">PHOTO · 01/04</span>
+        </div>
+        <img src="assets/kael-vorn-portrait.jpg" alt="Kael Vorn" />
+        <div class="reticule" aria-hidden="true">
+          <svg viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-width="0.6">
+            <circle cx="100" cy="100" r="88" stroke-dasharray="2 6"/>
+            <circle cx="100" cy="100" r="62"/>
+            <circle cx="100" cy="100" r="34"/>
+            <path d="M100 8 V42 M100 158 V192 M8 100 H42 M158 100 H192"/>
+            <path d="M20 20 L42 42 M158 158 L180 180 M180 20 L158 42 M42 158 L20 180" stroke-dasharray="3 3"/>
+            <circle cx="100" cy="100" r="2" fill="currentColor"/>
+          </svg>
+          <div class="labels">
+            <span class="top">N · 000.0</span>
+            <span class="bot">S · 180.0</span>
+            <span class="lft">W · 270</span>
+            <span class="rgt">E · 090</span>
+          </div>
+        </div>
+        <div class="stamp">Tiefling</div>
+        <div class="stamp small hunted">Lone Hunter</div>
+        <div class="subject">
+          <div class="nm-en">Kael Vorn</div>
+          <div class="alias">ALIAS — "V." · "the Sole Survivor"</div>
+          <div class="epi">— former elite reconnaissance scout · now a lone hunter</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Basic info -->
+    <div class="c-4">
+      <div class="panel">
+        <div class="scan-sweep"></div>
+        <div class="panel-head">
+          <span class="num">01</span>
+          <span class="ttl">Basic Info</span>
+          <span class="subline">vital · static</span>
+        </div>
+        <div class="kv-list">
+          <div class="k">Race</div>      <div class="v">Tiefling <em>— Infernal Legacy</em></div>
+          <div class="k">Class</div>     <div class="v">Ranger · Lv. 1</div>
+          <div class="k">Background</div><div class="v">Soldier <em>— regimental scout</em></div>
+          <div class="k">Age</div>       <div class="v">27</div>
+          <div class="k">Sex</div>       <div class="v">Male</div>
+          <div class="k">Height</div>    <div class="v">187 cm · 6'2"</div>
+          <div class="k">Weight</div>    <div class="v">176 lbs · 80 kg</div>
+          <div class="k">Alignment</div> <div class="v">Chaotic Evil <em>— cruel when it must be</em></div>
+          <div class="k">Tongues</div>   <div class="v">Common · Elvish · Giant</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Appearance -->
+    <div class="c-4">
+      <div class="panel">
+        <div class="scan-sweep"></div>
+        <div class="panel-head">
+          <span class="num">02</span>
+          <span class="ttl">Appearance</span>
+          <span class="subline">obs · 7 marks</span>
+        </div>
+        <ul class="data-list">
+          <li><span class="ix">A1</span><span class="tx">Hair: dark, cropped close — a soldier's cut, kept since the regiment.</span></li>
+          <li><span class="ix">A2</span><span class="tx">Eyes: deep brown, sharp — and faintly luminous in the dark.</span></li>
+          <li><span class="ix">A3</span><span class="tx">Skin: a dull dark-yellow ochre, weathered.</span></li>
+          <li><span class="ix">A4</span><span class="tx">Horns: black, curved, rising from the brow.</span></li>
+          <li><span class="ix">A5</span><span class="tx">Tail: long, pointed, flicking subtly with mood.</span></li>
+          <li><span class="ix">A6</span><span class="tx">Scarring: numerous, from many engagements.</span></li>
+          <li><span class="ix">A7</span><span class="tx">Demeanour: cold, still, focused.</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Ability scores -->
+    <div class="c-5">
+      <div class="panel">
+        <div class="scan-sweep"></div>
+        <div class="panel-head">
+          <span class="num">03</span>
+          <span class="ttl">Combat Profile</span>
+          <span class="subline">field-test</span>
+        </div>
+        <div class="hex-row">
+          <div class="hex"><div class="ab">STR</div><div class="sc">12</div><div class="mod">+1</div></div>
+          <div class="hex"><div class="ab">DEX</div><div class="sc">17</div><div class="mod">+3</div></div>
+          <div class="hex"><div class="ab">CON</div><div class="sc">14</div><div class="mod">+2</div></div>
+          <div class="hex"><div class="ab">INT</div><div class="sc">8</div><div class="mod">−1</div></div>
+          <div class="hex"><div class="ab">WIS</div><div class="sc">14</div><div class="mod">+2</div></div>
+          <div class="hex"><div class="ab">CHA</div><div class="sc">10</div><div class="mod">+0</div></div>
+        </div>
+        <div class="combat-row">
+          <div class="cmb"><div class="k">AC</div><div class="v">16</div></div>
+          <div class="cmb"><div class="k">HP</div><div class="v">11</div></div>
+          <div class="cmb"><div class="k">Speed</div><div class="v">35</div></div>
+          <div class="cmb"><div class="k">Init</div><div class="v">+3</div></div>
+        </div>
+        <div class="aux-row">
+          <span><b>ARMOR</b>Studded Leather</span>
+          <span><b>SAVES</b>STR · DEX</span>
+          <span><b>PROF</b>+2</span>
+          <span><b>P.INSIGHT</b>11</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Abilities -->
+    <div class="c-4">
+      <div class="panel">
+        <div class="scan-sweep"></div>
+        <div class="panel-head">
+          <span class="num">04</span>
+          <span class="ttl">Abilities</span>
+          <span class="subline">8 entries</span>
+        </div>
+        <ul class="data-list">
+          <li><span class="ix">B1</span><span class="tx">Darkvision — 60 ft. in low light or pitch-dark.</span></li>
+          <li><span class="ix">B2</span><span class="tx">Fire Resistance — half damage from fire.<span class="firetag"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2 C8 6 6 9 6 13 a6 6 0 0 0 12 0 c0 -3 -2 -6 -6 -11 z"/></svg></span></span></li>
+          <li><span class="ix">B3</span><span class="tx">Fire Bolt — 1d10 fire damage at 120 ft.<span class="firetag"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2 C8 6 6 9 6 13 a6 6 0 0 0 12 0 c0 -3 -2 -6 -6 -11 z"/></svg></span></span></li>
+          <li><span class="ix">B4</span><span class="tx">Hunter's Mark — 2 per long rest. Bonus damage on a chosen quarry.</span></li>
+          <li><span class="ix">B5</span><span class="tx">Longstrider · Thaumaturgy — minor cantrips of menace and reach.</span></li>
+          <li><span class="ix">B6</span><span class="tx">Weapon Mastery — <em>Slow</em> (Longbow) · target speed reduced by 10 ft.</span></li>
+          <li><span class="ix">B7</span><span class="tx">Weapon Mastery — <em>Vex</em> (Shortsword) · advantage on the next attack.</span></li>
+          <li><span class="ix">B8</span><span class="tx">Stealth +3 — an excellent scout.</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Weaknesses -->
+    <div class="c-3">
+      <div class="panel">
+        <div class="scan-sweep"></div>
+        <div class="panel-head">
+          <span class="num">05</span>
+          <span class="ttl">Weak Pts</span>
+          <span class="subline">6 flags</span>
+        </div>
+        <ul class="data-list">
+          <li><span class="ix">W1</span><span class="tx">CHA 10 — no charm; poor in any social setting.</span></li>
+          <li><span class="ix">W2</span><span class="tx">INT 8 — weak in scholarship and rote knowledge.</span></li>
+          <li><span class="ix">W3</span><span class="tx">Passive Insight 11 — bad at reading people.</span></li>
+          <li><span class="ix">W4</span><span class="tx">Trusts no one. Refuses orders. Will not work as part of a team.</span></li>
+          <li><span class="ix">W5</span><span class="tx">Solves problems through violence — even when he shouldn't.</span></li>
+          <li><span class="ix">W6</span><span class="tx">Faces ingrained social prejudice for being a tiefling.</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Personality -->
+    <div class="c-4">
+      <div class="panel">
+        <div class="scan-sweep"></div>
+        <div class="panel-head">
+          <span class="num">06</span>
+          <span class="ttl">Personality</span>
+          <span class="subline">profile</span>
+        </div>
+        <ul class="data-list">
+          <li><span class="ix">P1</span><span class="tx">Quiet. Closed off. Trusts no one.</span></li>
+          <li><span class="ix">P2</span><span class="tx">Trusts his own instincts — always.</span></li>
+          <li><span class="ix">P3</span><span class="tx">Despises orders and being controlled.</span></li>
+          <li><span class="ix">P4</span><span class="tx">Thinks systematically — direct, unembellished.</span></li>
+          <li><span class="ix">P5</span><span class="tx">Plays dice alone in idle hours — never against the house.</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Likes -->
+    <div class="c-4">
+      <div class="panel">
+        <div class="scan-sweep"></div>
+        <div class="panel-head">
+          <span class="num">07</span>
+          <span class="ttl">Likes</span>
+          <span class="subline">+ inclinations</span>
+        </div>
+        <ul class="data-list">
+          <li><span class="ix">+</span><span class="tx">The hunt — and the wild, walked alone.</span></li>
+          <li><span class="ix">+</span><span class="tx">Silence. Wide-open places.</span></li>
+          <li><span class="ix">+</span><span class="tx">Dice (the game; never the gambler).</span></li>
+          <li><span class="ix">+</span><span class="tx">Self-reliance.</span></li>
+          <li><span class="ix">+</span><span class="tx">Those willing to die at his side.</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Dislikes -->
+    <div class="c-4">
+      <div class="panel">
+        <div class="scan-sweep"></div>
+        <div class="panel-head">
+          <span class="num">08</span>
+          <span class="ttl">Dislikes</span>
+          <span class="subline">− aversions</span>
+        </div>
+        <ul class="data-list">
+          <li><span class="ix">−</span><span class="tx">Orders from a chain of command.</span></li>
+          <li><span class="ix">−</span><span class="tx">Those who trust without thinking.</span></li>
+          <li><span class="ix">−</span><span class="tx">Politics. Deception.</span></li>
+          <li><span class="ix">−</span><span class="tx">Betrayal.</span></li>
+          <li><span class="ix">−</span><span class="tx">The judging eyes of strangers.</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Backstory (wide) -->
+    <div class="c-7">
+      <div class="panel">
+        <div class="scan-sweep"></div>
+        <div class="panel-head">
+          <span class="num">09</span>
+          <span class="ttl">Backstory</span>
+          <span class="subline">debrief · classified</span>
+        </div>
+        <ul class="data-list">
+          <li><span class="ix">▸</span><span class="tx">Once a top-tier reconnaissance scout in the regimental army.</span></li>
+          <li><span class="ix">▸</span><span class="tx">A mission betrayed from above — nearly the entire unit slaughtered.</span></li>
+          <li><span class="ix">▸</span><span class="tx">The <em>sole</em> survivor — the only face left to remember.</span></li>
+          <li><span class="ix">▸</span><span class="tx">Has not trusted a chain of command since.</span></li>
+          <li><span class="ix">▸</span><span class="tx">Travels alone now — hunts beasts, hunts men, survives. Believes only in himself.</span></li>
+          <li><span class="ix">↳</span><span class="tx" style="color:var(--ember)"><em>"I can stare a hellhound in the eye without blinking. The straight, simple way is the best way."</em></span></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Associate -->
+    <div class="c-5">
+      <div class="panel">
+        <div class="scan-sweep"></div>
+        <div class="panel-head">
+          <span class="num">10</span>
+          <span class="ttl">Sole Associate</span>
+          <span class="subline">contact · cleared</span>
+        </div>
+        <div class="assoc">
+          <div class="pf"><img src="assets/kael-vorn-smith.jpg" alt="The smith"/></div>
+          <div class="info">
+            <div class="nm">The Smith</div>
+            <div class="role">SOURCE · BLACKSMITH · DWARVEN</div>
+            <div class="desc">
+              The only living man who still repairs Vorn's gear without asking why. The one tie <em>Vorn has not yet burned.</em>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Equipment matrix -->
+    <div class="c-12">
+      <div class="panel">
+        <div class="scan-sweep"></div>
+        <div class="panel-head">
+          <span class="num">11</span>
+          <span class="ttl">Equipment Matrix</span>
+          <span class="subline">15 items · all accounted</span>
+        </div>
+        <div class="eq-grid">
+          <div class="eq-cell bow">
+            <div class="gl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4 6 Q12 2 20 6 Q12 12 4 18 Q12 22 20 18"/><line x1="6" y1="7" x2="6" y2="17"/></svg></div>
+            <div class="nm">Longbow</div>
+            <div class="qty">×1</div>
+            <div class="arc" aria-hidden="true">
+              <svg viewBox="0 0 100 100">
+                <path d="M10 80 Q50 -10 90 80"/>
+                <polygon points="90,80 84,72 86,84" fill="currentColor" stroke="none"/>
+              </svg>
+            </div>
+          </div>
+          <div class="eq-cell">
+            <div class="gl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M6 18 L18 6 M14 6 H18 V10"/><path d="M5 19 L9 19 V15"/></svg></div>
+            <div class="nm">Shortsword</div>
+            <div class="qty">×1</div>
+          </div>
+          <div class="eq-cell">
+            <div class="gl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4 20 L20 4 M16 4 H20 V8"/></svg></div>
+            <div class="nm">Scimitar</div>
+            <div class="qty">×1</div>
+          </div>
+          <div class="eq-cell">
+            <div class="gl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 4 H16 V20 H8 Z M10 4 V2 H14 V4 M10 8 V18 M14 8 V18"/></svg></div>
+            <div class="nm">Quiver</div>
+            <div class="qty">×20</div>
+          </div>
+          <div class="eq-cell">
+            <div class="gl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M6 6 H18 V20 H6 Z M9 6 V3 H15 V6 M9 10 H15"/></svg></div>
+            <div class="nm">Backpack</div>
+            <div class="qty">×1</div>
+          </div>
+
+          <div class="eq-cell">
+            <div class="gl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><ellipse cx="12" cy="12" rx="9" ry="3"/><ellipse cx="12" cy="12" rx="5" ry="1.5"/></svg></div>
+            <div class="nm">Bedroll</div>
+            <div class="qty">×1</div>
+          </div>
+          <div class="eq-cell">
+            <div class="gl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="4" y="8" width="16" height="11"/><line x1="4" y1="12" x2="20" y2="12"/></svg></div>
+            <div class="nm">Tinderbox</div>
+            <div class="qty">×1</div>
+          </div>
+          <div class="eq-cell">
+            <div class="gl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 2 V5 M9 5 H15 V7 H9 Z M8 7 L7 11 V18 A2 2 0 0 0 9 20 H15 A2 2 0 0 0 17 18 V11 L16 7"/></svg></div>
+            <div class="nm">Torch</div>
+            <div class="qty">×10</div>
+          </div>
+          <div class="eq-cell">
+            <div class="gl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M6 6 H18 V20 H6 Z"/><path d="M10 6 V20 M14 6 V20"/></svg></div>
+            <div class="nm">Rations &amp; Water</div>
+            <div class="qty">×10</div>
+          </div>
+          <div class="eq-cell">
+            <div class="gl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M10 4 H14 V8 L17 12 V20 A2 2 0 0 1 15 22 H9 A2 2 0 0 1 7 20 V12 Z"/></svg></div>
+            <div class="nm">Oil</div>
+            <div class="qty">×2</div>
+          </div>
+
+          <div class="eq-cell">
+            <div class="gl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 8 Q12 4 21 8 Q15 12 14 16 Q12 20 10 16 Q9 12 3 8 Z"/></svg></div>
+            <div class="nm">Rope · 50 ft</div>
+            <div class="qty">×1</div>
+          </div>
+          <div class="eq-cell dice">
+            <div class="gl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="4" y="4" width="16" height="16"/><circle cx="9" cy="9" r="1" fill="currentColor"/><circle cx="15" cy="9" r="1" fill="currentColor"/><circle cx="9" cy="15" r="1" fill="currentColor"/><circle cx="15" cy="15" r="1" fill="currentColor"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg></div>
+            <div class="nm">Dice Set</div>
+            <div class="qty">×1</div>
+          </div>
+          <div class="eq-cell">
+            <div class="gl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4 12 L12 4 L20 12 L12 20 Z"/><path d="M8 12 L12 8 L16 12 L12 16 Z"/></svg></div>
+            <div class="nm">Sprig of Mistletoe</div>
+            <div class="qty">×1</div>
+          </div>
+          <div class="eq-cell coin">
+            <div class="gl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/></svg></div>
+            <div class="nm">Coin Pouch</div>
+            <div class="qty">17 GP</div>
+          </div>
+          <div class="eq-cell">
+            <div class="gl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M5 4 L12 6 L19 4 V14 C19 18 16 21 12 22 C8 21 5 18 5 14 Z"/><path d="M12 6 V22"/></svg></div>
+            <div class="nm">Studded Leather</div>
+            <div class="qty">+1 AC</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ============ FIELD SUMMATION ============ -->
+  <div class="summation" id="summation">
+    <div class="quote">"I can stare a <em>hellhound</em> in the eye without blinking — and face a problem head-on. The straight, simple way is the best way."</div>
+    <div class="quote-attr">— Subject statement · KV-1187 · Folio V</div>
+    <div class="signature">
+      <span class="glyph">
+        <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.2">
+          <path d="M8 4 L12 10 L16 6 L20 10 L24 4 L24 16 C24 22 16 28 16 28 C16 28 8 22 8 16 Z"/>
+          <path d="M14 14 L16 18 L18 14"/>
+          <circle cx="13" cy="11" r="0.8" fill="currentColor"/>
+          <circle cx="19" cy="11" r="0.8" fill="currentColor"/>
+        </svg>
+      </span>
+      <div class="scribed">
+        <strong>SIGIL</strong> The infernal skull of his bloodline. Burned, faintly, into the inside of his left forearm — and onto every man he has named his enemy.
+      </div>
+    </div>
+  </div>
+
+  <div class="colophon">Codex of the Veiled Watch · Folio V of VIII · Infernal Registry · Subject KV-1187</div>
+
+</div>
+
+<script>
+  // ====== 1. Floating embers (hellfire) ======
+  (function(){
+    const box = document.getElementById('embers');
+    if (!box) return;
+    const N = 22;
+    for (let i=0;i<N;i++){
+      const e = document.createElement('div');
+      e.className = 'ember';
+      const left = Math.random()*100;
+      const dur  = 9 + Math.random()*10;
+      const del  = Math.random()*dur;
+      const dx   = (Math.random()*100 - 50) + 'px';
+      const sz   = 2 + Math.random()*3.5;
+      e.style.left = left + '%';
+      e.style.width = sz+'px';
+      e.style.height = sz+'px';
+      e.style.animationDuration = dur + 's';
+      e.style.animationDelay = '-' + del + 's';
+      e.style.setProperty('--dx', dx);
+      box.appendChild(e);
+    }
+  })();
+
+  // ====== 3. Cursor crosshair ======
+  (function(){
+    const xh = document.getElementById('xhair');
+    if (!xh || matchMedia('(max-width:780px)').matches) return;
+    let tx = 0, ty = 0;
+    let x = 0, y = 0;
+    let raf;
+    let hideTimer;
+
+    document.addEventListener('mousemove', (e) => {
+      tx = e.clientX;
+      ty = e.clientY;
+      xh.classList.add('on');
+      clearTimeout(hideTimer);
+      hideTimer = setTimeout(() => xh.classList.remove('on'), 2000);
+    });
+
+    function tick(){
+      // smooth lag follow
+      x += (tx - x) * 0.22;
+      y += (ty - y) * 0.22;
+      xh.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%)`;
+      raf = requestAnimationFrame(tick);
+    }
+    raf = requestAnimationFrame(tick);
+
+    // "lock" state when hovering a target (portrait, equipment, hex)
+    const targets = document.querySelectorAll('.portrait-panel, .hex, .eq-cell, .assoc .pf');
+    targets.forEach(t => {
+      t.addEventListener('mouseenter', () => xh.classList.add('lock'));
+      t.addEventListener('mouseleave', () => xh.classList.remove('lock'));
+    });
+  })();
+
+  // ====== 4. Scroll reveal for panels and summation ======
+  (function(){
+    const targets = document.querySelectorAll('.panel, .summation');
+    if (!('IntersectionObserver' in window)){
+      targets.forEach(t => t.classList.add('in'));
+      return;
+    }
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting){
+          e.target.classList.add('in');
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+    targets.forEach(t => io.observe(t));
+  })();
+</script>
+<script src="shared.js"></script>
+
+</body>
+</html>

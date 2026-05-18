@@ -2,1547 +2,1340 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<title>Aython Ashvail Aurelius — House Aurelius, Disinherited</title>
+<title>Aython Ashvail Aurelius — A Playbill in One Folio</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
-<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="shared.css">
 <style>
-  :root {
-    --bg-deep:    #07070a;
-    --bg-paper:   #0e0e13;
-    --bg-card:    #15151c;
-    --bg-card-2:  #1c1c25;
-    --line:       #2a2a35;
-    --line-soft:  #1d1d25;
-    --ink:        #e8e2cf;
-    --ink-soft:   #c9c2ad;
-    --ink-mute:   #7a7461;
-    --ink-faint:  #4a4636;
-    --gold:       #c9a45c;
-    --gold-dim:   #8a6f3a;
-    --gold-deep:  #5a4622;
-    --navy:       #4a1418;
-    --navy-soft:  #6e1c20;
-    --blood:      #b01a1a;
-    --blood-soft: #6e1212;
-    --rune:       var(--gold);
-  }
-  html, body {
-    margin: 0;
-    padding: 0;
-    background: var(--bg-deep);
-    color: var(--ink);
-    font-family: "Cormorant Garamond", "EB Garamond", Georgia, serif;
-    font-weight: 400;
-    font-size: 17px;
-    line-height: 1.55;
-    -webkit-font-smoothing: antialiased;
-    text-rendering: optimizeLegibility;
-  }
-  body {
-    min-height: 100vh;
-    background:
-      radial-gradient(1200px 800px at 50% -10%, #14141d 0%, transparent 60%),
-      radial-gradient(900px 600px at 50% 110%, #110b0b 0%, transparent 65%),
-      var(--bg-deep);
-  }
-  /* film grain */
-  body::before {
-    content: "";
-    position: fixed; inset: 0;
-    pointer-events: none;
-    z-index: 100;
-    opacity: 0.06;
-    mix-blend-mode: overlay;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.7 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
-  }
-  /* oath-broken bleed */
-  body.oathbreaker::after {
-    content: "";
-    position: fixed; inset: 0;
-    pointer-events: none;
-    z-index: 99;
-    background:
-      radial-gradient(800px 600px at 10% 20%, rgba(176,26,26,0.18), transparent 60%),
-      radial-gradient(900px 700px at 95% 90%, rgba(176,26,26,0.22), transparent 60%),
-      radial-gradient(600px 500px at 50% 50%, rgba(120,15,15,0.10), transparent 70%);
-    animation: bleed 8s ease-in-out infinite alternate;
-  }
-  @keyframes bleed {
-    from { opacity: 0.7; }
-    to   { opacity: 1; }
-  }
+:root{
+  --bg-deep:#0a0608;
+  --bg-paper:#120a0a;
+  --bg-card:#1a0e0e;
+  --bg-card-2:#22141a;
+  --line:#3a1f1f;
+  --line-soft:#22100e;
+  --ink:#f3e6d2;
+  --ink-soft:#cab098;
+  --ink-mute:#867058;
+  --ink-faint:#4a3a2e;
+  --candle:#f1e6c8;
+  --brass:#c69a55;
+  --gold:#d6a360;
+  --gold-dim:#8a6035;
+  --cognac:#a86138;
+  --wine:#7a1a1a;
+  --wine-deep:#4a0a0a;
+  --cellar:#2a1010;
+  --blood:#c41a1a;
+}
+html,body{background:var(--bg-deep);color:var(--ink)}
+body{
+  min-height:100vh;
+  background:
+    radial-gradient(900px 700px at 20% 5%, rgba(241,230,200,0.06) 0%, transparent 60%),
+    radial-gradient(800px 600px at 90% 100%, rgba(122,26,26,0.12) 0%, transparent 60%),
+    var(--bg-deep);
+  transition: background 1.4s ease;
+  overflow-x:hidden;
+}
+body.cellar{
+  background:
+    radial-gradient(900px 700px at 50% 0%, rgba(196,26,26,0.18) 0%, transparent 50%),
+    radial-gradient(800px 600px at 50% 100%, rgba(74,10,10,0.32) 0%, transparent 60%),
+    #0a0405;
+}
 
-  h1, h2, h3, h4, .display {
-    font-family: "Cinzel", "Cormorant Garamond", serif;
-    font-weight: 500;
-    letter-spacing: 0.06em;
-    color: var(--ink);
-  }
-  em, i { font-family: "Cormorant Garamond", serif; font-style: italic; color: var(--ink-soft); }
-  .smallcaps {
-    font-family: "Cinzel", serif;
-    text-transform: uppercase;
-    letter-spacing: 0.22em;
-    font-weight: 500;
-    font-size: 0.72rem;
-    color: var(--gold);
-  }
-  .rule {
-    height: 1px;
-    background: linear-gradient(to right, transparent, var(--gold-dim) 20%, var(--gold-dim) 80%, transparent);
-    opacity: 0.55;
-  }
-  .v-rule {
-    width: 1px;
-    background: linear-gradient(to bottom, transparent, var(--gold-dim) 20%, var(--gold-dim) 80%, transparent);
-    opacity: 0.4;
-  }
+h1,h2,h3,h4{font-family:"Playfair Display",serif;font-weight:600;color:var(--ink)}
+em,i{font-style:italic;color:var(--ink-soft)}
 
-  .page {
-    max-width: 1240px;
-    margin: 0 auto;
-    padding: clamp(60px, 6vw, 80px) clamp(16px, 4vw, 40px) clamp(40px, 6vw, 80px);
-    position: relative;
-  }
+/* ===== BACK LINK — cellar-mode colour override ===== */
+body.cellar .back-link{color:#e8c4c4;border-color:var(--wine-deep)}
 
-  /* decorative corner frame */
-  .frame {
-    position: relative;
-    border: 1px solid var(--line);
-    background: linear-gradient(180deg, rgba(20,20,28,0.6), rgba(10,10,15,0.6));
-  }
-  .frame::before, .frame::after,
-  .frame > .corner-tl, .frame > .corner-tr,
-  .frame > .corner-bl, .frame > .corner-br {
-    content: "";
-    position: absolute;
-    width: 14px; height: 14px;
-    border: 1px solid var(--gold-dim);
-    background: var(--bg-deep);
-  }
-  .frame::before { top: -7px; left: -7px; transform: rotate(45deg); }
-  .frame::after  { top: -7px; right: -7px; transform: rotate(45deg); }
-  .frame > .corner-bl { bottom: -7px; left: -7px; transform: rotate(45deg); }
-  .frame > .corner-br { bottom: -7px; right: -7px; transform: rotate(45deg); }
+/* ===== HEIR TOGGLE ===== */
+.heir-toggle{
+  position:fixed;top:22px;right:22px;z-index:300;
+  display:inline-flex;align-items:stretch;
+  border:1px solid var(--gold-dim);background:rgba(10,6,8,0.88);backdrop-filter:blur(6px);
+}
+.heir-toggle button{
+  background:transparent;border:none;color:var(--ink-mute);
+  padding:10px 18px;font-family:"Cinzel",serif;text-transform:uppercase;
+  letter-spacing:0.22em;font-size:0.65rem;cursor:pointer;
+  transition:color .4s, background .4s;
+}
+.heir-toggle button.active{color:#0a0608;background:var(--gold)}
+.heir-toggle button.cellar.active{background:var(--wine);color:#fff5e8}
+.heir-toggle .divider{width:1px;background:var(--gold-dim)}
+body.cellar .heir-toggle{border-color:var(--wine-deep)}
 
-  .card {
-    background: var(--bg-card);
-    border: 1px solid var(--line);
-    padding: 22px 24px;
-    position: relative;
-  }
-  .card .label {
-    font-family: "Cinzel", serif;
-    text-transform: uppercase;
-    letter-spacing: 0.24em;
-    font-size: 0.7rem;
-    color: var(--gold);
-    margin-bottom: 14px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .card .label::before {
-    content: "";
-    width: 6px; height: 6px;
-    border: 1px solid var(--gold-dim);
-    transform: rotate(45deg);
-    display: inline-block;
-  }
-  .card .label::after {
-    content: "";
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(to right, var(--gold-deep), transparent);
-  }
+/* ============ PLAYBILL CONTAINER ============ */
+.playbill{
+  max-width:1180px;margin:0 auto;
+  padding:96px 24px 80px;
+  position:relative;z-index:5;
+}
 
-  /* ----- masthead ----- */
-  .masthead {
-    display: grid;
-    grid-template-columns: 1.05fr 1.4fr;
-    gap: clamp(20px, 3vw, 36px);
-    align-items: stretch;
-    margin-bottom: 28px;
-  }
-  .portrait {
-    position: relative;
-    overflow: hidden;
-    background: #000;
-    aspect-ratio: 1 / 1.8;
-  }
-  .portrait img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    object-position: center center;
-    transition: filter 1.2s ease, transform 6s ease;
-    filter: contrast(1.05) saturate(0.9);
-  }
-  .portrait:hover img { transform: scale(1.03); }
-  body.oathbreaker .portrait img {
-    filter: contrast(1.15) saturate(0.85) hue-rotate(-8deg) brightness(0.92);
-  }
-  .portrait .vignette {
-    position: absolute; inset: 0;
-    background:
-      linear-gradient(180deg, rgba(0,0,0,0) 50%, rgba(0,0,0,0.55) 100%),
-      radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.45) 100%);
-    pointer-events: none;
-  }
-  .portrait .badge {
-    position: absolute;
-    top: 18px; left: 18px;
-    font-family: "Cinzel", serif;
-    text-transform: uppercase;
-    letter-spacing: 0.3em;
-    font-size: 0.62rem;
-    color: var(--gold);
-    background: rgba(7,7,10,0.7);
-    border: 1px solid var(--gold-dim);
-    padding: 6px 12px;
-  }
-  .portrait .caption {
-    position: absolute;
-    bottom: 16px; left: 18px; right: 18px;
-    font-family: "Cormorant Garamond", serif;
-    font-style: italic;
-    color: var(--ink-soft);
-    font-size: 0.95rem;
-    letter-spacing: 0.04em;
-  }
+/* curtain edges */
+.playbill::before, .playbill::after{
+  content:"";position:fixed;top:0;bottom:0;width:80px;z-index:2;pointer-events:none;
+  background:linear-gradient(90deg, rgba(74,10,10,0.42), rgba(74,10,10,0) 100%);
+  transition:opacity 1.2s, background 1.2s;
+  opacity:0.45;
+}
+.playbill::before{left:0}
+.playbill::after{right:0;background:linear-gradient(270deg, rgba(74,10,10,0.42), rgba(74,10,10,0) 100%)}
+body.cellar .playbill::before, body.cellar .playbill::after{opacity:0.75}
 
-  .titleblock {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding-left: 8px;
-  }
-  .titleblock .seal {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    margin-bottom: 18px;
-  }
-  .titleblock .seal-line {
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(to right, var(--gold-dim), transparent);
-  }
-  .name {
-    font-family: "Cinzel", serif;
-    font-weight: 600;
-    font-size: clamp(48px, 5.4vw, 76px);
-    letter-spacing: 0.08em;
-    line-height: 0.95;
-    margin: 0;
-    color: var(--ink);
-    text-shadow: 0 0 30px rgba(201,164,92,0.06);
-  }
-  .name .ampersand {
-    color: var(--gold);
-    font-weight: 400;
-    font-style: italic;
-    font-family: "Cormorant Garamond", serif;
-    margin: 0 0.15em;
-  }
-  .subtitle {
-    margin-top: 18px;
-    font-family: "Cinzel", serif;
-    font-weight: 400;
-    letter-spacing: 0.32em;
-    text-transform: uppercase;
-    font-size: 0.85rem;
-    color: var(--ink-soft);
-  }
-  .subtitle .sep { color: var(--gold-dim); margin: 0 0.6em; }
-  .epitaph {
-    margin-top: 12px;
-    font-family: "Cormorant Garamond", serif;
-    font-style: italic;
-    color: var(--ink-mute);
-    font-size: 1.15rem;
-    letter-spacing: 0.02em;
-  }
-  .epitaph .ob {
-    color: var(--blood);
-    font-style: normal;
-    font-family: "Cinzel", serif;
-    letter-spacing: 0.24em;
-    font-size: 0.85em;
-    text-transform: uppercase;
-  }
+@media (max-width:1200px){.playbill::before,.playbill::after{display:none}}
 
-  .quickbar {
-    margin-top: 28px;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 0;
-    border-top: 1px solid var(--line);
-    border-bottom: 1px solid var(--line);
-  }
-  .quickbar .qcell {
-    padding: 14px 16px;
-    border-right: 1px solid var(--line-soft);
-  }
-  .quickbar .qcell:last-child { border-right: none; }
-  .quickbar .qkey {
-    font-family: "Cinzel", serif;
-    text-transform: uppercase;
-    letter-spacing: 0.22em;
-    font-size: 0.62rem;
-    color: var(--gold);
-    margin-bottom: 4px;
-  }
-  .quickbar .qval {
-    font-family: "Cinzel", serif;
-    font-size: 1.15rem;
-    color: var(--ink);
-    letter-spacing: 0.06em;
-  }
+/* ============ BANNER ============ */
+.banner{
+  position:relative;
+  text-align:center;
+  border-top:3px double var(--gold-dim);
+  border-bottom:3px double var(--gold-dim);
+  padding:18px 20px;margin-bottom:42px;
+  background:linear-gradient(180deg, transparent, rgba(122,26,26,0.06));
+  transition:border-color 1.2s;
+}
+body.cellar .banner{border-color:var(--wine-deep)}
+.banner .tonight{font-family:"Cinzel",serif;letter-spacing:0.46em;text-transform:uppercase;font-size:0.7rem;color:var(--gold);transition:color 1.2s}
+body.cellar .banner .tonight{color:var(--blood)}
+.banner .tonight::before, .banner .tonight::after{content:"❦";color:var(--gold-dim);margin:0 18px;font-size:0.9rem;vertical-align:middle;transition:color 1.2s}
+body.cellar .banner .tonight::before, body.cellar .banner .tonight::after{color:var(--wine-deep)}
+.banner .play{
+  margin-top:6px;font-family:"Playfair Display",serif;font-style:italic;font-weight:400;
+  font-size:1.05rem;letter-spacing:0.06em;color:var(--ink-soft);
+}
 
-  /* oath toggle */
-  .oathtoggle {
-    margin-top: 22px;
-    display: inline-flex;
-    align-items: stretch;
-    border: 1px solid var(--gold-dim);
-    background: rgba(0,0,0,0.4);
-    user-select: none;
-  }
-  .oathtoggle button {
-    background: transparent;
-    border: none;
-    color: var(--ink-mute);
-    padding: 12px 22px;
-    font-family: "Cinzel", serif;
-    text-transform: uppercase;
-    letter-spacing: 0.24em;
-    font-size: 0.72rem;
-    cursor: pointer;
-    transition: all 0.4s ease;
-    position: relative;
-  }
-  .oathtoggle button.active {
-    color: var(--bg-deep);
-    background: var(--gold);
-  }
-  .oathtoggle button.broken.active {
-    background: var(--blood);
-    color: #f8e9e9;
-  }
-  .oathtoggle .divider {
-    width: 1px;
-    background: var(--gold-dim);
-  }
+/* ============ TITLE BLOCK ============ */
+.title-grid{
+  display:grid;grid-template-columns:1fr 1.2fr;gap:48px;
+  align-items:center;margin-bottom:64px;
+}
+.portrait{
+  position:relative;
+  aspect-ratio:5/7;
+  border:1px solid var(--gold-dim);
+  background:#000;overflow:hidden;
+  box-shadow:0 40px 100px -30px rgba(0,0,0,0.9), inset 0 0 0 1px rgba(214,163,96,0.08);
+  transition:border-color 1.2s;
+}
+body.cellar .portrait{border-color:var(--wine-deep)}
+.portrait img{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 15%;
+  filter:contrast(1.06) saturate(0.95);
+  transition:filter 1.2s;
+}
+body.cellar .portrait img{filter:contrast(1.15) saturate(0.85) hue-rotate(-10deg) brightness(0.92)}
+.portrait::after{
+  content:"";position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse at 50% 25%, rgba(241,230,200,0.12) 0%, transparent 45%),
+    linear-gradient(180deg, transparent 65%, rgba(10,6,8,0.7) 100%);
+  transition:background 1.2s;
+}
+body.cellar .portrait::after{
+  background:
+    radial-gradient(ellipse at 50% 25%, rgba(196,26,26,0.18) 0%, transparent 45%),
+    linear-gradient(180deg, transparent 60%, rgba(10,4,5,0.78) 100%);
+}
+.portrait .label{
+  position:absolute;left:14px;bottom:14px;right:14px;z-index:2;
+  font-family:"Playfair Display",serif;font-style:italic;font-size:0.96rem;color:var(--candle);
+  letter-spacing:0.05em;text-shadow:0 1px 4px #000;
+}
 
-  /* ----- main grid ----- */
-  .grid {
-    display: grid;
-    grid-template-columns: 1.1fr 1fr 1fr;
-    gap: clamp(14px, 1.8vw, 22px);
-    align-items: start;
-  }
-  .span-2 { grid-column: span 2; }
-  .span-3 { grid-column: span 3; }
+.title-col{position:relative}
+.folio-label{
+  font-family:"Cinzel",serif;letter-spacing:0.4em;text-transform:uppercase;font-size:0.68rem;color:var(--brass);
+  margin-bottom:14px;
+  display:flex;align-items:center;gap:14px;
+  transition:color 1.2s;
+}
+body.cellar .folio-label{color:var(--blood)}
+.folio-label::after{content:"";flex:1;height:1px;background:linear-gradient(to right, currentColor, transparent);opacity:0.6}
 
-  /* abilities */
-  .abilities {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 14px;
-  }
-  .ability {
-    border: 1px solid var(--line);
-    background: var(--bg-card-2);
-    padding: 14px 12px 12px;
-    text-align: center;
-    position: relative;
-  }
-  .ability .ab-name {
-    font-family: "Cinzel", serif;
-    font-size: 0.65rem;
-    letter-spacing: 0.28em;
-    text-transform: uppercase;
-    color: var(--gold);
-  }
-  .ability .ab-mod {
-    font-family: "Cinzel", serif;
-    font-weight: 600;
-    font-size: 2.2rem;
-    color: var(--ink);
-    line-height: 1;
-    margin: 8px 0 4px;
-  }
-  .ability .ab-score {
-    display: inline-block;
-    border: 1px solid var(--gold-dim);
-    background: var(--bg-deep);
-    padding: 2px 12px;
-    font-family: "Cinzel", serif;
-    font-size: 0.78rem;
-    color: var(--ink-soft);
-    letter-spacing: 0.1em;
-  }
+.name-display{
+  font-family:"Playfair Display",serif;font-weight:700;font-style:italic;
+  font-size:clamp(48px, 6.5vw, 96px);
+  line-height:0.95;letter-spacing:-0.01em;margin:0;
+  background:linear-gradient(180deg, var(--candle) 0%, var(--gold) 50%, var(--cognac) 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;
+  text-shadow:0 0 60px rgba(214,163,96,0.15);
+  transition:background 1.2s;
+}
+body.cellar .name-display{
+  background:linear-gradient(180deg, var(--candle) 0%, #d68a8a 40%, var(--wine) 100%);
+  -webkit-background-clip:text;background-clip:text;
+}
+.name-display .amp{
+  font-style:normal;font-family:"Cormorant Garamond",serif;font-weight:400;color:var(--gold);-webkit-text-fill-color:var(--gold);font-size:0.7em;margin:0 0.15em;
+}
+.full-name{
+  margin-top:10px;font-family:"Cormorant Garamond",serif;font-style:italic;color:var(--ink-mute);font-size:1.05rem;letter-spacing:0.06em;
+}
+.house-line{
+  margin-top:20px;font-family:"Cinzel",serif;letter-spacing:0.28em;text-transform:uppercase;font-size:0.82rem;color:var(--ink-soft);
+}
+.house-line .sep{color:var(--brass);margin:0 0.6em;transition:color 1.2s}
+body.cellar .house-line .sep{color:var(--blood)}
 
-  /* combat stat row */
-  .combat-row {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-    margin-top: 16px;
-  }
-  .stat-tile {
-    border: 1px solid var(--line);
-    background: var(--bg-deep);
-    padding: 10px;
-    text-align: center;
-  }
-  .stat-tile .sk { font-family: "Cinzel", serif; font-size: 0.58rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); }
-  .stat-tile .sv { font-family: "Cinzel", serif; font-weight: 600; font-size: 1.4rem; color: var(--ink); margin-top: 4px; }
+.epi{
+  margin-top:14px;font-style:italic;color:var(--ink-mute);font-size:1.1rem;
+}
+.epi .ob{color:var(--blood);font-style:normal;font-family:"Cinzel",serif;letter-spacing:0.22em;font-size:0.78em;text-transform:uppercase}
 
-  /* skill list */
-  .skill-list {
-    list-style: none;
-    margin: 0; padding: 0;
-    columns: 1;
-    column-gap: 18px;
-  }
-  .skill-list li {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 4px 0;
-    border-bottom: 1px dashed var(--line-soft);
-    break-inside: avoid;
-    font-family: "Cormorant Garamond", serif;
-    font-size: 0.92rem;
-    color: var(--ink-soft);
-  }
-  .pip {
-    width: 8px; height: 8px;
-    border: 1px solid var(--gold-dim);
-    transform: rotate(45deg);
-    flex-shrink: 0;
-  }
-  .pip.filled { background: var(--gold); border-color: var(--gold); }
-  .pip.expert {
-    background: var(--gold);
-    border-color: var(--gold);
-    box-shadow: inset 0 0 0 2px var(--bg-card);
-  }
-  .skill-list li .name { flex: 1; }
-  .skill-list li .mod {
-    font-family: "Cinzel", serif;
-    font-size: 0.7rem;
-    color: var(--ink);
-    letter-spacing: 0.06em;
-    min-width: 28px;
-    text-align: right;
-  }
+.opening-quote{
+  margin-top:30px;max-width:520px;
+  padding:16px 22px;border-left:3px solid var(--brass);
+  font-family:"Playfair Display",serif;font-style:italic;font-size:1.25rem;line-height:1.5;color:var(--ink-soft);
+  transition:border-color 1.2s;
+}
+body.cellar .opening-quote{border-color:var(--wine)}
 
-  /* equipment */
-  .equipment-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-  }
-  .eq-item {
-    display: flex;
-    gap: 12px;
-    padding: 10px;
-    border: 1px solid var(--line);
-    background: var(--bg-deep);
-    align-items: flex-start;
-    transition: all 0.3s ease;
-  }
-  .eq-item.hero { grid-column: span 2; background: linear-gradient(135deg, rgba(201,164,92,0.06), transparent 60%), var(--bg-deep); }
-  .eq-item:hover {
-    border-color: var(--gold-dim);
-    transform: translateY(-1px);
-  }
-  .eq-glyph {
-    width: 42px; height: 42px;
-    flex-shrink: 0;
-    border: 1px solid var(--gold-dim);
-    background: var(--bg-card-2);
-    display: grid;
-    place-items: center;
-    color: var(--gold);
-  }
-  .eq-name {
-    font-family: "Cinzel", serif;
-    font-size: 0.78rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--ink);
-    margin-bottom: 3px;
-  }
-  .eq-meta {
-    font-family: "Cormorant Garamond", serif;
-    font-style: italic;
-    font-size: 0.92rem;
-    color: var(--ink-mute);
-    line-height: 1.35;
-  }
+/* ============ ACT MARKER ============ */
+.act{margin-bottom:80px}
+.act-head{
+  position:relative;
+  text-align:center;margin-bottom:36px;
+}
+.act-head::before, .act-head::after{
+  content:"";position:absolute;top:50%;width:30%;height:1px;
+  background:linear-gradient(to right, transparent, var(--gold-dim), transparent);
+  transition:background 1.2s;
+}
+.act-head::before{left:0}.act-head::after{right:0}
+body.cellar .act-head::before, body.cellar .act-head::after{background:linear-gradient(to right, transparent, var(--wine-deep), transparent)}
 
-  /* palette */
-  .palette {
-    display: grid;
-    grid-template-columns: repeat(8, 1fr);
-    gap: 6px;
-    margin-bottom: 12px;
-  }
-  .swatch {
-    aspect-ratio: 1 / 1.25;
-    border: 1px solid var(--line);
-    position: relative;
-  }
-  .swatch::after {
-    content: attr(data-name);
-    position: absolute;
-    bottom: -16px; left: 0; right: 0;
-    text-align: center;
-    font-family: "Cinzel", serif;
-    font-size: 0.52rem;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--ink-mute);
-    opacity: 0;
-    transition: opacity 0.3s;
-    white-space: nowrap;
-  }
-  .swatch:hover::after { opacity: 1; }
+.act-label{
+  font-family:"Cinzel",serif;letter-spacing:0.5em;text-transform:uppercase;font-size:0.68rem;color:var(--brass);margin-bottom:8px;transition:color 1.2s;
+}
+body.cellar .act-label{color:var(--blood)}
+.act-title{
+  font-family:"Playfair Display",serif;font-style:italic;font-weight:400;font-size:2.2rem;color:var(--ink);letter-spacing:0.02em;
+}
+.act-sub{margin-top:6px;font-family:"Cormorant Garamond",serif;font-style:italic;color:var(--ink-mute);font-size:1rem}
 
-  /* likes/dislikes */
-  .like-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 18px;
-  }
-  .like-col h4 {
-    font-family: "Cinzel", serif;
-    font-size: 0.72rem;
-    letter-spacing: 0.26em;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin: 0 0 12px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid var(--line);
-  }
-  .like-col.dislikes h4 { color: #d68a8a; }
-  .like-col ul { list-style: none; margin: 0; padding: 0; }
-  .like-col li {
-    position: relative;
-    padding: 4px 0 4px 18px;
-    font-family: "Cormorant Garamond", serif;
-    font-size: 1.04rem;
-    color: var(--ink-soft);
-    line-height: 1.4;
-  }
-  .like-col li::before {
-    content: "";
-    position: absolute;
-    left: 0; top: 12px;
-    width: 8px; height: 1px;
-    background: var(--gold-dim);
-  }
-  .like-col.dislikes li::before { background: #6e3030; }
+/* ============ CARDS ============ */
+.card{
+  position:relative;
+  border:1px solid var(--line);
+  background:linear-gradient(180deg, rgba(34,20,26,0.55), rgba(18,10,10,0.45));
+  padding:24px 28px;
+  transition:border-color 1.2s, background 1.2s;
+}
+body.cellar .card{border-color:#3a1010}
+.card::before, .card::after{
+  content:"";position:absolute;width:10px;height:10px;border:1px solid var(--gold-dim);background:var(--bg-deep);transform:rotate(45deg);transition:border-color 1.2s;
+}
+body.cellar .card::before, body.cellar .card::after{border-color:var(--wine-deep)}
+.card::before{top:-5px;left:-5px}
+.card::after{top:-5px;right:-5px}
+.card-title{
+  font-family:"Cinzel",serif;letter-spacing:0.24em;text-transform:uppercase;font-size:0.72rem;color:var(--brass);margin-bottom:18px;
+  display:flex;align-items:center;gap:10px;transition:color 1.2s;
+}
+body.cellar .card-title{color:var(--blood)}
+.card-title::before{content:"";width:8px;height:8px;border:1px solid currentColor;transform:rotate(45deg)}
+.card-title::after{content:"";flex:1;height:1px;background:linear-gradient(to right, currentColor, transparent);opacity:0.5}
 
-  /* backstory */
-  .backstory {
-    display: grid;
-    grid-template-columns: 1.6fr 1fr;
-    gap: 28px;
-    align-items: start;
-  }
-  .story-text {
-    font-family: "Cormorant Garamond", serif;
-    font-size: 1.08rem;
-    color: var(--ink-soft);
-    line-height: 1.65;
-    max-width: 58ch;
-  }
-  .story-text p { margin: 0 0 12px; }
-  .story-text p.drop::first-letter {
-    font-family: "Cinzel", serif;
-    font-weight: 600;
-    font-size: 3.4em;
-    float: left;
-    line-height: 0.85;
-    padding: 4px 12px 0 0;
-    color: var(--gold);
-  }
-  .timeline {
-    border-left: 1px solid var(--gold-dim);
-    padding-left: 22px;
-    margin-left: 8px;
-  }
-  .tl-item { position: relative; margin-bottom: 22px; }
-  .tl-item::before {
-    content: "";
-    position: absolute;
-    left: -29px;
-    top: 6px;
-    width: 11px; height: 11px;
-    background: var(--bg-card);
-    border: 1px solid var(--gold-dim);
-    transform: rotate(45deg);
-  }
-  .tl-item.fall::before {
-    background: var(--blood);
-    border-color: var(--blood);
-    box-shadow: 0 0 12px rgba(176,26,26,0.6);
-  }
-  .tl-age {
-    font-family: "Cinzel", serif;
-    font-size: 0.68rem;
-    letter-spacing: 0.24em;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 4px;
-  }
-  .tl-event {
-    font-family: "Cormorant Garamond", serif;
-    color: var(--ink-soft);
-    font-size: 1.02rem;
-    line-height: 1.4;
-  }
+/* ============ ACT I — INFO + APPEARANCE ============ */
+.info-pair{
+  display:grid;grid-template-columns:1fr 1fr;gap:24px;
+}
+.info-list{
+  display:grid;grid-template-columns:auto 1fr;gap:8px 18px;font-size:0.96rem;
+}
+.info-list .k{font-family:"Cinzel",serif;letter-spacing:0.22em;text-transform:uppercase;font-size:0.58rem;color:var(--brass);align-self:center;transition:color 1.2s}
+body.cellar .info-list .k{color:var(--blood)}
+.info-list .v{color:var(--ink-soft);font-family:"Cormorant Garamond",serif}
+.info-list .v em{color:var(--ink-mute);margin-left:6px}
 
-  /* views tabs */
-  .viewstack {
-    display: grid;
-    grid-template-columns: 240px 1fr;
-    gap: 18px;
-  }
-  .view-tabs {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-  .view-tabs button {
-    background: transparent;
-    border: 1px solid var(--line);
-    color: var(--ink-mute);
-    padding: 10px 14px;
-    font-family: "Cinzel", serif;
-    font-size: 0.72rem;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    cursor: pointer;
-    text-align: left;
-    transition: all 0.25s;
-    position: relative;
-  }
-  .view-tabs button .vk {
-    font-family: "Cormorant Garamond", serif;
-    font-style: italic;
-    color: var(--ink-faint);
-    font-size: 0.92rem;
-    letter-spacing: normal;
-    text-transform: none;
-    margin-left: 6px;
-  }
-  .view-tabs button:hover { color: var(--ink); border-color: var(--gold-dim); }
-  .view-tabs button.active {
-    color: var(--gold);
-    border-color: var(--gold-dim);
-    background: rgba(201,164,92,0.06);
-  }
-  .view-tabs button.active::before {
-    content: "";
-    position: absolute;
-    left: -1px; top: -1px; bottom: -1px;
-    width: 3px;
-    background: var(--gold);
-  }
-  .view-art {
-    border: 1px solid var(--line);
-    background:
-      radial-gradient(ellipse at center 45%, rgba(60,30,30,0.5), transparent 65%),
-      #000;
-    position: relative;
-    overflow: hidden;
-    aspect-ratio: 4 / 5;
-    max-height: 78vh;
-    justify-self: stretch;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .view-art .view-image {
-    display: block;
-    max-width: 100%;
-    max-height: 100%;
-    width: auto;
-    height: 100%;
-    object-fit: contain;
-    animation: viewfade 0.55s ease;
-  }
-  @keyframes viewfade {
-    from { opacity: 0; transform: translateY(8px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-  .view-art .legend {
-    position: absolute;
-    bottom: 10px; left: 14px; right: 14px;
-    display: flex;
-    justify-content: space-between;
-    font-family: "Cinzel", serif;
-    font-size: 0.62rem;
-    letter-spacing: 0.28em;
-    text-transform: uppercase;
-    color: var(--gold);
-    text-shadow: 0 1px 2px #000;
-  }
+.appearance{font-family:"Cormorant Garamond",serif;color:var(--ink-soft);font-size:1.04rem;line-height:1.55;font-style:italic}
+.appearance em{color:var(--ink)}
 
-  /* oathbreaker reveal */
-  .ob-card {
-    position: relative;
-    overflow: hidden;
-    border: 1px solid var(--line);
-    background: var(--bg-card);
-    min-height: 360px;
-    display: grid;
-    grid-template-columns: 1.1fr 1fr;
-    gap: 0;
-  }
-  .ob-art {
-    background-color: #000;
-    background-image: url("assets/aython-portrait.jpg");
-    background-repeat: no-repeat;
-    /* show the upper body — head/wine-glass region */
-    background-size: cover;
-    background-position: center 12%;
-    position: relative;
-    overflow: hidden;
-    filter: contrast(1.08) saturate(0.95);
-    min-height: 460px;
-  }
-  .ob-art::after {
-    content: "";
-    position: absolute; inset: 0;
-    background: linear-gradient(90deg, transparent 40%, rgba(15,8,8,0.55) 78%, var(--bg-card) 100%);
-  }
-  .ob-body {
-    padding: 26px 28px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-  .ob-head {
-    font-family: "Cinzel", serif;
-    color: var(--blood);
-    letter-spacing: 0.28em;
-    text-transform: uppercase;
-    font-size: 0.78rem;
-    margin-bottom: 14px;
-  }
-  .ob-title {
-    font-family: "Cinzel", serif;
-    font-size: 1.9rem;
-    color: var(--ink);
-    letter-spacing: 0.08em;
-    margin-bottom: 12px;
-  }
-  .ob-body p {
-    color: var(--ink-soft);
-    font-family: "Cormorant Garamond", serif;
-    font-size: 1.06rem;
-    margin: 0 0 14px;
-  }
-  .ob-stats {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    margin-top: 8px;
-  }
-  .ob-stat {
-    padding: 10px 12px;
-    border: 1px solid #3a1818;
-    background: rgba(120,18,18,0.07);
-  }
-  .ob-stat .k {
-    font-family: "Cinzel", serif;
-    font-size: 0.58rem;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: var(--blood);
-  }
-  .ob-stat .v {
-    font-family: "Cinzel", serif;
-    color: var(--ink);
-    font-size: 0.95rem;
-    margin-top: 4px;
-  }
+/* ============ ACT II — STATS, SKILLS, REPERTOIRE ============ */
+.repertoire-grid{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:18px}
 
-  /* footer quote */
-  .quote-block {
-    margin-top: 36px;
-    text-align: center;
-    padding: 36px 24px;
-    border-top: 1px solid var(--line);
-    border-bottom: 1px solid var(--line);
-    background: linear-gradient(180deg, transparent, rgba(0,0,0,0.4));
-  }
-  .quote {
-    font-family: "Cormorant Garamond", serif;
-    font-style: italic;
-    font-size: 1.7rem;
-    color: var(--ink-soft);
-    max-width: 720px;
-    margin: 0 auto;
-    line-height: 1.4;
-    letter-spacing: 0.02em;
-  }
-  body.oathbreaker .quote { color: #e8c4c4; }
-  .quote .blood { color: var(--blood); font-style: normal; font-family: "Cinzel", serif; letter-spacing: 0.2em; text-transform: uppercase; font-size: 0.82em; }
-  .quote-attribution {
-    margin-top: 16px;
-    font-family: "Cinzel", serif;
-    text-transform: uppercase;
-    letter-spacing: 0.36em;
-    font-size: 0.62rem;
-    color: var(--gold);
-  }
-  .colophon {
-    margin-top: 28px;
-    text-align: center;
-    font-family: "Cinzel", serif;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    font-size: 0.58rem;
-    color: var(--ink-faint);
-  }
+.scores{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.score{
+  position:relative;aspect-ratio:1/1.15;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
+  background:radial-gradient(circle at center, rgba(214,163,96,0.10), transparent 70%), var(--bg-card);
+  border:1px solid var(--line);
+  clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);
+  transition:border-color 1.2s, background 1.2s;
+}
+body.cellar .score{background:radial-gradient(circle at center, rgba(196,26,26,0.10), transparent 70%), var(--bg-card)}
+.score .ab{font-family:"Cinzel",serif;font-size:0.55rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--brass);transition:color 1.2s}
+body.cellar .score .ab{color:var(--blood)}
+.score .mod{font-family:"Playfair Display",serif;font-weight:700;font-size:1.7rem;color:var(--ink);line-height:1;margin:5px 0 2px}
+.score .sc{font-family:"Cinzel",serif;font-size:0.72rem;color:var(--ink-mute)}
 
-  /* compass star ornament */
-  .ornament {
-    width: 28px;
-    height: 28px;
-    flex-shrink: 0;
-  }
-  .ornament path, .ornament line, .ornament circle { stroke: var(--gold); fill: none; stroke-width: 1; }
+.combat-strip{margin-top:18px;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding-top:14px;border-top:1px solid var(--line-soft)}
+.cmb{text-align:center}
+.cmb .k{font-family:"Cinzel",serif;letter-spacing:0.22em;text-transform:uppercase;font-size:0.55rem;color:var(--brass);transition:color 1.2s}
+body.cellar .cmb .k{color:var(--blood)}
+.cmb .v{font-family:"Cinzel",serif;font-size:1.3rem;color:var(--ink);margin-top:3px}
 
-  body.oathbreaker .pip.filled,
-  body.oathbreaker .pip.expert { background: var(--blood); border-color: var(--blood); }
-  body.oathbreaker .ornament path,
-  body.oathbreaker .ornament line,
-  body.oathbreaker .ornament circle { stroke: var(--blood); }
-  body.oathbreaker .smallcaps,
-  body.oathbreaker .card .label,
-  body.oathbreaker .quickbar .qkey,
-  body.oathbreaker .ability .ab-name,
-  body.oathbreaker .stat-tile .sk,
-  body.oathbreaker .eq-glyph,
-  body.oathbreaker .like-col h4,
-  body.oathbreaker .tl-age,
-  body.oathbreaker .view-tabs button.active,
-  body.oathbreaker .view-art .legend,
-  body.oathbreaker .quote-attribution {
-    color: var(--blood);
-  }
-  body.oathbreaker .ability,
-  body.oathbreaker .stat-tile { border-color: #3a1818; }
-  body.oathbreaker .story-text p.drop::first-letter { color: var(--blood); }
+.skill-list{margin:0;padding:0;list-style:none}
+.skill-list li{display:flex;align-items:center;gap:10px;padding:5px 0;border-bottom:1px dashed var(--line-soft);font-size:0.94rem;color:var(--ink-soft)}
+.pip{width:9px;height:9px;border:1px solid var(--gold-dim);transform:rotate(45deg);flex-shrink:0;transition:background 1.2s,border-color 1.2s}
+.pip.filled{background:var(--brass);border-color:var(--brass)}
+.pip.expert{background:var(--brass);border-color:var(--brass);box-shadow:inset 0 0 0 2px var(--bg-card)}
+body.cellar .pip.filled, body.cellar .pip.expert{background:var(--blood);border-color:var(--blood)}
+.skill-list li .nm{flex:1}
+.skill-list li .md{font-family:"Cinzel",serif;font-size:0.72rem;color:var(--ink);letter-spacing:0.06em;min-width:28px;text-align:right}
 
-  /* sections */
-  section { margin-bottom: 32px; }
-  section > .sec-head {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    margin-bottom: 18px;
-    flex-wrap: wrap;
-  }
-  section > .sec-head .sec-title {
-    font-family: "Cinzel", serif;
-    font-size: clamp(1.05rem, 1.8vw, 1.4rem);
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--ink);
-  }
-  section > .sec-head .num {
-    font-family: "Cinzel", serif;
-    color: var(--gold);
-    font-size: 0.7rem;
-    letter-spacing: 0.3em;
-  }
-  section > .sec-head .seal-line {
-    flex: 1;
-    min-width: 40px;
-    height: 1px;
-    background: linear-gradient(to right, var(--gold-dim), transparent);
-  }
+.feat-list{margin:0;padding:0;list-style:none;font-size:0.95rem}
+.feat-list li{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px dashed var(--line-soft);color:var(--ink-soft)}
+.feat-list li em{color:var(--ink-mute)}
 
-  /* =================== RESPONSIVE =================== */
-  @media (max-width: 1024px) {
-    .grid {
-      grid-template-columns: 1fr 1fr;
-    }
-    .grid .card.span-2 { grid-column: span 2; }
-  }
+/* ============ ACT III — INSTRUMENTS & CABINET ============ */
+.cabinet{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.item{
+  display:flex;flex-direction:column;align-items:center;text-align:center;
+  padding:18px 12px;border:1px solid var(--line);background:var(--bg-card-2);
+  transition:border-color .3s,transform .3s, background 1.2s;
+}
+.item.hero{grid-column:span 2;background:linear-gradient(135deg, rgba(214,163,96,0.08), transparent), var(--bg-card-2)}
+.item:hover{border-color:var(--gold-dim);transform:translateY(-2px)}
+body.cellar .item:hover{border-color:var(--wine)}
+.item .gl{
+  width:46px;height:46px;display:grid;place-items:center;color:var(--brass);
+  border:1px solid var(--gold-dim);background:var(--bg-deep);margin-bottom:10px;
+  transition:color 1.2s, border-color 1.2s;
+}
+body.cellar .item .gl{color:var(--blood);border-color:var(--wine-deep)}
+.item .gl svg{width:24px;height:24px}
+.item .nm{font-family:"Cinzel",serif;letter-spacing:0.14em;text-transform:uppercase;font-size:0.7rem;color:var(--ink);line-height:1.3;margin-bottom:3px}
+.item .mt{font-family:"Cormorant Garamond",serif;font-style:italic;color:var(--ink-mute);font-size:0.86rem;line-height:1.35}
 
-  @media (max-width: 880px) {
-    .masthead {
-      grid-template-columns: 1fr;
-    }
-    .portrait { aspect-ratio: 4 / 5; max-width: 460px; margin: 0 auto; width: 100%; }
-    .titleblock { padding-left: 0; text-align: center; }
-    .titleblock .seal { justify-content: center; }
-    .quickbar { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-    .oathtoggle { align-self: center; margin-left: auto; margin-right: auto; }
+/* ============ INTERLUDE ============ */
+.interlude{
+  position:relative;text-align:center;padding:36px 24px;margin:80px 0 60px;
+  border-top:1px solid var(--gold-dim);border-bottom:1px solid var(--gold-dim);
+  transition:border-color 1.2s;
+}
+body.cellar .interlude{border-color:var(--wine-deep)}
+.interlude::before{
+  content:"INTERLUDE";position:absolute;top:-9px;left:50%;transform:translateX(-50%);
+  background:var(--bg-deep);padding:0 18px;
+  font-family:"Cinzel",serif;letter-spacing:0.4em;font-size:0.7rem;color:var(--brass);transition:color 1.2s, background 1.2s;
+}
+body.cellar .interlude::before{color:var(--blood);background:#0a0405}
+.interlude .text{font-family:"Playfair Display",serif;font-style:italic;font-size:1.4rem;color:var(--ink);max-width:680px;margin:0 auto;line-height:1.4;margin-top:6px}
 
-    .viewstack {
-      grid-template-columns: 1fr;
-    }
-    .view-art {
-      width: 100%;
-      max-width: 480px;
-      justify-self: center;
-      height: auto;
-      aspect-ratio: 9 / 16;
-    }
-    .view-tabs {
-      flex-direction: row;
-      flex-wrap: wrap;
-    }
-    .view-tabs button { flex: 1 1 calc(50% - 4px); }
-    .view-tabs button.active::before { display: none; }
+/* ============ LIKES / DISLIKES ============ */
+.dual{display:grid;grid-template-columns:1fr 1fr;gap:36px;align-items:start}
+.dual h4{
+  font-family:"Cinzel",serif;letter-spacing:0.24em;text-transform:uppercase;font-size:0.78rem;color:var(--brass);
+  margin:0 0 14px;padding-bottom:10px;border-bottom:1px solid var(--line);transition:color 1.2s;
+}
+body.cellar .dual h4{color:var(--blood)}
+.dual.refuse h4{color:#d68a8a}
+.dual ul{margin:0;padding:0;list-style:none}
+.dual li{padding:6px 0 6px 18px;position:relative;color:var(--ink-soft);font-size:1rem;line-height:1.45}
+.dual li::before{content:"";position:absolute;left:0;top:14px;width:10px;height:1px;background:var(--gold-dim);transition:background 1.2s}
+body.cellar .dual li::before{background:var(--wine-deep)}
+.dual.refuse li::before{background:#6e3030}
 
-    .backstory {
-      grid-template-columns: 1fr;
-      gap: 24px;
-    }
+/* ============ BACKSTORY ============ */
+.story{display:grid;grid-template-columns:1.5fr 1fr;gap:36px;align-items:start}
+.story-text{font-family:"Cormorant Garamond",serif;font-size:1.08rem;color:var(--ink-soft);line-height:1.7;max-width:58ch}
+.story-text p{margin:0 0 14px}
+.story-text p:first-child::first-letter{
+  font-family:"Playfair Display",serif;font-weight:700;font-style:italic;
+  font-size:3.6em;float:left;line-height:0.85;padding:4px 12px 0 0;color:var(--brass);transition:color 1.2s;
+}
+body.cellar .story-text p:first-child::first-letter{color:var(--blood)}
 
-    .ob-card {
-      grid-template-columns: 1fr;
-    }
-    .ob-art { min-height: 320px; background-size: cover !important; background-position: center 18% !important; }
-    .ob-art::after {
-      background: linear-gradient(180deg, transparent 50%, rgba(15,8,8,0.55) 85%, var(--bg-card) 100%) !important;
-    }
-  }
+.timeline{border-left:1px solid var(--gold-dim);padding-left:22px;transition:border-color 1.2s}
+body.cellar .timeline{border-color:var(--wine-deep)}
+.tl-item{position:relative;margin-bottom:20px}
+.tl-item::before{content:"";position:absolute;left:-29px;top:6px;width:11px;height:11px;background:var(--bg-card);border:1px solid var(--gold-dim);transform:rotate(45deg);transition:background 1.2s,border-color 1.2s}
+.tl-item.fall::before{background:var(--blood);border-color:var(--blood);box-shadow:0 0 12px rgba(196,26,26,0.6)}
+.tl-age{font-family:"Cinzel",serif;letter-spacing:0.24em;text-transform:uppercase;font-size:0.68rem;color:var(--brass);margin-bottom:4px;transition:color 1.2s}
+body.cellar .tl-age{color:var(--blood)}
+.tl-event{font-family:"Cormorant Garamond",serif;color:var(--ink-soft);font-size:1.02rem;line-height:1.45}
 
-  @media (max-width: 680px) {
-    .grid {
-      grid-template-columns: 1fr;
-    }
-    .grid .card.span-2,
-    .grid .card.span-3 { grid-column: span 1; }
+/* ============ ENCORE CARD ============ */
+.encore-card{
+  display:grid;grid-template-columns:1.05fr 1fr;gap:0;
+  border:1px solid var(--line);background:var(--bg-card);
+  position:relative;overflow:hidden;min-height:380px;
+  transition:border-color 1.2s;
+}
+body.cellar .encore-card{border-color:#3a1010}
+.encore-art{
+  background-color:#000;
+  background-image:url("assets/aython-portrait.jpg");
+  background-repeat:no-repeat;background-size:cover;background-position:center 8%;
+  position:relative;min-height:380px;
+  filter:contrast(1.08) saturate(0.95);
+  transition:filter 1.2s;
+}
+body.cellar .encore-art{filter:contrast(1.18) saturate(0.85) hue-rotate(-12deg) brightness(0.9)}
+.encore-art::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(90deg, transparent 30%, rgba(40,12,12,0.55) 70%, var(--bg-card) 100%);
+}
+.encore-body{padding:30px 32px;display:flex;flex-direction:column;justify-content:center}
+.encore-head{font-family:"Cinzel",serif;letter-spacing:0.3em;text-transform:uppercase;font-size:0.74rem;color:var(--blood);margin-bottom:14px}
+.encore-title{font-family:"Playfair Display",serif;font-style:italic;font-size:2rem;color:var(--ink);letter-spacing:0.02em;margin-bottom:14px}
+.encore-body p{color:var(--ink-soft);font-size:1.05rem;line-height:1.5;margin:0 0 14px}
+.encore-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px}
+.encore-stat{padding:10px 14px;border:1px solid #3a1010;background:rgba(122,10,10,0.08)}
+.encore-stat .k{font-family:"Cinzel",serif;letter-spacing:0.22em;text-transform:uppercase;font-size:0.58rem;color:var(--blood)}
+.encore-stat .v{font-family:"Cinzel",serif;color:var(--ink);font-size:0.96rem;margin-top:4px}
 
-    .equipment-grid {
-      grid-template-columns: 1fr;
-    }
-    .equipment-grid .eq-item.hero { grid-column: span 1; }
+/* ============ CLOSING ============ */
+.curtain-end{
+  margin-top:80px;padding:60px 24px;text-align:center;
+  border-top:3px double var(--gold-dim);border-bottom:3px double var(--gold-dim);
+  transition:border-color 1.2s;
+  background:linear-gradient(180deg, transparent, rgba(0,0,0,0.4));
+}
+body.cellar .curtain-end{border-color:var(--wine-deep)}
+.end-q{
+  font-family:"Playfair Display",serif;font-style:italic;font-size:1.9rem;line-height:1.5;color:var(--ink);max-width:760px;margin:0 auto;
+  background:linear-gradient(180deg, var(--candle) 0%, var(--gold) 50%, var(--cognac) 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;
+  transition:background 1.2s;
+}
+body.cellar .end-q{
+  background:linear-gradient(180deg, var(--candle) 0%, #f0c8c8 40%, var(--wine) 100%);
+  -webkit-background-clip:text;background-clip:text;
+}
+.end-q .bld{color:var(--blood);-webkit-text-fill-color:var(--blood);font-family:"Cinzel",serif;letter-spacing:0.16em;font-size:0.6em;text-transform:uppercase}
+.end-attr{margin-top:16px;font-family:"Cinzel",serif;letter-spacing:0.34em;text-transform:uppercase;font-size:0.62rem;color:var(--brass);transition:color 1.2s}
+body.cellar .end-attr{color:var(--blood)}
 
-    .like-grid {
-      grid-template-columns: 1fr;
-      gap: 24px;
-    }
+.colophon{margin-top:30px;text-align:center;font-family:"Cinzel",serif;letter-spacing:0.3em;text-transform:uppercase;font-size:0.58rem;color:var(--ink-faint)}
 
-    .name { font-size: clamp(40px, 11vw, 64px) !important; }
-    .subtitle { font-size: 0.74rem !important; letter-spacing: 0.22em !important; }
+/* ============ WINE GLASS FINALE ============ */
+.wine-finale{
+  margin:40px auto 10px;
+  text-align:center;
+  position:relative;
+  padding:30px 24px 10px;
+}
+.wine-stage{
+  position:relative;
+  display:inline-block;
+  margin:0 auto;
+}
+.wine-glass{
+  width:200px;height:340px;display:block;
+  filter:drop-shadow(0 30px 40px rgba(0,0,0,0.7));
+}
 
-    .quickbar { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .quickbar .qcell:nth-child(2) { border-right: none; }
-    .quickbar .qcell:nth-child(1),
-    .quickbar .qcell:nth-child(2) { border-bottom: 1px solid var(--line-soft); }
+/* glass outline */
+.wg-outline{
+  fill:none;stroke:var(--brass);stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;
+  transition:stroke 1.2s;
+}
+body.cellar .wg-outline{stroke:var(--wine)}
 
-    .combat-row {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-    .abilities {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 8px;
-    }
-    .ability .ab-mod { font-size: 1.7rem; }
+/* highlight reflection */
+.wg-highlight{fill:url(#wg-light);opacity:0.55}
 
-    .card { padding: 18px 16px; }
+/* bottle tip above glass */
+.wg-bottle{
+  fill:none;stroke:var(--brass);stroke-width:1.4;stroke-linecap:round;
+  transition:stroke 1.2s;
+}
+body.cellar .wg-bottle{stroke:var(--wine)}
 
-    .palette { grid-template-columns: repeat(4, 1fr); }
+/* wine body — animated fill */
+.wg-wine{
+  fill:url(#wg-wine-grad);
+  transform-origin:100px 195px;
+  transform:translateY(95px);
+  animation:wine-fill 7s cubic-bezier(.4,.0,.4,1) 0.5s forwards;
+  transition:filter 1.2s;
+}
+body.cellar .wg-wine{filter:brightness(0.55) saturate(1.2) hue-rotate(-8deg)}
+@keyframes wine-fill{
+  0%{transform:translateY(95px)}
+  100%{transform:translateY(0px)}
+}
 
-    .view-tabs button { flex: 1 1 calc(50% - 4px); font-size: 0.66rem; padding: 9px 10px; }
+/* wine surface ellipse */
+.wg-surface{
+  fill:rgba(255,255,255,0.10);
+  transform-origin:100px 65px;
+  transform:translateY(95px);
+  animation:wine-fill 7s cubic-bezier(.4,.0,.4,1) 0.5s forwards;
+}
 
-    .ob-stats { grid-template-columns: 1fr; }
+/* ripple ring at wine surface — animates whenever a drop lands */
+.wg-ripple{
+  fill:none;stroke:rgba(255,210,180,0.5);stroke-width:1.2;
+  transform-origin:100px 65px;
+  transform:scale(0);
+  animation:ripple 2.6s ease-out 1.6s infinite;
+  opacity:0;
+}
+body.cellar .wg-ripple{stroke:rgba(240,180,180,0.6)}
+@keyframes ripple{
+  0%{transform:scale(0);opacity:0.85}
+  50%{transform:scale(1.4);opacity:0.4}
+  100%{transform:scale(2.0);opacity:0}
+}
 
-    .quote { font-size: 1.3rem; }
-  }
+/* falling drop */
+.wg-drop{
+  fill:url(#wg-wine-grad);
+  animation:drop-fall 2.6s cubic-bezier(.5,.0,.6,1) infinite;
+  transform-origin:100px 0;
+}
+@keyframes drop-fall{
+  0%   {transform:translateY(0) scale(0.6, 0.4); opacity:0}
+  5%   {opacity:1}
+  15%  {transform:translateY(8px) scale(0.9, 1.2); opacity:1}
+  62%  {transform:translateY(58px) scale(0.85, 1.5); opacity:1}
+  72%  {transform:translateY(66px) scale(1.4, 0.4); opacity:0.6}
+  80%  {transform:translateY(66px) scale(1.7, 0.2); opacity:0}
+  100% {transform:translateY(66px) scale(1.7, 0.2); opacity:0}
+}
 
-  @media (max-width: 420px) {
-    .abilities { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .palette { grid-template-columns: repeat(4, 1fr); }
-    .view-tabs button { flex: 1 1 100%; }
-  }
+/* puddle reflection on table */
+.wg-puddle{
+  position:absolute;left:50%;bottom:-8px;
+  transform:translateX(-50%);
+  width:160px;height:24px;
+  background:radial-gradient(ellipse at center, rgba(74,10,10,0.55) 0%, rgba(74,10,10,0.0) 70%);
+  filter:blur(4px);
+  opacity:0;
+  animation:puddle-show 1.4s ease-out 5.5s forwards;
+  transition:background 1.2s;
+  pointer-events:none;
+}
+body.cellar .wg-puddle{background:radial-gradient(ellipse at center, rgba(196,26,26,0.7) 0%, rgba(196,26,26,0.0) 70%)}
+@keyframes puddle-show{
+  0%{opacity:0;transform:translateX(-50%) scaleY(0.4)}
+  100%{opacity:1;transform:translateX(-50%) scaleY(1)}
+}
+
+/* caption below */
+.wine-caption{
+  margin-top:36px;
+  font-family:"Playfair Display",serif;font-style:italic;
+  font-size:1.25rem;line-height:1.5;color:var(--ink-soft);
+  opacity:0;
+  animation:fade-up 1s ease-out 6s forwards;
+  max-width:520px;
+  margin-left:auto;margin-right:auto;
+}
+.wine-caption .byline{
+  display:block;margin-top:12px;
+  font-family:"Cinzel",serif;font-style:normal;letter-spacing:0.32em;text-transform:uppercase;
+  font-size:0.58rem;color:var(--brass);transition:color 1.2s;
+}
+body.cellar .wine-caption .byline{color:var(--blood)}
+
+@media (max-width:680px){
+  .wine-glass{width:170px;height:290px}
+  .wine-caption{font-size:1.1rem}
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width:980px){
+  .title-grid{grid-template-columns:1fr;gap:32px;text-align:center}
+  .portrait{max-width:380px;margin:0 auto}
+  .folio-label{justify-content:center}
+  .folio-label::after{display:none}
+  .opening-quote{margin:30px auto 0}
+  .info-pair{grid-template-columns:1fr;gap:18px}
+  .repertoire-grid{grid-template-columns:1fr;gap:14px}
+  .story{grid-template-columns:1fr;gap:24px}
+  .encore-card{grid-template-columns:1fr}
+  .encore-art{min-height:300px;background-position:center 5%}
+  .encore-art::after{background:linear-gradient(180deg, transparent 55%, rgba(40,12,12,0.55) 85%, var(--bg-card) 100%)}
+}
+@media (max-width:680px){
+  .playbill{padding:96px 16px 56px}
+  .cabinet{grid-template-columns:repeat(2,1fr)}
+  .item.hero{grid-column:span 2}
+  .dual{grid-template-columns:1fr;gap:24px}
+  .scores{grid-template-columns:repeat(3,1fr)}
+  .combat-strip{grid-template-columns:repeat(2,1fr);gap:12px}
+  .heir-toggle{right:10px;top:60px}
+  .heir-toggle button{padding:8px 12px;font-size:0.58rem;letter-spacing:0.18em}
+  .name-display{font-size:48px}
+  .end-q{font-size:1.3rem}
+}
+
+/* ============================================================
+   ANIMATIONS — candle-flicker, dust motes, music notes,
+   letter-stagger, scroll reveal, item tilt, wine-fill, etc.
+============================================================ */
+
+/* ----- ambient candle gloas + flicker ----- */
+.candles{position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden}
+.candle{
+  position:absolute;width:42px;height:96px;
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-end;
+  opacity:0;
+  transition:opacity 1.2s ease;
+  animation:candle-rise 1.2s ease-out 0.4s forwards;
+}
+body.cellar .candle{animation:snuff 0.9s cubic-bezier(.5,.0,.4,1) forwards}
+@keyframes candle-rise{
+  0%{opacity:0;transform:translateY(20px)}
+  100%{opacity:1;transform:translateY(0)}
+}
+@keyframes snuff{
+  0%{opacity:1;transform:translateY(0) scale(1)}
+  40%{opacity:0.6;transform:translateY(0) scale(1.05)}
+  100%{opacity:0;transform:translateY(-20px) scale(0.85)}
+}
+.candle .stick{
+  width:5px;height:48px;background:linear-gradient(180deg, #f1e6c8, #c69a55 60%, #6e5028);
+  border-radius:1px 1px 0 0;
+  box-shadow:0 0 6px rgba(0,0,0,0.6);
+}
+.candle .holder{
+  width:18px;height:6px;background:linear-gradient(180deg,#3a2a18,#1a0f08);
+  border-radius:2px;margin-top:-1px;
+}
+.candle .base{
+  width:26px;height:4px;background:linear-gradient(180deg,#241410,#0a0608);
+  border-radius:0 0 4px 4px;
+}
+.candle .flame{
+  position:absolute;top:-2px;left:50%;
+  width:14px;height:22px;
+  transform-origin:50% 100%;
+  animation:flicker 1.6s ease-in-out infinite alternate;
+}
+.candle .flame::before{
+  content:"";position:absolute;inset:0;
+  border-radius:50% 50% 50% 50% / 60% 60% 40% 40%;
+  background:radial-gradient(ellipse at 50% 70%, #fff5d0 0%, #ffd685 30%, #ff9c30 65%, transparent 80%);
+  filter:blur(0.4px);
+  box-shadow:0 0 14px rgba(255,170,80,0.7), 0 0 30px rgba(255,170,80,0.45), 0 0 60px rgba(255,170,80,0.25);
+}
+.candle .halo{
+  position:absolute;left:50%;top:-30px;width:140px;height:140px;
+  transform:translateX(-50%);
+  background:radial-gradient(circle, rgba(255,200,120,0.18) 0%, transparent 60%);
+  filter:blur(8px);
+  animation:halo-flicker 2.4s ease-in-out infinite alternate;
+  pointer-events:none;
+}
+@keyframes flicker{
+  0%{transform:translateX(-50%) scaleY(1) rotate(-1.2deg)}
+  20%{transform:translateX(-50%) scaleY(1.06) rotate(0.8deg)}
+  45%{transform:translateX(-50%) scaleY(0.92) rotate(-1.6deg)}
+  68%{transform:translateX(-50%) scaleY(1.04) rotate(1deg)}
+  100%{transform:translateX(-50%) scaleY(0.98) rotate(-0.4deg)}
+}
+@keyframes halo-flicker{
+  0%{opacity:.7}
+  50%{opacity:1}
+  100%{opacity:.6}
+}
+
+/* ----- drifting golden dust motes ----- */
+.dust{position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden;transition:opacity 1.2s}
+body.cellar .dust{opacity:0.4}
+.mote{
+  position:absolute;bottom:-10px;width:3px;height:3px;border-radius:50%;
+  background:radial-gradient(circle, #fff5d0, #d6a360 60%, transparent 80%);
+  box-shadow:0 0 6px rgba(214,163,96,0.6);
+  opacity:0;
+  animation:drift linear infinite;
+}
+body.cellar .mote{
+  background:radial-gradient(circle, #f0c8c8, #7a1a1a 60%, transparent 80%);
+  box-shadow:0 0 6px rgba(122,26,26,0.6);
+}
+@keyframes drift{
+  0%{transform:translate(0,0) scale(0.7);opacity:0}
+  12%{opacity:.7}
+  60%{opacity:.45}
+  100%{transform:translate(var(--dx,30px),-110vh) scale(0.3);opacity:0}
+}
+
+/* ----- banner sparkles ----- */
+.banner .tonight{position:relative}
+.banner .spark{
+  position:absolute;color:var(--brass);
+  font-size:0.9rem;
+  animation:twinkle 2.6s ease-in-out infinite;
+  pointer-events:none;
+  opacity:.6;
+  transition:color 1.2s;
+}
+body.cellar .banner .spark{color:var(--blood)}
+.banner .spark.s1{top:-14px;left:18%;animation-delay:0s}
+.banner .spark.s2{top:-10px;right:22%;animation-delay:1.3s}
+.banner .spark.s3{bottom:-12px;left:35%;animation-delay:0.6s;font-size:0.7rem}
+.banner .spark.s4{bottom:-14px;right:30%;animation-delay:1.9s;font-size:0.7rem}
+@keyframes twinkle{
+  0%,100%{opacity:0.1;transform:scale(0.7) rotate(0deg)}
+  50%{opacity:0.9;transform:scale(1.2) rotate(180deg)}
+}
+
+/* ----- letter-by-letter name reveal ----- */
+.name-display .lt{
+  display:inline-block;
+  opacity:0;
+  transform:translateY(0.4em) rotate(-6deg);
+  animation:letter-in 0.7s cubic-bezier(.2,.7,.2,1) forwards;
+}
+.name-display .lt.sp{width:0.18em}
+.name-display .amp{
+  display:inline-block;
+  opacity:0;
+  transform:rotate(-25deg) scale(0.6);
+  animation:amp-in 0.8s cubic-bezier(.2,.7,.2,1) forwards;
+}
+@keyframes letter-in{
+  0%{opacity:0;transform:translateY(0.4em) rotate(-6deg)}
+  60%{opacity:1;transform:translateY(-0.04em) rotate(1deg)}
+  100%{opacity:1;transform:translateY(0) rotate(0)}
+}
+@keyframes amp-in{
+  0%{opacity:0;transform:rotate(-25deg) scale(0.6)}
+  100%{opacity:1;transform:rotate(0deg) scale(1)}
+}
+
+/* ----- folio label fade up ----- */
+.folio-label{opacity:0;animation:fade-up 0.7s ease-out 0.2s forwards}
+.full-name, .house-line, .epi{opacity:0;animation:fade-up 0.7s ease-out forwards}
+.full-name{animation-delay:1.3s}
+.house-line{animation-delay:1.45s}
+.epi{animation-delay:1.6s}
+@keyframes fade-up{
+  0%{opacity:0;transform:translateY(10px)}
+  100%{opacity:1;transform:translateY(0)}
+}
+
+/* ----- opening quote: wine-fill underline + slow shimmer ----- */
+.opening-quote{position:relative;opacity:0;animation:fade-up 1s ease-out 1.8s forwards}
+.opening-quote::after{
+  content:"";position:absolute;left:-3px;top:0;bottom:0;width:3px;
+  background:linear-gradient(180deg, var(--wine) 0%, var(--blood) 100%);
+  transform-origin:top center;transform:scaleY(0);
+  animation:wine-pour 1.2s ease-out 2.4s forwards;
+  transition:background 1.2s;
+}
+body.cellar .opening-quote::after{background:linear-gradient(180deg, var(--blood) 0%, var(--wine-deep) 100%)}
+@keyframes wine-pour{
+  0%{transform:scaleY(0)}
+  100%{transform:scaleY(1)}
+}
+
+/* ----- portrait fade-in + slow vignette pulse ----- */
+.portrait{opacity:0;transform:scale(0.96);animation:portrait-in 1.2s cubic-bezier(.2,.7,.2,1) 0.3s forwards}
+@keyframes portrait-in{
+  0%{opacity:0;transform:scale(0.96)}
+  100%{opacity:1;transform:scale(1)}
+}
+.portrait::before{
+  content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:radial-gradient(ellipse at 50% 28%, rgba(241,230,200,0.06) 0%, transparent 50%);
+  animation:vignette-breathe 6s ease-in-out infinite alternate;
+}
+@keyframes vignette-breathe{
+  0%{opacity:0.65}
+  100%{opacity:1}
+}
+
+/* ----- scroll-fade-up for acts ----- */
+.act{opacity:0;transform:translateY(28px);transition:opacity 0.9s ease-out, transform 0.9s cubic-bezier(.2,.7,.2,1)}
+.act.in{opacity:1;transform:translateY(0)}
+
+/* ----- act-head ornament settle ----- */
+.act.in .act-label{animation:settle 0.6s ease-out 0.1s both}
+.act.in .act-title{animation:settle 0.8s ease-out 0.25s both}
+@keyframes settle{
+  0%{letter-spacing:0.8em;opacity:0;filter:blur(2px)}
+  100%{letter-spacing:initial;opacity:1;filter:blur(0)}
+}
+.act.in .act-title{animation-name:settle-title}
+@keyframes settle-title{
+  0%{letter-spacing:0.2em;opacity:0;filter:blur(2px)}
+  100%{letter-spacing:0.02em;opacity:1;filter:blur(0)}
+}
+
+/* ----- card / item polish ----- */
+.card{transition:border-color 1.2s, background 1.2s, transform .5s cubic-bezier(.2,.7,.2,1)}
+.item{transition:border-color .3s, transform .4s cubic-bezier(.2,.7,.2,1), background 1.2s, box-shadow .4s}
+.item:hover{
+  border-color:var(--gold-dim);
+  transform:translateY(-3px) rotate(-0.6deg);
+  box-shadow:0 18px 30px -16px rgba(214,163,96,0.32);
+  z-index:2;
+}
+body.cellar .item:hover{box-shadow:0 18px 30px -16px rgba(196,26,26,0.32)}
+.item .gl{transition:color 1.2s, border-color 1.2s, transform .5s}
+.item:hover .gl{transform:scale(1.08) rotate(2deg);color:var(--candle)}
+body.cellar .item:hover .gl{color:#fff5e8}
+
+/* ----- music notes float (only for instrument items) ----- */
+.item.note-source{position:relative;overflow:visible}
+.item.note-source .nt{
+  position:absolute;left:50%;top:30px;
+  color:var(--brass);font-size:1.1rem;
+  pointer-events:none;opacity:0;
+  transition:color 1.2s;
+}
+body.cellar .item.note-source .nt{color:#f0c8c8}
+.item.note-source:hover .nt{
+  animation:note-rise 1.6s ease-out forwards;
+}
+.item.note-source:hover .nt.n2{animation-delay:0.2s}
+.item.note-source:hover .nt.n3{animation-delay:0.45s}
+@keyframes note-rise{
+  0%{opacity:0;transform:translate(-50%,0) rotate(-12deg) scale(0.7)}
+  20%{opacity:0.9}
+  100%{opacity:0;transform:translate(calc(-50% + 24px),-80px) rotate(18deg) scale(1.1)}
+}
+
+/* ----- score pip stagger ----- */
+.score{transition:border-color 1.2s, background 1.2s, transform .35s}
+.score:hover{transform:translateY(-2px)}
+
+/* ----- ribbon-shimmer on banner top border ----- */
+.banner{position:relative;overflow:hidden}
+.banner::after{
+  content:"";position:absolute;top:-3px;left:-30%;
+  width:30%;height:3px;
+  background:linear-gradient(90deg, transparent, rgba(241,230,200,0.5), transparent);
+  animation:banner-sheen 5.5s ease-in-out infinite;
+  transition:background 1.2s;
+}
+body.cellar .banner::after{background:linear-gradient(90deg, transparent, rgba(196,26,26,0.6), transparent)}
+@keyframes banner-sheen{
+  0%{left:-30%}
+  60%{left:100%}
+  100%{left:100%}
+}
+
+/* ----- wine stain spread on Disinherited toggle ----- */
+.wine-stain{
+  position:fixed;inset:0;pointer-events:none;z-index:60;
+  opacity:0;
+  background:
+    radial-gradient(60% 70% at 12% 110%, rgba(122,10,10,0.65) 0%, transparent 60%),
+    radial-gradient(50% 60% at 95% 95%, rgba(74,10,10,0.55) 0%, transparent 60%);
+  transition:opacity 1.2s ease-out;
+}
+body.cellar .wine-stain{opacity:1}
+
+/* ----- timeline beads pop on reveal ----- */
+.tl-item{transition:transform .5s;}
+.tl-item::before{transition:transform .4s, background 1.2s, border-color 1.2s, box-shadow 0.6s}
+.timeline:hover .tl-item:not(:hover){opacity:0.5;transition:opacity .3s}
+.tl-item:hover::before{transform:rotate(45deg) scale(1.4)}
+
+/* ----- encore art slow pan ----- */
+.encore-art{transition:background-position 8s ease, filter 1.2s}
+.encore-card:hover .encore-art{background-position:center 14%}
+
+/* ----- closing quote letterspacing settle ----- */
+.end-q{animation:settle-title 1.4s ease-out both}
+
+/* ----- reduce motion ----- */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:0.001ms !important;animation-iteration-count:1 !important;transition-duration:0.001ms !important}
+  .mote,.candle,.banner::after,.banner .spark{display:none}
+}
 </style>
 </head>
 <body>
-  <div id="root"></div>
 
-  <a href="index.html" style="
-      position: fixed;
-      top: 22px; left: 22px;
-      z-index: 200;
-      font-family: 'Cinzel', serif;
-      font-size: 0.62rem;
-      letter-spacing: 0.32em;
-      text-transform: uppercase;
-      color: #c9a45c;
-      text-decoration: none;
-      padding: 8px 14px;
-      border: 1px solid #8a6f3a;
-      background: rgba(7,7,10,0.75);
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      backdrop-filter: blur(4px);
-      transition: gap 0.3s, border-color 0.3s, color 0.3s;
-    "
-    onmouseover="this.style.gap='16px'; this.style.borderColor='#c9a45c'; this.style.color='#e8e2cf'"
-    onmouseout="this.style.gap='10px'; this.style.borderColor='#8a6f3a'; this.style.color='#c9a45c'">
-    <span style="width:16px; height:1px; background:currentColor; position:relative; display:inline-block;">
-      <span style="position:absolute; left:0; top:-3px; width:7px; height:7px; border-top:1px solid currentColor; border-left:1px solid currentColor; transform:rotate(-45deg); display:block;"></span>
-    </span>
-    Back to Codex
-  </a>
+<!-- ============ AMBIENT CANDLES ============ -->
+<div class="candles" aria-hidden="true">
+  <div class="candle" style="top:18%;left:32px">
+    <div class="halo"></div>
+    <div class="flame"></div>
+    <div class="stick"></div>
+    <div class="holder"></div>
+    <div class="base"></div>
+  </div>
+  <div class="candle" style="top:55%;left:14px">
+    <div class="halo"></div>
+    <div class="flame"></div>
+    <div class="stick" style="height:36px"></div>
+    <div class="holder"></div>
+    <div class="base"></div>
+  </div>
+  <div class="candle" style="top:28%;right:32px">
+    <div class="halo"></div>
+    <div class="flame"></div>
+    <div class="stick" style="height:44px"></div>
+    <div class="holder"></div>
+    <div class="base"></div>
+  </div>
+  <div class="candle" style="top:78%;right:18px">
+    <div class="halo"></div>
+    <div class="flame"></div>
+    <div class="stick" style="height:30px"></div>
+    <div class="holder"></div>
+    <div class="base"></div>
+  </div>
+</div>
 
-  <script type="text/babel" data-presets="env,react">
+<!-- ============ DRIFTING DUST MOTES ============ -->
+<div class="dust" id="dust" aria-hidden="true"></div>
 
+<!-- ============ WINE-STAIN OVERLAY (Disinherited mode) ============ -->
+<div class="wine-stain" aria-hidden="true"></div>
 
-const { useState, useEffect, useMemo } = React;
+<a class="back-link" href="index.html"><span class="arr"></span>Back to Codex</a>
 
-// ----- compass / star ornament SVGs (simple geometric) -----
-const CompassStar = ({ size = 28 }) =>
-<svg className="ornament" viewBox="0 0 60 60" width={size} height={size}>
-      <circle cx="30" cy="30" r="26" />
-      <circle cx="30" cy="30" r="14" />
-      <path d="M30 4 L34 30 L30 56 L26 30 Z" fill="currentColor" stroke="none" style={{ opacity: 0.18 }} />
-      <line x1="30" y1="2" x2="30" y2="58" />
-      <line x1="2" y1="30" x2="58" y2="30" />
-      <line x1="10" y1="10" x2="50" y2="50" />
-      <line x1="50" y1="10" x2="10" y2="50" />
-      <circle cx="30" cy="30" r="2.5" fill="currentColor" stroke="none" />
-    </svg>;
+<div class="heir-toggle" role="tablist" aria-label="heir state">
+  <button id="btn-heir" class="active">Heir · Apparent</button>
+  <div class="divider"></div>
+  <button id="btn-cellar" class="cellar">Heir · Disinherited</button>
+</div>
 
+<div class="playbill">
 
-const Diamond = ({ size = 10 }) =>
-<span style={{
-  display: "inline-block", width: size, height: size,
-  border: "1px solid var(--gold-dim)",
-  transform: "rotate(45deg)"
-}} />;
+  <!-- ============ BANNER ============ -->
+  <div class="banner">
+    <div class="tonight">
+      <span class="spark s1">✦</span>
+      <span class="spark s2">✦</span>
+      <span class="spark s3">✦</span>
+      <span class="spark s4">✦</span>
+      Tonight Only · Folio · II
+    </div>
+    <div class="play">— A Programme in Six Acts &amp; an Encore, played by candle-light —</div>
+  </div>
 
+  <!-- ============ TITLE BLOCK ============ -->
+  <div class="title-grid">
+    <div class="portrait">
+      <img src="assets/aython-portrait.jpg" alt="Aython Ashvail Aurelius" />
+      <div class="label">"Pour the wine first, then the verse. The truth keeps either way."</div>
+    </div>
 
-// ----- equipment glyphs (very simple) -----
-const Glyph = ({ kind }) => {
-  const props = { fill: "none", stroke: "currentColor", strokeWidth: 1.2, strokeLinecap: "round", strokeLinejoin: "round" };
-  switch (kind) {
-    case "sword":
-      return <svg viewBox="0 0 24 24" width="22" height="22" {...props}>
-          <path d="M12 2 L12 16 M9 16 H15 M10 16 V19 H14 V16 M11 19 V22 H13 V19" />
-          <path d="M7 5 L12 2 L17 5" />
-        </svg>;
-    case "amulet":
-      return <svg viewBox="0 0 24 24" width="22" height="22" {...props}>
-          <path d="M4 3 L12 8 L20 3" />
-          <circle cx="12" cy="15" r="6" />
-          <line x1="12" y1="9" x2="12" y2="21" />
-          <line x1="6" y1="15" x2="18" y2="15" />
-        </svg>;
-    case "armor":
-      return <svg viewBox="0 0 24 24" width="22" height="22" {...props}>
-          <path d="M5 4 L12 6 L19 4 V14 C19 18 16 21 12 22 C8 21 5 18 5 14 Z" />
-          <path d="M12 6 V22" />
-          <path d="M5 10 H19" />
-        </svg>;
-    case "potion":
-      return <svg viewBox="0 0 24 24" width="22" height="22" {...props}>
-          <path d="M10 2 H14 V6 L17 11 V20 A2 2 0 0 1 15 22 H9 A2 2 0 0 1 7 20 V11 Z" />
-          <line x1="7" y1="14" x2="17" y2="14" />
-        </svg>;
-    case "pack":
-      return <svg viewBox="0 0 24 24" width="22" height="22" {...props}>
-          <path d="M8 5 V3 H16 V5 M5 5 H19 V21 H5 Z" />
-          <line x1="9" y1="11" x2="15" y2="11" />
-        </svg>;
-    case "bedroll":
-      return <svg viewBox="0 0 24 24" width="22" height="22" {...props}>
-          <ellipse cx="12" cy="12" rx="9" ry="3" />
-          <ellipse cx="12" cy="12" rx="5" ry="1.5" />
-        </svg>;
-    case "lantern":
-      return <svg viewBox="0 0 24 24" width="22" height="22" {...props}>
-          <path d="M12 2 V4 M9 4 H15 V6 H9 Z" />
-          <path d="M8 6 L7 9 V18 A2 2 0 0 0 9 20 H15 A2 2 0 0 0 17 18 V9 L16 6" />
-          <circle cx="12" cy="13" r="2" />
-        </svg>;
-    case "tinder":
-      return <svg viewBox="0 0 24 24" width="22" height="22" {...props}>
-          <rect x="4" y="7" width="16" height="11" />
-          <line x1="4" y1="11" x2="20" y2="11" />
-          <path d="M10 14 L12 17 L14 14" />
-        </svg>;
-    case "rapier":
-      return <svg viewBox="0 0 24 24" width="22" height="22" {...props}>
-          <path d="M12 2 L12 17" />
-          <circle cx="12" cy="18" r="1.4" />
-          <path d="M8 16 Q12 14 16 16" />
-          <path d="M10 17 V20 H14 V17" />
-          <path d="M11 20 V22 H13 V20" />
-        </svg>;
-    case "lute":
-      return <svg viewBox="0 0 24 24" width="22" height="22" {...props}>
-          <ellipse cx="11" cy="16" rx="6" ry="5.5" />
-          <circle cx="11" cy="16" r="1.6" />
-          <path d="M14 12 L20 4 M18 2 L22 6" />
-          <path d="M13 11 L17 7" />
-        </svg>;
-    case "flute":
-      return <svg viewBox="0 0 24 24" width="22" height="22" {...props}>
-          <path d="M3 14 L18 5 L21 8 L6 17 Z" />
-          <circle cx="8" cy="14" r="0.7" fill="currentColor" stroke="none" />
-          <circle cx="11" cy="12" r="0.7" fill="currentColor" stroke="none" />
-          <circle cx="14" cy="10" r="0.7" fill="currentColor" stroke="none" />
-        </svg>;
-    case "lyre":
-      return <svg viewBox="0 0 24 24" width="22" height="22" {...props}>
-          <path d="M6 4 Q4 12 8 20 H16 Q20 12 18 4" />
-          <path d="M6 4 H18" />
-          <line x1="9"  y1="6" x2="9"  y2="19" />
-          <line x1="12" y1="6" x2="12" y2="19" />
-          <line x1="15" y1="6" x2="15" y2="19" />
-        </svg>;
-    case "ring":
-      return <svg viewBox="0 0 24 24" width="22" height="22" {...props}>
-          <circle cx="12" cy="15" r="6" />
-          <path d="M9 8 L12 4 L15 8 Z" fill="currentColor" stroke="none" style={{opacity:0.85}} />
-          <path d="M9 8 L12 4 L15 8 Z" />
-        </svg>;
-    case "clothes":
-      return <svg viewBox="0 0 24 24" width="22" height="22" {...props}>
-          <path d="M8 3 L12 6 L16 3 L20 5 L18 9 L18 21 H6 V9 L4 5 Z" />
-          <line x1="12" y1="6" x2="12" y2="21" />
-        </svg>;
-    case "coin":
-      return <svg viewBox="0 0 24 24" width="22" height="22" {...props}>
-          <circle cx="12" cy="12" r="8" />
-          <circle cx="12" cy="12" r="5" />
-          <path d="M10 9 L14 15 M14 9 L10 15" />
-        </svg>;
-    default:return null;
-  }
-};
+    <div class="title-col">
+      <div class="folio-label">Featuring · the Prince of the Night</div>
+      <h1 class="name-display" id="hero-name" data-text-en="Aython" data-text-fr="Aurelius">Aython<br/><span class="amp">—</span>Aurelius</h1>
+      <div class="full-name">Aython Ashvail Aurelius · second son of the disinherited line</div>
+      <div class="house-line">Human <span class="sep">·</span> Bard <span class="sep">·</span> House&nbsp;Aurelius</div>
+      <div class="epi">cast out — bound only to the next <span class="ob">cup</span>.</div>
 
-// ----- data -----
-const abilities = [
-    { code:"STR", score:10, mod:"+0" },
-    { code:"DEX", score:16, mod:"+3" },
-    { code:"CON", score:12, mod:"+1" },
-    { code:"INT", score:8,  mod:"−1" },
-    { code:"WIS", score:12, mod:"+1" },
-    { code:"CHA", score:16, mod:"+3" },
-  ];
+      <div class="opening-quote">"No one is an enemy until they refuse the cup."</div>
+    </div>
+  </div>
 
+  <!-- ============ ACT I — OF HIS PERSON ============ -->
+  <section class="act">
+    <div class="act-head">
+      <div class="act-label">Act · I</div>
+      <div class="act-title">Of His Person &amp; Bearing</div>
+      <div class="act-sub">basic info · appearance</div>
+    </div>
 
-const skills = [
-    { name:"Acrobatics",   mod:"+5", level:1 },
-    { name:"Deception",    mod:"+7", level:2 },
-    { name:"Insight",      mod:"+3", level:1 },
-    { name:"Intimidation", mod:"+5", level:1 },
-    { name:"Performance",  mod:"+7", level:2 },
-    { name:"Persuasion",   mod:"+5", level:1 },
-    { name:"Sleight of Hand", mod:"+5", level:1 },
-    { name:"Stealth",      mod:"+5", level:1 },
-  ];
+    <div class="card">
+      <div class="card-title">The Programme — Aython, in Brief</div>
+      <div class="info-pair">
+        <div class="info-list">
+          <div class="k">Race</div>      <div class="v">Human</div>
+          <div class="k">Class</div>     <div class="v">Bard · College of Eloquence</div>
+          <div class="k">House</div>     <div class="v">Aurelius <em>(disinherited)</em></div>
+          <div class="k">Age</div>       <div class="v">25</div>
+          <div class="k">Height</div>    <div class="v">185 cm</div>
+          <div class="k">Weight</div>    <div class="v">82 kg</div>
+          <div class="k">Coin</div>      <div class="v">115 GP <em>(borrowed at interest)</em></div>
+          <div class="k">Alignment</div> <div class="v">Chaotic Neutral</div>
+        </div>
+        <div class="appearance">
+          Tall, lean — a man built for stairwells and salons. <em>Dark hair</em> permanently arranged as if he has just risen from a divan. The smile is rehearsed; the laugh is real, but the bow always finishes it. Wears a velvet coat one season out of fashion, the seam at the right cuff carefully un-mended. He keeps the family signet on the wrong hand, on purpose. He bows like a stage actor leaving applause behind him.
+        </div>
+      </div>
+    </div>
+  </section>
 
+  <!-- ============ ACT II — THE REPERTOIRE ============ -->
+  <section class="act">
+    <div class="act-head">
+      <div class="act-label">Act · II</div>
+      <div class="act-title">The Repertoire</div>
+      <div class="act-sub">scores · skills · bardic features</div>
+    </div>
 
-const palette = [
-    { c:"#f1e6c8", n:"Candle"    },
-    { c:"#c69a55", n:"Brass"     },
-    { c:"#a06030", n:"Cognac"    },
-    { c:"#7a1f1f", n:"Wine"      },
-    { c:"#4a1418", n:"Burgundy"  },
-    { c:"#2a1010", n:"Cellar"    },
-    { c:"#0c0c12", n:"Ink"       },
-    { c:"#b0883a", n:"Aureate"   },
-  ];
+    <div class="repertoire-grid">
 
+      <div class="card">
+        <div class="card-title">Ability &amp; Combat</div>
+        <div class="scores">
+          <div class="score"><div class="ab">STR</div><div class="mod">+0</div><div class="sc">10</div></div>
+          <div class="score"><div class="ab">DEX</div><div class="mod">+3</div><div class="sc">16</div></div>
+          <div class="score"><div class="ab">CON</div><div class="mod">+1</div><div class="sc">12</div></div>
+          <div class="score"><div class="ab">INT</div><div class="mod">−1</div><div class="sc">8</div></div>
+          <div class="score"><div class="ab">WIS</div><div class="mod">+1</div><div class="sc">12</div></div>
+          <div class="score"><div class="ab">CHA</div><div class="mod">+3</div><div class="sc">16</div></div>
+        </div>
+        <div class="combat-strip">
+          <div class="cmb"><div class="k">AC</div><div class="v">14</div></div>
+          <div class="cmb"><div class="k">HP</div><div class="v">9</div></div>
+          <div class="cmb"><div class="k">Init</div><div class="v">+3</div></div>
+          <div class="cmb"><div class="k">Spd</div><div class="v">30</div></div>
+        </div>
+      </div>
 
-const equipment = [
-    { kind:"rapier",  name:"Elite Rapier",      meta:"1d8 piercing · finesse · +5 to hit" , hero:true },
-    { kind:"lute",    name:"Lute (พิณลูท)", meta:"lacquered rosewood · the family's gift" },
-    { kind:"flute",   name:"Flute (ขลุ่ย)", meta:"silver-chased · for the slow nights" },
-    { kind:"lyre",    name:"Lyre (พิณไลร์)", meta:"hand-strung · for the salons" },
-    { kind:"ring",    name:"Signet Ring",       meta:"crest of House Aurelius · refused to sell" },
-    { kind:"clothes", name:"Fine Clothes",      meta:"velvet, brocade · last respectable suit" },
-    { kind:"armor",   name:"Light Leather",     meta:"hidden beneath the coat · +1 AC" },
-    { kind:"coin",    name:"Purse",             meta:"115 GP · borrowed at considerable interest" },
-  ];
+      <div class="card">
+        <div class="card-title">Proficient Skills</div>
+        <ul class="skill-list">
+          <li><span class="pip filled"></span><span class="nm">Acrobatics</span><span class="md">+5</span></li>
+          <li><span class="pip expert"></span><span class="nm">Deception</span><span class="md">+7</span></li>
+          <li><span class="pip filled"></span><span class="nm">Insight</span><span class="md">+3</span></li>
+          <li><span class="pip filled"></span><span class="nm">Intimidation</span><span class="md">+5</span></li>
+          <li><span class="pip expert"></span><span class="nm">Performance</span><span class="md">+7</span></li>
+          <li><span class="pip filled"></span><span class="nm">Persuasion</span><span class="md">+5</span></li>
+          <li><span class="pip filled"></span><span class="nm">Sleight of Hand</span><span class="md">+5</span></li>
+          <li><span class="pip filled"></span><span class="nm">Stealth</span><span class="md">+5</span></li>
+        </ul>
+      </div>
 
+      <div class="card">
+        <div class="card-title">Bardic Repertoire · Lv. 1</div>
+        <p style="margin:0 0 14px;font-style:italic;color:var(--ink-soft);font-size:0.98rem">"Pour the wine first, then the verse. The truth keeps either way."</p>
+        <ul class="feat-list">
+          <li><span>Bardic Inspiration</span><em>3 / rest · d6</em></li>
+          <li><span>Spellcasting</span><em>DC 13 · +5</em></li>
+          <li><span>Ritual Casting</span><em>from book</em></li>
+          <li><span>Vicious Mockery</span><em>cantrip</em></li>
+          <li><span>Rapier — Finesse</span><em>+5 · 1d8</em></li>
+        </ul>
+      </div>
 
-const likes = [
-    "Wine, song, candle-light, applause.",
-    "A clever room — the kind that laughs at the right line.",
-    "The desperate, the unloved, the small. (Quietly.)",
-    "His own legend, slowly written in someone else's ledger.",
-  ];
+    </div>
+  </section>
 
-const dislikes = [
-    "Honest labour. Honest hours. Honest letters.",
-    "Anything academic — names of kings, dates of wars.",
-    "Loving someone too plainly. It always becomes a debt.",
-    "The Aurelius name used as a leash on him.",
-  ];
+  <!-- ============ ACT III — CABINET OF INSTRUMENTS ============ -->
+  <section class="act">
+    <div class="act-head">
+      <div class="act-label">Act · III</div>
+      <div class="act-title">The Cabinet &amp; Its Instruments</div>
+      <div class="act-sub">what he carries · what he plays · what he refuses to sell</div>
+    </div>
 
+    <div class="card">
+      <div class="cabinet">
+        <div class="item hero note-source">
+          <span class="nt n1">♫</span><span class="nt n2">♪</span><span class="nt n3">♬</span>
+          <div class="gl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 2 L12 17"/><circle cx="12" cy="18" r="1.4"/><path d="M8 16 Q12 14 16 16"/><path d="M10 17 V20 H14 V17"/><path d="M11 20 V22 H13 V20"/></svg></div>
+          <div class="nm">Elite Rapier</div>
+          <div class="mt">1d8 piercing · finesse · +5 to hit</div>
+        </div>
+        <div class="item note-source">
+          <span class="nt n1">♫</span><span class="nt n2">♪</span><span class="nt n3">♬</span>
+          <div class="gl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><ellipse cx="11" cy="16" rx="6" ry="5.5"/><circle cx="11" cy="16" r="1.6"/><path d="M14 12 L20 4 M18 2 L22 6"/><path d="M13 11 L17 7"/></svg></div>
+          <div class="nm">Lute</div>
+          <div class="mt">lacquered rosewood · the family's gift</div>
+        </div>
+        <div class="item note-source">
+          <span class="nt n1">♫</span><span class="nt n2">♪</span><span class="nt n3">♬</span>
+          <div class="gl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 14 L18 5 L21 8 L6 17 Z"/><circle cx="8" cy="14" r="0.7" fill="currentColor"/><circle cx="11" cy="12" r="0.7" fill="currentColor"/><circle cx="14" cy="10" r="0.7" fill="currentColor"/></svg></div>
+          <div class="nm">Flute</div>
+          <div class="mt">silver-chased · for the slow nights</div>
+        </div>
+        <div class="item note-source">
+          <span class="nt n1">♫</span><span class="nt n2">♪</span><span class="nt n3">♬</span>
+          <div class="gl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M6 4 Q4 12 8 20 H16 Q20 12 18 4"/><path d="M6 4 H18"/><line x1="9" y1="6" x2="9" y2="19"/><line x1="12" y1="6" x2="12" y2="19"/><line x1="15" y1="6" x2="15" y2="19"/></svg></div>
+          <div class="nm">Lyre</div>
+          <div class="mt">hand-strung · for the salons</div>
+        </div>
+        <div class="item">
+          <div class="gl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="15" r="6"/><path d="M9 8 L12 4 L15 8 Z" fill="currentColor" style="opacity:0.85"/><path d="M9 8 L12 4 L15 8 Z"/></svg></div>
+          <div class="nm">Signet Ring</div>
+          <div class="mt">crest of House Aurelius · refused to sell</div>
+        </div>
+        <div class="item">
+          <div class="gl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 3 L12 6 L16 3 L20 5 L18 9 L18 21 H6 V9 L4 5 Z"/><line x1="12" y1="6" x2="12" y2="21"/></svg></div>
+          <div class="nm">Fine Clothes</div>
+          <div class="mt">velvet, brocade · last respectable suit</div>
+        </div>
+        <div class="item">
+          <div class="gl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M5 4 L12 6 L19 4 V14 C19 18 16 21 12 22 C8 21 5 18 5 14 Z"/><path d="M12 6 V22"/></svg></div>
+          <div class="nm">Light Leather</div>
+          <div class="mt">hidden beneath the coat · +1 AC</div>
+        </div>
+        <div class="item">
+          <div class="gl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="5"/><path d="M10 9 L14 15 M14 9 L10 15"/></svg></div>
+          <div class="nm">Purse</div>
+          <div class="mt">115 GP · borrowed at considerable interest</div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-const timeline = [
-    { age:"Year 0",  event:"Born to House Aurelius, second son. The midwife is paid in old silver." },
-    { age:"Year 7",  event:"Vincent enters the Aurelian Guard. Aython is given his first lute — to keep him quiet." },
-    { age:"Year 18", event:"Refuses the Cadet Academy. Performs in the Lower Quarter under another name, and a better hat." },
-    { age:"Year 24", event:"The Gala of the Silver Wolf. The wine fountain. The disinheritance." , fall:true },
-    { age:"Year 25", event:"On the run. The Auditors close. He pours another glass anyway." },
-  ];
+  <!-- ============ INTERLUDE ============ -->
+  <div class="interlude">
+    <div class="text">"He is, in the polite reckoning, charming. In the impolite reckoning, expensive. Both are correct."</div>
+  </div>
 
+  <!-- ============ ACT IV — HEART ============ -->
+  <section class="act">
+    <div class="act-head">
+      <div class="act-label">Act · IV</div>
+      <div class="act-title">Pleasures &amp; Aversions</div>
+      <div class="act-sub">what he loves · what he refuses</div>
+    </div>
 
-const views = [
-    { key:"smile",  label:"Smile",   cap:"01", src:"assets/aython-smile.jpg"  },
-    { key:"stare",  label:"Stare",   cap:"02", src:"assets/aython-stare.jpg"  },
-    { key:"glance", label:"Glance",  cap:"03", src:"assets/aython-glance.jpg" },
-    { key:"cold",   label:"Cold",    cap:"04", src:"assets/aython-cold.jpg"   },
-  ];
-
-
-function App() {
-  const [oath, setOath] = useState("keeper"); // "keeper" | "broken"
-  const [view, setView] = useState("smile");
-
-  useEffect(() => {
-    document.body.classList.toggle("oathbreaker", oath === "broken");
-  }, [oath]);
-
-  // selected view metadata
-  const currentView = useMemo(() => views.find(v => v.key === view), [view]);
-
-  return (
-    <div className="page">
-
-        {/* ======== MASTHEAD ======== */}
-        <header className="masthead">
-          <div className="portrait frame">
-            <i className="corner-bl" /><i className="corner-br" />
-                        <img src="assets/aython-portrait.jpg" alt="Aython Ashvail Aurelius" />
-            <div className="vignette" />
-            <div className="badge">Codex · II</div>
-            <div className="caption">
-              <span style={{ color: "var(--gold)" }}>«</span> the Prince of the Night <span style={{ color: "var(--gold)" }}>»</span>
-            </div>
+    <div class="card">
+      <div class="dual">
+        <div>
+          <h4>Beloved</h4>
+          <ul>
+            <li>Wine, song, candle-light, applause.</li>
+            <li>A clever room — the kind that laughs at the right line.</li>
+            <li>The desperate, the unloved, the small. <em>(Quietly.)</em></li>
+            <li>His own legend, slowly written in someone else's ledger.</li>
+          </ul>
+        </div>
+        <div class="dual refuse" style="display:contents">
+          <div>
+            <h4>Abhorred</h4>
+            <ul>
+              <li>Honest labour. Honest hours. Honest letters.</li>
+              <li>Anything academic — names of kings, dates of wars.</li>
+              <li>Loving someone too plainly. It always becomes a debt.</li>
+              <li>The Aurelius name used as a leash on him.</li>
+            </ul>
           </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-          <div className="titleblock">
-            <div>
-              <div className="seal">
-                <CompassStar size={28} />
-                <span className="smallcaps">House Aurelius · Disinherited Line</span>
-                <span className="seal-line" />
-                <span className="smallcaps" style={{ color: "var(--ink-mute)" }}>folio · 25 a.r.</span>
-              </div>
+  <!-- ============ ACT V — ANNALS ============ -->
+  <section class="act">
+    <div class="act-head">
+      <div class="act-label">Act · V</div>
+      <div class="act-title">Annals of a Black Sheep</div>
+      <div class="act-sub">the long pour, from house to cellar</div>
+    </div>
 
-              <h1 className="name">
-                Aython<br/>
-                <span style={{color:"var(--gold)", fontStyle:"italic", fontFamily:"'Cormorant Garamond',serif", fontWeight:400, fontSize:"0.78em"}}>—</span>
-                {" "}Aurelius
-              </h1>
-
-              <div className="subtitle">
-                Human <span className="sep">·</span> Bard <span className="sep">·</span> House&nbsp;Aurelius
-              </div>
-              <div className="epitaph">
-                cast out — bound only to the next <span className="ob">cup</span>.
-              </div>
-
-              <div className="oathtoggle" role="tablist" aria-label="oath state">
-                <button className={oath === "keeper" ? "active" : ""} onClick={() => setOath("keeper")}>Heir · Apparent</button>
-                <div className="divider" />
-                <button className={"broken " + (oath === "broken" ? "active" : "")} onClick={() => setOath("broken")}>Heir · Disinherited</button>
-              </div>
-            </div>
-
-            <div className="quickbar">
-              <div className="qcell"><div className="qkey">Race</div><div className="qval">Human</div></div>
-              <div className="qcell"><div className="qkey">Age</div><div className="qval">25</div></div>
-              <div className="qcell"><div className="qkey">Height</div><div className="qval">185 cm</div></div>
-              <div className="qcell"><div className="qkey">Weight</div><div className="qval">82 kg</div></div>
-            </div>
-          </div>
-        </header>
-
-        {/* ======== STATS ======== */}
-        <section>
-          <div className="sec-head">
-            <CompassStar size={20} />
-            <span className="num">I</span>
-            <span className="sec-title">Vitals &amp; Refined Aptitudes</span>
-            <span className="seal-line" />
-          </div>
-
-          <div className="grid">
-            {/* abilities */}
-            <div className="card">
-              <div className="label">Ability Scores</div>
-              <div className="abilities">
-                {abilities.map((a) =>
-              <div className="ability" key={a.code}>
-                    <div className="ab-name">{a.code}</div>
-                    <div className="ab-mod">{a.mod}</div>
-                    <div className="ab-score">{a.score}</div>
-                  </div>
-              )}
-              </div>
-              <div className="combat-row">
-                <div className="stat-tile"><div className="sk">AC</div><div className="sv">14</div></div>
-                <div className="stat-tile"><div className="sk">HP</div><div className="sv">9</div></div>
-                <div className="stat-tile"><div className="sk">Init</div><div className="sv">+3</div></div>
-                <div className="stat-tile"><div className="sk">Spd</div><div className="sv">30</div></div>
-              </div>
-            </div>
-
-            {/* skills */}
-            <div className="card">
-              <div className="label">Proficient Skills</div>
-              <ul className="skill-list">
-                {skills.map((s) =>
-              <li key={s.name}>
-                    <span className={"pip " + (s.level === 2 ? "expert" : "filled")} />
-                    <span className="name" style={{ fontSize: "46px" }}>{s.name}</span>
-                    <span className="mod">{s.mod}</span>
-                  </li>
-              )}
-              </ul>
-              <div style={{ marginTop: 14, fontSize: "0.78rem", color: "var(--ink-mute)", fontFamily: "'Cinzel',serif", letterSpacing: "0.16em", textTransform: "uppercase" }}>
-                <span style={{ display: "inline-block", width: 8, height: 8, background: "var(--gold)", marginRight: 8, transform: "rotate(45deg)" }} />
-                proficient
-                <span style={{ display: "inline-block", width: 8, height: 8, background: "var(--gold)", boxShadow: "inset 0 0 0 2px var(--bg-card)", margin: "0 8px 0 18px", transform: "rotate(45deg)" }} />
-                expertise
-              </div>
-            </div>
-
-            {/* oath / class features */}
-            <div className="card">
-              <div className="label">Oath of Vengeance</div>
-              <p style={{ margin: "0 0 14px", color: "var(--ink-soft)", fontSize: "1.02rem", fontStyle: "italic" }}>
-                "Fight the greater evil. Show no mercy to the wicked. By any means."
-              </p>
-              <ul style={{ listStyle: "none", margin: 0, padding: 0, fontSize: "0.96rem" }}>
-                <li style={{ padding: "7px 0", borderBottom: "1px dashed var(--line-soft)", display: "flex", justifyContent: "space-between" }}><span>Abjure Enemy</span><em style={{ color: "var(--ink-mute)" }}>1 / rest</em></li>
-                <li style={{ padding: "7px 0", borderBottom: "1px dashed var(--line-soft)", display: "flex", justifyContent: "space-between" }}><span>Vow of Enmity</span><em style={{ color: "var(--ink-mute)" }}>BA · 1 min</em></li>
-                <li style={{ padding: "7px 0", borderBottom: "1px dashed var(--line-soft)", display: "flex", justifyContent: "space-between" }}><span>Relentless Avenger</span><em style={{ color: "var(--ink-mute)" }}>passive</em></li>
-                <li style={{ padding: "7px 0", borderBottom: "1px dashed var(--line-soft)", display: "flex", justifyContent: "space-between" }}><span>Soul of Vengeance</span><em style={{ color: "var(--ink-mute)" }}>reaction</em></li>
-                <li style={{ padding: "7px 0", display: "flex", justifyContent: "space-between" }}><span>Avenging Angel</span><em style={{ color: "var(--ink-mute)" }}>1 hr · once</em></li>
-              </ul>
-            </div>
-          </div>
-        </section>
-
-        {/* ======== VIEWS ======== */}
-        <section>
-          <div className="sec-head">
-            <CompassStar size={20} />
-            <span className="num">II</span>
-            <span className="sec-title">Faces of the Prince</span>
-            <span className="seal-line" />
-          </div>
-
-          <div className="viewstack">
-            <div className="view-tabs">
-              {views.map((v) =>
-            <button key={v.key}
-            className={view === v.key ? "active" : ""}
-            onClick={() => setView(v.key)}>
-                  {v.label}<span className="vk">— plate {v.cap}</span>
-                </button>
-            )}
-              <div style={{ marginTop: 14, fontFamily: "'Cormorant Garamond',serif", fontStyle: "italic", color: "var(--ink-mute)", fontSize: "0.95rem", lineHeight: 1.5 }}>
-                The Aurelius face wears its masks in order: the laugh, the cold stare,
-                the long thoughtful glance, the cellar-deep silence. None of them are lies — none of them are him.
-              </div>
-            </div>
-            <div className="view-art frame">
-              <i className="corner-bl" /><i className="corner-br" />
-              <img
-                key={currentView.key}
-                src={currentView.src}
-                alt={currentView.label + ' view'}
-                className="view-image"
-              />
-              <div className="legend">
-                <span>{currentView.label}</span>
-                <span>plate · {currentView.cap}</span>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ======== EQUIPMENT & PALETTE ======== */}
-        <section>
-          <div className="sec-head">
-            <CompassStar size={20} />
-            <span className="num">III</span>
-            <span className="sec-title">Instruments, Trinkets &amp; Hues</span>
-            <span className="seal-line" />
-          </div>
-
-          <div className="grid">
-            <div className="card span-2">
-              <div className="label">Equipment Carried</div>
-              <div className="equipment-grid">
-                {equipment.map((e, i) =>
-              <div className={"eq-item " + (e.hero ? "hero" : "")} key={i}>
-                    <div className="eq-glyph"><Glyph kind={e.kind} /></div>
-                    <div>
-                      <div className="eq-name">{e.name}</div>
-                      <div className="eq-meta">{e.meta}</div>
-                    </div>
-                  </div>
-              )}
-              </div>
-            </div>
-
-            <div className="card">
-              <div className="label">Color Palette</div>
-              <div className="palette">
-                {palette.map((p) =>
-              <div className="swatch" key={p.c}
-              data-name={p.n}
-              style={{ background: p.c, borderColor: p.c === "#0c0c12" ? "var(--line)" : "transparent" }} />
-              )}
-              </div>
-              <div style={{ marginTop: 24, fontFamily: "'Cormorant Garamond',serif", fontStyle: "italic", color: "var(--ink-mute)", fontSize: "0.98rem", lineHeight: 1.5 }}>
-                Candle and brass for the salons. Cognac and wine for the long sleeves. Burgundy and cellar-dark for the coats he doesn't wear anymore. The aureate is real gold — for the signet ring he refuses to sell — and when the bottle empties, all of it darkens to <span style={{color:"var(--blood)"}}>cellar-red</span>.
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ======== LIKES / DISLIKES ======== */}
-        <section>
-          <div className="sec-head">
-            <CompassStar size={20} />
-            <span className="num">IV</span>
-            <span className="sec-title">Pleasures &amp; Aversions</span>
-            <span className="seal-line" />
-          </div>
-
-          <div className="card">
-            <div className="like-grid">
-              <div className="like-col">
-                <h4>Beloved</h4>
-                <ul>{likes.map((l, i) => <li key={i}>{l}</li>)}</ul>
-              </div>
-              <div className="like-col dislikes">
-                <h4>Abhorred</h4>
-                <ul>{dislikes.map((l, i) => <li key={i}>{l}</li>)}</ul>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ======== BACKSTORY ======== */}
-        <section>
-          <div className="sec-head">
-            <CompassStar size={20} />
-            <span className="num">V</span>
-            <span className="sec-title">Annals of a Black Sheep</span>
-            <span className="seal-line" />
-          </div>
-
-          <div className="card">
-            <div className="backstory">
-              <div className="story-text">
-                <p className="drop">
-                  Aython was born the second son of <em>House Aurelius</em>, an old line whose chief inheritance is the word "nobility" and the obligation to keep saying it. His brother <em>Vincent</em> took to the Aurelian Guard the way other boys take to dogs.
-                </p>
-                <p>
-                  Aython took to <strong style={{color:"var(--ink)"}}>the stage</strong>. Where the family saw discipline, he saw a long polished hallway with no music in it. By eighteen he was singing for coin under another name in the Lower Quarter — and laughing at all of his mother's letters.
-                </p>
-                <p>
-                  Then came the <em>Gala of the Silver Wolf</em>. A wine fountain, paid for with House money he was not, technically, allowed to spend. A fountain so generous the candles drowned in it. The Duchess Henrietta took the floor and named him — in front of every name that mattered — <strong style={{color:"var(--ink)"}}>"the Black Sheep"</strong>.
-                </p>
-                <p>
-                  She sent him out in last season's coat with a single sentence: <em>return when your name is worth more than gold.</em> He bowed at the door like a stage actor leaving applause behind him, and has not bowed since.
-                </p>
-                <p style={{color:"var(--ink-soft)"}}>
-                  <em>And that</em> — was the start of the long pilgrimage from cellar to cellar.
-                </p>
-              </div>
-
-              <div>
-                <div className="smallcaps" style={{ marginBottom: 14 }}>The Long Pour</div>
-                <div className="timeline">
-                  {timeline.map((t, i) =>
-                <div className={"tl-item " + (t.fall ? "fall" : "")} key={i}>
-                      <div className="tl-age">{t.age}</div>
-                      <div className="tl-event">{t.event}</div>
-                    </div>
-                )}
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ======== OATHBREAKER ======== */}
-        <section>
-          <div className="sec-head">
-            <CompassStar size={20} />
-            <span className="num">VI</span>
-            <span className="sec-title">When the Bottle Empties</span>
-            <span className="seal-line" />
-          </div>
-
-          <div className="ob-card frame">
-            <i className="corner-bl" /><i className="corner-br" />
-            <div className="ob-art" role="img" aria-label="Oathbreaker form portrait" />
-            <div className="ob-body">
-              <div className="ob-head">— Form II · The Cellar Below —</div>
-              <div className="ob-title">When the Wine Runs Out</div>
-              <p>
-                When the salons close and the candles drown and there is no Duchess left to disappoint, the smile slips and the <span style={{color:"var(--blood)"}}>Aurelius</span> stare comes out. He does not draw the rapier with grief. He draws it like a closing line.
-              </p>
-              <div className="ob-stats">
-                <div className="ob-stat"><div className="k">Aura</div><div className="v">Charm · 10 ft</div></div>
-                <div className="ob-stat"><div className="k">Cantrip</div><div className="v">Vicious Mockery</div></div>
-                <div className="ob-stat"><div className="k">Bonus</div><div className="v">Cutting Words</div></div>
-                <div className="ob-stat"><div className="k">Vow</div><div className="v">Refuse no toast</div></div>
-              </div>
-              <div style={{ marginTop: 18, fontFamily: "'Cormorant Garamond',serif", fontStyle: "italic", color: "var(--ink-mute)", fontSize: "0.98rem" }}>
-                Toggle <span style={{ color: "var(--blood)" }}>Heir · Disinherited</span> at the top of the codex to read this folio in its true colour.
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ======== FOOTER ======== */}
-        <div className="quote-block">
-          <div className="quote">
-            <span className="blood">“</span> No one is an enemy <span style={{ color: "var(--gold)" }}>…</span>
-            <br />
-            until they refuse the cup. <span className="blood">”</span>
-          </div>
-          <div className="quote-attribution">— Aython Ashvail Aurelius · folio II, page two</div>
+    <div class="card">
+      <div class="story">
+        <div class="story-text">
+          <p>Aython was born the second son of <em>House Aurelius</em>, an old line whose chief inheritance is the word "nobility" and the obligation to keep saying it. His brother <em>Vincent</em> took to the Aurelian Guard the way other boys take to dogs.</p>
+          <p>Aython took to <strong style="color:var(--ink)">the stage</strong>. Where the family saw discipline, he saw a long polished hallway with no music in it. By eighteen he was singing for coin under another name in the Lower Quarter — and laughing at all of his mother's letters.</p>
+          <p>Then came the <em>Gala of the Silver Wolf</em>. A wine fountain, paid for with House money he was not, technically, allowed to spend. So generous the candles drowned in it. The Duchess Henrietta took the floor and named him — in front of every name that mattered — <strong style="color:var(--ink)">"the Black Sheep"</strong>.</p>
+          <p>She sent him out in last season's coat with a single sentence: <em>return when your name is worth more than gold.</em> He bowed at the door like a stage actor leaving applause behind him, and has not bowed since.</p>
+          <p style="color:var(--ink-soft)"><em>And that</em> — was the start of the long pilgrimage from cellar to cellar.</p>
         </div>
 
-        <div className="colophon">
-          Codex of the Veiled Watch · Folio II of I · Annum Aurelius XXV
+        <div>
+          <div style="font-family:'Cinzel',serif;letter-spacing:0.26em;text-transform:uppercase;font-size:0.7rem;color:var(--brass);margin-bottom:14px">— The Long Pour —</div>
+          <div class="timeline">
+            <div class="tl-item">
+              <div class="tl-age">Year 0</div>
+              <div class="tl-event">Born to House Aurelius, second son. The midwife is paid in old silver.</div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-age">Year 7</div>
+              <div class="tl-event">Vincent enters the Aurelian Guard. Aython is given his first lute — to keep him quiet.</div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-age">Year 18</div>
+              <div class="tl-event">Refuses the Cadet Academy. Performs in the Lower Quarter under another name, and a better hat.</div>
+            </div>
+            <div class="tl-item fall">
+              <div class="tl-age">Year 24</div>
+              <div class="tl-event">The Gala of the Silver Wolf. The wine fountain. The disinheritance.</div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-age">Year 25</div>
+              <div class="tl-event">On the run. The Auditors close. He pours another glass anyway.</div>
+            </div>
+          </div>
         </div>
-      </div>);
+      </div>
+    </div>
+  </section>
 
-}
+  <!-- ============ ENCORE ============ -->
+  <section class="act">
+    <div class="act-head">
+      <div class="act-label">Encore</div>
+      <div class="act-title">When the Bottle Empties</div>
+      <div class="act-sub">— Form II · the cellar below —</div>
+    </div>
 
-ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+    <div class="encore-card">
+      <div class="encore-art" role="img" aria-label="Aython in cellar form"></div>
+      <div class="encore-body">
+        <div class="encore-head">— Form II · The Cellar Below —</div>
+        <div class="encore-title">When the Wine Runs Out</div>
+        <p>When the salons close and the candles drown and there is no Duchess left to disappoint, the smile slips and the <span style="color:var(--blood)">Aurelius</span> stare comes out. He does not draw the rapier with grief. He draws it like a closing line.</p>
+        <div class="encore-stats">
+          <div class="encore-stat"><div class="k">Aura</div><div class="v">Charm · 10 ft</div></div>
+          <div class="encore-stat"><div class="k">Cantrip</div><div class="v">Vicious Mockery</div></div>
+          <div class="encore-stat"><div class="k">Bonus</div><div class="v">Cutting Words</div></div>
+          <div class="encore-stat"><div class="k">Vow</div><div class="v">Refuse no toast</div></div>
+        </div>
+        <div style="margin-top:18px;font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--ink-mute);font-size:0.96rem">
+          Toggle <span style="color:var(--blood)">Heir · Disinherited</span> at the corner of the playbill to read this Act in its true colour.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CLOSING ============ -->
+  <div class="curtain-end">
+    <div class="end-q">
+      <span class="bld">"</span> No one is an enemy <span style="color:var(--brass)">…</span><br/>
+      until they refuse the cup. <span class="bld">"</span>
+    </div>
+    <div class="end-attr">— Aython Ashvail Aurelius · folio II, page two</div>
+  </div>
+
+  <!-- ============ WINE GLASS FINALE ============ -->
+  <section class="wine-finale" aria-label="a glass of wine, slowly filling">
+    <div class="wine-stage">
+      <svg class="wine-glass" viewBox="0 0 200 340" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="wg-wine-grad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%"  stop-color="#7a1a1a"/>
+            <stop offset="50%" stop-color="#4a0a0a"/>
+            <stop offset="100%" stop-color="#2a0606"/>
+          </linearGradient>
+          <radialGradient id="wg-light" cx="30%" cy="30%" r="60%">
+            <stop offset="0%"  stop-color="rgba(255,245,208,0.6)"/>
+            <stop offset="100%" stop-color="rgba(255,245,208,0)"/>
+          </radialGradient>
+          <!-- Inner bowl clip-path for the wine -->
+          <clipPath id="wg-bowl">
+            <path d="M44 62 C32 124, 64 158, 96 168 L104 168 C136 158, 168 124, 156 62 Z"/>
+          </clipPath>
+        </defs>
+
+        <!-- Bottle tip — small spout above glass -->
+        <g class="wg-bottle">
+          <path d="M88 8 L88 22 L96 32 L104 32 L112 22 L112 8"/>
+          <line x1="88" y1="8" x2="112" y2="8"/>
+        </g>
+
+        <!-- Wine inside (clipped to bowl shape) -->
+        <g clip-path="url(#wg-bowl)">
+          <rect class="wg-wine" x="30" y="60" width="140" height="120"/>
+          <!-- Surface highlight ellipse -->
+          <ellipse class="wg-surface" cx="100" cy="63" rx="50" ry="3"/>
+          <!-- Ripple expanding from drop impact -->
+          <ellipse class="wg-ripple" cx="100" cy="63" rx="14" ry="2"/>
+        </g>
+
+        <!-- Glass bowl outline -->
+        <path class="wg-outline"
+              d="M44 62 C32 124, 64 158, 96 168 L96 290
+                 M104 290 L104 168 C136 158, 168 124, 156 62"/>
+        <!-- Top lip arc -->
+        <path class="wg-outline" d="M44 62 Q100 50 156 62"/>
+        <!-- Base ellipse -->
+        <ellipse class="wg-outline" cx="100" cy="296" rx="40" ry="4.5"/>
+        <!-- Glass body highlight reflection -->
+        <ellipse class="wg-highlight" cx="68" cy="95" rx="7" ry="34"/>
+
+        <!-- Falling drop — repeats forever -->
+        <ellipse class="wg-drop" cx="100" cy="38" rx="3" ry="5"/>
+      </svg>
+      <div class="wg-puddle" aria-hidden="true"></div>
+    </div>
+    <div class="wine-caption">
+      "Pour one more — and we will call it tomorrow."
+      <span class="byline">— Encore · by candle-light —</span>
+    </div>
+  </section>
+
+  <div class="colophon">Codex of the Veiled Watch · Folio II of VIII · Playbill · the Prince of the Night</div>
+
+</div>
+
+<script>
+  // ====== 1. Name letter-by-letter reveal ======
+  (function(){
+    const el = document.getElementById('hero-name');
+    if (!el) return;
+    // Split AYTHON and AURELIUS, preserve the <br/> and <span class="amp">
+    // Final HTML: <span class="lt">A</span>...etc <br/><span class="amp">—</span><span class="lt">A</span>...
+    const first = 'Aython';
+    const last  = 'Aurelius';
+    function wrap(word, delayStart){
+      return [...word].map((ch,i) =>
+        `<span class="lt" style="animation-delay:${delayStart + i*0.06}s">${ch}</span>`
+      ).join('');
+    }
+    el.innerHTML =
+      wrap(first, 0.3)
+      + '<br/>'
+      + '<span class="amp" style="animation-delay:'+(0.3+first.length*0.06)+'s">—</span>'
+      + wrap(last, 0.3 + first.length*0.06 + 0.18);
+  })();
+
+  // ====== 2. Drifting dust motes ======
+  (function(){
+    const box = document.getElementById('dust');
+    if (!box) return;
+    const N = 22;
+    for (let i=0;i<N;i++){
+      const m = document.createElement('div');
+      m.className = 'mote';
+      const left = Math.random()*100;
+      const dur  = 14 + Math.random()*16;
+      const del  = Math.random()*dur;
+      const dx   = (Math.random()*100 - 50) + 'px';
+      const sz   = 2 + Math.random()*3;
+      m.style.left = left + '%';
+      m.style.width = sz+'px';
+      m.style.height = sz+'px';
+      m.style.animationDuration = dur + 's';
+      m.style.animationDelay = '-' + del + 's';
+      m.style.setProperty('--dx', dx);
+      box.appendChild(m);
+    }
+  })();
+
+  // ====== 3. Scroll-fade for acts ======
+  (function(){
+    const acts = document.querySelectorAll('.act');
+    if (!('IntersectionObserver' in window)){
+      acts.forEach(a => a.classList.add('in'));
+      return;
+    }
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting){
+          e.target.classList.add('in');
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -10% 0px' });
+    acts.forEach(a => io.observe(a));
+  })();
+
+  // ====== 4. Heir toggle ======
+  (function(){
+    const body = document.body;
+    const heir = document.getElementById('btn-heir');
+    const cellar = document.getElementById('btn-cellar');
+    function set(state){
+      if (state === 'cellar'){
+        body.classList.add('cellar');
+        heir.classList.remove('active');
+        cellar.classList.add('active');
+      } else {
+        body.classList.remove('cellar');
+        cellar.classList.remove('active');
+        heir.classList.add('active');
+      }
+    }
+    heir.addEventListener('click', () => set('heir'));
+    cellar.addEventListener('click', () => set('cellar'));
+  })();
 </script>
+<script src="shared.js"></script>
+
 </body>
 </html>

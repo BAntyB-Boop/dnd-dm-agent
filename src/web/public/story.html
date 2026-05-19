@@ -1,453 +1,1038 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
+<meta charset="utf-8" />
 <title>The Veiled Codex — Chronicle of Borderland</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="stylesheet" href="shared.css">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Noto+Serif+Thai:wght@400;500&display=swap" rel="stylesheet" />
 <style>
-  :root {
-    --bg-deep:    #07070a;
-    --bg-paper:   #0e0e13;
-    --bg-card:    #15151c;
-    --bg-card-2:  #1c1c25;
-    --line:       #2a2a35;
-    --line-soft:  #1d1d25;
-    --ink:        #e8e2cf;
-    --ink-soft:   #c9c2ad;
-    --ink-mute:   #7a7461;
-    --ink-faint:  #4a4636;
-    --gold:       #c9a45c;
-    --gold-dim:   #8a6f3a;
-    --gold-deep:  #5a4622;
-    --blood:      #b01a1a;
-  }
+:root{
+  --bg-deep:#06060c;
+  --bg-paper:#0e0e16;
+  --bg-card:#15151c;
+  --bg-card-2:#1c1c25;
+  --line:#2a2a35;
+  --line-soft:#1d1d25;
+  --ink:#e8e2cf;
+  --ink-soft:#c9c2ad;
+  --ink-mute:#7a7461;
+  --ink-faint:#4a4636;
+  --gold:#c9a45c;
+  --gold-bright:#f6efd2;
+  --gold-dim:#8a6f3a;
+  --gold-deep:#5a4622;
+  --blood:#b01a1a;
+  /* per-chapter ambient tints */
+  --c-prologue: #6b8aff;
+  --c-ch1: #d6a360;   /* candle / tavern */
+  --c-ch2: #5a76c8;   /* cold blue hunter */
+  --c-ch3: #4a90b0;   /* storm at sea */
+  --c-ch4: #c93a2a;   /* museum fire */
+  --c-ch5: #ff5a30;   /* hellfire battle */
+  --c-ch6: #6fa8c4;   /* ocean / dawn */
+}
+html,body{background:var(--bg-deep);color:var(--ink)}
+body{
+  min-height:100vh;
+  background:
+    radial-gradient(1400px 700px at 50% -8%, #141020 0%, transparent 60%),
+    radial-gradient(900px 500px at 50% 110%, #110b0b 0%, transparent 65%),
+    var(--bg-deep);
+  overflow-x:hidden;
+}
+.th-font{font-family:"Noto Serif Thai",serif;letter-spacing:0}
 
-  html, body {
-    background: var(--bg-deep);
-    color: var(--ink);
-  }
-  body {
-    min-height: 100vh;
-    background:
-      radial-gradient(1400px 700px at 50% -8%, #141020 0%, transparent 60%),
-      radial-gradient(900px 500px at 50% 110%, #110b0b 0%, transparent 65%),
-      var(--bg-deep);
-  }
+/* =================================================================
+   SHADER WALLPAPER — cosmic plasma background, per-chapter color shift
+================================================================= */
+.shader-wallpaper{
+  position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;
+  --accent: var(--gold);
+  --accent2: var(--gold-dim);
+  transition: filter 1.6s ease;
+}
+/* slow rotating conic + radial layers create plasma feel */
+.shader-wallpaper::before{
+  content:"";position:absolute;inset:-30%;
+  background:
+    radial-gradient(ellipse 50% 40% at 30% 30%, color-mix(in srgb, var(--accent) 24%, transparent), transparent 65%),
+    radial-gradient(ellipse 60% 50% at 70% 70%, color-mix(in srgb, var(--accent2) 22%, transparent), transparent 60%),
+    radial-gradient(ellipse 40% 30% at 50% 50%, color-mix(in srgb, var(--accent) 12%, transparent), transparent 55%);
+  filter:blur(60px) saturate(1.2);
+  opacity:0.65;
+  animation:plasma-1 38s ease-in-out infinite alternate;
+}
+.shader-wallpaper::after{
+  content:"";position:absolute;inset:-30%;
+  background:
+    conic-gradient(from var(--ang, 0deg) at 50% 50%,
+      transparent 0deg,
+      color-mix(in srgb, var(--accent) 16%, transparent) 60deg,
+      transparent 120deg,
+      color-mix(in srgb, var(--accent2) 14%, transparent) 200deg,
+      transparent 280deg,
+      color-mix(in srgb, var(--accent) 16%, transparent) 340deg,
+      transparent 360deg
+    );
+  filter:blur(80px);
+  opacity:0.55;
+  animation:plasma-2 90s linear infinite;
+}
+@keyframes plasma-1{
+  0%  {transform:translate(0,0) scale(1)}
+  50% {transform:translate(2%,-3%) scale(1.08)}
+  100%{transform:translate(-1%,2%) scale(1.04)}
+}
+@keyframes plasma-2{
+  to {transform:rotate(360deg)}
+}
 
-  /* ---------- language toggle button ---------- */
-  .lang-toggle {
-    position: fixed;
-    top: 22px;
-    right: 28px;
-    z-index: 300;
-    display: inline-flex;
-    align-items: center;
-    gap: 0;
-    font-family: "Cinzel", serif;
-    font-size: 0.6rem;
-    letter-spacing: 0.22em;
-    border: 1px solid var(--gold-dim);
-    background: rgba(7, 7, 14, 0.9);
-    backdrop-filter: blur(6px);
-    overflow: hidden;
-  }
-  .lang-toggle button {
-    padding: 9px 16px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-family: inherit;
-    font-size: inherit;
-    letter-spacing: inherit;
-    text-transform: uppercase;
-    color: var(--ink-mute);
-    transition: color 0.2s, background 0.2s;
-  }
-  .lang-toggle .divider {
-    width: 1px;
-    height: 28px;
-    background: var(--gold-dim);
-    opacity: 0.4;
-    flex-shrink: 0;
-  }
-  .lang-toggle button.active {
-    color: var(--gold);
-    background: rgba(201, 164, 92, 0.08);
-  }
-  .lang-toggle button:hover:not(.active) {
-    color: var(--ink-soft);
-  }
+/* film grain */
+.grain{
+  position:fixed;inset:0;pointer-events:none;z-index:201;opacity:0.07;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.7 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
 
-  /* ---------- header ---------- */
-  header.story-head {
-    text-align: center;
-    margin-bottom: 64px;
-    position: relative;
-  }
-  .seal-rule {
-    display: flex; align-items: center; justify-content: center;
-    gap: 14px;
-    margin-bottom: 20px;
-  }
-  .seal-rule .line {
-    flex: 1 1 60px;
-    max-width: 200px;
-    height: 1px;
-    background: linear-gradient(to right, transparent, var(--gold-dim) 50%, transparent);
-  }
-  .seal-rule .glyph {
-    width: 28px; height: 28px;
-    color: var(--gold);
-  }
-  .eyebrow {
-    font-family: "Cinzel", serif;
-    text-transform: uppercase;
-    letter-spacing: 0.32em;
-    font-weight: 500;
-    font-size: 0.68rem;
-    color: var(--gold);
-    display: block;
-    margin-bottom: 14px;
-  }
-  h1.story-title {
-    font-family: "Cinzel", serif;
-    font-weight: 500;
-    font-size: clamp(28px, 4.5vw, 60px);
-    letter-spacing: 0.16em;
-    line-height: 1.1;
-    margin: 0 0 10px;
-    color: var(--ink);
-  }
-  .story-subtitle {
-    font-family: "Cormorant Garamond", Georgia, serif;
-    font-size: 1.1rem;
-    font-style: italic;
-    color: var(--ink-mute);
-    letter-spacing: 0.04em;
-  }
-  .story-subtitle .lang-th { display: none; }
+/* =================================================================
+   COSMIC STARFIELD — three parallax layers
+================================================================= */
+.cosmos{position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden}
+.cosmos .star-layer{
+  position:absolute;inset:-20%;
+  background-repeat:repeat;
+  animation:drift-y linear infinite;
+}
+.cosmos .l1{
+  background-image:
+    radial-gradient(1px 1px at 5% 12%, rgba(255,245,208,0.7), transparent 60%),
+    radial-gradient(1px 1px at 22% 38%, rgba(255,245,208,0.5), transparent 60%),
+    radial-gradient(1.2px 1.2px at 38% 24%, rgba(255,245,208,0.6), transparent 60%),
+    radial-gradient(1px 1px at 56% 70%, rgba(255,245,208,0.55), transparent 60%),
+    radial-gradient(1.4px 1.4px at 72% 18%, rgba(255,245,208,0.5), transparent 60%),
+    radial-gradient(1px 1px at 88% 52%, rgba(255,245,208,0.6), transparent 60%);
+  background-size:600px 600px;
+  animation-duration:240s;opacity:0.85;
+}
+.cosmos .l2{
+  background-image:
+    radial-gradient(1.6px 1.6px at 12% 60%, rgba(180,210,255,0.55), transparent 60%),
+    radial-gradient(2px 2px at 44% 86%, rgba(255,220,180,0.4), transparent 60%),
+    radial-gradient(1.4px 1.4px at 76% 32%, rgba(200,230,255,0.5), transparent 60%);
+  background-size:900px 900px;
+  animation-duration:420s;opacity:0.65;
+}
+.cosmos .l3{
+  background-image:
+    radial-gradient(2.4px 2.4px at 20% 88%, rgba(255,210,160,0.5), transparent 60%),
+    radial-gradient(3px 3px at 62% 50%, rgba(200,220,255,0.45), transparent 60%);
+  background-size:1400px 1400px;
+  animation-duration:720s;opacity:0.5;
+  filter:blur(0.6px);
+}
+@keyframes drift-y{
+  0%   {transform:translateY(0)}
+  100% {transform:translateY(-600px)}
+}
+/* shooting star — JS-spawned */
+.shooting-star{
+  position:absolute;width:2px;height:2px;border-radius:50%;background:white;
+  box-shadow:0 0 10px white, 0 0 20px white;
+}
+.shooting-star::after{
+  content:"";position:absolute;right:0;top:50%;width:100px;height:1px;
+  background:linear-gradient(to left, white, transparent);
+  transform:translateY(-50%);
+}
 
-  /* ---------- story layout: sidebar + content ---------- */
-  .story-layout {
-    display: grid;
-    grid-template-columns: 148px 1fr;
-    gap: 0 52px;
-    align-items: start;
-    max-width: 1080px;
-    margin: 0 auto;
-  }
+/* =================================================================
+   LANGUAGE TOGGLE + BACK
+================================================================= */
+.back-link:hover{box-shadow:0 0 20px rgba(201,164,92,0.2)}
 
-  /* ---------- sticky sidebar nav ---------- */
-  .side-nav {
-    position: sticky;
-    top: 80px;
-    padding-top: 4px;
+/* mobile: shrink + relocate back-link bottom-left */
+@media (max-width:600px){
+  .back-link{
+    top:auto;bottom:14px;left:14px;
+    padding:6px 10px;font-size:0.52rem;letter-spacing:0.22em;gap:6px;
   }
-  .side-nav-label {
-    font-family: "Cinzel", serif;
-    font-size: 0.52rem;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--ink-faint);
-    margin-bottom: 18px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid var(--line-soft);
-    display: block;
-  }
-  .side-nav ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    position: relative;
-  }
-  /* vertical connector line */
-  .side-nav ul::before {
-    content: "";
-    position: absolute;
-    left: 18px;
-    top: 8px;
-    bottom: 8px;
-    width: 1px;
-    background: linear-gradient(to bottom, transparent, var(--line) 10%, var(--line) 90%, transparent);
-  }
-  .side-nav li {
-    position: relative;
-    margin-bottom: 4px;
-  }
-  .side-nav a {
-    display: flex;
-    align-items: flex-start;
-    gap: 14px;
-    text-decoration: none;
-    padding: 8px 10px 8px 0;
-    border-radius: 2px;
-    transition: background 0.2s;
-    position: relative;
-  }
-  .side-nav a:hover {
-    background: rgba(201,164,92,0.05);
-  }
-  /* dot on the line */
-  .side-nav a::before {
-    content: "";
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    border: 1px solid var(--gold-dim);
-    background: var(--bg-deep);
-    flex-shrink: 0;
-    margin-top: 6px;
-    margin-left: 15px;
-    transition: background 0.25s, border-color 0.25s, transform 0.25s;
-  }
-  .side-nav a.active::before {
-    background: var(--gold);
-    border-color: var(--gold);
-    transform: scale(1.3);
-  }
-  .side-nav .nav-text {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    overflow: hidden;
-  }
-  .side-nav .nav-roman {
-    font-family: "Cinzel", serif;
-    font-size: 0.72rem;
-    letter-spacing: 0.22em;
-    color: var(--ink-mute);
-    transition: color 0.25s;
-    line-height: 1;
-  }
-  .side-nav a.active .nav-roman,
-  .side-nav a:hover .nav-roman {
-    color: var(--gold);
-  }
-  .side-nav .nav-label {
-    font-family: "Cormorant Garamond", Georgia, serif;
-    font-size: 0.78rem;
-    color: var(--ink-faint);
-    line-height: 1.3;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    transition: color 0.25s;
-  }
-  .side-nav a.active .nav-label,
-  .side-nav a:hover .nav-label {
-    color: var(--ink-mute);
-  }
+  .back-link .arr{width:10px}
+}
 
-  /* ---------- chapters ---------- */
-  .chronicle {
-    min-width: 0;
-  }
+.lang-toggle{
+  position:fixed;top:22px;right:28px;z-index:300;
+  display:inline-flex;align-items:center;
+  font-family:"Cinzel",serif;font-size:0.6rem;letter-spacing:0.22em;
+  border:1px solid var(--gold-dim);background:rgba(7,7,14,0.9);backdrop-filter:blur(6px);
+}
+.lang-toggle button{
+  padding:9px 16px;background:none;border:none;cursor:pointer;
+  font-family:inherit;font-size:inherit;letter-spacing:inherit;text-transform:uppercase;
+  color:var(--ink-mute);transition:color .2s, background .2s;
+}
+.lang-toggle .divider{width:1px;height:28px;background:var(--gold-dim);opacity:0.4;flex-shrink:0}
+.lang-toggle button.active{color:var(--gold);background:rgba(201,164,92,0.08)}
+.lang-toggle button:hover:not(.active){color:var(--ink-soft)}
 
-  .chapter {
-    margin-bottom: 80px;
-    opacity: 0;
-    transform: translateY(18px);
-    transition: opacity 0.6s ease, transform 0.6s ease;
+/* mobile: shrink + relocate lang-toggle bottom-right */
+@media (max-width:600px){
+  .lang-toggle{
+    top:auto;bottom:14px;right:14px;
   }
-  .chapter.in {
-    opacity: 1;
-    transform: none;
+  .lang-toggle button{
+    padding:5px 10px;font-size:0.5rem;letter-spacing:0.16em;
   }
+  .lang-toggle .divider{height:18px}
+}
 
-  .chapter-header {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    margin-bottom: 28px;
-    padding-bottom: 16px;
-    border-bottom: 1px solid var(--line);
-  }
-  .chapter-num {
-    font-family: "Cinzel", serif;
-    font-size: 0.58rem;
-    letter-spacing: 0.28em;
-    text-transform: uppercase;
-    color: var(--gold-dim);
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-  .chapter-title-wrap {
-    flex: 1;
-  }
-  .chapter-title-en,
-  .chapter-title-th {
-    font-family: "Cinzel", serif;
-    font-weight: 500;
-    font-size: clamp(14px, 2vw, 20px);
-    letter-spacing: 0.08em;
-    color: var(--ink);
-    margin: 0;
-    line-height: 1.3;
-  }
-  .chapter-title-th { display: none; }
+/* =================================================================
+   PAGE / HEADER
+================================================================= */
+.page{
+  position:relative;z-index:10;
+  max-width:1280px;margin:0 auto;padding:80px clamp(20px,3vw,40px) 80px;
+}
 
-  /* ---------- body text ---------- */
-  .chapter-body {
-    font-family: "Cormorant Garamond", Georgia, serif;
-    font-size: 1.15rem;
-    line-height: 1.9;
-    color: var(--ink-soft);
-  }
-  .chapter-body p {
-    margin: 0 0 1.1em;
-  }
-  .chapter-body p:last-child { margin-bottom: 0; }
+header.story-head{
+  text-align:center;margin-bottom:84px;position:relative;
+  opacity:0;animation:fade-up 1.2s ease-out 0.2s forwards;
+}
+@keyframes fade-up{0%{opacity:0;transform:translateY(14px)}100%{opacity:1;transform:translateY(0)}}
 
-  .lang-en { display: block; }
-  .lang-th { display: none; }
+.seal-rule{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:22px}
+.seal-rule .line{flex:1 1 60px;max-width:220px;height:1px;background:linear-gradient(to right,transparent,var(--gold-dim) 50%,transparent)}
+.seal-rule .glyph{width:30px;height:30px;color:var(--gold);animation:compass-spin 80s linear infinite}
+@keyframes compass-spin{to{transform:rotate(360deg)}}
 
-  /* bullet lists */
-  .chapter-body ul {
-    list-style: none;
-    padding: 0;
-    margin: 0.5em 0 1em 0;
-  }
-  .chapter-body ul li {
-    padding-left: 1.4em;
-    position: relative;
-    margin-bottom: 0.35em;
-  }
-  .chapter-body ul li::before {
-    content: "•";
-    position: absolute;
-    left: 0;
-    color: var(--gold-dim);
-  }
+.eyebrow{font-family:"Cinzel",serif;text-transform:uppercase;letter-spacing:0.4em;font-weight:500;font-size:0.68rem;color:var(--gold);display:block;margin-bottom:18px}
 
-  /* roster list */
-  .roster-list {
-    list-style: none;
-    padding: 0;
-    margin: 1.2em 0;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .roster-list li {
-    padding: 12px 18px;
-    background: var(--bg-card);
-    border-left: 2px solid var(--gold-dim);
-    font-family: "Cormorant Garamond", Georgia, serif;
-    font-size: 1rem;
-    color: var(--ink-soft);
-    line-height: 1.5;
-  }
-  .roster-list li strong {
-    color: var(--gold);
-    font-weight: 600;
-  }
+h1.story-title{
+  font-family:"Cinzel Decorative","Cinzel",serif;font-weight:700;
+  font-size:clamp(38px,6.5vw,82px);letter-spacing:0.08em;line-height:1.05;
+  margin:0 0 20px;color:var(--ink);position:relative;
+  background:linear-gradient(180deg, var(--gold-bright) 0%, var(--gold) 60%, var(--gold-deep) 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;
+  text-shadow:0 0 40px rgba(201,164,92,0.18);
+}
+/* particle title — each letter wrapped with .lt, JS staggers reveal */
+.story-title .lt{
+  display:inline-block;opacity:0;
+  transform:translateY(0.5em) rotate(-8deg) scale(0.85);
+  filter:blur(8px);
+  animation:title-bloom 1.1s cubic-bezier(.2,.7,.2,1) forwards;
+}
+.story-title .lt.sp{width:0.28em}
+@keyframes title-bloom{
+  0%   {opacity:0;transform:translateY(0.5em) rotate(-8deg) scale(0.85);filter:blur(8px)}
+  60%  {opacity:1;filter:blur(0)}
+  100% {opacity:1;transform:translateY(0) rotate(0) scale(1);filter:blur(0)}
+}
 
-  /* prologue italic styling */
-  .prologue .chapter-body {
-    font-style: italic;
-    font-size: 1.22rem;
-    color: var(--ink);
-  }
-  .prologue .chapter-header {
-    border-bottom-color: var(--gold-deep);
-  }
+.story-subtitle{
+  font-family:"Cormorant Garamond",Georgia,serif;font-size:1.16rem;font-style:italic;color:var(--ink-mute);letter-spacing:0.04em;
+  opacity:0;animation:fade-up 1s ease-out 1.6s forwards;
+}
+.story-subtitle .lang-th{display:none}
 
-  /* section divider between chapters */
-  .chapter-sep {
-    text-align: center;
-    color: var(--gold-deep);
-    font-size: 0.7rem;
-    letter-spacing: 0.5em;
-    margin-bottom: 80px;
-    opacity: 0.5;
-    user-select: none;
-  }
+/* =================================================================
+   LAYOUT: nav + chronicle
+================================================================= */
+.story-layout{
+  display:grid;
+  grid-template-columns:180px 1fr;
+  gap:0 64px;
+  align-items:start;
+  max-width:1140px;margin:0 auto;
+}
 
-  /* ---------- closing ---------- */
-  .story-closing {
-    text-align: center;
-    padding: clamp(24px, 4vw, 56px) 0 clamp(40px, 6vw, 80px);
-  }
-  .closing-rule {
-    height: 1px;
-    background: linear-gradient(to right, transparent, var(--gold-dim) 30%, var(--gold-dim) 70%, transparent);
-    margin-bottom: 36px;
-    opacity: 0.35;
-  }
-  .closing-glyph {
-    font-family: "Cinzel", serif;
-    font-size: clamp(20px, 3vw, 36px);
-    letter-spacing: 0.5em;
-    color: var(--gold);
-    opacity: 0.2;
-    display: block;
-    margin-bottom: 18px;
-  }
-  .closing-text {
-    font-family: "Cormorant Garamond", Georgia, serif;
-    font-style: italic;
-    font-size: 1.1rem;
-    color: var(--ink-mute);
-    letter-spacing: 0.04em;
-  }
-  .closing-text .lang-th { display: none; }
+/* sticky sidebar nav */
+.side-nav{
+  position:sticky;top:80px;padding-top:4px;
+  opacity:0;animation:fade-up 0.9s ease-out 0.8s forwards;
+}
+.side-nav-label{
+  font-family:"Cinzel",serif;font-size:0.52rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--ink-faint);
+  margin-bottom:18px;padding-bottom:10px;border-bottom:1px solid var(--line-soft);display:block;
+}
+.side-nav ul{list-style:none;padding:0;margin:0;position:relative}
+.side-nav ul::before{
+  content:"";position:absolute;left:18px;top:8px;bottom:8px;width:1px;
+  background:linear-gradient(to bottom,transparent,var(--line) 10%,var(--line) 90%,transparent);
+}
+.side-nav li{position:relative;margin-bottom:4px}
+.side-nav a{
+  display:flex;align-items:flex-start;gap:14px;text-decoration:none;padding:8px 10px 8px 0;border-radius:2px;
+  transition:background .2s;position:relative;
+}
+.side-nav a:hover{background:rgba(201,164,92,0.05)}
+.side-nav a::before{
+  content:"";width:7px;height:7px;border-radius:50%;border:1px solid var(--gold-dim);background:var(--bg-deep);
+  flex-shrink:0;margin-top:6px;margin-left:15px;
+  transition:background .25s, border-color .25s, transform .25s, box-shadow .25s;
+}
+.side-nav a.active::before{
+  background:var(--gold);border-color:var(--gold);transform:scale(1.5);
+  box-shadow:0 0 12px rgba(201,164,92,0.7);
+}
+.side-nav .nav-text{display:flex;flex-direction:column;gap:2px;overflow:hidden}
+.side-nav .nav-roman{font-family:"Cinzel",serif;font-size:0.72rem;letter-spacing:0.22em;color:var(--ink-mute);transition:color .25s;line-height:1}
+.side-nav a.active .nav-roman,.side-nav a:hover .nav-roman{color:var(--gold)}
+.side-nav .nav-label{font-family:"Cormorant Garamond",Georgia,serif;font-size:0.82rem;color:var(--ink-faint);line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:color .25s}
+.side-nav a.active .nav-label,.side-nav a:hover .nav-label{color:var(--ink-mute)}
 
-  /* ---------- Thai mode overrides ---------- */
-  body.th-active .lang-en { display: none; }
-  body.th-active .lang-th { display: block; }
-  body.th-active .chapter-title-en { display: none; }
-  body.th-active .chapter-title-th { display: block; }
-  body.th-active .story-subtitle .lang-en { display: none; }
-  body.th-active .story-subtitle .lang-th { display: inline; }
-  body.th-active .closing-text .lang-en { display: none; }
-  body.th-active .closing-text .lang-th { display: block; }
-  body.th-active .roster-list { display: none; }
-  body.th-active .roster-list-th { display: flex !important; }
-  .roster-list-th { display: none; }
+/* chronicle */
+.chronicle{min-width:0}
 
-  /* ---------- responsive ---------- */
-  @media (max-width: 860px) {
-    .story-layout {
-      grid-template-columns: 1fr;
-    }
-    .side-nav {
-      position: static;
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      margin-bottom: 40px;
-      overflow-x: auto;
-      padding-bottom: 4px;
-    }
-    .side-nav-label { display: none; }
-    .side-nav ul {
-      display: flex;
-      gap: 2px;
-      flex-shrink: 0;
-    }
-    .side-nav ul::before { display: none; }
-    .side-nav li { margin-bottom: 0; }
-    .side-nav a {
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-      padding: 8px 12px;
-      border: 1px solid var(--line-soft);
-      background: var(--bg-card);
-    }
-    .side-nav a.active { border-color: var(--gold-dim); }
-    .side-nav a::before { display: none; }
-    .side-nav .nav-label { display: none; }
-    .side-nav .nav-roman { font-size: 0.65rem; letter-spacing: 0.18em; }
+/* =================================================================
+   CHAPTER — frame, ambient overlay, body
+================================================================= */
+.chapter{
+  margin-bottom:90px;
+  opacity:0;transform:translateY(28px);
+  transition:opacity 0.8s ease, transform 0.8s cubic-bezier(.2,.7,.2,1);
+  position:relative;
+}
+.chapter.in{opacity:1;transform:none}
+
+/* per-chapter accent variable */
+.chapter.prologue   {--accent: var(--c-prologue)}
+.chapter.ch1         {--accent: var(--c-ch1)}
+.chapter.ch2         {--accent: var(--c-ch2)}
+.chapter.ch3         {--accent: var(--c-ch3)}
+.chapter.ch4         {--accent: var(--c-ch4)}
+.chapter.ch5         {--accent: var(--c-ch5)}
+.chapter.ch6         {--accent: var(--c-ch6)}
+
+/* chapter card — subtle layered surface */
+.chapter-inner{
+  position:relative;
+  padding:36px clamp(20px,3vw,48px) 40px;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--accent) 6%, transparent), transparent 40%),
+    linear-gradient(180deg, rgba(20,20,28,0.55), rgba(10,10,15,0.4));
+  border:1px solid var(--line);
+  border-left:3px solid var(--accent);
+  overflow:hidden;
+  transition:border-color .6s, box-shadow .6s;
+}
+.chapter.in .chapter-inner{
+  border-color:color-mix(in srgb, var(--accent) 30%, var(--line));
+  box-shadow:0 30px 80px -30px rgba(0,0,0,0.7), inset 0 0 60px color-mix(in srgb, var(--accent) 5%, transparent);
+}
+
+/* corner ornaments */
+.chapter-inner::before, .chapter-inner::after{
+  content:"";position:absolute;width:10px;height:10px;
+  border:1px solid var(--accent);background:var(--bg-deep);transform:rotate(45deg);opacity:0.6;
+}
+.chapter-inner::before{top:-5px;right:-5px}
+.chapter-inner::after{bottom:-5px;right:-5px}
+
+/* ambient drifting particles inside chapter */
+.chapter-fx{
+  position:absolute;inset:0;pointer-events:none;z-index:0;overflow:hidden;
+  opacity:0;transition:opacity 0.8s ease;
+}
+.chapter.in .chapter-fx{opacity:1}
+.chapter-fx .glow{
+  position:absolute;top:-30%;right:-20%;width:60%;height:80%;
+  background:radial-gradient(ellipse at center, color-mix(in srgb, var(--accent) 22%, transparent), transparent 65%);
+  filter:blur(40px);
+}
+/* ember/dust drifts — class-specific via modifier */
+.chapter-fx .p{
+  position:absolute;width:3px;height:3px;border-radius:50%;
+  background:radial-gradient(circle, color-mix(in srgb, var(--accent) 90%, white), color-mix(in srgb, var(--accent) 50%, transparent) 55%, transparent 80%);
+  box-shadow:0 0 6px color-mix(in srgb, var(--accent) 70%, transparent);
+  bottom:-10px;opacity:0;
+  animation:ch-rise linear infinite;
+}
+.chapter.in .chapter-fx .p{opacity:0.85}
+@keyframes ch-rise{
+  0%   {transform:translate(0,0) scale(0.7);opacity:0}
+  10%  {opacity:0.85}
+  100% {transform:translate(var(--dx,30px),-700px) scale(0.2);opacity:0}
+}
+
+/* chapter relative for content above fx */
+.chapter > * { position:relative; z-index:1 }
+.chapter-fx { z-index:0 }
+
+/* CHAPTER HEADER */
+.chapter-header{
+  display:flex;align-items:center;gap:16px;
+  margin-bottom:28px;padding-bottom:18px;
+  border-bottom:1px solid color-mix(in srgb, var(--accent) 30%, var(--line));
+  position:relative;
+}
+.chapter-num{
+  font-family:"Cinzel",serif;font-size:0.58rem;letter-spacing:0.28em;text-transform:uppercase;
+  color:var(--accent);white-space:nowrap;flex-shrink:0;
+  padding:5px 10px;border:1px solid color-mix(in srgb, var(--accent) 50%, var(--gold-dim));
+  background:rgba(0,0,0,0.3);
+}
+.chapter-title-wrap{flex:1;min-width:0}
+.chapter-title-en,.chapter-title-th{
+  font-family:"Cinzel",serif;font-weight:500;font-size:clamp(18px,2.4vw,28px);
+  letter-spacing:0.06em;color:var(--ink);margin:0;line-height:1.25;
+  background:linear-gradient(180deg, var(--gold-bright) 0%, var(--ink) 50%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;
+}
+.chapter-title-th{display:none;font-family:"Noto Serif Thai",serif;letter-spacing:0}
+
+/* roman numeral mega-glyph behind title */
+.chapter-romal{
+  position:absolute;right:0;top:-22px;
+  font-family:"Cinzel Decorative",serif;font-weight:700;
+  font-size:clamp(78px,12vw,160px);line-height:1;
+  color:transparent;-webkit-text-stroke:1px color-mix(in srgb, var(--accent) 25%, transparent);
+  opacity:0.45;pointer-events:none;user-select:none;
+  letter-spacing:0;
+  transform:translateY(-10%);
+  transition:transform 1.4s ease;
+}
+.chapter.in .chapter-romal{transform:translateY(0)}
+
+/* body */
+.chapter-body{font-family:"Cormorant Garamond",Georgia,serif;font-size:1.15rem;line-height:1.9;color:var(--ink-soft)}
+.chapter-body p{margin:0 0 1.1em}
+.chapter-body p:last-child{margin-bottom:0}
+
+/* prologue gets a more ethereal treatment */
+.chapter.prologue .chapter-body{font-style:italic;font-size:1.22rem;color:var(--ink)}
+
+/* drop-cap on first paragraph of each chapter */
+.chapter-body .lang-en > p:first-child::first-letter,
+.chapter-body .lang-th > p:first-child::first-letter{
+  font-family:"Cinzel Decorative",serif;font-weight:700;
+  font-size:3.6em;float:left;line-height:0.85;padding:6px 14px 0 0;
+  color:var(--accent);
+  text-shadow:0 0 16px color-mix(in srgb, var(--accent) 50%, transparent);
+}
+
+.lang-en{display:block}
+.lang-th{display:none}
+
+/* bullets */
+.chapter-body ul{list-style:none;padding:0;margin:0.5em 0 1em 0}
+.chapter-body ul li{padding-left:1.4em;position:relative;margin-bottom:0.35em}
+.chapter-body ul li::before{content:"◆";position:absolute;left:0;color:var(--accent);font-size:0.7em;top:0.4em}
+
+/* roster list — special for final chapter */
+.roster-list, .roster-list-th{
+  list-style:none;padding:0;margin:1.2em 0;display:flex;flex-direction:column;gap:10px;
+}
+.roster-list li, .roster-list-th li{
+  padding:14px 22px;
+  background:linear-gradient(90deg, color-mix(in srgb, var(--accent) 10%, var(--bg-card)), var(--bg-card-2));
+  border-left:2px solid var(--accent);
+  font-family:"Cormorant Garamond",Georgia,serif;font-size:1.04rem;color:var(--ink-soft);line-height:1.5;
+  position:relative;overflow:hidden;
+  transition:transform .4s, border-color .4s, box-shadow .4s;
+}
+.roster-list li::before, .roster-list-th li::before{
+  content:"";position:absolute;left:0;top:0;width:2px;height:100%;
+  background:var(--accent);box-shadow:0 0 12px var(--accent);
+  opacity:0;transition:opacity .3s;
+}
+.roster-list li:hover, .roster-list-th li:hover{
+  transform:translateX(6px);
+  box-shadow:0 12px 30px -10px color-mix(in srgb, var(--accent) 40%, transparent);
+}
+.roster-list li:hover::before, .roster-list-th li:hover::before{opacity:1}
+.roster-list li strong, .roster-list-th li strong{color:var(--accent);font-weight:600;font-family:"Cinzel",serif;letter-spacing:0.12em;font-size:0.95em}
+
+/* chapter divider */
+.chapter-sep{
+  text-align:center;color:var(--gold-deep);font-size:0.7rem;letter-spacing:0.5em;
+  margin-bottom:90px;opacity:0.5;user-select:none;position:relative;
+}
+.chapter-sep::before, .chapter-sep::after{
+  content:"";display:inline-block;width:80px;height:1px;vertical-align:middle;
+  background:linear-gradient(to right, transparent, var(--gold-deep));margin:0 16px;
+}
+.chapter-sep::after{background:linear-gradient(to left, transparent, var(--gold-deep))}
+
+/* =================================================================
+   CHAPTER IMAGE — embedded illustration
+================================================================= */
+.chapter-image{
+  position:relative;
+  margin:0 -8px 28px;
+  aspect-ratio:16/10;
+  overflow:hidden;
+  border:1px solid color-mix(in srgb, var(--accent) 30%, var(--line));
+  background:#000;
+  box-shadow:0 30px 60px -30px rgba(0,0,0,0.7);
+}
+.chapter-image img{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  transform:scale(1.06);
+  filter:contrast(1.04) saturate(1.04) brightness(0.96);
+  transition:transform 18s ease-out;
+  will-change:transform;
+}
+.chapter.in .chapter-image img{transform:scale(1.0)}
+.chapter-image::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.6) 100%),
+    linear-gradient(180deg, transparent 60%, rgba(0,0,0,0.7) 100%),
+    radial-gradient(ellipse at 80% 20%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 60%);
+}
+.chapter-image::before{
+  content:"";position:absolute;left:0;top:0;width:60px;height:60px;
+  border-top:1px solid var(--accent);border-left:1px solid var(--accent);
+  opacity:0.7;z-index:2;
+}
+.chapter-image .caption{
+  position:absolute;left:18px;right:18px;bottom:14px;z-index:3;
+  display:flex;align-items:baseline;gap:12px;
+  font-family:"Cinzel",serif;letter-spacing:0.28em;text-transform:uppercase;
+  font-size:0.58rem;color:var(--accent);text-shadow:0 1px 6px #000;
+}
+.chapter-image .caption .dot{width:6px;height:6px;background:var(--accent);box-shadow:0 0 8px var(--accent);flex-shrink:0;align-self:center}
+.chapter-image .caption .sub{
+  flex:1;font-family:"Cormorant Garamond",serif;font-style:italic;letter-spacing:0.02em;text-transform:none;
+  font-size:0.95rem;color:var(--ink-soft);
+}
+
+/* =================================================================
+   CHAPTER V — fire-themed background, hellfire mood
+================================================================= */
+.chapter.ch5 .chapter-inner{
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 90%, rgba(255,90,48,0.22) 0%, transparent 55%),
+    radial-gradient(ellipse 70% 50% at 80% 10%, rgba(196,58,42,0.20) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 50% 50%, rgba(120,20,10,0.18) 0%, transparent 65%),
+    linear-gradient(180deg, rgba(28,12,12,0.88), rgba(10,4,4,0.92));
+  border-color:#3a1010 !important;
+  border-left-color:#ff5a30 !important;
+  box-shadow:
+    0 30px 80px -30px rgba(0,0,0,0.85),
+    inset 0 0 120px rgba(255,90,48,0.12),
+    inset 0 0 0 1px rgba(255,90,48,0.10);
+  overflow:hidden;
+}
+/* animated noise lava */
+.chapter.ch5 .chapter-inner::after{
+  content:"";position:absolute;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(ellipse 40% 30% at 30% 70%, rgba(255,120,60,0.18), transparent 60%),
+    radial-gradient(ellipse 50% 35% at 80% 30%, rgba(255,90,48,0.16), transparent 60%);
+  filter:blur(40px);
+  animation:lava-drift 14s ease-in-out infinite alternate;
+}
+@keyframes lava-drift{
+  0%   {transform:translate(0,0) scale(1)}
+  50%  {transform:translate(-3%,2%) scale(1.06)}
+  100% {transform:translate(2%,-1%) scale(1.04)}
+}
+/* heavy rising embers (fixed positions, many of them) */
+.chapter.ch5 .fire-bg{
+  position:absolute;inset:0;pointer-events:none;z-index:0;overflow:hidden;
+  opacity:0;transition:opacity 0.8s;
+}
+.chapter.ch5.in .fire-bg{opacity:1}
+.chapter.ch5 .fire-bg .spark{
+  position:absolute;bottom:-8px;width:3px;height:3px;border-radius:50%;
+  background:radial-gradient(circle, #ffd0a0, #ff7a30 50%, transparent 80%);
+  box-shadow:0 0 8px rgba(255,90,48,0.7), 0 0 16px rgba(255,90,48,0.35);
+  opacity:0;
+  animation:fire-rise var(--dur, 6s) ease-in infinite;
+  animation-delay:var(--del, 0s);
+}
+@keyframes fire-rise{
+  0%   {opacity:0;transform:translate(0,0) scale(0.5)}
+  10%  {opacity:0.9}
+  70%  {opacity:0.5}
+  100% {opacity:0;transform:translate(var(--dx, 30px), -100vh) scale(0.2)}
+}
+/* flickering vertical flame columns at edges */
+.chapter.ch5 .fire-bg .flame-col{
+  position:absolute;bottom:0;width:120px;height:80%;
+  background:linear-gradient(to top, rgba(255,90,48,0.5) 0%, rgba(255,140,60,0.25) 30%, transparent 80%);
+  filter:blur(20px);
+  animation:flame-breathe 2.6s ease-in-out infinite alternate;
+}
+.chapter.ch5 .fire-bg .flame-col.left{left:-20px;animation-delay:-1.2s}
+.chapter.ch5 .fire-bg .flame-col.right{right:-20px}
+@keyframes flame-breathe{
+  0%,100%{opacity:0.5;transform:scaleY(1) scaleX(0.95)}
+  50%   {opacity:0.85;transform:scaleY(1.08) scaleX(1.05)}
+}
+/* keep content above the fire layer */
+.chapter.ch5 .chapter-header,
+.chapter.ch5 .chapter-body{position:relative;z-index:1}
+/* tint the existing chapter-fx particles to fire color */
+.chapter.ch5 .chapter-fx .glow{background:radial-gradient(ellipse at center, rgba(255,90,48,0.4), transparent 65%) !important}
+
+@media (prefers-reduced-motion:reduce){
+  .chapter.ch5 .fire-bg,.chapter.ch5 .chapter-inner::after{animation:none;display:none}
+}
+
+/* =================================================================
+   BATTLE IMAGES — fire effects for Chapter V dual images
+================================================================= */
+.chapter-image.battle{
+  position:relative;
+  aspect-ratio:16/9;
+  margin:36px -16px;
+  overflow:visible;
+}
+.chapter-image.battle .image-wrap{
+  position:relative;width:100%;height:100%;overflow:hidden;
+  border:1px solid #5a1818;
+  background:#000;
+  box-shadow:0 30px 60px -20px rgba(0,0,0,0.8),0 0 50px -10px rgba(255,90,48,0.45),inset 0 0 60px rgba(255,90,48,0.2);
+}
+.chapter-image.battle .image-wrap img{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  filter:contrast(1.08) saturate(1.15) brightness(0.94);
+  transform:scale(1.04);transition:transform 18s ease-out, filter 1.2s;will-change:transform;
+}
+.chapter.in .chapter-image.battle .image-wrap img{transform:scale(1)}
+.chapter-image.battle .image-wrap::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.55) 95%),radial-gradient(ellipse at center, rgba(255,90,48,0.18), transparent 65%);
+  mix-blend-mode:screen;animation:battle-pulse 3.4s ease-in-out infinite;
+}
+@keyframes battle-pulse{0%,100%{opacity:0.65}50%{opacity:1}}
+.chapter-image.battle .image-wrap::before{
+  content:"";position:absolute;inset:0;z-index:2;pointer-events:none;
+  background:repeating-linear-gradient(180deg, transparent 0 24px, rgba(255,90,48,0.04) 24px 25px);
+  mix-blend-mode:screen;opacity:0;animation:heat-haze 6s ease-in-out infinite;
+}
+@keyframes heat-haze{0%,100%{opacity:0;transform:translateY(0)}50%{opacity:0.8;transform:translateY(-8px)}}
+.chapter-image.battle .embers{position:absolute;inset:-20px;pointer-events:none;z-index:3;overflow:hidden}
+.chapter-image.battle .embers .ember{
+  position:absolute;bottom:-8px;width:4px;height:4px;border-radius:50%;
+  background:radial-gradient(circle,#ffd0a0,#ff7a30 50%,transparent 80%);
+  box-shadow:0 0 10px rgba(255,90,48,0.85), 0 0 20px rgba(255,90,48,0.45);
+  opacity:0;animation:ember-rise-battle var(--dur, 5s) ease-in infinite;animation-delay:var(--del, 0s);
+}
+@keyframes ember-rise-battle{
+  0%{opacity:0;transform:translate(0,0) scale(0.6)}
+  10%{opacity:1}
+  60%{opacity:0.8}
+  100%{opacity:0;transform:translate(var(--dx,20px),-110%) scale(0.3)}
+}
+.chapter-image.battle .runes{position:absolute;inset:6px;pointer-events:none;z-index:4}
+.chapter-image.battle .runes svg{position:absolute;width:32px;height:32px;color:#ff5a30;
+  filter:drop-shadow(0 0 8px rgba(255,90,48,0.9));
+  animation:rune-flicker 2s ease-in-out infinite alternate;
+}
+.chapter-image.battle .runes .tl{top:0;left:0}
+.chapter-image.battle .runes .tr{top:0;right:0;transform:scaleX(-1)}
+.chapter-image.battle .runes .bl{bottom:0;left:0;transform:scaleY(-1)}
+.chapter-image.battle .runes .br{bottom:0;right:0;transform:scale(-1,-1)}
+@keyframes rune-flicker{0%,100%{opacity:0.7;filter:drop-shadow(0 0 4px rgba(255,90,48,0.5))}50%{opacity:1;filter:drop-shadow(0 0 12px rgba(255,170,80,1))}}
+.chapter-image.battle .caption{
+  position:absolute;left:18px;right:18px;bottom:14px;z-index:5;
+  display:flex;align-items:baseline;gap:12px;
+  font-family:"Cinzel",serif;letter-spacing:0.28em;text-transform:uppercase;
+  font-size:0.58rem;color:#ff7a3a;text-shadow:0 1px 6px #000, 0 0 12px rgba(255,90,48,0.7);
+}
+.chapter-image.battle .caption .dot{width:6px;height:6px;background:#ff5a30;box-shadow:0 0 10px #ff5a30;flex-shrink:0;align-self:center;animation:battle-pulse 1.6s ease-in-out infinite}
+.chapter-image.battle .caption .sub{flex:1;font-family:"Cormorant Garamond",serif;font-style:italic;letter-spacing:0.02em;text-transform:none;font-size:0.95rem;color:#ffd6c0;text-shadow:0 1px 4px #000}
+.chapter-image.battle.intense .image-wrap{
+  box-shadow:0 30px 60px -20px rgba(0,0,0,0.85),0 0 80px -10px rgba(255,90,48,0.75),inset 0 0 90px rgba(255,90,48,0.32);
+  animation:slight-shake 0.18s ease-in-out infinite alternate;
+}
+@keyframes slight-shake{0%{transform:translate(0,0)}100%{transform:translate(0.6px,-0.4px)}}
+.chapter-image.battle.intense .image-wrap::after{
+  background:radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.6) 95%),radial-gradient(ellipse at center, rgba(255,90,48,0.32), transparent 65%);
+  animation:battle-pulse 2.2s ease-in-out infinite;
+}
+@media (max-width:760px){
+  .chapter-image.battle{margin:24px -8px;aspect-ratio:4/3}
+  .chapter-image.battle .runes svg{width:22px;height:22px}
+}
+@media (prefers-reduced-motion:reduce){
+  .chapter-image.battle .embers,.chapter-image.battle .runes,.chapter-image.battle .image-wrap::after,.chapter-image.battle .image-wrap::before{display:none}
+  .chapter-image.battle.intense .image-wrap{animation:none}
+}
+
+/* =================================================================
+   CLOSING — cosmic boat departure
+================================================================= */
+.story-closing{
+  text-align:center;padding:clamp(40px,6vw,90px) 0 clamp(40px,6vw,80px);
+  position:relative;
+}
+.closing-rule{height:1px;background:linear-gradient(to right,transparent,var(--gold-dim) 30%,var(--gold-dim) 70%,transparent);margin-bottom:36px;opacity:0.35}
+.closing-glyph{
+  font-family:"Cinzel",serif;font-size:clamp(20px,3vw,36px);letter-spacing:0.5em;
+  color:var(--gold);opacity:0.4;display:block;margin-bottom:18px;
+  animation:closing-pulse 4.5s ease-in-out infinite;
+}
+@keyframes closing-pulse{0%,100%{opacity:0.3}50%{opacity:0.7}}
+.closing-text{font-family:"Cormorant Garamond",Georgia,serif;font-style:italic;font-size:1.15rem;color:var(--ink-mute);letter-spacing:0.04em;max-width:540px;margin:0 auto}
+
+/* tiny boat silhouette + ocean shimmer */
+.closing-boat{
+  position:relative;margin:36px auto 20px;width:120px;height:60px;
+}
+.closing-boat svg{width:100%;height:auto;color:var(--gold);opacity:0.45;animation:boat-rock 4s ease-in-out infinite}
+@keyframes boat-rock{
+  0%,100%{transform:translateX(0) rotate(-2deg)}
+  50%   {transform:translateX(0) rotate(2deg)}
+}
+.closing-boat::after{
+  content:"";position:absolute;left:50%;bottom:-6px;transform:translateX(-50%);
+  width:240px;height:2px;
+  background:linear-gradient(to right, transparent, var(--gold-dim), transparent);
+  filter:blur(1px);opacity:0.5;
+}
+
+/* =================================================================
+   THAI MODE
+================================================================= */
+body.th-active .lang-en{display:none}
+body.th-active .lang-th{display:block}
+body.th-active .chapter-title-en{display:none}
+body.th-active .chapter-title-th{display:block}
+body.th-active .story-subtitle .lang-en{display:none}
+body.th-active .story-subtitle .lang-th{display:inline}
+body.th-active .closing-text .lang-en{display:none}
+body.th-active .closing-text .lang-th{display:block}
+body.th-active .roster-list{display:none}
+body.th-active .roster-list-th{display:flex !important}
+.roster-list-th{display:none}
+
+/* =================================================================
+   RESPONSIVE
+================================================================= */
+@media (max-width:860px){
+  .story-layout{grid-template-columns:1fr;gap:0}
+  .side-nav{
+    position:sticky;top:0;display:flex;align-items:center;gap:8px;
+    margin:0 -16px 40px;padding:14px 16px;overflow-x:auto;
+    background:rgba(7,7,10,0.92);backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);z-index:50;
   }
+  .side-nav-label{display:none}
+  .side-nav ul{display:flex;gap:4px;flex-shrink:0}
+  .side-nav ul::before{display:none}
+  .side-nav li{margin-bottom:0}
+  .side-nav a{flex-direction:column;align-items:center;gap:4px;padding:8px 12px;border:1px solid var(--line-soft);background:var(--bg-card);min-width:60px}
+  .side-nav a.active{border-color:var(--gold-dim)}
+  .side-nav a::before{display:none}
+  .side-nav .nav-label{display:none}
+  .side-nav .nav-roman{font-size:0.65rem;letter-spacing:0.18em}
+}
+@media (max-width:520px){
+  .page{padding:80px 14px 60px}
+  .chapter-inner{padding:24px 18px 28px}
+  .chapter-romal{display:none}
+}
+
+/* =================================================================
+   REDUCE MOTION
+================================================================= */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:0.001ms !important;animation-iteration-count:1 !important;transition-duration:0.001ms !important}
+  .shader-wallpaper,.cosmos,.chapter-fx,.shooting-star{display:none}
+}
+/* =================================================================
+   COSMIC INTRO — scroll-driven zoom from cosmos → tavern
+================================================================= */
+.cosmic-intro{
+  position:relative;
+  height:1000vh;
+  width:100vw;
+  margin-left:calc(50% - 50vw);
+  margin-right:calc(50% - 50vw);
+}
+.ci-pin{
+  position:sticky;top:0;left:0;
+  width:100vw;height:100vh;
+  overflow:hidden;
+  display:grid;place-items:center;
+}
+.ci-stage{
+  position:absolute;inset:0;
+  display:grid;place-items:center;
+  pointer-events:none;
+  width:100vw;height:100vh;
+}
+.ci-layer{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  opacity:var(--op, 0);
+  transition:opacity 0.4s ease;
+  will-change:transform, opacity;
+}
+.ci-caption{
+  position:absolute;left:50%;bottom:14vh;transform:translateX(-50%);
+  font-family:"Cinzel",serif;letter-spacing:0.32em;text-transform:uppercase;
+  font-size:clamp(0.62rem,1.0vw,0.78rem);color:var(--gold);
+  text-shadow:0 0 20px rgba(0,0,0,0.95);
+  opacity:0;transition:opacity 0.5s ease;
+  padding:18px 36px;
+  background:radial-gradient(ellipse at center, rgba(7,7,14,0.82) 0%, rgba(7,7,14,0.6) 70%, rgba(7,7,14,0) 100%);
+  backdrop-filter:blur(4px);
+  -webkit-backdrop-filter:blur(4px);
+  border-top:1px solid rgba(201,164,92,0.18);
+  border-bottom:1px solid rgba(201,164,92,0.18);
+  width:min(760px, 88vw);
+  text-align:center;
+  box-sizing:border-box;
+}
+.ci-caption .top{
+  display:block;
+  word-break:break-word;
+  overflow-wrap:break-word;
+  line-height:1.4;
+}
+.ci-caption.show{opacity:0.95}
+.ci-caption .sub{
+  display:block;
+  margin-top:12px;
+  padding-top:10px;
+  border-top:1px solid rgba(201,164,92,0.12);
+  font-family:"Cormorant Garamond",serif;font-style:italic;
+  font-size:clamp(0.95rem, 1.1vw, 1.08rem);color:var(--ink-soft);
+  letter-spacing:0.02em;text-transform:none;
+  line-height:1.5;
+  word-break:break-word;
+  overflow-wrap:break-word;
+  text-shadow:0 1px 8px rgba(0,0,0,0.9);
+  white-space:normal;
+}
+@media (max-width:600px){
+  .ci-caption{padding:14px 22px;letter-spacing:0.22em}
+}
+
+/* --- LAYER 1: GALAXY (deep cosmos) --- */
+.ci-galaxy{
+  width:140vmax;height:140vmax;border-radius:50%;
+  background:
+    radial-gradient(circle at center, rgba(255,245,208,0.16) 0%, rgba(180,140,255,0.10) 8%, transparent 24%),
+    conic-gradient(from 0deg at 50% 50%,
+      rgba(255,245,208,0.04), rgba(180,140,255,0.06), rgba(120,180,255,0.05), rgba(255,200,140,0.04), rgba(255,245,208,0.04)
+    );
+  filter:blur(2px);
+  animation:galaxy-spin 240s linear infinite;
+}
+.ci-galaxy::before{
+  content:"";position:absolute;inset:0;border-radius:50%;
+  background:radial-gradient(ellipse 80% 22% at 50% 50%, rgba(255,245,208,0.18), transparent 60%);
+  filter:blur(8px);
+}
+.ci-galaxy::after{
+  content:"";position:absolute;inset:0;border-radius:50%;
+  background:radial-gradient(circle at center, rgba(180,140,255,0.4) 0%, transparent 8%);
+  filter:blur(20px);
+}
+@keyframes galaxy-spin{to{transform:rotate(360deg)}}
+
+/* --- LAYER 2: CONSTELLATION (sigil drawn in stars) --- */
+.ci-constel{
+  width:min(680px,80vw);aspect-ratio:1;
+}
+.ci-constel svg{width:100%;height:100%;color:var(--gold)}
+.ci-constel .line{stroke:currentColor;fill:none;stroke-width:0.6;opacity:0.5;
+  stroke-dasharray:600;stroke-dashoffset:600;
+  animation:constel-draw 4s ease-out forwards;animation-play-state:paused;
+}
+.ci-layer.constel.active .line{animation-play-state:running}
+.ci-constel .star-pt{fill:currentColor;filter:drop-shadow(0 0 4px var(--gold))}
+@keyframes constel-draw{to{stroke-dashoffset:0}}
+
+/* --- LAYER 3: CONTINENT MAP --- */
+.ci-continent{
+  width:min(680px,80vw);aspect-ratio:1;
+  background:radial-gradient(ellipse at 50% 55%, rgba(40,30,20,0.55), transparent 60%);
+  border-radius:50%;
+}
+.ci-continent svg{width:100%;height:100%;color:var(--gold-dim)}
+.ci-continent .coast{stroke:currentColor;fill:rgba(60,45,30,0.4);stroke-width:0.8}
+.ci-continent .mark{fill:var(--blood);filter:drop-shadow(0 0 6px var(--blood))}
+.ci-continent .pulse{animation:map-pulse 2s ease-in-out infinite}
+@keyframes map-pulse{0%,100%{r:5}50%{r:9}}
+
+/* --- LAYER 4: CITY SILHOUETTE --- */
+.ci-city{
+  width:100vmax;height:60vmax;
+  background:linear-gradient(180deg, transparent 0%, rgba(40,28,18,0.6) 100%);
+  bottom:0;top:auto;
+  transform:translate(-50%, 0);
+}
+.ci-city svg{width:100%;height:100%;display:block}
+.ci-city .sky{fill:url(#sky-grad)}
+.ci-city .building{fill:#0c0a08}
+.ci-city .window{fill:#d6a360;opacity:0.7}
+
+/* --- LAYER 5: TAVERN WINDOW --- */
+.ci-tavern{
+  width:min(720px,80vw);height:min(540px,60vh);
+  border:8px solid rgba(40,28,18,0.9);
+  background:#000;
+  position:relative;overflow:hidden;
+}
+.ci-tavern::before{
+  content:"";position:absolute;inset:0;
+  background:radial-gradient(ellipse at center, rgba(255,200,120,0.18), transparent 65%);
+  pointer-events:none;z-index:2;
+}
+.ci-tavern img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 35%;
+  filter:contrast(1.05) saturate(1) brightness(0.95);
+}
+.ci-tavern::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg, transparent 50%, rgba(0,0,0,0.6) 100%);
+  z-index:2;
+}
+/* mullion bars on tavern window */
+.ci-tavern .mullion-v{position:absolute;top:0;bottom:0;width:6px;background:rgba(20,14,8,0.8);z-index:3}
+.ci-tavern .mullion-h{position:absolute;left:0;right:0;height:6px;background:rgba(20,14,8,0.8);z-index:3}
+
+/* --- LAYER 6: FINAL TAVERN INTERIOR (full bleed image) --- */
+.ci-interior{
+  width:100vw;height:100vh;
+  background:#000;
+  position:absolute;inset:0;
+}
+.ci-interior img{width:100%;height:100%;object-fit:cover;object-position:center center;
+  filter:contrast(1.06) saturate(1.05) brightness(0.95);
+}
+.ci-interior::after{
+  content:"";position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse at center 40%, transparent 30%, rgba(0,0,0,0.65) 90%),
+    linear-gradient(180deg, rgba(0,0,0,0.2) 0%, transparent 30%, transparent 70%, rgba(0,0,0,0.7) 100%);
+  pointer-events:none;
+}
+
+/* image-stage layers span full viewport directly (no centered translate)
+   so their inset:0 child fills the viewport instead of collapsing. */
+.ci-layer.interior, .ci-layer.overlook, .ci-layer.temple, .ci-layer.museum, .ci-layer.battle, .ci-layer.beach{
+  left:0;top:0;
+  width:100vw;height:100vh;
+  transform:none;
+}
+/* battle stage tint + heat-haze + fire overlay */
+.ci-layer.battle .ci-interior::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse at center, rgba(255,90,48,0.18), transparent 65%) !important,
+    linear-gradient(180deg, rgba(0,0,0,0.2) 0%, transparent 35%, transparent 65%, rgba(0,0,0,0.5) 100%) !important;
+  mix-blend-mode:screen;
+  animation:battle-heat 2.6s ease-in-out infinite;
+}
+@keyframes battle-heat{
+  0%,100%{opacity:0.7}
+  50%{opacity:1}
+}
+/* embers floating up from bottom of battle stage */
+.ci-layer.battle .battle-embers{
+  position:absolute;inset:0;pointer-events:none;z-index:2;overflow:hidden;
+}
+.ci-layer.battle .battle-embers .e{
+  position:absolute;bottom:-8px;width:5px;height:5px;border-radius:50%;
+  background:radial-gradient(circle,#ffd0a0,#ff7a30 50%,transparent 80%);
+  box-shadow:0 0 12px rgba(255,90,48,0.9), 0 0 28px rgba(255,90,48,0.45);
+  opacity:0;
+  animation:battle-spark var(--dur, 4s) ease-in infinite;
+  animation-delay:var(--del, 0s);
+}
+@keyframes battle-spark{
+  0%   {opacity:0;transform:translate(0,0) scale(0.5)}
+  10%  {opacity:1}
+  60%  {opacity:0.85}
+  100% {opacity:0;transform:translate(var(--dx,30px),-105vh) scale(0.2)}
+}
+
+/* TEXT PARTICLE EFFECT — caption letters flicker/glow for battle stage */
+.ci-caption.battle .top, .ci-caption.battle .sub{
+  display:inline-block;
+}
+.ci-caption.battle .lt{
+  display:inline-block;
+  background:linear-gradient(180deg, #fff5d0 0%, #ffaa50 40%, #ff5a30 80%, #b01a1a 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;
+  text-shadow:0 0 12px rgba(255,90,48,0.7), 0 0 24px rgba(255,170,80,0.5);
+  animation:lt-flicker 1.4s ease-in-out infinite alternate;
+  animation-delay:var(--del, 0s);
+  filter:drop-shadow(0 0 6px rgba(255,90,48,0.7));
+}
+.ci-caption.battle .lt.sp{width:0.28em}
+@keyframes lt-flicker{
+  0%  {opacity:0.7; transform:translateY(0) rotate(0deg)}
+  20% {opacity:1;   transform:translateY(-0.5px) rotate(-1deg)}
+  40% {opacity:0.85;transform:translateY(0.5px) rotate(0.6deg)}
+  60% {opacity:1;   transform:translateY(-0.3px) rotate(-0.4deg)}
+  100%{opacity:0.92;transform:translateY(0) rotate(0)}
+}
+
+/* candles glow on intro */
+.ci-candle{
+  position:absolute;width:8px;height:8px;border-radius:50%;
+  background:radial-gradient(circle, #fff5d0 0%, #ffaa50 40%, transparent 80%);
+  box-shadow:0 0 24px rgba(255,170,80,0.85), 0 0 48px rgba(255,170,80,0.45);
+  animation:candle-flicker 1.8s ease-in-out infinite alternate;
+}
+@keyframes candle-flicker{0%,100%{opacity:0.7;transform:scale(0.9)}50%{opacity:1;transform:scale(1.1)}}
+
+/* progress hint */
+.ci-progress{
+  position:absolute;bottom:32px;left:50%;transform:translateX(-50%);
+  z-index:10;display:flex;align-items:center;gap:14px;
+  font-family:"Cinzel",serif;letter-spacing:0.32em;text-transform:uppercase;font-size:0.6rem;color:var(--gold-dim);
+  opacity:0.7;transition:opacity 0.4s;
+}
+.ci-progress.fade{opacity:0}
+.ci-progress::after{
+  content:"";width:1px;height:24px;background:linear-gradient(to bottom, var(--gold), transparent);
+  animation:scroll-hint 1.6s ease-in-out infinite;
+}
+@keyframes scroll-hint{
+  0%{transform:translateY(-8px);opacity:0}
+  50%{opacity:1}
+  100%{transform:translateY(8px);opacity:0}
+}
+
+/* scrub indicator dots */
+.ci-dots{
+  position:absolute;right:32px;top:50%;transform:translateY(-50%);
+  display:flex;flex-direction:column;gap:14px;z-index:10;
+}
+.ci-dots .dot{width:6px;height:6px;border-radius:50%;background:rgba(201,164,92,0.3);transition:all 0.3s}
+.ci-dots .dot.active{background:var(--gold);box-shadow:0 0 12px var(--gold);transform:scale(1.6)}
+
+@media (max-width:768px){
+  .cosmic-intro{height:600vh;margin-left:0;margin-right:0}
+  .ci-dots{right:14px}
+  .ci-caption{bottom:18vh}
+}
+@media (prefers-reduced-motion:reduce){
+  .cosmic-intro{height:auto}
+  .ci-pin{position:relative;height:60vh}
+  .ci-layer{opacity:1 !important}
+  .ci-layer:not(.interior){display:none}
+  .ci-layer.interior img{filter:contrast(1.06)}
+  .ci-progress,.ci-dots{display:none}
+}
+
 </style>
 </head>
 <body>
 
+<!-- =========== SHADER WALLPAPER =========== -->
+<div class="shader-wallpaper" id="shader" aria-hidden="true"></div>
+
+<!-- =========== COSMIC STARFIELD =========== -->
+<div class="cosmos" aria-hidden="true">
+  <div class="star-layer l1"></div>
+  <div class="star-layer l2"></div>
+  <div class="star-layer l3"></div>
+</div>
+
+<!-- =========== FILM GRAIN =========== -->
+<div class="grain" aria-hidden="true"></div>
+
 <a class="back-link" href="index.html"><span class="arr"></span>The Veiled Codex</a>
 
-<!-- Language toggle -->
 <div class="lang-toggle">
   <button id="btn-en" class="active" onclick="setLang('en')">EN</button>
   <div class="divider"></div>
@@ -455,387 +1040,730 @@
 </div>
 
 <div class="page">
+
+  <!-- ================ COSMIC SCALE INTRO ================ -->
+  <section class="cosmic-intro" id="cosmic-intro" aria-label="Cosmic scale intro">
+    <div class="ci-pin">
+      <div class="ci-stage">
+
+        <!-- Layer 1: Galaxy / cosmos -->
+        <div class="ci-layer galaxy" data-key="galaxy" aria-hidden="true">
+          <div class="ci-galaxy"></div>
+        </div>
+
+        <!-- Layer 2: Constellation — a six-star sigil being drawn -->
+        <div class="ci-layer constel" data-key="constel" aria-hidden="true">
+          <div class="ci-constel">
+            <svg viewBox="0 0 400 400">
+              <!-- six stars in a hexagram pattern with center -->
+              <path class="line" d="M 200 60 L 340 280 L 60 280 Z"/>
+              <path class="line" d="M 200 340 L 60 120 L 340 120 Z"/>
+              <circle class="line" cx="200" cy="200" r="140"/>
+              <circle class="star-pt" cx="200" cy="60"  r="3.5"/>
+              <circle class="star-pt" cx="340" cy="120" r="3.5"/>
+              <circle class="star-pt" cx="340" cy="280" r="3.5"/>
+              <circle class="star-pt" cx="200" cy="340" r="3.5"/>
+              <circle class="star-pt" cx="60"  cy="280" r="3.5"/>
+              <circle class="star-pt" cx="60"  cy="120" r="3.5"/>
+              <circle class="star-pt" cx="200" cy="200" r="4"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Layer 3: Continent map of Borderland -->
+        <div class="ci-layer continent" data-key="continent" aria-hidden="true">
+          <div class="ci-continent">
+            <svg viewBox="0 0 400 400">
+              <defs>
+                <radialGradient id="land-grad" cx="50%" cy="55%" r="50%">
+                  <stop offset="0%" stop-color="#3a2a1c"/>
+                  <stop offset="100%" stop-color="#1a120a" stop-opacity="0"/>
+                </radialGradient>
+              </defs>
+              <!-- continent shape -->
+              <path class="coast" fill="url(#land-grad)" d="M120 90 Q160 70 220 80 Q290 90 330 130 Q360 180 340 240 Q310 300 250 320 Q190 330 140 300 Q90 270 80 220 Q70 160 90 130 Q105 100 120 90 Z"/>
+              <!-- coast detail lines -->
+              <path d="M150 110 Q200 130 250 120 M120 200 Q160 220 200 210 M180 280 Q230 290 270 270" stroke="currentColor" stroke-width="0.6" fill="none" opacity="0.5"/>
+              <!-- mountains -->
+              <path d="M180 170 L195 155 L208 175 L222 150 L240 175 M260 220 L275 205 L290 225" stroke="currentColor" fill="none" stroke-width="0.7" opacity="0.6"/>
+              <!-- city marker -->
+              <g class="pulse">
+                <circle class="mark" cx="210" cy="190" r="5"/>
+                <circle cx="210" cy="190" r="10" stroke="#b01a1a" fill="none" opacity="0.5"/>
+              </g>
+              <!-- compass rose top-right -->
+              <g transform="translate(340 60)" stroke="currentColor" fill="none" stroke-width="0.6" opacity="0.5">
+                <circle cx="0" cy="0" r="18"/>
+                <path d="M0 -16 L4 0 L0 16 L-4 0 Z" fill="currentColor" opacity="0.5"/>
+                <text x="0" y="-22" text-anchor="middle" font-size="7" font-family="Cinzel,serif" fill="currentColor">N</text>
+              </g>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Layer 4: City silhouette at night -->
+        <div class="ci-layer city" data-key="city" aria-hidden="true">
+          <div class="ci-city">
+            <svg viewBox="0 0 1600 600" preserveAspectRatio="xMidYMax slice">
+              <defs>
+                <linearGradient id="sky-grad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%"  stop-color="#0e1224"/>
+                  <stop offset="60%" stop-color="#221814"/>
+                  <stop offset="100%" stop-color="#000"/>
+                </linearGradient>
+              </defs>
+              <rect class="sky" x="0" y="0" width="1600" height="600"/>
+              <!-- distant haze -->
+              <ellipse cx="800" cy="500" rx="800" ry="60" fill="#c9a45c" opacity="0.06"/>
+              <!-- city skyline silhouette — medieval rooftops + spires -->
+              <path class="building" d="M0 600 L0 480 L60 480 L60 440 L100 440 L100 470 L140 470 L160 430 L180 470 L240 470 L240 420 L280 420 L280 380 L320 380 L320 360 L340 320 L360 360 L360 420 L420 420 L420 460 L480 460 L500 410 L520 460 L580 460 L580 430 L620 430 L620 470 L680 470 L680 440 L720 440 L740 400 L760 440 L820 440 L820 470 L860 470 L880 430 L900 470 L960 470 L960 430 L1000 430 L1020 380 L1040 430 L1080 430 L1080 470 L1140 470 L1140 440 L1180 440 L1200 400 L1220 440 L1280 440 L1280 470 L1340 470 L1340 430 L1380 430 L1400 380 L1420 430 L1460 430 L1460 470 L1520 470 L1520 440 L1600 440 L1600 600 Z"/>
+              <!-- windows -->
+              <g class="window">
+                <rect x="80"  y="500" width="6" height="6"/>
+                <rect x="110" y="480" width="6" height="6"/>
+                <rect x="250" y="440" width="6" height="6"/>
+                <rect x="290" y="400" width="6" height="6"/>
+                <rect x="425" y="480" width="6" height="6"/>
+                <rect x="500" y="500" width="6" height="6"/>
+                <rect x="605" y="460" width="6" height="6"/>
+                <rect x="700" y="460" width="6" height="6"/>
+                <rect x="830" y="500" width="6" height="6"/>
+                <rect x="905" y="460" width="6" height="6"/>
+                <rect x="1015" y="440" width="6" height="6"/>
+                <rect x="1105" y="500" width="6" height="6"/>
+                <rect x="1195" y="430" width="6" height="6"/>
+                <rect x="1290" y="500" width="6" height="6"/>
+                <rect x="1395" y="430" width="6" height="6"/>
+                <rect x="1500" y="500" width="6" height="6"/>
+              </g>
+              <!-- moon -->
+              <circle cx="1200" cy="140" r="32" fill="#f0e4c8" opacity="0.7"/>
+              <circle cx="1200" cy="140" r="42" fill="#f0e4c8" opacity="0.15"/>
+            </svg>
+            <!-- one tavern window glowing bright — the focal point -->
+            <div style="position:absolute;left:48%;top:62%;width:14px;height:18px;background:radial-gradient(ellipse at center, #ffd685, #ff9c30 60%, transparent);box-shadow:0 0 30px #ff9c30, 0 0 60px #ff9c30;animation:candle-flicker 1.4s ease-in-out infinite alternate"></div>
+          </div>
+        </div>
+
+        <!-- Layer 5: Tavern window (zooming into the lit window) -->
+        <div class="ci-layer tavern-window" data-key="tavern-window" aria-hidden="true">
+          <div class="ci-tavern">
+            <img src="assets/story/ch1-tavern.jpg" alt="Inside the tavern" />
+            <!-- mullion grid — simulates leaded window panes -->
+            <div class="mullion-v" style="left:33.3%"></div>
+            <div class="mullion-v" style="left:66.6%"></div>
+            <div class="mullion-h" style="top:50%"></div>
+          </div>
+        </div>
+
+        <!-- Layer 6: Tavern interior — full bleed -->
+        <div class="ci-layer interior" data-key="interior" aria-hidden="true">
+          <div class="ci-interior">
+            <img src="assets/story/ch1-tavern.jpg" alt="" />
+            <!-- floating candle dots -->
+            <span class="ci-candle" style="left:8%;top:18%"></span>
+            <span class="ci-candle" style="left:84%;top:14%;animation-delay:-0.4s"></span>
+            <span class="ci-candle" style="left:14%;top:88%;animation-delay:-0.8s"></span>
+            <span class="ci-candle" style="left:92%;top:78%;animation-delay:-1.2s"></span>
+          </div>
+        </div>
+
+        <!-- Layer 7: Chapter II teaser — sunset overlook -->
+        <div class="ci-layer overlook" data-key="overlook" aria-hidden="true">
+          <div class="ci-interior">
+            <img src="assets/story/ch2-overlook.jpg" alt="" />
+          </div>
+        </div>
+
+        <!-- Layer 8: Chapter III teaser — seaside ceremony -->
+        <div class="ci-layer temple" data-key="temple" aria-hidden="true">
+          <div class="ci-interior">
+            <img src="assets/story/ch3-temple.jpg" alt="" />
+          </div>
+        </div>
+
+        <!-- Layer 9: Chapter IV teaser — museum hall -->
+        <div class="ci-layer museum" data-key="museum" aria-hidden="true">
+          <div class="ci-interior">
+            <img src="assets/story/ch4-museum.jpg" alt="" />
+          </div>
+        </div>
+
+        <!-- Layer 10: Chapter V teaser — battle in the sea of fire -->
+        <div class="ci-layer battle" data-key="battle" aria-hidden="true">
+          <div class="ci-interior">
+            <img src="assets/story/ch5-battle2.jpg" alt="" />
+          </div>
+          <div class="battle-embers" aria-hidden="true">
+            <span class="e" style="left:6%;  --dx:24px;  --dur:3.2s; --del:0s"></span>
+            <span class="e" style="left:16%; --dx:-18px; --dur:3.6s; --del:-0.7s"></span>
+            <span class="e" style="left:26%; --dx:22px;  --dur:2.8s; --del:-1.4s"></span>
+            <span class="e" style="left:38%; --dx:-24px; --dur:3.4s; --del:-1.0s"></span>
+            <span class="e" style="left:50%; --dx:18px;  --dur:2.6s; --del:-2.2s"></span>
+            <span class="e" style="left:62%; --dx:-16px; --dur:3.2s; --del:-0.4s"></span>
+            <span class="e" style="left:74%; --dx:24px;  --dur:3.4s; --del:-1.8s"></span>
+            <span class="e" style="left:86%; --dx:-12px; --dur:2.8s; --del:-2.6s"></span>
+            <span class="e" style="left:96%; --dx:18px;  --dur:3.2s; --del:-0.2s"></span>
+          </div>
+        </div>
+
+        <!-- Layer 11: Chapter VI teaser — beach at sunset -->
+        <div class="ci-layer beach" data-key="beach" aria-hidden="true">
+          <div class="ci-interior">
+            <img src="assets/story/ch6-beach.jpg" alt="" />
+          </div>
+        </div>
+
+      </div>
+
+      <!-- per-layer caption -->
+      <div class="ci-caption" id="ci-caption">
+        <span class="top">— In the beginning, only the stars knew their names —</span>
+        <span class="sub"></span>
+      </div>
+
+      <!-- scrub indicator dots -->
+      <div class="ci-dots" aria-hidden="true">
+        <span class="dot" data-i="0"></span>
+        <span class="dot" data-i="1"></span>
+        <span class="dot" data-i="2"></span>
+        <span class="dot" data-i="3"></span>
+        <span class="dot" data-i="4"></span>
+        <span class="dot" data-i="5"></span>
+        <span class="dot" data-i="6"></span>
+        <span class="dot" data-i="7"></span>
+        <span class="dot" data-i="8"></span>
+        <span class="dot" data-i="9"></span>
+        <span class="dot" data-i="10"></span>
+      </div>
+
+      <!-- scroll hint -->
+      <div class="ci-progress" id="ci-progress"><span>Scroll to descend</span></div>
+    </div>
+  </section>
+
   <header class="story-head">
     <div class="seal-rule">
       <div class="line"></div>
       <svg class="glyph" viewBox="0 0 30 30" fill="none" stroke="currentColor" stroke-width="1">
-        <polygon points="15,2 28,22 2,22" stroke-linejoin="round"/>
-        <line x1="15" y1="8" x2="15" y2="17"/>
-        <circle cx="15" cy="20" r="1" fill="currentColor"/>
+        <circle cx="15" cy="15" r="13"/>
+        <circle cx="15" cy="15" r="6"/>
+        <path d="M15 2 L15 28 M2 15 L28 15 M5 5 L25 25 M25 5 L5 25"/>
+        <circle cx="15" cy="15" r="1.4" fill="currentColor"/>
       </svg>
       <div class="line"></div>
     </div>
     <span class="eyebrow">The Veiled Codex — Chronicle</span>
-    <h1 class="story-title">Heroes of Borderland</h1>
+    <h1 class="story-title" id="hero-title">Heroes of Borderland</h1>
     <p class="story-subtitle">
       <span class="lang-en">The chronicle of five travelers and how their paths converged</span>
-      <span class="lang-th">บันทึกแห่งการเดินทางของนักผจญภัยทั้งห้าสู่ Borderland</span>
+      <span class="lang-th th-font">บันทึกแห่งการเดินทางของนักผจญภัยทั้งห้าสู่ Borderland</span>
     </p>
   </header>
 
   <div class="story-layout">
 
-  <!-- ══ STICKY SIDEBAR NAV ══ -->
-  <nav class="side-nav" id="side-nav">
-    <span class="side-nav-label">Contents</span>
-    <ul>
-      <li>
-        <a href="#prologue" data-target="prologue">
-          <span class="nav-text">
-            <span class="nav-roman">—</span>
-            <span class="nav-label">Prologue</span>
-          </span>
-        </a>
-      </li>
-      <li>
-        <a href="#ch1" data-target="ch1">
-          <span class="nav-text">
-            <span class="nav-roman">I</span>
-            <span class="nav-label">Noble &amp; Thief</span>
-          </span>
-        </a>
-      </li>
-      <li>
-        <a href="#ch2" data-target="ch2">
-          <span class="nav-text">
-            <span class="nav-roman">II</span>
-            <span class="nav-label">The Hunter</span>
-          </span>
-        </a>
-      </li>
-      <li>
-        <a href="#ch3" data-target="ch3">
-          <span class="nav-text">
-            <span class="nav-roman">III</span>
-            <span class="nav-label">False Temple</span>
-          </span>
-        </a>
-      </li>
-      <li>
-        <a href="#ch4" data-target="ch4">
-          <span class="nav-text">
-            <span class="nav-roman">IV</span>
-            <span class="nav-label">Sought Death</span>
-          </span>
-        </a>
-      </li>
-      <li>
-        <a href="#ch5" data-target="ch5">
-          <span class="nav-text">
-            <span class="nav-roman">V</span>
-            <span class="nav-label">Broken Soul</span>
-          </span>
-        </a>
-      </li>
-      <li>
-        <a href="#ch6" data-target="ch6">
-          <span class="nav-text">
-            <span class="nav-roman">VI</span>
-            <span class="nav-label">Borderland</span>
-          </span>
-        </a>
-      </li>
-    </ul>
-  </nav>
+    <!-- ============ SIDEBAR NAV ============ -->
+    <nav class="side-nav" id="side-nav">
+      <span class="side-nav-label">Contents</span>
+      <ul>
+        <li><a href="#prologue" data-target="prologue"><span class="nav-text"><span class="nav-roman">—</span><span class="nav-label">Prologue</span></span></a></li>
+        <li><a href="#ch1" data-target="ch1"><span class="nav-text"><span class="nav-roman">I</span><span class="nav-label">Noble &amp; Thief</span></span></a></li>
+        <li><a href="#ch2" data-target="ch2"><span class="nav-text"><span class="nav-roman">II</span><span class="nav-label">The Hunter</span></span></a></li>
+        <li><a href="#ch3" data-target="ch3"><span class="nav-text"><span class="nav-roman">III</span><span class="nav-label">False Temple</span></span></a></li>
+        <li><a href="#ch4" data-target="ch4"><span class="nav-text"><span class="nav-roman">IV</span><span class="nav-label">Sought Death</span></span></a></li>
+        <li><a href="#ch5" data-target="ch5"><span class="nav-text"><span class="nav-roman">V</span><span class="nav-label">Broken Soul</span></span></a></li>
+        <li><a href="#ch6" data-target="ch6"><span class="nav-text"><span class="nav-roman">VI</span><span class="nav-label">Borderland</span></span></a></li>
+      </ul>
+    </nav>
 
-  <!-- ══ MAIN CONTENT ══ -->
-  <div class="chronicle">
+    <!-- ============ MAIN CHRONICLE ============ -->
+    <div class="chronicle">
 
-    <!-- ══════════════════ PROLOGUE ══════════════════ -->
-    <section class="chapter prologue" id="prologue">
-      <div class="chapter-header">
-        <span class="chapter-num">Prologue</span>
+      <!-- ═════ PROLOGUE ═════ -->
+      <section class="chapter prologue" id="prologue" data-accent="prologue">
+        <div class="chapter-inner">
+          <div class="chapter-fx">
+            <div class="glow"></div>
+            <span class="p" style="left:14%;--dx:8px;animation-duration:18s;animation-delay:-2s"></span>
+            <span class="p" style="left:38%;--dx:-12px;animation-duration:22s;animation-delay:-8s"></span>
+            <span class="p" style="left:62%;--dx:16px;animation-duration:20s;animation-delay:-14s"></span>
+            <span class="p" style="left:86%;--dx:-6px;animation-duration:24s;animation-delay:-4s"></span>
+          </div>
+          <div class="chapter-header">
+            <span class="chapter-num">Prologue</span>
+            <span class="chapter-romal">∞</span>
+          </div>
+          <div class="chapter-body">
+            <div class="lang-en">
+              <p>Before their names were remembered across the land of Borderland, the five of them were merely travelers — each searching for something in their own lives.</p>
+              <p>Some were running from the past.<br/>Some were trying to prove themselves.<br/>Some were searching for the meaning of being alive.</p>
+              <p>And without realizing it, their paths slowly began to converge.</p>
+            </div>
+            <div class="lang-th th-font">
+              <p>ก่อนที่ชื่อของพวกเขาจะเริ่มถูกจดจำในดินแดน Borderland ทั้งห้าคนเป็นเพียงผู้เดินทางที่ต่างกำลังตามหาบางสิ่งในชีวิตของตนเอง</p>
+              <p>บางคนกำลังหนีจากอดีต<br/>บางคนกำลังพยายามพิสูจน์ตัวเอง<br/>บางคนกำลังค้นหาความหมายของการมีชีวิตอยู่</p>
+              <p>และโดยไม่รู้ตัว เส้นทางของพวกเขาก็ค่อย ๆ มาบรรจบกัน</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="chapter-sep">✦</div>
+
+      <!-- ═════ CHAPTER I ═════ -->
+      <section class="chapter ch1" id="ch1" data-accent="ch1">
+        <div class="chapter-inner">
+          <div class="chapter-fx">
+            <div class="glow"></div>
+            <span class="p" style="left:18%;--dx:12px;animation-duration:14s;animation-delay:-2s"></span>
+            <span class="p" style="left:42%;--dx:-10px;animation-duration:17s;animation-delay:-6s"></span>
+            <span class="p" style="left:70%;--dx:14px;animation-duration:15s;animation-delay:-10s"></span>
+            <span class="p" style="left:88%;--dx:-8px;animation-duration:19s;animation-delay:-4s"></span>
+          </div>
+          <div class="chapter-header">
+            <span class="chapter-num">Chapter I</span>
+            <div class="chapter-title-wrap">
+              <h2 class="chapter-title-en">The Noble and The Thief</h2>
+              <h2 class="chapter-title-th">ขุนนางและหัวขโมย</h2>
+            </div>
+            <span class="chapter-romal">I</span>
+          </div>
+
+          <figure class="chapter-image">
+            <img src="assets/story/ch1-tavern.jpg" alt="Aython and Jen meet in the tavern" />
+            <figcaption class="caption">
+              <span class="dot"></span>
+              <span>Plate I — The Pact</span>
+              <span class="sub">a noble in last year's velvet shakes hands with a thief by candle-light.</span>
+            </figcaption>
+          </figure>
+          <div class="chapter-body">
+            <div class="lang-en">
+              <p>Aython Ashvail Aurelius, a young nobleman once known as the "Prince of the Night," was cut off from his entire inheritance by his mother and cast out into the world. Despite being left penniless, he continued to live as if he were still hosting high-society galas.</p>
+              <p>In a small tavern, Aython tried to persuade the owner to give him free drinks — claiming that someday this establishment might become a hotspot among the aristocracy.</p>
+              <p>Watching from the corner of the room was Jen: a thief, a con artist, a self-proclaimed and thoroughly enlightened priest. At first, Jen thought Aython was just a useless, washed-up noble. But the more he observed, the more intrigued he became.</p>
+              <p>Even with no money, no power, and almost nothing left, Aython still treated every person with a grace that made them feel valued.</p>
+              <p>Instead of betraying one another, the two began to work together. Aython used his high-class network, his ability to read people, and social circle intel to select their targets. Jen was the man on the ground — forging documents, stealing assets, infiltrating manors, and finding the escape routes.</p>
+              <p>The two became a strangely perfect pair: one a nobleman with no money, the other a man of faith who doesn't believe in God — yet somehow preaches with incredible conviction.</p>
+            </div>
+            <div class="lang-th th-font">
+              <p>Aython Ashvail Aurelius ขุนนางหนุ่มผู้เคยเป็น "Prince of the Night" ถูกมารดาของตนตัดออกจากทรัพย์สินทั้งหมดและส่งออกเดินทางสู่โลกภายนอก แม้จะกลายเป็นคนไร้เงิน เขายังคงใช้ชีวิตราวกับตนเองยังเป็นเจ้าภาพของงานเลี้ยงระดับชนชั้นสูง</p>
+              <p>ในร้านเหล้าเล็ก ๆ แห่งหนึ่ง Aython พยายามโน้มน้าวเจ้าของร้านให้เลี้ยงเหล้า โดยอ้างว่าสักวันร้านแห่งนี้อาจกลายเป็นสถานที่ยอดนิยมในหมู่ขุนนางได้</p>
+              <p>ชายอีกคนที่นั่งเฝ้ามองอยู่มุมร้านคือ Jen — หัวขโมย นักต้มตุ๋น ผู้แฝงตัวเป็นนักบวช (ที่รู้แจ้งอย่างถ่องแท้) ตอนแรก Jen คิดว่า Aython เป็นเพียงขุนนางตกอับไร้ประโยชน์ แต่ยิ่งสังเกต เขากลับยิ่งสนใจ</p>
+              <p>แม้จะไม่มีเงิน ไม่มีอำนาจ และแทบไม่เหลืออะไรเลย Aython ก็ยังปฏิบัติต่อผู้คนด้วยความสง่างามราวกับทุกคนมีคุณค่า</p>
+              <p>แทนที่จะหักหลังกัน ทั้งสองกลับเริ่มร่วมมือกัน Aython ใช้เครือข่ายชนชั้นสูง การอ่านคน และข้อมูลจากวงสังคมเพื่อเลือกเป้าหมาย ส่วน Jen คือคนลงมือจริง — ปลอมเอกสาร ลักทรัพย์ แทรกซึมคฤหาสน์ และหาทางหนีออกมา</p>
+              <p>ทั้งสองเริ่มกลายเป็นคู่หูที่เข้ากันได้อย่างประหลาด หนึ่งคือขุนนางผู้ไม่มีเงิน อีกหนึ่งคือคนศรัทธาที่ไม่เชื่อในพระเจ้า แต่สามารถถ่ายทอดให้ผู้คนได้อย่างน่าเลื่อมใส</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="chapter-sep">✦</div>
+
+      <!-- ═════ CHAPTER II ═════ -->
+      <section class="chapter ch2" id="ch2" data-accent="ch2">
+        <div class="chapter-inner">
+          <div class="chapter-fx">
+            <div class="glow"></div>
+            <span class="p" style="left:12%;--dx:8px;animation-duration:20s"></span>
+            <span class="p" style="left:48%;--dx:-12px;animation-duration:24s;animation-delay:-8s"></span>
+            <span class="p" style="left:80%;--dx:10px;animation-duration:18s;animation-delay:-12s"></span>
+          </div>
+          <div class="chapter-header">
+            <span class="chapter-num">Chapter II</span>
+            <div class="chapter-title-wrap">
+              <h2 class="chapter-title-en">The Hunter Who Arrived Too Late</h2>
+              <h2 class="chapter-title-th">นักล่าผู้มาสายเกินไป</h2>
+            </div>
+            <span class="chapter-romal">II</span>
+          </div>
+
+          <figure class="chapter-image">
+            <img src="assets/story/ch2-overlook.jpg" alt="Three travelers overlook a city at sunset" />
+            <figcaption class="caption">
+              <span class="dot"></span>
+              <span>Plate II — The Three on the Ridge</span>
+              <span class="sub">a soldier without faith, a noble without coin, a thief without a god — walking the same road by accident.</span>
+            </figcaption>
+          </figure>
+          <div class="chapter-body">
+            <div class="lang-en">
+              <p>Kael Vorn continued to hunt for traces of an enemy from his past. He was once a soldier who believed in duty and order, but war and betrayal had stripped him of his faith in people.</p>
+              <p>The latest lead brought him to a nobleman's manor. That night, Vorn cold-bloodedly slaughtered everyone who stood in his way — only to find, upon reaching the treasure room, that his target wasn't there.</p>
+              <p>In that same room, Aython and Jen were busy robbing the place. Amidst piles of corpses and a treasure room filled with fakes, Aython was complaining about the owner's "terrible taste" rather than being shocked by the scene before him.</p>
+              <p>Vorn stared at the two of them in confusion. He had just endured a night of death — and these two men were arguing about the value of art in the middle of a bloodbath.</p>
+              <p>Even so, the three eventually ended up traveling together. Initially, Vorn only hoped to exploit their information-gathering abilities, networks, and powers of persuasion to track down his quarry. But adventuring with these two eccentrics brought him a strange, unfamiliar sense of enjoyment.</p>
+            </div>
+            <div class="lang-th th-font">
+              <p>Kael Vorn ยังคงออกตามล่าร่องรอยของศัตรูจากอดีต เขาเคยเป็นทหาร เคยเชื่อในหน้าที่และระเบียบ แต่สงครามและการทรยศทำให้เขาเลิกเชื่อในผู้คน</p>
+              <p>เบาะแสล่าสุดนำเขามาถึงคฤหาสน์ขุนนางแห่งหนึ่ง ในคืนนั้น Vorn สังหารทุกคนที่ขวางทางอย่างเลือดเย็น แต่เมื่อไปถึงห้องสมบัติ เขากลับพบว่าเป้าหมายไม่ได้อยู่ที่นี่</p>
+              <p>และในห้องเดียวกันนั้น Aython กับ Jen ก็กำลังปล้นคฤหาสน์อยู่ ท่ามกลางกองศพและห้องสมบัติที่เต็มไปด้วยของปลอม Aython กลับบ่นถึง "รสนิยมอันเลวร้าย" ของเจ้าของคฤหาสน์ มากกว่าจะตกใจกับสถานการณ์ตรงหน้า</p>
+              <p>Vorn มองทั้งสองด้วยความสับสน เขาเพิ่งผ่านค่ำคืนแห่งความตายมา แต่ชายสองคนนี้กลับเถียงกันเรื่องคุณค่าของงานศิลป์กลางกองศพ</p>
+              <p>อย่างไรก็ตาม สุดท้ายทั้งสามกลับร่วมเดินทางด้วยกัน ในช่วงแรก Vorn หวังเพียงใช้ประโยชน์จากความสามารถในการหาข้อมูล เครือข่าย และทักษะในการเกลี้ยกล่อมเพื่อให้ได้สิ่งที่ต้องการ แต่การผจญภัยกับคนพิลึกทั้งสองกลับสร้างความเพลิดเพลินให้เขาอย่างน่าประหลาด</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="chapter-sep">✦</div>
+
+      <!-- ═════ CHAPTER III ═════ -->
+      <section class="chapter ch3" id="ch3" data-accent="ch3">
+        <div class="chapter-inner">
+          <div class="chapter-fx">
+            <div class="glow"></div>
+            <span class="p" style="left:16%;--dx:12px;animation-duration:16s"></span>
+            <span class="p" style="left:36%;--dx:-10px;animation-duration:18s;animation-delay:-5s"></span>
+            <span class="p" style="left:58%;--dx:18px;animation-duration:14s;animation-delay:-10s"></span>
+            <span class="p" style="left:82%;--dx:-14px;animation-duration:20s;animation-delay:-3s"></span>
+          </div>
+          <div class="chapter-header">
+            <span class="chapter-num">Chapter III</span>
+            <div class="chapter-title-wrap">
+              <h2 class="chapter-title-en">The False Temple of Peace</h2>
+              <h2 class="chapter-title-th">วัดแห่งความสงบปลอม</h2>
+            </div>
+            <span class="chapter-romal">III</span>
+          </div>
+
+          <figure class="chapter-image">
+            <img src="assets/story/ch3-temple.jpg" alt="A seaside ceremony of false saints and willing pilgrims" />
+            <figcaption class="caption">
+              <span class="dot"></span>
+              <span>Plate III — The Healing Lie</span>
+              <span class="sub">all of it a fiction — and yet, somehow, the pilgrims went home truly mended.</span>
+            </figcaption>
+          </figure>
+          <div class="chapter-body">
+            <div class="lang-en">
+              <p>Anuchit Thepsuang is a warrior monk traveling in search of life's meaning. After losing his temple and the people most dear to him, he began to sense that "something" was hidden in this world — something ordinary humans could not understand.</p>
+              <p>That journey led him to a city filled with spiritual training courses, meditation retreats, and teachings on inner peace. But behind it all was a scam orchestrated by Jen and Aython.</p>
+              <ul>
+                <li>Jen disguised himself as a famous saint.</li>
+                <li>Aython played the organizer and keynote speaker.</li>
+                <li>Vorn kidnapped the real priest and kept him hidden.</li>
+              </ul>
+              <p>Even though it was all a lie, what confused Anuchit most was that the people who came there were actually healed. Many left with smiles. Many found the will to keep living.</p>
+              <p>Anuchit began to understand: sometimes, hope doesn't have to be perfect. As long as it gives people the strength to keep moving forward, it still has value. And without realizing it, he began to become part of the group.</p>
+              <p>After it was all over, the four of them fled the city with a vast sum of money. For the first time, they felt that life might actually be getting better.</p>
+              <p>But during their journey, a violent storm at sea battered their ship. Giant waves smashed the vessel to pieces amidst darkness and thunder. Everyone survived — but their belongings, their money, and everything they had just gained sank to the bottom of the sea.</p>
+              <p>They lost everything once again. And that made the four of them begin to understand a certain truth about the traveler's life: no matter how much you try to hold on, the world can take it away at any moment.</p>
+            </div>
+            <div class="lang-th th-font">
+              <p>Anuchit Thepsuang คือพระนักสู้ผู้เดินทางเพื่อตามหาความหมายของชีวิต หลังสูญเสียวัดและผู้คนสำคัญ เขาเริ่มสัมผัสได้ว่ามี "บางสิ่ง" ซ่อนอยู่ในโลกใบนี้ บางสิ่งที่มนุษย์ทั่วไปไม่อาจเข้าใจ</p>
+              <p>การเดินทางนั้นนำเขามาถึงเมืองแห่งหนึ่งซึ่งเต็มไปด้วยคอร์สฝึกจิต การนั่งสมาธิ และคำสอนเรื่องความสงบ แต่เบื้องหลังทั้งหมดกลับเป็นการต้มตุ๋นของ Jen และ Aython</p>
+              <ul>
+                <li>Jen ปลอมตัวเป็นนักบุญชื่อดัง</li>
+                <li>Aython รับบทผู้จัดงานและนักพูด</li>
+                <li>Vorn ลักพาตัวบาทหลวงตัวจริงไปซ่อน</li>
+              </ul>
+              <p>แม้ทั้งหมดจะเป็นเรื่องโกหก สิ่งที่ทำให้ Anuchit สับสนคือผู้คนที่มาที่นี่กลับ "ได้รับการเยียวยาจริง" หลายคนกลับไปพร้อมรอยยิ้ม หลายคนกลับมีกำลังใจใช้ชีวิตต่อ</p>
+              <p>Anuchit จึงเริ่มเข้าใจว่า บางครั้ง ความหวังอาจไม่ได้สมบูรณ์แบบ แต่ตราบใดที่มันช่วยให้ผู้คนมีแรงเดินต่อไปได้ มันก็ยังมีคุณค่าอยู่ และโดยไม่รู้ตัว เขาก็เริ่มกลายเป็นส่วนหนึ่งของกลุ่ม</p>
+              <p>หลังจากทุกอย่างจบลง ทั้งสี่หลบหนีออกจากเมืองพร้อมเงินจำนวนมหาศาล เป็นครั้งแรกที่พวกเขารู้สึกว่า ชีวิตอาจกำลังเริ่มดีขึ้นจริง ๆ</p>
+              <p>แต่ระหว่างการเดินทาง พายุรุนแรงกลางทะเลกลับพัดถล่มเรือของพวกเขา คลื่นยักษ์ซัดเรือแตกออกเป็นเสี่ยง ๆ ท่ามกลางความมืดและเสียงฟ้าร้อง ทุกคนรอดชีวิต แต่ทรัพย์สิน เงินทอง และทุกอย่างที่พวกเขาเพิ่งได้มาทั้งหมด กลับจมหายลงสู่ทะเล</p>
+              <p>พวกเขาสูญเสียทุกอย่างอีกครั้ง และนั่นทำให้ทั้งสี่เริ่มเข้าใจความจริงบางอย่างเกี่ยวกับชีวิตของนักเดินทาง — ไม่ว่าพยายามคว้าอะไรไว้มากเพียงใด โลกก็สามารถพรากมันไปได้ทุกเมื่อ</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="chapter-sep">✦</div>
+
+      <!-- ═════ CHAPTER IV ═════ -->
+      <section class="chapter ch4" id="ch4" data-accent="ch4">
+        <div class="chapter-inner">
+          <div class="chapter-fx">
+            <div class="glow"></div>
+            <span class="p" style="left:10%;--dx:18px;animation-duration:12s"></span>
+            <span class="p" style="left:28%;--dx:-14px;animation-duration:14s;animation-delay:-3s"></span>
+            <span class="p" style="left:50%;--dx:22px;animation-duration:10s;animation-delay:-6s"></span>
+            <span class="p" style="left:72%;--dx:-18px;animation-duration:13s;animation-delay:-8s"></span>
+            <span class="p" style="left:88%;--dx:16px;animation-duration:11s;animation-delay:-1s"></span>
+          </div>
+          <div class="chapter-header">
+            <span class="chapter-num">Chapter IV</span>
+            <div class="chapter-title-wrap">
+              <h2 class="chapter-title-en">The Man Who Sought Death</h2>
+              <h2 class="chapter-title-th">ชายผู้แสวงหาความตาย</h2>
+            </div>
+            <span class="chapter-romal">IV</span>
+          </div>
+
+          <figure class="chapter-image">
+            <img src="assets/story/ch4-museum.jpg" alt="The party inside the ancient museum" />
+            <figcaption class="caption">
+              <span class="dot"></span>
+              <span>Plate IV — Before the First Flame</span>
+              <span class="sub">four strangers walk a hall of statues. Above, on the balcony, the fifth is already watching.</span>
+            </figcaption>
+          </figure>
+          <div class="chapter-body">
+            <div class="lang-en">
+              <p>Kael Veranth, a mage with dragon blood, continued his journey in search of answers to the "voice" that had echoed in his head his entire life — a whisper from something far beyond, a feeling that he didn't belong in this world, and a power he couldn't control.</p>
+              <p>After his power burned down his own village in childhood, Veranth began to believe that perhaps "death" was the only path to the answers he sought.</p>
+              <p>At the same time, the party of four was planning to heist an ancient museum. But before they could act, another group of bandits struck first. Aython saw an opportunity immediately — he quickly announced to the crowd that they would protect the city's treasures.</p>
+              <p>Vorn was the first to act, his arrow piercing the bandit leader's neck from a distance. Anuchit charged directly into the fray. Jen used magic to support and heal the wounded. In no time, the robbery was thwarted. The people began to see the four as heroes.</p>
+              <p>But before it was over, a man appeared on the museum's high balcony: Kael Veranth. The moment he saw the four, he sensed that this group was "different" — and perhaps strong enough to actually kill him.</p>
+              <p>Deep red flames exploded from his palms. The tremors caused the entire museum to begin collapsing. Stone pillars cracked, the ceiling caved in, and centuries-old artifacts were being destroyed.</p>
+              <p>But what shocked Aython most wasn't Veranth's power — it was the history being lost before his eyes. Without hesitation, he lunged to protect a display case. A stone pillar collapsed on him, knocking him unconscious.</p>
+            </div>
+            <div class="lang-th th-font">
+              <p>Kael Veranth จอมเวทย์ผู้มีสายเลือดมังกร ยังคงออกเดินทางเพื่อตามหาคำตอบของ "เสียง" ที่ดังอยู่ในหัวมาตลอดชีวิต เสียงกระซิบจากบางสิ่งอันไกลโพ้น ความรู้สึกว่าตนเองไม่ควรอยู่บนโลกใบนี้ และพลังที่ไม่อาจควบคุมได้</p>
+              <p>หลังจากพลังของเขาเผาหมู่บ้านตนเองในวัยเด็ก Veranth ก็เริ่มเชื่อว่า บางที "ความตาย" อาจเป็นทางเดียวที่จะนำเขาไปสู่คำตอบ</p>
+              <p>ในเวลาเดียวกัน ปาร์ตี้ทั้งสี่กำลังวางแผนปล้นพิพิธภัณฑ์โบราณแห่งหนึ่ง แต่ก่อนจะลงมือ กลุ่มโจรอีกกลุ่มกลับบุกเข้าปล้นเสียก่อน Aython มองเห็นโอกาสทันที เขารีบประกาศต่อหน้าผู้คนว่า พวกเขาจะช่วยปกป้องสมบัติของเมือง</p>
+              <p>Vorn ลงมือเป็นคนแรก ลูกธนูของเขาพุ่งทะลุคอหัวหน้าโจรจากระยะไกล Anuchit เข้าปะทะกลางวงต่อสู้โดยตรง ส่วน Jen ใช้เวทมนตร์สนับสนุนและรักษาผู้บาดเจ็บ ภายในเวลาไม่นาน การปล้นก็ถูกหยุดลง ผู้คนเริ่มมองทั้งสี่เป็นวีรบุรุษ</p>
+              <p>แต่ก่อนทุกอย่างจะจบลง ชายคนหนึ่งกลับปรากฏตัวขึ้นบนระเบียงสูงของพิพิธภัณฑ์ — Kael Veranth ทันทีที่เห็นทั้งสี่ เขาก็สัมผัสได้ว่าคนกลุ่มนี้ "แตกต่าง" และบางที อาจแข็งแกร่งพอจะฆ่าเขาได้จริง ๆ</p>
+              <p>เปลวเพลิงสีแดงเข้มระเบิดออกจากฝ่ามือของเขา แรงสั่นสะเทือนทำให้พิพิธภัณฑ์ทั้งหลังเริ่มพังถล่ม เสาหินแตกร้าว เพดานเริ่มถล่ม โบราณวัตถุหลายร้อยปีกำลังถูกทำลาย</p>
+              <p>แต่สิ่งที่ทำให้ Aython ตกใจที่สุด ไม่ใช่พลังของ Veranth แต่คือประวัติศาสตร์ที่กำลังสูญหายไปต่อหน้าต่อตา โดยไม่ลังเล เขากระโจนเข้าไปปกป้องตู้จัดแสดง ก่อนจะถูกเสาหินถล่มใส่จนหมดสติ</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="chapter-sep">✦</div>
+
+      <!-- ═════ CHAPTER V ═════ -->
+      <section class="chapter ch5" id="ch5" data-accent="ch5">
+        <div class="chapter-inner">
+          <div class="fire-bg" aria-hidden="true">
+            <div class="flame-col left"></div>
+            <div class="flame-col right"></div>
+            <span class="spark" style="left:6%;  --dx:14px;  --dur:5.2s; --del:0s"></span>
+            <span class="spark" style="left:12%; --dx:-10px; --dur:6.0s; --del:-1.4s"></span>
+            <span class="spark" style="left:18%; --dx:18px;  --dur:4.8s; --del:-2.8s"></span>
+            <span class="spark" style="left:24%; --dx:-14px; --dur:5.6s; --del:-0.6s"></span>
+            <span class="spark" style="left:32%; --dx:12px;  --dur:5.0s; --del:-3.4s"></span>
+            <span class="spark" style="left:38%; --dx:-8px;  --dur:6.4s; --del:-1.8s"></span>
+            <span class="spark" style="left:46%; --dx:20px;  --dur:4.6s; --del:-2.2s"></span>
+            <span class="spark" style="left:54%; --dx:-18px; --dur:5.4s; --del:-0.8s"></span>
+            <span class="spark" style="left:62%; --dx:14px;  --dur:6.0s; --del:-3.0s"></span>
+            <span class="spark" style="left:68%; --dx:-12px; --dur:5.2s; --del:-1.6s"></span>
+            <span class="spark" style="left:76%; --dx:16px;  --dur:4.8s; --del:-2.4s"></span>
+            <span class="spark" style="left:84%; --dx:-10px; --dur:5.8s; --del:-3.6s"></span>
+            <span class="spark" style="left:92%; --dx:18px;  --dur:5.4s; --del:-1.0s"></span>
+            <span class="spark" style="left:98%; --dx:-14px; --dur:6.2s; --del:-2.6s"></span>
+          </div>
+          <div class="chapter-fx">
+            <div class="glow"></div>
+            <span class="p" style="left:8%;--dx:24px;animation-duration:9s"></span>
+            <span class="p" style="left:22%;--dx:-18px;animation-duration:11s;animation-delay:-2s"></span>
+            <span class="p" style="left:38%;--dx:22px;animation-duration:8s;animation-delay:-5s"></span>
+            <span class="p" style="left:54%;--dx:-20px;animation-duration:10s;animation-delay:-3s"></span>
+            <span class="p" style="left:72%;--dx:26px;animation-duration:9s;animation-delay:-6s"></span>
+            <span class="p" style="left:90%;--dx:-16px;animation-duration:12s;animation-delay:-1s"></span>
+          </div>
+          <div class="chapter-header">
+            <span class="chapter-num">Chapter V</span>
+            <div class="chapter-title-wrap">
+              <h2 class="chapter-title-en">The Broken Soul</h2>
+              <h2 class="chapter-title-th">จิตวิญญาณที่แตกสลาย</h2>
+            </div>
+            <span class="chapter-romal">V</span>
+          </div>
+          <div class="chapter-body">
+            <div class="lang-en">
+              <p>Vorn, Jen, and Anuchit had to join forces to fight Veranth amidst the crumbling museum. His magic was intense, striking from every direction — fire could erupt from the floor, walls, or even the air at any moment.</p>
+              <p>Jen used illusions and magical shields to clear a path. Vorn searched for openings to attack from a distance. Anuchit was the only one who kept walking forward, straight through the flames.</p>
+              <p>Eventually, the three managed to reach Veranth. Vorn pinned the mage to the ground, weapon poised to deliver a killing blow — but Anuchit raised his hand to stop him. In Veranth's eyes, he saw not malice but emptiness: the look of someone who had lost their reason to live long ago.</p>
+
+              <figure class="chapter-image battle">
+                <div class="image-wrap">
+                  <img src="assets/story/ch5-battle1.jpg" alt="The three reach Veranth amidst red magic" />
+                  <div class="runes" aria-hidden="true">
+                    <svg class="tl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2 12 L12 2 L12 12 Z"/><path d="M2 12 L12 12 L2 22 Z"/></svg>
+                    <svg class="tr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2 12 L12 2 L12 12 Z"/><path d="M2 12 L12 12 L2 22 Z"/></svg>
+                    <svg class="bl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2 12 L12 2 L12 12 Z"/><path d="M2 12 L12 12 L2 22 Z"/></svg>
+                    <svg class="br" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2 12 L12 2 L12 12 Z"/><path d="M2 12 L12 12 L2 22 Z"/></svg>
+                  </div>
+                  <figcaption class="caption">
+                    <span class="dot"></span>
+                    <span>Plate V · i — The Standoff</span>
+                    <span class="sub">three blades raised, one mage who refuses to flinch. The red runes have already chosen sides.</span>
+                  </figcaption>
+                </div>
+                <div class="embers" aria-hidden="true">
+                  <span class="ember" style="left:8%;  --dx:14px;  --dur:4.2s; --del:0s"></span>
+                  <span class="ember" style="left:22%; --dx:-10px; --dur:5.5s; --del:-1.2s"></span>
+                  <span class="ember" style="left:38%; --dx:18px;  --dur:3.8s; --del:-0.6s"></span>
+                  <span class="ember" style="left:54%; --dx:-14px; --dur:5.0s; --del:-2.4s"></span>
+                  <span class="ember" style="left:68%; --dx:12px;  --dur:4.5s; --del:-3.0s"></span>
+                  <span class="ember" style="left:82%; --dx:-8px;  --dur:5.2s; --del:-1.6s"></span>
+                  <span class="ember" style="left:94%; --dx:16px;  --dur:4.0s; --del:-2.0s"></span>
+                </div>
+              </figure>
+
+              <p>Anuchit believed that to kill someone who lacked even the will to live would trap that soul in suffering forever. Vorn disagreed. And in the moment the three were arguing, Veranth seized the chance to counterattack.</p>
+              <p>A massive explosion of fire erupted from his body. Vorn and Jen were thrown back by the blast, too injured to fight on. Inside the collapsing hall, only Anuchit and Veranth remained.</p>
+
+              <figure class="chapter-image battle intense">
+                <div class="image-wrap">
+                  <img src="assets/story/ch5-battle2.jpg" alt="Anuchit and Veranth alone in a sea of fire" />
+                  <div class="runes" aria-hidden="true">
+                    <svg class="tl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 2 C8 7 6 10 6 14 a6 6 0 0 0 12 0 c0 -4 -2 -7 -6 -12 z"/></svg>
+                    <svg class="tr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 2 C8 7 6 10 6 14 a6 6 0 0 0 12 0 c0 -4 -2 -7 -6 -12 z"/></svg>
+                    <svg class="bl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 2 C8 7 6 10 6 14 a6 6 0 0 0 12 0 c0 -4 -2 -7 -6 -12 z"/></svg>
+                    <svg class="br" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 2 C8 7 6 10 6 14 a6 6 0 0 0 12 0 c0 -4 -2 -7 -6 -12 z"/></svg>
+                  </div>
+                  <figcaption class="caption">
+                    <span class="dot"></span>
+                    <span>Plate V · ii — In the Sea of Fire</span>
+                    <span class="sub">no shield. No companion. Two open palms across a wall of flame — and the silence before the bargain.</span>
+                  </figcaption>
+                </div>
+                <div class="embers" aria-hidden="true">
+                  <span class="ember" style="left:4%;  --dx:24px;  --dur:3.0s; --del:0s"></span>
+                  <span class="ember" style="left:14%; --dx:-18px; --dur:3.4s; --del:-0.5s"></span>
+                  <span class="ember" style="left:24%; --dx:20px;  --dur:2.8s; --del:-1.0s"></span>
+                  <span class="ember" style="left:36%; --dx:-22px; --dur:3.2s; --del:-1.4s"></span>
+                  <span class="ember" style="left:48%; --dx:18px;  --dur:2.6s; --del:-2.0s"></span>
+                  <span class="ember" style="left:60%; --dx:-16px; --dur:3.0s; --del:-0.8s"></span>
+                  <span class="ember" style="left:72%; --dx:24px;  --dur:3.4s; --del:-1.8s"></span>
+                  <span class="ember" style="left:84%; --dx:-12px; --dur:2.8s; --del:-2.4s"></span>
+                  <span class="ember" style="left:96%; --dx:18px;  --dur:3.2s; --del:-0.4s"></span>
+                </div>
+              </figure>
+
+              <p>Facing each other in a sea of fire, the final battle began. But as they fought, Veranth began to understand something. Anuchit, too, was someone who sensed things the world didn't understand.</p>
+              <p>The difference was this: Veranth had chosen to wait for death to find his answers — while Anuchit had chosen to live to find them, using every breath, every wound, and every day still given to him to keep moving forward.</p>
+              <p>For the first time in years, Veranth began to hesitate about his own death. Finally, the flames around him slowly died out. He chose to keep living.</p>
+            </div>
+            <div class="lang-th th-font">
+              <p>Vorn, Jen และ Anuchit ต้องร่วมมือกันต่อสู้กับ Veranth ท่ามกลางพิพิธภัณฑ์ที่กำลังพังทลาย พลังเวทของ Veranth รุนแรงและโจมตีได้จากทุกทิศทาง ไฟสามารถปะทุขึ้นจากพื้น กำแพง หรือแม้แต่อากาศรอบตัวได้ทุกเมื่อ</p>
+              <p>Jen ใช้เวทภาพลวงตาและเกราะเวทเพื่อเปิดทาง Vorn คอยหาจังหวะโจมตีจากระยะไกล ส่วน Anuchit คือคนเดียวที่ยังคงเดินฝ่าเปลวเพลิงเข้าไปข้างหน้า</p>
+              <p>ท้ายที่สุด ทั้งสามก็สามารถเข้าถึงตัว Veranth ได้สำเร็จ Vorn กดจอมเวทย์ลงกับพื้น พร้อมปลายอาวุธที่สามารถปลิดชีวิตได้ทุกเมื่อ แต่ Anuchit กลับยกมือห้าม เขามองเห็นในดวงตาของ Veranth ไม่ใช่ความอาฆาต แต่เป็น "ความว่างเปล่า" สายตาของคนที่สูญเสียความหมายของการมีชีวิตไปนานแล้ว</p>
+              <p>Anuchit เชื่อว่า หากสังหารผู้ที่ไร้แม้แต่เจตจำนงจะมีชีวิต วิญญาณของคนผู้นั้นอาจถูกกักขังอยู่กับความทุกข์ตลอดไป Vorn ไม่เห็นด้วย และในจังหวะที่ทั้งสามกำลังถกเถียงกัน Veranth ก็ฉวยโอกาสสวนกลับทันที</p>
+              <p>เปลวเพลิงมหาศาลระเบิดออกจากร่างของเขา Vorn และ Jen ถูกแรงระเบิดซัดกระเด็น บาดเจ็บจนไม่สามารถต่อสู้ต่อได้ ภายในโถงที่กำลังพังทลาย จึงเหลือเพียง Anuchit และ Veranth</p>
+              <p>ทั้งสองเผชิญหน้ากันท่ามกลางทะเลเพลิง การต่อสู้ครั้งสุดท้ายจึงเริ่มต้นขึ้น แต่ยิ่งต่อสู้ Veranth ก็ยิ่งเข้าใจบางอย่าง — Anuchit เองก็เป็นคนที่สัมผัสได้ถึงบางสิ่งที่โลกทั่วไปไม่เข้าใจเช่นเดียวกัน</p>
+              <p>แต่สิ่งที่แตกต่างกันคือ Veranth เลือกเฝ้ารอความตายเพื่อค้นหาคำตอบ ขณะที่ Anuchit กลับเลือกใช้ชีวิตเพื่อตามหามัน ใช้ทุกลมหายใจ ทุกบาดแผล และทุกวันที่ยังมีอยู่ เพื่อเดินหน้าต่อไป</p>
+              <p>เป็นครั้งแรกในรอบหลายปี Veranth เริ่มลังเลต่อความตายของตนเอง และในที่สุด เปลวเพลิงรอบตัวก็ค่อย ๆ ดับลง เขาเลือกที่จะมีชีวิตอยู่ต่อ</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="chapter-sep">✦</div>
+
+      <!-- ═════ CHAPTER VI ═════ -->
+      <section class="chapter ch6" id="ch6" data-accent="ch6">
+        <div class="chapter-inner">
+          <div class="chapter-fx">
+            <div class="glow"></div>
+            <span class="p" style="left:14%;--dx:14px;animation-duration:18s"></span>
+            <span class="p" style="left:34%;--dx:-12px;animation-duration:22s;animation-delay:-6s"></span>
+            <span class="p" style="left:58%;--dx:16px;animation-duration:20s;animation-delay:-10s"></span>
+            <span class="p" style="left:82%;--dx:-10px;animation-duration:24s;animation-delay:-3s"></span>
+          </div>
+          <div class="chapter-header">
+            <span class="chapter-num">Chapter VI</span>
+            <div class="chapter-title-wrap">
+              <h2 class="chapter-title-en">Toward Borderland</h2>
+              <h2 class="chapter-title-th">มุ่งสู่ Borderland</h2>
+            </div>
+            <span class="chapter-romal">VI</span>
+          </div>
+
+          <figure class="chapter-image">
+            <img src="assets/story/ch6-beach.jpg" alt="The five travelers meet on the beach at sunset" />
+            <figcaption class="caption">
+              <span class="dot"></span>
+              <span>Plate VI — Five on the Shore</span>
+              <span class="sub">an outstretched hand at low tide. The sixth shadow has been following them since the temple.</span>
+            </figcaption>
+          </figure>
+          <div class="chapter-body">
+            <div class="lang-en">
+              <p>After everything that happened, the museum was surrounded by troops from across the city. Shouts and footsteps echoed over the crumbling ruins while flames continued to lick at stone pillars and artifact displays.</p>
+              <p>Aython, having just regained consciousness, took only a moment to assess the situation. He quickly led everyone to the museum's basement, then opened the entrance to a secret tunnel hidden behind an old stone wall.</p>
+              <p>These tunnels weren't ancient myths — they were knowledge passed down through noble families since the old days. In an era where a city could be besieged at any moment, the manors, museums, and key buildings of the ruling class were always built with escape routes. As an heir of House Aurelius, Aython had grown up with this knowledge since childhood.</p>
+              <p>The four escaped through the underground tunnels while the troops above continued to blockade the area, completely unaware that their targets had already slipped away. The tunnel stretched all the way to the coast outside the city.</p>
+              <p>Once everyone successfully made it outside, they began preparing a boat for immediate departure. But during the process, they discovered that Veranth had followed them out. No one knew when he had started following. The mage simply stood silently not far away, as if even he wasn't sure what to do next.</p>
+              <p>Vorn didn't trust him at all. To Vorn, someone who had nearly killed them all shouldn't be left to wander without any kind of guarantee. On the contrary, Anuchit believed Veranth deserved another chance — he saw in the mage not just a danger, but a person who had been lost in his own suffering for far too long.</p>
+              <p>Jen didn't take a clear stance. Even though he still didn't fully trust Veranth, he didn't oppose the group's decision. Meanwhile, Aython didn't care much about trust — to him, having a powerful mage along for the journey was far more useful than letting the man wander off aimlessly.</p>
+              <p>In the end, no one drove Veranth away. And Veranth himself simply followed them onto the boat in silence.</p>
+              <p>That night, the small junk boat left the coast with five travelers:</p>
+
+              <ul class="roster-list">
+                <li><strong>Vorn</strong> — who still couldn't let go of the past.</li>
+                <li><strong>Jen</strong> — who hid his kindness beneath lies.</li>
+                <li><strong>Anuchit</strong> — who was still searching for the meaning of life.</li>
+                <li><strong>Veranth</strong> — who was beginning to open his heart to living once more.</li>
+                <li><strong>Aython</strong> — who was still trying to prove he could change the world, even without a single gold coin.</li>
+              </ul>
+
+              <p>No one knew where the destination lay. But everyone was journeying toward the same place — the land called <strong>Borderland</strong>.</p>
+            </div>
+            <div class="lang-th th-font">
+              <p>หลังเหตุการณ์ทั้งหมด พิพิธภัณฑ์ถูกกองทหารทั้งเมืองปิดล้อม เสียงตะโกนและฝีเท้าดังสะท้อนอยู่เหนือซากอาคารที่กำลังพังทลาย ขณะที่เปลวไฟยังคงลุกไหม้อยู่ตามเสาหินและชั้นจัดแสดงโบราณวัตถุ</p>
+              <p>Aython ซึ่งเพิ่งฟื้นคืนสติขึ้นมา ใช้เวลาเพียงไม่นานในการประเมินสถานการณ์ เขารีบนำทุกคนลงไปยังชั้นใต้ดินของพิพิธภัณฑ์ ก่อนเปิดทางเข้าสู่อุโมงค์ลับที่ซ่อนอยู่หลังผนังหินเก่า</p>
+              <p>อุโมงค์เหล่านี้ไม่ใช่ตำนานโบราณ แต่เป็นสิ่งที่ชนชั้นสูงหลายตระกูลเรียนรู้มาตั้งแต่อดีต ในยุคที่เมืองสามารถถูกปิดล้อมได้ทุกเมื่อ คฤหาสน์ พิพิธภัณฑ์ และอาคารสำคัญของชนชั้นปกครองมักถูกสร้างทางหลบหนีเอาไว้เสมอ และในฐานะทายาทแห่ง House Aurelius Aython เติบโตมากับความรู้เหล่านี้ตั้งแต่วัยเด็ก</p>
+              <p>ทั้งสี่หลบหนีผ่านอุโมงค์ใต้ดิน ขณะที่กองทหารด้านบนยังคงปิดล้อมพื้นที่โดยไม่รู้เลยว่าเป้าหมายได้หลบหนีออกมาแล้ว อุโมงค์ทอดยาวออกไปจนถึงชายฝั่งนอกเมือง</p>
+              <p>เมื่อทุกคนออกมาถึงด้านนอกได้สำเร็จ พวกเขาจึงเริ่มเตรียมเรือเพื่อออกเดินทางทันที แต่ระหว่างนั้นเอง พวกเขากลับพบว่า Veranth เดินตามออกมาด้วย ไม่มีใครรู้ว่าเขาเริ่มเดินตามมาตั้งแต่เมื่อไร จอมเวทย์เพียงยืนเงียบอยู่ไม่ไกล ราวกับแม้แต่ตัวเขาเองก็ยังไม่แน่ใจว่าควรทำอะไรต่อไป</p>
+              <p>Vorn ไม่ไว้วางใจเขาเลย สำหรับ Vorn คนที่เกือบสังหารพวกตนทั้งหมดไม่ควรถูกปล่อยไว้โดยไม่มีหลักประกันใด ๆ ตรงกันข้าม Anuchit กลับเชื่อว่า Veranth ยังควรได้รับโอกาสอีกครั้ง เขามองเห็นในตัวจอมเวทย์ ไม่ใช่เพียงอันตราย แต่คือคนผู้หนึ่งที่กำลังหลงทางอยู่กับความทุกข์ของตัวเองมานานเกินไป</p>
+              <p>ส่วน Jen ไม่ได้แสดงท่าทีชัดเจนนัก แม้ลึก ๆ เขาจะยังไม่เชื่อใจ Veranth แต่ก็ไม่ได้คัดค้านการตัดสินใจของกลุ่ม ขณะที่ Aython ไม่ได้ใส่ใจเรื่องความไว้ใจมากเท่าคนอื่น สำหรับเขา การมีจอมเวทย์ทรงพลังร่วมเดินทางย่อมมีประโยชน์มากกว่าการปล่อยให้อีกฝ่ายหายไปโดยไร้จุดหมาย</p>
+              <p>ท้ายที่สุด ไม่มีใครขับไล่ Veranth ออกไป และ Veranth เองก็เพียงเดินตามพวกเขาขึ้นเรืออย่างเงียบงัน</p>
+              <p>ในคืนนั้น เรือสำเภาลำเล็กจึงออกจากชายฝั่งพร้อมผู้เดินทางทั้งห้าคน</p>
+
+              <ul class="roster-list-th">
+                <li><strong>Vorn</strong> — ผู้ยังไม่สามารถปล่อยวางอดีต</li>
+                <li><strong>Jen</strong> — ผู้ซ่อนความเมตตาไว้ใต้คำโกหก</li>
+                <li><strong>Anuchit</strong> — ผู้ยังคงค้นหาความหมายของชีวิต</li>
+                <li><strong>Veranth</strong> — ผู้เริ่มเปิดใจต่อการมีชีวิตอยู่อีกครั้ง</li>
+                <li><strong>Aython</strong> — ผู้ยังคงพยายามพิสูจน์ว่าเขาสามารถเปลี่ยนโลกได้ แม้ไม่มีทองสักเหรียญ</li>
+              </ul>
+
+              <p>ไม่มีใครรู้ว่าปลายทางอยู่ที่ใด แต่ทุกคนต่างกำลังออกเดินทางไปสู่สถานที่เดียวกัน — ดินแดนที่ชื่อว่า <strong>Borderland</strong></p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- closing -->
+      <div class="story-closing">
+        <div class="closing-rule"></div>
+        <div class="closing-boat" aria-hidden="true">
+          <svg viewBox="0 0 120 60" fill="none" stroke="currentColor" stroke-width="1.2">
+            <!-- mast -->
+            <line x1="60" y1="42" x2="60" y2="8"/>
+            <!-- sail -->
+            <path d="M60 10 Q78 22 60 40 Z" fill="currentColor" opacity="0.3"/>
+            <!-- second sail -->
+            <path d="M60 14 Q44 26 60 36 Z" fill="currentColor" opacity="0.2"/>
+            <!-- hull -->
+            <path d="M30 40 L90 40 L82 50 L38 50 Z" fill="currentColor" opacity="0.4"/>
+            <!-- top of mast -->
+            <circle cx="60" cy="6" r="1.5" fill="currentColor"/>
+          </svg>
+        </div>
+        <span class="closing-glyph">✦ ✦ ✦</span>
+        <p class="closing-text">
+          <span class="lang-en">The land of Borderland awaits — and the fate of the five has only just begun.</span>
+          <span class="lang-th th-font">ดินแดน Borderland รอคอยพวกเขาอยู่ — และชะตากรรมของทั้งห้าเพิ่งจะเริ่มต้น</span>
+        </p>
       </div>
-      <div class="chapter-body">
 
-        <div class="lang-en">
-          <p>Before their names were remembered across the land of Borderland, the five of them were merely travelers — each searching for something in their own lives.</p>
-          <p>Some were running from the past.<br>
-          Some were trying to prove themselves.<br>
-          Some were searching for the meaning of being alive.</p>
-          <p>And without realizing it, their paths slowly began to converge.</p>
-        </div>
-
-        <div class="lang-th">
-          <p>ก่อนที่ชื่อของพวกเขาจะเริ่มถูกจดจำในดินแดน Borderland ทั้งห้าคนเป็นเพียงผู้เดินทางที่ต่างกำลังตามหาบางสิ่งในชีวิตของตนเอง</p>
-          <p>บางคนกำลังหนีจากอดีต<br>
-          บางคนกำลังพยายามพิสูจน์ตัวเอง<br>
-          บางคนกำลังค้นหาความหมายของการมีชีวิตอยู่</p>
-          <p>และโดยไม่รู้ตัว เส้นทางของพวกเขาก็ค่อย ๆ มาบรรจบกัน</p>
-        </div>
-
-      </div>
-    </section>
-
-    <div class="chapter-sep">✦</div>
-
-    <!-- ══════════════════ CHAPTER I ══════════════════ -->
-    <section class="chapter" id="ch1">
-      <div class="chapter-header">
-        <span class="chapter-num">Chapter I</span>
-        <div class="chapter-title-wrap">
-          <h2 class="chapter-title-en">The Noble and The Thief</h2>
-          <h2 class="chapter-title-th">ขุนนางและหัวขโมย</h2>
-        </div>
-      </div>
-      <div class="chapter-body">
-
-        <div class="lang-en">
-          <p>Aython Ashvail Aurelius, a young nobleman once known as the "Prince of the Night," was cut off from his entire inheritance by his mother and cast out into the world. Despite being left penniless, he continued to live as if he were still hosting high-society galas.</p>
-          <p>In a small tavern, Aython tried to persuade the owner to give him free drinks — claiming that someday this establishment might become a hotspot among the aristocracy.</p>
-          <p>Watching from the corner of the room was Jen: a thief, a con artist, a self-proclaimed and thoroughly enlightened priest. At first, Jen thought Aython was just a useless, washed-up noble. But the more he observed, the more intrigued he became.</p>
-          <p>Even with no money, no power, and almost nothing left, Aython still treated every person with a grace that made them feel valued.</p>
-          <p>Instead of betraying one another, the two began to work together. Aython used his high-class network, his ability to read people, and social circle intel to select their targets. Jen was the man on the ground — forging documents, stealing assets, infiltrating manors, and finding the escape routes.</p>
-          <p>The two became a strangely perfect pair: one a nobleman with no money, the other a man of faith who doesn't believe in God — yet somehow preaches with incredible conviction.</p>
-        </div>
-
-        <div class="lang-th">
-          <p>Aython Ashvail Aurelius ขุนนางหนุ่มผู้เคยเป็น "Prince of the Night" ถูกมารดาของตนตัดออกจากทรัพย์สินทั้งหมดและส่งออกเดินทางสู่โลกภายนอก แม้จะกลายเป็นคนไร้เงิน เขายังคงใช้ชีวิตราวกับตนเองยังเป็นเจ้าภาพของงานเลี้ยงระดับชนชั้นสูง</p>
-          <p>ในร้านเหล้าเล็ก ๆ แห่งหนึ่ง Aython พยายามโน้มน้าวเจ้าของร้านให้เลี้ยงเหล้า โดยอ้างว่าสักวันร้านแห่งนี้อาจกลายเป็นสถานที่ยอดนิยมในหมู่ขุนนางได้</p>
-          <p>ชายอีกคนที่นั่งเฝ้ามองอยู่มุมร้านคือ Jen — หัวขโมย นักต้มตุ๋น ผู้แฝงตัวเป็นนักบวช (ที่รู้แจ้งอย่างถ่องแท้) ตอนแรก Jen คิดว่า Aython เป็นเพียงขุนนางตกอับไร้ประโยชน์ แต่ยิ่งสังเกต เขากลับยิ่งสนใจ</p>
-          <p>แม้จะไม่มีเงิน ไม่มีอำนาจ และแทบไม่เหลืออะไรเลย Aython ก็ยังปฏิบัติต่อผู้คนด้วยความสง่างามราวกับทุกคนมีคุณค่า</p>
-          <p>แทนที่จะหักหลังกัน ทั้งสองกลับเริ่มร่วมมือกัน Aython ใช้เครือข่ายชนชั้นสูง การอ่านคน และข้อมูลจากวงสังคมเพื่อเลือกเป้าหมาย ส่วน Jen คือคนลงมือจริง — ปลอมเอกสาร ลักทรัพย์ แทรกซึมคฤหาสน์ และหาทางหนีออกมา</p>
-          <p>ทั้งสองเริ่มกลายเป็นคู่หูที่เข้ากันได้อย่างประหลาด หนึ่งคือขุนนางผู้ไม่มีเงิน อีกหนึ่งคือคนศรัทธาที่ไม่เชื่อในพระเจ้า แต่สามารถถ่ายทอดให้ผู้คนได้อย่างน่าเลื่อมใส</p>
-        </div>
-
-      </div>
-    </section>
-
-    <div class="chapter-sep">✦</div>
-
-    <!-- ══════════════════ CHAPTER II ══════════════════ -->
-    <section class="chapter" id="ch2">
-      <div class="chapter-header">
-        <span class="chapter-num">Chapter II</span>
-        <div class="chapter-title-wrap">
-          <h2 class="chapter-title-en">The Hunter Who Arrived Too Late</h2>
-          <h2 class="chapter-title-th">นักล่าผู้มาสายเกินไป</h2>
-        </div>
-      </div>
-      <div class="chapter-body">
-
-        <div class="lang-en">
-          <p>Kael Vorn continued to hunt for traces of an enemy from his past. He was once a soldier who believed in duty and order, but war and betrayal had stripped him of his faith in people.</p>
-          <p>The latest lead brought him to a nobleman's manor. That night, Vorn cold-bloodedly slaughtered everyone who stood in his way — only to find, upon reaching the treasure room, that his target wasn't there.</p>
-          <p>In that same room, Aython and Jen were busy robbing the place. Amidst piles of corpses and a treasure room filled with fakes, Aython was complaining about the owner's "terrible taste" rather than being shocked by the scene before him.</p>
-          <p>Vorn stared at the two of them in confusion. He had just endured a night of death — and these two men were arguing about the value of art in the middle of a bloodbath.</p>
-          <p>Even so, the three eventually ended up traveling together. Initially, Vorn only hoped to exploit their information-gathering abilities, networks, and powers of persuasion to track down his quarry. But adventuring with these two eccentrics brought him a strange, unfamiliar sense of enjoyment.</p>
-        </div>
-
-        <div class="lang-th">
-          <p>Kael Vorn ยังคงออกตามล่าร่องรอยของศัตรูจากอดีต เขาเคยเป็นทหาร เคยเชื่อในหน้าที่และระเบียบ แต่สงครามและการทรยศทำให้เขาเลิกเชื่อในผู้คน</p>
-          <p>เบาะแสล่าสุดนำเขามาถึงคฤหาสน์ขุนนางแห่งหนึ่ง ในคืนนั้น Vorn สังหารทุกคนที่ขวางทางอย่างเลือดเย็น แต่เมื่อไปถึงห้องสมบัติ เขากลับพบว่าเป้าหมายไม่ได้อยู่ที่นี่</p>
-          <p>และในห้องเดียวกันนั้น Aython กับ Jen ก็กำลังปล้นคฤหาสน์อยู่ ท่ามกลางกองศพและห้องสมบัติที่เต็มไปด้วยของปลอม Aython กลับบ่นถึง "รสนิยมอันเลวร้าย" ของเจ้าของคฤหาสน์ มากกว่าจะตกใจกับสถานการณ์ตรงหน้า</p>
-          <p>Vorn มองทั้งสองด้วยความสับสน เขาเพิ่งผ่านค่ำคืนแห่งความตายมา แต่ชายสองคนนี้กลับเถียงกันเรื่องคุณค่าของงานศิลป์กลางกองศพ</p>
-          <p>อย่างไรก็ตาม สุดท้ายทั้งสามกลับร่วมเดินทางด้วยกัน ในช่วงแรก Vorn หวังเพียงใช้ประโยชน์จากความสามารถในการหาข้อมูล เครือข่าย และทักษะในการเกลี้ยกล่อมเพื่อให้ได้สิ่งที่ต้องการ แต่การผจญภัยกับคนพิลึกทั้งสองกลับสร้างความเพลิดเพลินให้เขาอย่างน่าประหลาด</p>
-        </div>
-
-      </div>
-    </section>
-
-    <div class="chapter-sep">✦</div>
-
-    <!-- ══════════════════ CHAPTER III ══════════════════ -->
-    <section class="chapter" id="ch3">
-      <div class="chapter-header">
-        <span class="chapter-num">Chapter III</span>
-        <div class="chapter-title-wrap">
-          <h2 class="chapter-title-en">The False Temple of Peace</h2>
-          <h2 class="chapter-title-th">วัดแห่งความสงบปลอม</h2>
-        </div>
-      </div>
-      <div class="chapter-body">
-
-        <div class="lang-en">
-          <p>Anuchit Thepsuang is a warrior monk traveling in search of life's meaning. After losing his temple and the people most dear to him, he began to sense that "something" was hidden in this world — something ordinary humans could not understand.</p>
-          <p>That journey led him to a city filled with spiritual training courses, meditation retreats, and teachings on inner peace. But behind it all was a scam orchestrated by Jen and Aython.</p>
-          <ul>
-            <li>Jen disguised himself as a famous saint.</li>
-            <li>Aython played the organizer and keynote speaker.</li>
-            <li>Vorn kidnapped the real priest and kept him hidden.</li>
-          </ul>
-          <p>Even though it was all a lie, what confused Anuchit most was that the people who came there were actually healed. Many left with smiles. Many found the will to keep living.</p>
-          <p>Anuchit began to understand: sometimes, hope doesn't have to be perfect. As long as it gives people the strength to keep moving forward, it still has value. And without realizing it, he began to become part of the group.</p>
-          <p>After it was all over, the four of them fled the city with a vast sum of money. For the first time, they felt that life might actually be getting better.</p>
-          <p>But during their journey, a violent storm at sea battered their ship. Giant waves smashed the vessel to pieces amidst darkness and thunder. Everyone survived — but their belongings, their money, and everything they had just gained sank to the bottom of the sea.</p>
-          <p>They lost everything once again. And that made the four of them begin to understand a certain truth about the traveler's life: no matter how much you try to hold on, the world can take it away at any moment.</p>
-        </div>
-
-        <div class="lang-th">
-          <p>Anuchit Thepsuang คือพระนักสู้ผู้เดินทางเพื่อตามหาความหมายของชีวิต หลังสูญเสียวัดและผู้คนสำคัญ เขาเริ่มสัมผัสได้ว่ามี "บางสิ่ง" ซ่อนอยู่ในโลกใบนี้ บางสิ่งที่มนุษย์ทั่วไปไม่อาจเข้าใจ</p>
-          <p>การเดินทางนั้นนำเขามาถึงเมืองแห่งหนึ่งซึ่งเต็มไปด้วยคอร์สฝึกจิต การนั่งสมาธิ และคำสอนเรื่องความสงบ แต่เบื้องหลังทั้งหมดกลับเป็นการต้มตุ๋นของ Jen และ Aython</p>
-          <ul>
-            <li>Jen ปลอมตัวเป็นนักบุญชื่อดัง</li>
-            <li>Aython รับบทผู้จัดงานและนักพูด</li>
-            <li>Vorn ลักพาตัวบาทหลวงตัวจริงไปซ่อน</li>
-          </ul>
-          <p>แม้ทั้งหมดจะเป็นเรื่องโกหก สิ่งที่ทำให้ Anuchit สับสนคือผู้คนที่มาที่นี่กลับ "ได้รับการเยียวยาจริง" หลายคนกลับไปพร้อมรอยยิ้ม หลายคนกลับมีกำลังใจใช้ชีวิตต่อ</p>
-          <p>Anuchit จึงเริ่มเข้าใจว่า บางครั้ง ความหวังอาจไม่ได้สมบูรณ์แบบ แต่ตราบใดที่มันช่วยให้ผู้คนมีแรงเดินต่อไปได้ มันก็ยังมีคุณค่าอยู่ และโดยไม่รู้ตัว เขาก็เริ่มกลายเป็นส่วนหนึ่งของกลุ่ม</p>
-          <p>หลังจากทุกอย่างจบลง ทั้งสี่หลบหนีออกจากเมืองพร้อมเงินจำนวนมหาศาล เป็นครั้งแรกที่พวกเขารู้สึกว่า ชีวิตอาจกำลังเริ่มดีขึ้นจริง ๆ</p>
-          <p>แต่ระหว่างการเดินทาง พายุรุนแรงกลางทะเลกลับพัดถล่มเรือของพวกเขา คลื่นยักษ์ซัดเรือแตกออกเป็นเสี่ยง ๆ ท่ามกลางความมืดและเสียงฟ้าร้อง ทุกคนรอดชีวิต แต่ทรัพย์สิน เงินทอง และทุกอย่างที่พวกเขาเพิ่งได้มาทั้งหมด กลับจมหายลงสู่ทะเล</p>
-          <p>พวกเขาสูญเสียทุกอย่างอีกครั้ง และนั่นทำให้ทั้งสี่เริ่มเข้าใจความจริงบางอย่างเกี่ยวกับชีวิตของนักเดินทาง — ไม่ว่าพยายามคว้าอะไรไว้มากเพียงใด โลกก็สามารถพรากมันไปได้ทุกเมื่อ</p>
-        </div>
-
-      </div>
-    </section>
-
-    <div class="chapter-sep">✦</div>
-
-    <!-- ══════════════════ CHAPTER IV ══════════════════ -->
-    <section class="chapter" id="ch4">
-      <div class="chapter-header">
-        <span class="chapter-num">Chapter IV</span>
-        <div class="chapter-title-wrap">
-          <h2 class="chapter-title-en">The Man Who Sought Death</h2>
-          <h2 class="chapter-title-th">ชายผู้แสวงหาความตาย</h2>
-        </div>
-      </div>
-      <div class="chapter-body">
-
-        <div class="lang-en">
-          <p>Kael Veranth, a mage with dragon blood, continued his journey in search of answers to the "voice" that had echoed in his head his entire life — a whisper from something far beyond, a feeling that he didn't belong in this world, and a power he couldn't control.</p>
-          <p>After his power burned down his own village in childhood, Veranth began to believe that perhaps "death" was the only path to the answers he sought.</p>
-          <p>At the same time, the party of four was planning to heist an ancient museum. But before they could act, another group of bandits struck first. Aython saw an opportunity immediately — he quickly announced to the crowd that they would protect the city's treasures.</p>
-          <p>Vorn was the first to act, his arrow piercing the bandit leader's neck from a distance. Anuchit charged directly into the fray. Jen used magic to support and heal the wounded. In no time, the robbery was thwarted. The people began to see the four as heroes.</p>
-          <p>But before it was over, a man appeared on the museum's high balcony: Kael Veranth. The moment he saw the four, he sensed that this group was "different" — and perhaps strong enough to actually kill him.</p>
-          <p>Deep red flames exploded from his palms. The tremors caused the entire museum to begin collapsing. Stone pillars cracked, the ceiling caved in, and centuries-old artifacts were being destroyed.</p>
-          <p>But what shocked Aython most wasn't Veranth's power — it was the history being lost before his eyes. Without hesitation, he lunged to protect a display case. A stone pillar collapsed on him, knocking him unconscious.</p>
-        </div>
-
-        <div class="lang-th">
-          <p>Kael Veranth จอมเวทย์ผู้มีสายเลือดมังกร ยังคงออกเดินทางเพื่อตามหาคำตอบของ "เสียง" ที่ดังอยู่ในหัวมาตลอดชีวิต เสียงกระซิบจากบางสิ่งอันไกลโพ้น ความรู้สึกว่าตนเองไม่ควรอยู่บนโลกใบนี้ และพลังที่ไม่อาจควบคุมได้</p>
-          <p>หลังจากพลังของเขาเผาหมู่บ้านตนเองในวัยเด็ก Veranth ก็เริ่มเชื่อว่า บางที "ความตาย" อาจเป็นทางเดียวที่จะนำเขาไปสู่คำตอบ</p>
-          <p>ในเวลาเดียวกัน ปาร์ตี้ทั้งสี่กำลังวางแผนปล้นพิพิธภัณฑ์โบราณแห่งหนึ่ง แต่ก่อนจะลงมือ กลุ่มโจรอีกกลุ่มกลับบุกเข้าปล้นเสียก่อน Aython มองเห็นโอกาสทันที เขารีบประกาศต่อหน้าผู้คนว่า พวกเขาจะช่วยปกป้องสมบัติของเมือง</p>
-          <p>Vorn ลงมือเป็นคนแรก ลูกธนูของเขาพุ่งทะลุคอหัวหน้าโจรจากระยะไกล Anuchit เข้าปะทะกลางวงต่อสู้โดยตรง ส่วน Jen ใช้เวทมนตร์สนับสนุนและรักษาผู้บาดเจ็บ ภายในเวลาไม่นาน การปล้นก็ถูกหยุดลง ผู้คนเริ่มมองทั้งสี่เป็นวีรบุรุษ</p>
-          <p>แต่ก่อนทุกอย่างจะจบลง ชายคนหนึ่งกลับปรากฏตัวขึ้นบนระเบียงสูงของพิพิธภัณฑ์ — Kael Veranth ทันทีที่เห็นทั้งสี่ เขาก็สัมผัสได้ว่าคนกลุ่มนี้ "แตกต่าง" และบางที อาจแข็งแกร่งพอจะฆ่าเขาได้จริง ๆ</p>
-          <p>เปลวเพลิงสีแดงเข้มระเบิดออกจากฝ่ามือของเขา แรงสั่นสะเทือนทำให้พิพิธภัณฑ์ทั้งหลังเริ่มพังถล่ม เสาหินแตกร้าว เพดานเริ่มถล่ม โบราณวัตถุหลายร้อยปีกำลังถูกทำลาย</p>
-          <p>แต่สิ่งที่ทำให้ Aython ตกใจที่สุด ไม่ใช่พลังของ Veranth แต่คือประวัติศาสตร์ที่กำลังสูญหายไปต่อหน้าต่อตา โดยไม่ลังเล เขากระโจนเข้าไปปกป้องตู้จัดแสดง ก่อนจะถูกเสาหินถล่มใส่จนหมดสติ</p>
-        </div>
-
-      </div>
-    </section>
-
-    <div class="chapter-sep">✦</div>
-
-    <!-- ══════════════════ CHAPTER V ══════════════════ -->
-    <section class="chapter" id="ch5">
-      <div class="chapter-header">
-        <span class="chapter-num">Chapter V</span>
-        <div class="chapter-title-wrap">
-          <h2 class="chapter-title-en">The Broken Soul</h2>
-          <h2 class="chapter-title-th">จิตวิญญาณที่แตกสลาย</h2>
-        </div>
-      </div>
-      <div class="chapter-body">
-
-        <div class="lang-en">
-          <p>Vorn, Jen, and Anuchit had to join forces to fight Veranth amidst the crumbling museum. His magic was intense, striking from every direction — fire could erupt from the floor, walls, or even the air at any moment.</p>
-          <p>Jen used illusions and magical shields to clear a path. Vorn searched for openings to attack from a distance. Anuchit was the only one who kept walking forward, straight through the flames.</p>
-          <p>Eventually, the three managed to reach Veranth. Vorn pinned the mage to the ground, weapon poised to deliver a killing blow — but Anuchit raised his hand to stop him. In Veranth's eyes, he saw not malice but emptiness: the look of someone who had lost their reason to live long ago.</p>
-          <p>Anuchit believed that to kill someone who lacked even the will to live would trap that soul in suffering forever. Vorn disagreed. And in the moment the three were arguing, Veranth seized the chance to counterattack.</p>
-          <p>A massive explosion of fire erupted from his body. Vorn and Jen were thrown back by the blast, too injured to fight on. Inside the collapsing hall, only Anuchit and Veranth remained.</p>
-          <p>Facing each other in a sea of fire, the final battle began. But as they fought, Veranth began to understand something. Anuchit, too, was someone who sensed things the world didn't understand.</p>
-          <p>The difference was this: Veranth had chosen to wait for death to find his answers — while Anuchit had chosen to live to find them, using every breath, every wound, and every day still given to him to keep moving forward.</p>
-          <p>For the first time in years, Veranth began to hesitate about his own death. Finally, the flames around him slowly died out. He chose to keep living.</p>
-        </div>
-
-        <div class="lang-th">
-          <p>Vorn, Jen และ Anuchit ต้องร่วมมือกันต่อสู้กับ Veranth ท่ามกลางพิพิธภัณฑ์ที่กำลังพังทลาย พลังเวทของ Veranth รุนแรงและโจมตีได้จากทุกทิศทาง ไฟสามารถปะทุขึ้นจากพื้น กำแพง หรือแม้แต่อากาศรอบตัวได้ทุกเมื่อ</p>
-          <p>Jen ใช้เวทภาพลวงตาและเกราะเวทเพื่อเปิดทาง Vorn คอยหาจังหวะโจมตีจากระยะไกล ส่วน Anuchit คือคนเดียวที่ยังคงเดินฝ่าเปลวเพลิงเข้าไปข้างหน้า</p>
-          <p>ท้ายที่สุด ทั้งสามก็สามารถเข้าถึงตัว Veranth ได้สำเร็จ Vorn กดจอมเวทย์ลงกับพื้น พร้อมปลายอาวุธที่สามารถปลิดชีวิตได้ทุกเมื่อ แต่ Anuchit กลับยกมือห้าม เขามองเห็นในดวงตาของ Veranth ไม่ใช่ความอาฆาต แต่เป็น "ความว่างเปล่า" สายตาของคนที่สูญเสียความหมายของการมีชีวิตไปนานแล้ว</p>
-          <p>Anuchit เชื่อว่า หากสังหารผู้ที่ไร้แม้แต่เจตจำนงจะมีชีวิต วิญญาณของคนผู้นั้นอาจถูกกักขังอยู่กับความทุกข์ตลอดไป Vorn ไม่เห็นด้วย และในจังหวะที่ทั้งสามกำลังถกเถียงกัน Veranth ก็ฉวยโอกาสสวนกลับทันที</p>
-          <p>เปลวเพลิงมหาศาลระเบิดออกจากร่างของเขา Vorn และ Jen ถูกแรงระเบิดซัดกระเด็น บาดเจ็บจนไม่สามารถต่อสู้ต่อได้ ภายในโถงที่กำลังพังทลาย จึงเหลือเพียง Anuchit และ Veranth</p>
-          <p>ทั้งสองเผชิญหน้ากันท่ามกลางทะเลเพลิง การต่อสู้ครั้งสุดท้ายจึงเริ่มต้นขึ้น แต่ยิ่งต่อสู้ Veranth ก็ยิ่งเข้าใจบางอย่าง — Anuchit เองก็เป็นคนที่สัมผัสได้ถึงบางสิ่งที่โลกทั่วไปไม่เข้าใจเช่นเดียวกัน</p>
-          <p>แต่สิ่งที่แตกต่างกันคือ Veranth เลือกเฝ้ารอความตายเพื่อค้นหาคำตอบ ขณะที่ Anuchit กลับเลือกใช้ชีวิตเพื่อตามหามัน ใช้ทุกลมหายใจ ทุกบาดแผล และทุกวันที่ยังมีอยู่ เพื่อเดินหน้าต่อไป</p>
-          <p>เป็นครั้งแรกในรอบหลายปี Veranth เริ่มลังเลต่อความตายของตนเอง และในที่สุด เปลวเพลิงรอบตัวก็ค่อย ๆ ดับลง เขาเลือกที่จะมีชีวิตอยู่ต่อ</p>
-        </div>
-
-      </div>
-    </section>
-
-    <div class="chapter-sep">✦</div>
-
-    <!-- ══════════════════ CHAPTER VI ══════════════════ -->
-    <section class="chapter" id="ch6">
-      <div class="chapter-header">
-        <span class="chapter-num">Chapter VI</span>
-        <div class="chapter-title-wrap">
-          <h2 class="chapter-title-en">Toward Borderland</h2>
-          <h2 class="chapter-title-th">มุ่งสู่ Borderland</h2>
-        </div>
-      </div>
-      <div class="chapter-body">
-
-        <div class="lang-en">
-          <p>After everything that happened, the museum was surrounded by troops from across the city. Shouts and footsteps echoed over the crumbling ruins while flames continued to lick at stone pillars and artifact displays.</p>
-          <p>Aython, having just regained consciousness, took only a moment to assess the situation. He quickly led everyone to the museum's basement, then opened the entrance to a secret tunnel hidden behind an old stone wall.</p>
-          <p>These tunnels weren't ancient myths — they were knowledge passed down through noble families since the old days. In an era where a city could be besieged at any moment, the manors, museums, and key buildings of the ruling class were always built with escape routes. As an heir of House Aurelius, Aython had grown up with this knowledge since childhood.</p>
-          <p>The four escaped through the underground tunnels while the troops above continued to blockade the area, completely unaware that their targets had already slipped away. The tunnel stretched all the way to the coast outside the city.</p>
-          <p>Once everyone successfully made it outside, they began preparing a boat for immediate departure. But during the process, they discovered that Veranth had followed them out. No one knew when he had started following. The mage simply stood silently not far away, as if even he wasn't sure what to do next.</p>
-          <p>Vorn didn't trust him at all. To Vorn, someone who had nearly killed them all shouldn't be left to wander without any kind of guarantee. On the contrary, Anuchit believed Veranth deserved another chance — he saw in the mage not just a danger, but a person who had been lost in his own suffering for far too long.</p>
-          <p>Jen didn't take a clear stance. Even though he still didn't fully trust Veranth, he didn't oppose the group's decision. Meanwhile, Aython didn't care much about trust — to him, having a powerful mage along for the journey was far more useful than letting the man wander off aimlessly.</p>
-          <p>In the end, no one drove Veranth away. And Veranth himself simply followed them onto the boat in silence.</p>
-          <p>That night, the small junk boat left the coast with five travelers:</p>
-
-          <ul class="roster-list">
-            <li><strong>Vorn</strong> — who still couldn't let go of the past.</li>
-            <li><strong>Jen</strong> — who hid his kindness beneath lies.</li>
-            <li><strong>Anuchit</strong> — who was still searching for the meaning of life.</li>
-            <li><strong>Veranth</strong> — who was beginning to open his heart to living once more.</li>
-            <li><strong>Aython</strong> — who was still trying to prove he could change the world, even without a single gold coin.</li>
-          </ul>
-
-          <p>No one knew where the destination lay. But everyone was journeying toward the same place — the land called <strong>Borderland</strong>.</p>
-        </div>
-
-        <div class="lang-th">
-          <p>หลังเหตุการณ์ทั้งหมด พิพิธภัณฑ์ถูกกองทหารทั้งเมืองปิดล้อม เสียงตะโกนและฝีเท้าดังสะท้อนอยู่เหนือซากอาคารที่กำลังพังทลาย ขณะที่เปลวไฟยังคงลุกไหม้อยู่ตามเสาหินและชั้นจัดแสดงโบราณวัตถุ</p>
-          <p>Aython ซึ่งเพิ่งฟื้นคืนสติขึ้นมา ใช้เวลาเพียงไม่นานในการประเมินสถานการณ์ เขารีบนำทุกคนลงไปยังชั้นใต้ดินของพิพิธภัณฑ์ ก่อนเปิดทางเข้าสู่อุโมงค์ลับที่ซ่อนอยู่หลังผนังหินเก่า</p>
-          <p>อุโมงค์เหล่านี้ไม่ใช่ตำนานโบราณ แต่เป็นสิ่งที่ชนชั้นสูงหลายตระกูลเรียนรู้มาตั้งแต่อดีต ในยุคที่เมืองสามารถถูกปิดล้อมได้ทุกเมื่อ คฤหาสน์ พิพิธภัณฑ์ และอาคารสำคัญของชนชั้นปกครองมักถูกสร้างทางหลบหนีเอาไว้เสมอ และในฐานะทายาทแห่ง House Aurelius Aython เติบโตมากับความรู้เหล่านี้ตั้งแต่วัยเด็ก</p>
-          <p>ทั้งสี่หลบหนีผ่านอุโมงค์ใต้ดิน ขณะที่กองทหารด้านบนยังคงปิดล้อมพื้นที่โดยไม่รู้เลยว่าเป้าหมายได้หลบหนีออกมาแล้ว อุโมงค์ทอดยาวออกไปจนถึงชายฝั่งนอกเมือง</p>
-          <p>เมื่อทุกคนออกมาถึงด้านนอกได้สำเร็จ พวกเขาจึงเริ่มเตรียมเรือเพื่อออกเดินทางทันที แต่ระหว่างนั้นเอง พวกเขากลับพบว่า Veranth เดินตามออกมาด้วย ไม่มีใครรู้ว่าเขาเริ่มเดินตามมาตั้งแต่เมื่อไร จอมเวทย์เพียงยืนเงียบอยู่ไม่ไกล ราวกับแม้แต่ตัวเขาเองก็ยังไม่แน่ใจว่าควรทำอะไรต่อไป</p>
-          <p>Vorn ไม่ไว้วางใจเขาเลย สำหรับ Vorn คนที่เกือบสังหารพวกตนทั้งหมดไม่ควรถูกปล่อยไว้โดยไม่มีหลักประกันใด ๆ ตรงกันข้าม Anuchit กลับเชื่อว่า Veranth ยังควรได้รับโอกาสอีกครั้ง เขามองเห็นในตัวจอมเวทย์ ไม่ใช่เพียงอันตราย แต่คือคนผู้หนึ่งที่กำลังหลงทางอยู่กับความทุกข์ของตัวเองมานานเกินไป</p>
-          <p>ส่วน Jen ไม่ได้แสดงท่าทีชัดเจนนัก แม้ลึก ๆ เขาจะยังไม่เชื่อใจ Veranth แต่ก็ไม่ได้คัดค้านการตัดสินใจของกลุ่ม ขณะที่ Aython ไม่ได้ใส่ใจเรื่องความไว้ใจมากเท่าคนอื่น สำหรับเขา การมีจอมเวทย์ทรงพลังร่วมเดินทางย่อมมีประโยชน์มากกว่าการปล่อยให้อีกฝ่ายหายไปโดยไร้จุดหมาย</p>
-          <p>ท้ายที่สุด ไม่มีใครขับไล่ Veranth ออกไป และ Veranth เองก็เพียงเดินตามพวกเขาขึ้นเรืออย่างเงียบงัน</p>
-          <p>ในคืนนั้น เรือสำเภาลำเล็กจึงออกจากชายฝั่งพร้อมผู้เดินทางทั้งห้าคน</p>
-
-          <ul class="roster-list-th">
-            <li><strong>Vorn</strong> — ผู้ยังไม่สามารถปล่อยวางอดีต</li>
-            <li><strong>Jen</strong> — ผู้ซ่อนความเมตตาไว้ใต้คำโกหก</li>
-            <li><strong>Anuchit</strong> — ผู้ยังคงค้นหาความหมายของชีวิต</li>
-            <li><strong>Veranth</strong> — ผู้เริ่มเปิดใจต่อการมีชีวิตอยู่อีกครั้ง</li>
-            <li><strong>Aython</strong> — ผู้ยังคงพยายามพิสูจน์ว่าเขาสามารถเปลี่ยนโลกได้ แม้ไม่มีทองสักเหรียญ</li>
-          </ul>
-
-          <p>ไม่มีใครรู้ว่าปลายทางอยู่ที่ใด แต่ทุกคนต่างกำลังออกเดินทางไปสู่สถานที่เดียวกัน — ดินแดนที่ชื่อว่า <strong>Borderland</strong></p>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- closing -->
-    <div class="story-closing">
-      <div class="closing-rule"></div>
-      <span class="closing-glyph">✦ ✦ ✦</span>
-      <p class="closing-text">
-        <span class="lang-en">The land of Borderland awaits — and the fate of the five has only just begun.</span>
-        <span class="lang-th">ดินแดน Borderland รอคอยพวกเขาอยู่ — และชะตากรรมของทั้งห้าเพิ่งจะเริ่มต้น</span>
-      </p>
     </div>
+  </div>
+</div>
 
-  </div><!-- .chronicle -->
-
-  </div><!-- .story-layout -->
-</div><!-- .page -->
-
-<script src="shared.js"></script>
 <script>
-  // ── Language toggle ──
-  function setLang(lang) {
+  // ─── 1. Particle title reveal ───
+  (function(){
+    const el = document.getElementById('hero-title');
+    if (!el) return;
+    const txt = el.textContent;
+    el.innerHTML = [...txt].map((ch, i) => {
+      if (ch === ' ') return '<span class="lt sp" style="animation-delay:'+(0.4 + i*0.045).toFixed(2)+'s"> </span>';
+      return '<span class="lt" style="animation-delay:'+(0.4 + i*0.045).toFixed(2)+'s">'+ch+'</span>';
+    }).join('');
+  })();
+
+  // ─── 2. Language toggle ───
+  function setLang(lang){
     const body = document.body;
     const btnEn = document.getElementById('btn-en');
     const btnTh = document.getElementById('btn-th');
-    if (lang === 'th') {
+    if (lang === 'th'){
       body.classList.add('th-active');
       btnTh.classList.add('active');
       btnEn.classList.remove('active');
@@ -846,45 +1774,207 @@
       btnTh.classList.remove('active');
       document.documentElement.lang = 'en';
     }
-    localStorage.setItem('story-lang', lang);
+    try { localStorage.setItem('story-lang', lang); } catch(e) {}
   }
-  const saved = localStorage.getItem('story-lang');
-  if (saved === 'th') setLang('th');
+  try {
+    const saved = localStorage.getItem('story-lang');
+    if (saved === 'th') setLang('th');
+  } catch(e){}
 
-  // ── Scroll reveal for chapters ──
-  const chapters = document.querySelectorAll('.chapter');
-  const revealIO = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (e.isIntersecting) { e.target.classList.add('in'); revealIO.unobserve(e.target); }
+  // ─── 3. Scroll reveal for chapters ───
+  (function(){
+    const chapters = document.querySelectorAll('.chapter');
+    if (!('IntersectionObserver' in window)){
+      chapters.forEach(c => c.classList.add('in'));
+    } else {
+      const io = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          if (e.isIntersecting){
+            e.target.classList.add('in');
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.06, rootMargin: '0px 0px -6% 0px' });
+      chapters.forEach(c => io.observe(c));
+    }
+  })();
+
+  // ─── 4. Active nav highlight + shader wallpaper tint shift ───
+  (function(){
+    const navLinks = document.querySelectorAll('.side-nav a[data-target]');
+    const sectionIds = ['prologue','ch1','ch2','ch3','ch4','ch5','ch6'];
+    const shader = document.getElementById('shader');
+
+    // accent + tint mapping
+    const tints = {
+      prologue: ['var(--c-prologue)', 'var(--gold)'],
+      ch1:      ['var(--c-ch1)',      'var(--gold-bright)'],
+      ch2:      ['var(--c-ch2)',      'var(--c-prologue)'],
+      ch3:      ['var(--c-ch3)',      'var(--c-cleric, var(--c-ch3))'],
+      ch4:      ['var(--c-ch4)',      'var(--c-ch5)'],
+      ch5:      ['var(--c-ch5)',      'var(--c-ch4)'],
+      ch6:      ['var(--c-ch6)',      'var(--gold-bright)']
+    };
+
+    function setActive(id){
+      navLinks.forEach(a => a.classList.toggle('active', a.dataset.target === id));
+      if (shader && tints[id]){
+        shader.style.setProperty('--accent', tints[id][0]);
+        shader.style.setProperty('--accent2', tints[id][1]);
+      }
+    }
+    setActive('prologue');
+
+    if (!('IntersectionObserver' in window)) return;
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) setActive(e.target.id); });
+    }, { rootMargin: '-15% 0px -55% 0px', threshold: 0 });
+    sectionIds.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) io.observe(el);
     });
-  }, { threshold: 0.06 });
-  chapters.forEach(c => revealIO.observe(c));
+  })();
 
-  // ── Active nav highlight on scroll ──
-  const navLinks = document.querySelectorAll('.side-nav a[data-target]');
-  const sectionIds = ['prologue', 'ch1', 'ch2', 'ch3', 'ch4', 'ch5', 'ch6'];
+  // ─── 5. Shooting stars — occasional ───
+  (function(){
+    if (matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+    const cosmos = document.querySelector('.cosmos');
+    if (!cosmos) return;
+    function spawn(){
+      const s = document.createElement('div');
+      s.className = 'shooting-star';
+      const top = Math.random() * 60;
+      const left = 30 + Math.random() * 60;
+      s.style.top = top + '%';
+      s.style.left = left + '%';
+      s.style.animation = 'shoot 1.6s linear forwards';
+      cosmos.appendChild(s);
+      setTimeout(() => s.remove(), 1800);
+      // schedule next one between 7-22 seconds
+      setTimeout(spawn, 7000 + Math.random() * 15000);
+    }
+    // keyframes are defined CSS-side
+    setTimeout(spawn, 4500);
+  })();
 
-  function setActiveNav(id) {
-    navLinks.forEach(a => {
-      a.classList.toggle('active', a.dataset.target === id);
-    });
-  }
+  // ─── 6. Reading progress in nav (subtle progress underlay) ───
+  (function(){
+    // Could add a progress bar later — left as a hook
+  })();
+  // ─── 7. COSMIC INTRO — scroll-driven scrub through layers ───
+  (function(){
+    if (matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+    const root = document.getElementById('cosmic-intro');
+    if (!root) return;
+    const layers = root.querySelectorAll('.ci-layer');
+    const dots   = root.querySelectorAll('.ci-dots .dot');
+    const captionEl = document.getElementById('ci-caption');
+    const captionTop = captionEl.querySelector('.top');
+    const captionSub = captionEl.querySelector('.sub');
+    const progressEl = document.getElementById('ci-progress');
 
-  // Use IntersectionObserver with a generous rootMargin so the active
-  // state switches when the chapter header crosses the top ~30% of the viewport
-  const activeIO = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (e.isIntersecting) setActiveNav(e.target.id);
-    });
-  }, { rootMargin: '-10% 0px -60% 0px', threshold: 0 });
+    // 6 stages — each defines: which layer is active, its zoom transform per progress (0..1 within stage), caption
+    const stages = [
+      { key:'galaxy',        cap:'— In the beginning, only the stars knew their names —', sub:'A galaxy turns slowly in the dark.' },
+      { key:'constel',       cap:'— A sigil drawn in light —',                              sub:'Six points and a circle: the mark of the Veiled Watch.' },
+      { key:'continent',     cap:'— The land called Borderland —',                          sub:'A continent. One city pulses red on its breast.' },
+      { key:'city',          cap:'— A city of stone and candle-light —',                   sub:'One window burns brighter than the rest.' },
+      { key:'tavern-window', cap:'— The Wine-Glass Inn, by the third bell —',              sub:'Glass and lead between us and the warmth.' },
+      { key:'interior',      cap:'— Folio I · The Pact —',                                  sub:'Two strangers shake hands. The chronicle begins.' },
+      { key:'overlook',      cap:'— Folio II · Three on the Ridge —',                      sub:'A soldier joins them. The road grows longer.' },
+      { key:'temple',        cap:'— Folio III · The Healing Lie —',                        sub:'A seaside chapel built on falsehoods, healing real wounds.' },
+      { key:'museum',        cap:'— Folio IV · Before the First Flame —',                  sub:'A hall of statues. A man watches from the balcony.' },
+      { key:'battle',        cap:'— Folio V · In the Sea of Fire —',                      sub:'Two open palms across a wall of flame. No mercy. No retreat.' },
+      { key:'beach',         cap:'— Folio VI · Five on the Shore —',                      sub:'At sunset, the road becomes a sea. They sail toward Borderland.' }
+    ];
 
-  sectionIds.forEach(id => {
-    const el = document.getElementById(id);
-    if (el) activeIO.observe(el);
-  });
+    // Map each stage to its DOM
+    const layerByKey = {};
+    layers.forEach(l => { layerByKey[l.dataset.key] = l });
 
-  // Set first item active on load
-  setActiveNav('prologue');
+    let lastStage = -1;
+
+    function update(){
+      const r = root.getBoundingClientRect();
+      const total = root.offsetHeight - window.innerHeight;
+      const raw = Math.min(1, Math.max(0, -r.top / total));
+      const p = raw * stages.length; // 0..6
+      const idx = Math.min(stages.length - 1, Math.floor(p));
+      const local = p - idx; // 0..1 within current stage
+
+      stages.forEach((s, i) => {
+        const layer = layerByKey[s.key];
+        if (!layer) return;
+        let op = 0;
+        if (i === idx){
+          op = local < 0.2 ? local / 0.2 : local > 0.8 ? (1 - local) / 0.2 : 1;
+        }
+        layer.style.setProperty('--op', op.toFixed(3));
+        layer.style.opacity = op.toFixed(3);
+
+        let scale;
+        if (i === idx)         scale = 1 + local * 0.6;
+        else if (i === idx-1)  scale = 1.6 + 0.4;
+        else if (i === idx+1)  scale = 0.7 + local * 0.3;
+        else                   scale = (i < idx) ? 2.0 : 0.6;
+
+        // image stages span the viewport — apply scale to inner wrapper
+        const isImageStage = ['interior','overlook','temple','museum','battle','beach'].includes(s.key);
+        if (isImageStage){
+          const wrap = layer.firstElementChild;
+          if (wrap) wrap.style.transform = `scale(${scale.toFixed(3)})`;
+        } else {
+          layer.style.transform = `translate(-50%, -50%) scale(${scale.toFixed(3)})`;
+        }
+      });
+
+      // dot indicator
+      dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+
+      // caption
+      if (idx !== lastStage){
+        const s = stages[idx];
+        captionEl.classList.remove('show');
+        setTimeout(() => {
+          // text-particle effect for battle stage: wrap each letter
+          if (s.key === 'battle'){
+            captionEl.classList.add('battle');
+            captionTop.innerHTML = [...s.cap].map((ch, i) => {
+              if (ch === ' ') return '<span class="lt sp" style="--del:'+(i*0.04).toFixed(2)+'s"> </span>';
+              return '<span class="lt" style="--del:'+(i*0.04).toFixed(2)+'s">'+ch+'</span>';
+            }).join('');
+            captionSub.innerHTML = [...s.sub].map((ch, i) => {
+              if (ch === ' ') return '<span class="lt sp" style="--del:'+((i+30)*0.03).toFixed(2)+'s"> </span>';
+              return '<span class="lt" style="--del:'+((i+30)*0.03).toFixed(2)+'s">'+ch+'</span>';
+            }).join('');
+          } else {
+            captionEl.classList.remove('battle');
+            captionTop.textContent = s.cap;
+            captionSub.textContent = s.sub;
+          }
+          captionEl.classList.add('show');
+        }, 200);
+        lastStage = idx;
+      }
+
+      // hide scroll hint after the user has scrolled at all
+      if (raw > 0.02) progressEl.classList.add('fade');
+      else progressEl.classList.remove('fade');
+
+      // trigger constellation drawing when constel layer is active
+      if (idx === 1) layerByKey['constel'].classList.add('active');
+    }
+
+    let raf;
+    function onScroll(){
+      if (raf) return;
+      raf = requestAnimationFrame(() => { update(); raf = null; });
+    }
+    update();
+    window.addEventListener('scroll', onScroll, { passive:true });
+    window.addEventListener('resize', onScroll);
+  })();
 </script>
+
 </body>
 </html>

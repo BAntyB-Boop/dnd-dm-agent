@@ -52,9 +52,10 @@ body::after{
   100%{opacity:0.7}
 }
 
-h1,h2,h3,h4{color:var(--ink)}
+.page{max-width:1240px;margin:0 auto;padding:80px 32px 80px;position:relative;z-index:5;overflow:visible}
 
-.page{max-width:1240px;margin:0 auto;padding:80px 32px 80px;position:relative;z-index:5}
+/* prevent any element from creating horizontal scroll */
+.mandala, .sec, .story-card, .end-block, .colophon{max-width:100%;overflow-x:clip}
 
 /* ============================================================
    AMBIENT — drifting motes + lotus petals
@@ -91,11 +92,25 @@ h1,h2,h3,h4{color:var(--ink)}
 .mandala{
   position:relative;
   display:grid;
-  grid-template-columns:1fr 1.1fr 1fr;
+  grid-template-columns:0.9fr 1.3fr 0.9fr;
   align-items:center;
-  gap:32px;
-  min-height:780px;
+  gap:40px;
+  min-height:760px;
   margin-bottom:64px;
+}
+
+/* tablet / narrow desktop — collapse the 3-col mandala BEFORE it gets cramped */
+@media (max-width:1180px){
+  .mandala{
+    grid-template-columns:1fr 1fr;
+    gap:32px;
+    min-height:auto;
+  }
+  .mandala::before,.mandala-svg,.mandala-svg-inner,.ray-set{
+    width:520px;height:520px;left:50%;
+  }
+  .mandala .center{grid-column:1 / -1;order:1;margin-bottom:8px}
+  .mandala .satellite{order:2}
 }
 /* central glow */
 .mandala::before{
@@ -166,8 +181,9 @@ h1,h2,h3,h4{color:var(--ink)}
 /* PORTRAIT — with halo rings */
 .portrait-wrap{
   position:relative;
-  width:min(440px,92%);
+  width:min(380px,100%);
   display:flex;justify-content:center;align-items:center;
+  margin:0 auto;
   opacity:0;
   animation:portrait-bloom 1.4s cubic-bezier(.2,.7,.2,1) 0.4s forwards;
 }
@@ -178,12 +194,13 @@ h1,h2,h3,h4{color:var(--ink)}
 
 /* halo behind head — large golden ring with delicate rotation */
 .halo-ring{
-  position:absolute;top:-50px;left:50%;transform:translateX(-50%);
-  width:280px;height:280px;
+  position:absolute;top:-40px;left:50%;transform:translateX(-50%);
+  width:240px;height:240px;
   z-index:0;
   color:var(--halo);
   animation:halo-rotate 60s linear infinite;
   filter:drop-shadow(0 0 14px rgba(255,214,133,0.6)) drop-shadow(0 0 30px rgba(255,214,133,0.3));
+  pointer-events:none;
 }
 @keyframes halo-rotate{
   0%  {transform:translateX(-50%) rotate(0deg)}
@@ -276,8 +293,8 @@ h1,h2,h3,h4{color:var(--ink)}
 
 .name-en{
   font-family:"Cinzel",serif;font-weight:600;
-  font-size:clamp(36px,4.6vw,68px);
-  letter-spacing:0.18em;line-height:1;color:var(--ink);
+  font-size:clamp(32px,4vw,56px);
+  letter-spacing:0.16em;line-height:1.05;color:var(--ink);
   margin:0;
   text-shadow:0 0 40px rgba(255,214,133,0.15);
 }
@@ -549,12 +566,11 @@ h1,h2,h3,h4{color:var(--ink)}
 }
 
 /* ============ RESPONSIVE ============ */
-@media (max-width:980px){
+@media (max-width:760px){
   .mandala{grid-template-columns:1fr;gap:24px;min-height:auto}
   .mandala::before,.mandala-svg,.mandala-svg-inner,.ray-set{display:none}
+  .mandala .center, .mandala .satellite{grid-column:1}
   .mandala .satellite{order:3}
-  .mandala .satellite:nth-of-type(3){order:2}
-  .mandala .center{order:1}
   .expr-wheel{grid-template-columns:repeat(2,1fr)}
   .scores{grid-template-columns:repeat(3,1fr)}
   .combat-strip{grid-template-columns:repeat(3,1fr);gap:14px}
@@ -562,15 +578,19 @@ h1,h2,h3,h4{color:var(--ink)}
   .eq-medal-row{grid-template-columns:repeat(2,1fr)}
   .story-grid{grid-template-columns:1fr;gap:24px}
   .story-card{padding:24px 22px}
-  .halo-ring{width:220px;height:220px;top:-38px}
+  .halo-ring{width:200px;height:200px;top:-28px}
+  .name-en{letter-spacing:0.1em}
+  .page{padding:90px 18px 64px}
+  .badge-top{font-size:0.6rem;letter-spacing:0.24em}
+  .badge-top::before,.badge-top::after{width:18px;margin:0 8px}
 }
 @media (max-width:520px){
   .scores{grid-template-columns:repeat(2,1fr)}
   .eq-medal-row{grid-template-columns:1fr}
-  .name-en{font-size:32px}
-  .page{padding:64px 18px 48px}
-  .halo-ring{width:180px;height:180px;top:-28px}
+  .name-en{font-size:30px}
+  .page{padding:90px 14px 48px}
   .third-eye{width:38px;height:38px;top:18px}
+  .expr-wheel{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -660,7 +680,7 @@ h1,h2,h3,h4{color:var(--ink)}
           <div class="k">Sex</div>      <div class="v">Male</div>
           <div class="k">Height</div>   <div class="v">5'9" · 175 cm</div>
           <div class="k">Weight</div>   <div class="v">155 lbs · 70 kg</div>
-          <div class="k">Alignment</k>  <div class="v">Neutral Good</div>
+          <div class="k">Alignment</div>  <div class="v">Neutral Good</div>
         </div>
       </div>
 
@@ -767,6 +787,9 @@ h1,h2,h3,h4{color:var(--ink)}
     </div>
 
   </div>
+
+  </div>
+  <!-- /.mandala -->
 
   <!-- ============ EXPRESSIONS WHEEL ============ -->
   <section class="sec">
@@ -1106,7 +1129,6 @@ h1,h2,h3,h4{color:var(--ink)}
     targets.forEach(t => io.observe(t));
   })();
 </script>
-<script src="shared.js"></script>
 
 </body>
 </html>

@@ -1,876 +1,835 @@
-<!DOCTYPE html><html lang="en"><head>
-
-
-
-
-
-
-
-
-<meta charset="utf-8">
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
 <title>The Veiled Codex — Roster of Folios</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="stylesheet" href="shared.css">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&display=swap" rel="stylesheet" />
 <style>
-  :root {
-    --bg-deep:    #07070a;
-    --bg-paper:   #0e0e13;
-    --bg-card:    #15151c;
-    --bg-card-2:  #1c1c25;
-    --line:       #2a2a35;
-    --line-soft:  #1d1d25;
-    --ink:        #e8e2cf;
-    --ink-soft:   #c9c2ad;
-    --ink-mute:   #7a7461;
-    --ink-faint:  #4a4636;
-    --gold:       #c9a45c;
-    --gold-dim:   #8a6f3a;
-    --gold-deep:  #5a4622;
-    --blood:      #b01a1a;
-  }
-  html, body {
-    background: var(--bg-deep);
-    color: var(--ink);
-  }
-  body {
-    min-height: 100vh;
-    background:
-      radial-gradient(1200px 800px at 50% -10%, #14141d 0%, transparent 60%),
-      radial-gradient(900px 600px at 50% 110%, #110b0b 0%, transparent 65%),
-      var(--bg-deep);
-  }
+:root{
+  --bg-deep:#07070a;
+  --bg-paper:#0e0e13;
+  --bg-card:#15151c;
+  --bg-card-2:#1c1c25;
+  --line:#2a2a35;
+  --line-soft:#1d1d25;
+  --ink:#e8e2cf;
+  --ink-soft:#c9c2ad;
+  --ink-mute:#7a7461;
+  --ink-faint:#4a4636;
+  --gold:#c9a45c;
+  --gold-dim:#8a6f3a;
+  --gold-deep:#5a4622;
+  --blood:#b01a1a;
+  /* per-class accents */
+  --c-paladin: #d68a8a;
+  --c-bard:    #d6a360;
+  --c-sorcerer:#ff7a3a;
+  --c-monk:    #ffd685;
+  --c-ranger:  #ff5a30;
+  --c-cleric:  #5fa494;
+}
+html,body{background:var(--bg-deep);color:var(--ink);overflow-x:hidden}
+body{
+  min-height:100vh;
+  background:
+    radial-gradient(1200px 800px at 50% -10%, #14141d 0%, transparent 60%),
+    radial-gradient(900px 600px at 50% 110%, #110b0b 0%, transparent 65%),
+    var(--bg-deep);
+}
+/* ============ AMBIENT — ROAMING DUST / STARS ============ */
+.atmos{position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden}
+.mote{
+  position:absolute;bottom:-12px;width:2.5px;height:2.5px;border-radius:50%;
+  background:radial-gradient(circle, #fff5d0, var(--gold) 50%, transparent 80%);
+  box-shadow:0 0 6px rgba(201,164,92,0.5);
+  animation:mote-rise linear infinite;
+  opacity:0;
+}
+@keyframes mote-rise{
+  0%   {transform:translate(0,0) scale(0.6);opacity:0}
+  10%  {opacity:0.8}
+  100% {transform:translate(var(--dx,40px),-110vh) scale(0.2);opacity:0}
+}
+/* shooting stars — occasional */
+.starlight{
+  position:absolute;width:1px;height:1px;background:white;border-radius:50%;
+  box-shadow:0 0 8px white;
+}
+@keyframes shoot{
+  0%   {opacity:0;transform:translate(0,0)}
+  4%   {opacity:1}
+  100% {opacity:0;transform:translate(-280px,210px)}
+}
 
-  /* ---------- header ---------- */
-  header.shelf-head {
-    text-align: center;
-    margin-bottom: 56px;
-    position: relative;
-  }
-  .seal-rule {
-    display: flex; align-items: center; justify-content: center;
-    gap: 14px;
-    margin-bottom: 22px;
-  }
-  .seal-rule .line {
-    flex: 1 1 60px;
-    max-width: 180px;
-    height: 1px;
-    background: linear-gradient(to right, transparent, var(--gold-dim) 50%, transparent);
-  }
-  .seal-rule .glyph {
-    width: 30px; height: 30px;
-    color: var(--gold);
-  }
-  .smallcaps {
-    font-family: "Cinzel", serif;
-    text-transform: uppercase;
-    letter-spacing: 0.32em;
-    font-weight: 500;
-    font-size: 0.72rem;
-    color: var(--gold);
-  }
-  h1.title {
-    font-family: "Cinzel", serif;
-    font-weight: 500;
-    font-size: clamp(36px, 6vw, 84px);
-    letter-spacing: 0.18em;
-    line-height: 1;
-    margin: 6px 0 12px;
-    color: var(--ink);
-  }
-  .subtitle {
-    font-family: "Cormorant Garamond", serif;
-    font-style: italic;
-    color: var(--ink-mute);
-    font-size: clamp(1rem, 1.4vw, 1.2rem);
-    max-width: 580px;
-    margin: 0 auto;
-    line-height: 1.5;
-    padding: 0 12px;
-  }
-  .meta-row {
-    margin-top: 28px;
-    display: inline-flex;
-    flex-wrap: wrap;
-    align-items: stretch;
-    border-top: 1px solid var(--line);
-    border-bottom: 1px solid var(--line);
-    max-width: 100%;
-  }
-  .meta-cell {
-    padding: 10px clamp(12px, 2.5vw, 22px);
-    border-right: 1px solid var(--line-soft);
-  }
-  .meta-cell:last-child { border-right: none; }
-  .meta-cell .k {
-    font-family: "Cinzel", serif;
-    text-transform: uppercase;
-    letter-spacing: 0.22em;
-    font-size: 0.58rem;
-    color: var(--gold);
-  }
-  .meta-cell .v {
-    font-family: "Cinzel", serif;
-    font-size: 1rem;
-    color: var(--ink);
-    letter-spacing: 0.08em;
-    margin-top: 2px;
-  }
+/* ============ ENTER GAME BUTTON ============ */
+.enter-game-btn{
+  position:fixed;top:22px;right:28px;z-index:200;
+  display:inline-flex;align-items:center;gap:10px;
+  padding:10px 20px;background:rgba(7,7,10,0.85);
+  border:1px solid var(--gold-dim);color:var(--gold);
+  font-family:"Cinzel",serif;font-size:0.64rem;letter-spacing:0.32em;text-transform:uppercase;text-decoration:none;
+  backdrop-filter:blur(6px);
+  transition:border-color .3s, color .3s, box-shadow .3s, gap .3s;
+  overflow:hidden;
+}
+.enter-game-btn::before{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(90deg, transparent 0, rgba(201,164,92,0.2) 50%, transparent 100%);
+  transform:translateX(-100%);
+  transition:transform .8s ease;
+}
+.enter-game-btn:hover{
+  border-color:var(--gold);color:var(--ink);gap:18px;
+  box-shadow:0 0 30px rgba(201,164,92,0.25);
+}
+.enter-game-btn:hover::before{transform:translateX(100%)}
+.enter-game-btn .btn-arrow{
+  width:18px;height:1px;background:currentColor;position:relative;
+  transition:width .3s;
+}
+.enter-game-btn:hover .btn-arrow{width:26px}
+.enter-game-btn .btn-arrow::after{
+  content:"";position:absolute;right:0;top:-3px;width:6px;height:6px;
+  border-right:1px solid currentColor;border-top:1px solid currentColor;transform:rotate(45deg);
+}
 
-  /* ---------- shelf ---------- */
-  .shelf-label {
-    display: flex; align-items: center;
-    gap: 18px;
-    margin: 0 0 22px;
-  }
-  .shelf-label .num {
-    font-family: "Cinzel", serif;
-    color: var(--gold);
-    font-size: 0.72rem;
-    letter-spacing: 0.3em;
-  }
-  .shelf-label .lbl {
-    font-family: "Cinzel", serif;
-    text-transform: uppercase;
-    letter-spacing: 0.2em;
-    font-size: 1rem;
-    color: var(--ink);
-  }
-  .shelf-label .rule {
-    flex: 1; height: 1px;
-    background: linear-gradient(to right, var(--gold-dim), transparent);
-  }
-  .shelf-label .count {
-    font-family: "Cinzel", serif;
-    color: var(--ink-mute);
-    font-size: 0.68rem;
-    letter-spacing: 0.28em;
-    text-transform: uppercase;
-  }
+.page{max-width:1300px;margin:0 auto;padding:80px clamp(16px,3vw,40px) 80px;position:relative;z-index:5}
 
-  /* ---------- folio grid ---------- */
-  .folio-grid {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: clamp(16px, 2.2vw, 26px);
-    align-items: stretch;
-    grid-auto-rows: 1fr;
-  }
+/* ============ HEADER ============ */
+header.shelf-head{
+  text-align:center;margin-bottom:48px;position:relative;
+  opacity:0;animation:fade-up 1s ease-out 0.15s forwards;
+}
+@keyframes fade-up{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:translateY(0)}}
 
-  @media (max-width: 1100px) {
-    .folio-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  }
-  @media (max-width: 820px) {
-    .folio-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  }
-  @media (max-width: 520px) {
-    .folio-grid { grid-template-columns: minmax(0, 1fr); gap: 18px; }
-    .folio .pane { aspect-ratio: 3 / 4; }
-    .shelf-label { flex-wrap: wrap; row-gap: 8px; }
-    .shelf-label .rule { display: none; }
-    .meta-cell { flex: 1 1 auto; }
-  }
+.seal-rule{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:22px}
+.seal-rule .line{flex:1 1 60px;max-width:200px;height:1px;background:linear-gradient(to right,transparent,var(--gold-dim) 50%,transparent)}
+.seal-rule .glyph{width:32px;height:32px;color:var(--gold);animation:compass-spin 60s linear infinite}
+@keyframes compass-spin{to{transform:rotate(360deg)}}
 
-  /* card frame with corner diamonds */
-  .folio {
-    position: relative;
-    text-decoration: none;
-    color: inherit;
-    display: flex;
-    flex-direction: column;
-    background: linear-gradient(180deg, #14141c, #0c0c12);
-    border: 1px solid var(--line);
-    transition: transform 0.45s cubic-bezier(.2,.7,.2,1), border-color 0.4s, box-shadow 0.4s;
-    overflow: hidden;
-    cursor: pointer;
-    height: 100%;
-  }
-  .folio .pane { flex-shrink: 0; }
-  .folio .body { flex: 1; display: flex; flex-direction: column; }
-  .folio .body .blurb { flex: 1; }
-  .folio::before, .folio::after,
-  .folio > .corner-bl, .folio > .corner-br {
-    content: "";
-    position: absolute;
-    width: 10px; height: 10px;
-    border: 1px solid var(--gold-dim);
-    background: var(--bg-deep);
-    transform: rotate(45deg);
-    z-index: 4;
-    pointer-events: none;
-    transition: border-color 0.4s, background 0.4s;
-  }
-  .folio::before { top: -5px; left: -5px; }
-  .folio::after  { top: -5px; right: -5px; }
-  .folio > .corner-bl { bottom: -5px; left: -5px; }
-  .folio > .corner-br { bottom: -5px; right: -5px; }
-  .folio:hover {
-    border-color: var(--gold);
-    transform: translateY(-4px);
-    box-shadow:
-      0 30px 60px -30px rgba(0,0,0,0.9),
-      0 0 0 1px rgba(201,164,92,0.15);
-  }
-  .folio:hover::before, .folio:hover::after,
-  .folio:hover > .corner-bl, .folio:hover > .corner-br {
-    border-color: var(--gold);
-  }
+.smallcaps{font-family:"Cinzel",serif;text-transform:uppercase;letter-spacing:0.32em;font-weight:500;font-size:0.72rem;color:var(--gold)}
+h1.title{
+  font-family:"Cinzel Decorative","Cinzel",serif;font-weight:700;
+  font-size:clamp(40px,6vw,84px);letter-spacing:0.16em;line-height:1;margin:6px 0 12px;color:var(--ink);
+  background:linear-gradient(180deg,#f6efd2 0%,var(--gold) 60%,var(--gold-deep) 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;
+  text-shadow:0 0 40px rgba(201,164,92,0.12);
+}
+.subtitle{
+  font-family:"Cormorant Garamond",serif;font-style:italic;color:var(--ink-mute);
+  font-size:clamp(1rem,1.4vw,1.2rem);max-width:580px;margin:0 auto;line-height:1.5;padding:0 12px;
+}
+.meta-row{
+  margin-top:28px;display:inline-flex;flex-wrap:wrap;align-items:stretch;
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line);max-width:100%;
+}
+.meta-cell{padding:10px clamp(12px,2.5vw,22px);border-right:1px solid var(--line-soft)}
+.meta-cell:last-child{border-right:none}
+.meta-cell .k{font-family:"Cinzel",serif;text-transform:uppercase;letter-spacing:0.22em;font-size:0.58rem;color:var(--gold)}
+.meta-cell .v{font-family:"Cinzel",serif;font-size:1rem;color:var(--ink);letter-spacing:0.08em;margin-top:2px}
 
-  /* portrait pane */
-  .folio .pane {
-    position: relative;
-    aspect-ratio: 1 / 2;
-    overflow: hidden;
-    background: #000;
-  }
-  .folio .pane img {
-    position: absolute; inset: 0;
-    width: 100%; height: 100%;
-    object-fit: cover;
-    object-position: center center;
-    transition: transform 1.5s cubic-bezier(.2,.7,.2,1), filter 0.6s;
-    filter: contrast(1.05) saturate(0.85) brightness(0.92);
-  }
-  .folio:hover .pane img {
-    transform: scale(1.05);
-    filter: contrast(1.1) saturate(0.95) brightness(1);
-  }
-  .folio .pane::after {
-    content: "";
-    position: absolute; inset: 0;
-    background:
-      linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(0,0,0,0.7) 100%),
-      radial-gradient(ellipse at center 30%, transparent 50%, rgba(0,0,0,0.4) 100%);
-    pointer-events: none;
-  }
+/* ============ CHRONICLE BANNER ============ */
+.chronicle-banner{
+  margin-bottom:56px;position:relative;border:1px solid var(--gold-dim);
+  background:
+    linear-gradient(135deg, rgba(201,164,92,0.05) 0%, transparent 50%),
+    linear-gradient(315deg, rgba(176,26,26,0.06) 0%, transparent 50%),
+    var(--bg-card);
+  padding:clamp(36px,5vw,60px) clamp(24px,5vw,72px);
+  text-align:center;overflow:hidden;
+  opacity:0;animation:fade-up 1s ease-out 0.4s forwards;
+}
+.chronicle-banner::before, .chronicle-banner::after,
+.chronicle-banner .cb-corner-bl, .chronicle-banner .cb-corner-br{
+  content:"";position:absolute;width:12px;height:12px;
+  border:1px solid var(--gold-dim);background:var(--bg-deep);transform:rotate(45deg);pointer-events:none;
+}
+.chronicle-banner::before{top:-6px;left:-6px}
+.chronicle-banner::after{top:-6px;right:-6px}
+.chronicle-banner .cb-corner-bl{bottom:-6px;left:-6px}
+.chronicle-banner .cb-corner-br{bottom:-6px;right:-6px}
 
-  /* folio number top-left + status top-right */
-  .folio-num {
-    position: absolute;
-    top: 12px; left: 14px;
-    z-index: 3;
-    font-family: "Cinzel", serif;
-    color: var(--gold);
-    font-size: 0.62rem;
-    letter-spacing: 0.32em;
-    text-transform: uppercase;
-    text-shadow: 0 1px 4px #000;
-  }
-  .folio-status {
-    position: absolute;
-    top: 12px; right: 14px;
-    z-index: 3;
-    font-family: "Cinzel", serif;
-    font-size: 0.56rem;
-    letter-spacing: 0.28em;
-    text-transform: uppercase;
-    padding: 4px 9px;
-    border: 1px solid var(--gold-dim);
-    background: rgba(7,7,10,0.7);
-    color: var(--gold);
-  }
-  .folio-status.peril { border-color: #5e1a1a; color: #d68a8a; }
-  .folio-status.locked { border-color: var(--line); color: var(--ink-faint); }
+/* drifting sigils in banner bg */
+.chronicle-banner .bg-sigil{
+  position:absolute;color:var(--gold);opacity:0.04;pointer-events:none;
+  font-family:"Cinzel Decorative",serif;font-size:200px;line-height:1;
+}
+.chronicle-banner .bg-sigil.left{left:-20px;top:-30px;transform:rotate(-12deg)}
+.chronicle-banner .bg-sigil.right{right:-30px;bottom:-40px;transform:rotate(8deg)}
 
-  /* identity bar */
-  .folio .ident {
-    position: absolute;
-    bottom: 14px; left: 14px; right: 14px;
-    z-index: 3;
-  }
-  .folio .ident .race {
-    font-family: "Cinzel", serif;
-    text-transform: uppercase;
-    letter-spacing: 0.28em;
-    font-size: 0.58rem;
-    color: var(--gold);
-    margin-bottom: 4px;
-  }
-  .folio .ident .name {
-    font-family: "Cinzel", serif;
-    font-weight: 500;
-    font-size: 1.45rem;
-    color: var(--ink);
-    line-height: 1.05;
-    letter-spacing: 0.06em;
-    margin: 0;
-    text-shadow: 0 1px 6px rgba(0,0,0,0.9);
-  }
-  .folio .ident .epithet {
-    margin-top: 4px;
-    font-family: "Cormorant Garamond", serif;
-    font-style: italic;
-    color: var(--ink-soft);
-    font-size: 0.92rem;
-    line-height: 1.3;
-  }
+.chronicle-banner .cb-rule{display:flex;align-items:center;gap:16px;margin-bottom:28px}
+.chronicle-banner .cb-rule .r{flex:1;height:1px;background:linear-gradient(to right,transparent,var(--gold-dim) 40%,transparent);opacity:0.5}
+.chronicle-banner .cb-rule .g{color:var(--gold);font-size:10px;opacity:0.6;letter-spacing:0.3em;animation:twinkle 2.6s ease-in-out infinite}
+@keyframes twinkle{0%,100%{opacity:0.3}50%{opacity:0.9}}
 
-  /* lower stat block */
-  .folio .body {
-    padding: 16px 16px 14px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    flex: 1;
-  }
-  .stat-row {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    border: 1px solid var(--line);
-    background: var(--bg-deep);
-  }
-  .stat-row .c {
-    padding: 8px 4px;
-    text-align: center;
-    border-right: 1px solid var(--line-soft);
-    min-width: 0;
-    overflow: hidden;
-  }
-  .stat-row .c:last-child { border-right: none; }
-  .stat-row .c .k {
-    font-family: "Cinzel", serif;
-    text-transform: uppercase;
-    letter-spacing: 0.2em;
-    font-size: 0.5rem;
-    color: var(--gold);
-    white-space: nowrap;
-  }
-  .stat-row .c .v {
-    font-family: "Cinzel", serif;
-    font-size: 0.78rem;
-    color: var(--ink);
-    margin-top: 3px;
-    letter-spacing: 0.04em;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
+.cb-eyebrow{font-family:"Cinzel",serif;font-size:0.58rem;letter-spacing:0.38em;text-transform:uppercase;color:var(--gold-dim);display:block;margin-bottom:14px}
+.cb-title{
+  font-family:"Cinzel Decorative",serif;font-weight:400;font-size:clamp(24px,4vw,48px);
+  letter-spacing:0.08em;color:var(--ink);margin:0 0 14px;line-height:1.15;
+  background:linear-gradient(180deg, #f6efd2 0%, var(--gold) 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;
+}
+.cb-sub{
+  font-family:"Cormorant Garamond",Georgia,serif;font-style:italic;
+  font-size:clamp(1rem,1.3vw,1.18rem);color:var(--ink-mute);max-width:560px;margin:0 auto 36px;line-height:1.55;
+}
+.cb-btn{
+  display:inline-flex;align-items:center;gap:16px;text-decoration:none;color:var(--gold);
+  font-family:"Cinzel",serif;font-size:0.66rem;letter-spacing:0.32em;text-transform:uppercase;
+  padding:14px 32px;border:1px solid var(--gold-dim);background:rgba(7,7,10,0.7);backdrop-filter:blur(4px);
+  transition:border-color .3s,color .3s,gap .3s,box-shadow .3s;position:relative;overflow:hidden;
+}
+.cb-btn::before{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(90deg, transparent, rgba(201,164,92,0.18), transparent);
+  transform:translateX(-100%);transition:transform .8s ease;
+}
+.cb-btn:hover{border-color:var(--gold);color:var(--ink);gap:22px;box-shadow:0 0 32px rgba(201,164,92,0.18),inset 0 0 20px rgba(201,164,92,0.04)}
+.cb-btn:hover::before{transform:translateX(100%)}
+.cb-btn .arr{width:20px;height:1px;background:currentColor;position:relative;transition:width .3s;flex-shrink:0}
+.cb-btn:hover .arr{width:28px}
+.cb-btn .arr::after{content:"";position:absolute;right:0;top:-3px;width:7px;height:7px;border-right:1px solid currentColor;border-top:1px solid currentColor;transform:rotate(45deg)}
 
-  .blurb {
-    font-family: "Cormorant Garamond", serif;
-    font-size: 0.94rem;
-    color: var(--ink-soft);
-    line-height: 1.45;
-    font-style: italic;
-    flex: 1;
-  }
+/* ============ SHELF LABEL ============ */
+.shelf-label{
+  display:flex;align-items:center;gap:18px;margin:0 0 28px;
+  opacity:0;animation:fade-up 0.8s ease-out 0.7s forwards;
+}
+.shelf-label .num{font-family:"Cinzel",serif;color:var(--gold);font-size:0.72rem;letter-spacing:0.3em}
+.shelf-label .lbl{font-family:"Cinzel",serif;text-transform:uppercase;letter-spacing:0.2em;font-size:1rem;color:var(--ink)}
+.shelf-label .rule{flex:1;height:1px;background:linear-gradient(to right,var(--gold-dim),transparent)}
+.shelf-label .count{font-family:"Cinzel",serif;color:var(--ink-mute);font-size:0.68rem;letter-spacing:0.28em;text-transform:uppercase}
 
-  .open-row {
-    display: flex; align-items: center; justify-content: space-between;
-    padding-top: 12px;
-    border-top: 1px solid var(--line);
-  }
-  .open-row .vol {
-    font-family: "Cinzel", serif;
-    font-size: 0.58rem;
-    letter-spacing: 0.28em;
-    text-transform: uppercase;
-    color: var(--ink-mute);
-  }
-  .open-row .open {
-    font-family: "Cinzel", serif;
-    font-size: 0.66rem;
-    letter-spacing: 0.32em;
-    text-transform: uppercase;
-    color: var(--gold);
-    display: inline-flex; align-items: center; gap: 8px;
-    transition: gap 0.4s;
-  }
-  .folio:hover .open-row .open { gap: 14px; }
-  .open-row .open .arrow {
-    width: 22px; height: 1px;
-    background: var(--gold);
-    position: relative;
-  }
-  .open-row .open .arrow::after {
-    content: "";
-    position: absolute; right: 0; top: -3px;
-    width: 7px; height: 7px;
-    border-top: 1px solid var(--gold);
-    border-right: 1px solid var(--gold);
-    transform: rotate(45deg);
-  }
+/* ============ FOLIO GRID ============ */
+.folio-grid{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:clamp(20px,2.4vw,32px);align-items:stretch;
+}
+@media (max-width:1100px){.folio-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:600px){.folio-grid{grid-template-columns:1fr;gap:20px}}
 
-  /* ----- empty / placeholder folio ----- */
-  .folio.empty {
-    cursor: default;
-    background:
-      repeating-linear-gradient(
-        135deg,
-        transparent 0 14px,
-        rgba(255,255,255,0.012) 14px 15px
-      ),
-      linear-gradient(180deg, #0e0e14, #0a0a10);
-    border-style: dashed;
-    border-color: var(--line);
-  }
-  .folio.empty:hover {
-    transform: none;
-    border-color: var(--gold-dim);
-    box-shadow: none;
-  }
-  .folio.empty:hover::before, .folio.empty:hover::after,
-  .folio.empty:hover > .corner-bl, .folio.empty:hover > .corner-br {
-    border-color: var(--gold-dim);
-  }
-  .folio.empty .pane {
-    background: var(--bg-deep);
-    display: grid; place-items: center;
-  }
-  .folio.empty .pane::after { display: none; }
-  .empty-mark {
-    width: 56%;
-    aspect-ratio: 1;
-    border: 1px solid var(--line);
-    transform: rotate(45deg);
-    display: grid; place-items: center;
-    opacity: 0.7;
-  }
-  .empty-mark span {
-    transform: rotate(-45deg);
-    font-family: "Cinzel", serif;
-    color: var(--ink-faint);
-    letter-spacing: 0.28em;
-    font-size: 0.62rem;
-    text-transform: uppercase;
-    text-align: center;
-    line-height: 1.5;
-  }
-  .folio.empty .ident { display: none; }
-  .folio.empty .body .blurb {
-    color: var(--ink-faint);
-    text-align: center;
-  }
-  .folio.empty .open-row .open {
-    color: var(--ink-faint);
-  }
-  .folio.empty .open-row .open .arrow { background: var(--ink-faint); }
-  .folio.empty .open-row .open .arrow::after {
-    border-top-color: var(--ink-faint);
-    border-right-color: var(--ink-faint);
-  }
-  .folio.empty .stat-row .c .v { color: var(--ink-faint); }
+/* ============ FOLIO CARD ============ */
+.folio{
+  position:relative;text-decoration:none;color:inherit;
+  display:flex;flex-direction:column;height:100%;
+  background:linear-gradient(180deg, var(--bg-card), var(--bg-card-2));
+  border:1px solid var(--line);
+  overflow:hidden;cursor:pointer;isolation:isolate;
+  opacity:0;transform:translateY(20px);
+  transition:transform 0.5s cubic-bezier(.2,.7,.2,1), border-color 0.4s, box-shadow 0.4s, opacity 0.6s;
+  /* class accent variable, default gold */
+  --accent: var(--gold);
+}
+.folio.peril    {--accent:var(--c-paladin)}
+.folio.bard     {--accent:var(--c-bard)}
+.folio.ember    {--accent:var(--c-sorcerer)}
+.folio.halo     {--accent:var(--c-monk)}
+.folio.hellfire {--accent:var(--c-ranger)}
+.folio.crow     {--accent:var(--c-cleric)}
 
-  /* peril vignette for Aurora card */
-  .folio.peril .pane::before {
-    content: "";
-    position: absolute; inset: 0; z-index: 2;
-    background: radial-gradient(ellipse at 80% 90%, rgba(176,26,26,0.22), transparent 60%);
-    pointer-events: none;
-  }
+.folio.in{opacity:1;transform:translateY(0)}
+.folio:nth-child(1){transition-delay:0.05s}
+.folio:nth-child(2){transition-delay:0.15s}
+.folio:nth-child(3){transition-delay:0.25s}
+.folio:nth-child(4){transition-delay:0.35s}
+.folio:nth-child(5){transition-delay:0.45s}
+.folio:nth-child(6){transition-delay:0.55s}
 
-  /* ornament */
-  .star-orn { color: var(--gold); }
+/* corner diamonds */
+.folio::before, .folio::after,
+.folio > .corner-bl, .folio > .corner-br{
+  content:"";position:absolute;width:10px;height:10px;
+  border:1px solid var(--gold-dim);background:var(--bg-deep);transform:rotate(45deg);
+  z-index:7;pointer-events:none;
+  transition:border-color 0.4s, background 0.4s;
+}
+.folio::before{top:-5px;left:-5px}
+.folio::after {top:-5px;right:-5px}
+.folio > .corner-bl{bottom:-5px;left:-5px}
+.folio > .corner-br{bottom:-5px;right:-5px}
 
-  /* footer */
-  .colophon {
-    margin-top: 64px;
-    text-align: center;
-    font-family: "Cinzel", serif;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    font-size: 0.58rem;
-    color: var(--ink-faint);
-  }
-  .colophon .sep { color: var(--gold-dim); margin: 0 12px; }
+/* glow ring on hover — uses accent */
+.folio:hover{
+  border-color:var(--accent);
+  transform:translateY(-6px);
+  box-shadow:
+    0 36px 60px -30px rgba(0,0,0,0.9),
+    0 0 0 1px color-mix(in srgb, var(--accent) 30%, transparent),
+    0 0 50px color-mix(in srgb, var(--accent) 25%, transparent);
+}
+.folio:hover::before, .folio:hover::after,
+.folio:hover > .corner-bl, .folio:hover > .corner-br{border-color:var(--accent)}
 
-  /* ---------- chronicle banner ---------- */
-  .chronicle-banner {
-    margin-top: 0;
-    margin-bottom: 56px;
-    position: relative;
-    border: 1px solid var(--gold-dim);
-    background:
-      linear-gradient(135deg, rgba(201,164,92,0.04) 0%, transparent 50%),
-      linear-gradient(315deg, rgba(176,26,26,0.06) 0%, transparent 50%),
-      var(--bg-card);
-    padding: clamp(36px, 5vw, 60px) clamp(24px, 5vw, 72px);
-    text-align: center;
-    overflow: hidden;
-  }
-  /* corner diamonds */
-  .chronicle-banner::before,
-  .chronicle-banner::after,
-  .chronicle-banner .cb-corner-bl,
-  .chronicle-banner .cb-corner-br {
-    content: "";
-    position: absolute;
-    width: 12px; height: 12px;
-    border: 1px solid var(--gold-dim);
-    background: var(--bg-deep);
-    transform: rotate(45deg);
-    transition: border-color 0.4s;
-    pointer-events: none;
-  }
-  .chronicle-banner::before  { top: -6px;    left: -6px;    }
-  .chronicle-banner::after   { top: -6px;    right: -6px;   }
-  .chronicle-banner .cb-corner-bl { bottom: -6px; left: -6px;  }
-  .chronicle-banner .cb-corner-br { bottom: -6px; right: -6px; }
-  /* subtle horizontal rules inside banner */
-  .chronicle-banner .cb-rule {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    margin-bottom: 28px;
-  }
-  .chronicle-banner .cb-rule .r {
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(to right, transparent, var(--gold-dim) 40%, transparent);
-    opacity: 0.5;
-  }
-  .chronicle-banner .cb-rule .g {
-    color: var(--gold);
-    font-size: 10px;
-    opacity: 0.6;
-    letter-spacing: 0.3em;
-  }
-  .cb-eyebrow {
-    font-family: "Cinzel", serif;
-    font-size: 0.58rem;
-    letter-spacing: 0.38em;
-    text-transform: uppercase;
-    color: var(--gold-dim);
-    display: block;
-    margin-bottom: 14px;
-  }
-  .cb-title {
-    font-family: "Cinzel", serif;
-    font-weight: 500;
-    font-size: clamp(22px, 3.5vw, 44px);
-    letter-spacing: 0.14em;
-    color: var(--ink);
-    margin: 0 0 14px;
-    line-height: 1.15;
-  }
-  .cb-sub {
-    font-family: "Cormorant Garamond", Georgia, serif;
-    font-style: italic;
-    font-size: clamp(1rem, 1.3vw, 1.18rem);
-    color: var(--ink-mute);
-    max-width: 560px;
-    margin: 0 auto 36px;
-    line-height: 1.55;
-  }
-  .cb-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 16px;
-    text-decoration: none;
-    color: var(--gold);
-    font-family: "Cinzel", serif;
-    font-size: 0.66rem;
-    letter-spacing: 0.32em;
-    text-transform: uppercase;
-    padding: 14px 32px;
-    border: 1px solid var(--gold-dim);
-    background: rgba(7,7,10,0.7);
-    backdrop-filter: blur(4px);
-    transition: border-color 0.3s, color 0.3s, gap 0.3s, box-shadow 0.3s;
-    position: relative;
-  }
-  .cb-btn:hover {
-    border-color: var(--gold);
-    color: var(--ink);
-    gap: 22px;
-    box-shadow: 0 0 32px rgba(201,164,92,0.12), inset 0 0 20px rgba(201,164,92,0.04);
-  }
-  .cb-btn .arr {
-    width: 20px;
-    height: 1px;
-    background: currentColor;
-    position: relative;
-    transition: width 0.3s;
-    flex-shrink: 0;
-  }
-  .cb-btn .arr::after {
-    content: "";
-    position: absolute;
-    right: 0; top: -3px;
-    width: 7px; height: 7px;
-    border-right: 1px solid currentColor;
-    border-top: 1px solid currentColor;
-    transform: rotate(45deg);
-  }
-  .cb-btn:hover .arr { width: 28px; }
+/* sigil emblem — top-right of pane, per character */
+.folio .sigil{
+  position:absolute;top:14px;right:14px;z-index:4;
+  width:34px;height:34px;color:var(--accent);
+  opacity:0;transform:translateY(-4px) scale(0.85);
+  transition:opacity .5s, transform .5s, filter .5s;
+  filter:drop-shadow(0 0 0 transparent);
+}
+.folio:hover .sigil{
+  opacity:0.95;transform:translateY(0) scale(1);
+  filter:drop-shadow(0 0 10px color-mix(in srgb, var(--accent) 70%, transparent));
+}
+.folio .sigil svg{width:100%;height:100%}
 
-  /* ---------- enter-game button ---------- */
-  .enter-game-btn {
-    position: fixed;
-    top: 22px; right: 28px;
-    z-index: 200;
-    display: inline-flex; align-items: center; gap: 10px;
-    padding: 10px 20px;
-    background: rgba(7,7,10,0.85);
-    border: 1px solid var(--gold-dim);
-    color: var(--gold);
-    font-family: "Cinzel", serif;
-    font-size: 0.64rem;
-    letter-spacing: 0.32em;
-    text-transform: uppercase;
-    text-decoration: none;
-    backdrop-filter: blur(6px);
-    transition: border-color 0.3s, color 0.3s, box-shadow 0.3s;
-  }
-  .enter-game-btn:hover {
-    border-color: var(--gold);
-    color: var(--ink);
-    box-shadow: 0 0 20px rgba(201,164,92,0.18);
-  }
-  .enter-game-btn .btn-arrow {
-    width: 18px; height: 1px;
-    background: currentColor;
-    position: relative;
-    transition: width 0.3s;
-  }
-  .enter-game-btn .btn-arrow::after {
-    content: "";
-    position: absolute;
-    right: 0; top: -3px;
-    width: 6px; height: 6px;
-    border-right: 1px solid currentColor;
-    border-top: 1px solid currentColor;
-    transform: rotate(45deg);
-  }
-  .enter-game-btn:hover .btn-arrow { width: 26px; }
+/* portrait pane */
+.folio .pane{
+  position:relative;aspect-ratio:1/1.6;overflow:hidden;background:#000;flex-shrink:0;
+}
+.folio .pane img{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center center;
+  transition:transform 1.5s cubic-bezier(.2,.7,.2,1), filter 0.6s;
+  filter:contrast(1.05) saturate(0.85) brightness(0.92);
+}
+.folio:hover .pane img{transform:scale(1.06);filter:contrast(1.12) saturate(0.95) brightness(1)}
+.folio .pane::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg, rgba(0,0,0,0) 38%, rgba(0,0,0,0.78) 100%),
+             radial-gradient(ellipse at center 28%, transparent 50%, rgba(0,0,0,0.45) 100%);
+  pointer-events:none;z-index:1;
+}
+/* class-tinted overlay that fades in on hover */
+.folio .pane .accent-glow{
+  position:absolute;inset:0;z-index:2;pointer-events:none;
+  background:radial-gradient(ellipse at 70% 85%, color-mix(in srgb, var(--accent) 22%, transparent) 0%, transparent 55%);
+  opacity:0;transition:opacity .6s;
+}
+.folio:hover .pane .accent-glow{opacity:1}
+
+/* per-class animated effects layered over pane */
+.fx-layer{position:absolute;inset:0;z-index:2;pointer-events:none;overflow:hidden}
+
+/* embers (Kael Veranth sorcerer) */
+.folio.ember .fx-ember .e{
+  position:absolute;bottom:-6px;width:3px;height:3px;border-radius:50%;
+  background:radial-gradient(circle,#ffb070,var(--c-sorcerer) 50%,transparent 80%);
+  box-shadow:0 0 8px rgba(255,122,58,0.7);
+  opacity:0;animation:ember-rise 4s ease-in infinite;
+}
+.folio.ember:hover .fx-ember .e{animation-play-state:running}
+.folio.ember .fx-ember .e{animation-play-state:paused}
+.folio.ember .fx-ember .e:nth-child(1){left:18%;animation-delay:0s}
+.folio.ember .fx-ember .e:nth-child(2){left:34%;animation-delay:0.6s}
+.folio.ember .fx-ember .e:nth-child(3){left:56%;animation-delay:1.2s}
+.folio.ember .fx-ember .e:nth-child(4){left:72%;animation-delay:1.8s}
+.folio.ember .fx-ember .e:nth-child(5){left:88%;animation-delay:2.4s}
+@keyframes ember-rise{
+  0%   {opacity:0;transform:translate(0,0) scale(0.7)}
+  10%  {opacity:0.9}
+  100% {opacity:0;transform:translate(var(--dx,16px),-120%) scale(0.3)}
+}
+
+/* hellfire crosshair (Kael Vorn ranger) */
+.folio.hellfire .fx-scope{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(0.85);
+  width:60%;height:auto;aspect-ratio:1;color:var(--c-ranger);
+  opacity:0;transition:opacity .5s, transform .8s;
+}
+.folio.hellfire:hover .fx-scope{opacity:0.5;transform:translate(-50%,-50%) scale(1) rotate(360deg)}
+.folio.hellfire .fx-scope svg{width:100%;height:100%;filter:drop-shadow(0 0 8px color-mix(in srgb, var(--c-ranger) 60%, transparent))}
+
+/* halo ring (Anuchit monk aasimar) */
+.folio.halo .fx-halo{
+  position:absolute;top:14%;left:50%;transform:translateX(-50%) scale(0.7);
+  width:55%;aspect-ratio:1;
+  opacity:0;transition:opacity .6s, transform .8s;
+}
+.folio.halo:hover .fx-halo{opacity:0.65;transform:translateX(-50%) scale(1)}
+.folio.halo .fx-halo svg{width:100%;height:100%;color:var(--c-monk);
+  filter:drop-shadow(0 0 14px rgba(255,214,133,0.65)) drop-shadow(0 0 30px rgba(255,214,133,0.3));
+  animation:halo-spin 12s linear infinite;
+}
+@keyframes halo-spin{to{transform:rotate(360deg)}}
+
+/* wine droplet (Aython bard) */
+.folio.bard .fx-drip{
+  position:absolute;top:32%;left:50%;transform:translateX(-50%);
+  width:6px;height:14px;border-radius:50% 50% 50% 50% / 70% 70% 30% 30%;
+  background:linear-gradient(180deg, var(--blood), #5a0a0a);
+  box-shadow:0 0 6px rgba(176,26,26,0.5);
+  opacity:0;
+}
+.folio.bard:hover .fx-drip{animation:wine-drip 1.8s ease-in infinite}
+@keyframes wine-drip{
+  0%   {opacity:0;transform:translate(-50%,0) scale(0.7, 0.4)}
+  10%  {opacity:1;transform:translate(-50%,4px) scale(0.85, 1)}
+  70%  {opacity:1;transform:translate(-50%, 90px) scale(0.7, 1.4)}
+  85%  {opacity:0.6;transform:translate(-50%, 102px) scale(1.3, 0.5)}
+  100% {opacity:0;transform:translate(-50%, 102px) scale(1.4, 0.2)}
+}
+
+/* crow silhouettes (Jen Corner cleric) */
+.folio.crow .fx-crow{
+  position:absolute;top:0;left:0;width:100%;height:100%;
+}
+.folio.crow .fx-crow .bird{
+  position:absolute;color:var(--c-cleric);
+  opacity:0;
+  transition:opacity .5s;
+}
+.folio.crow:hover .fx-crow .bird{opacity:0.55;animation:crow-fly 6s linear infinite}
+.folio.crow .fx-crow .bird svg{width:20px;height:20px;filter:drop-shadow(0 0 4px rgba(95,164,148,0.6))}
+.folio.crow .fx-crow .bird.b1{top:12%;left:-20px;animation-delay:0s}
+.folio.crow .fx-crow .bird.b2{top:22%;left:-20px;animation-delay:2s}
+.folio.crow .fx-crow .bird.b3{top:32%;left:-20px;animation-delay:4s}
+@keyframes crow-fly{
+  0%  {transform:translateX(0) translateY(0)}
+  100%{transform:translateX(130%) translateY(-30px)}
+}
+
+/* peril blood ribbon (Aurora paladin — falling oath) */
+.folio.peril .fx-bleed{
+  position:absolute;inset:0;
+  background:radial-gradient(ellipse at 80% 95%, rgba(176,26,26,0.4) 0%, transparent 55%);
+  mix-blend-mode:screen;opacity:0;transition:opacity .8s;
+}
+.folio.peril:hover .fx-bleed{opacity:0.7;animation:bleed-pulse 3s ease-in-out infinite}
+@keyframes bleed-pulse{0%,100%{opacity:0.5}50%{opacity:0.85}}
+
+/* folio number top-left */
+.folio-num{
+  position:absolute;top:14px;left:14px;z-index:5;
+  font-family:"Cinzel",serif;color:var(--accent);font-size:0.62rem;letter-spacing:0.32em;text-transform:uppercase;
+  text-shadow:0 1px 4px #000;
+}
+
+/* identity bar */
+.folio .ident{position:absolute;bottom:18px;left:18px;right:18px;z-index:5}
+.folio .ident .race{
+  font-family:"Cinzel",serif;text-transform:uppercase;letter-spacing:0.28em;font-size:0.58rem;color:var(--accent);margin-bottom:4px;
+  text-shadow:0 1px 4px #000;
+}
+.folio .ident .name{
+  font-family:"Cinzel",serif;font-weight:500;font-size:1.55rem;color:var(--ink);
+  line-height:1.05;letter-spacing:0.06em;margin:0;text-shadow:0 2px 8px rgba(0,0,0,0.95);
+}
+.folio .ident .epithet{
+  margin-top:5px;font-family:"Cormorant Garamond",serif;font-style:italic;color:var(--ink-soft);
+  font-size:0.92rem;line-height:1.3;text-shadow:0 1px 4px #000;
+}
+
+/* lower body */
+.folio .body{padding:16px 18px 16px;display:flex;flex-direction:column;gap:12px;flex:1}
+
+.stat-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid var(--line);background:var(--bg-deep);
+  transition:border-color .4s}
+.folio:hover .stat-row{border-color:color-mix(in srgb, var(--accent) 40%, var(--line))}
+.stat-row .c{padding:8px 4px;text-align:center;border-right:1px solid var(--line-soft);min-width:0;overflow:hidden}
+.stat-row .c:last-child{border-right:none}
+.stat-row .c .k{font-family:"Cinzel",serif;text-transform:uppercase;letter-spacing:0.2em;font-size:0.5rem;color:var(--accent);white-space:nowrap;transition:color .4s}
+.stat-row .c .v{font-family:"Cinzel",serif;font-size:0.78rem;color:var(--ink);margin-top:3px;letter-spacing:0.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.blurb{font-family:"Cormorant Garamond",serif;font-size:0.94rem;color:var(--ink-soft);line-height:1.45;font-style:italic;flex:1}
+
+.open-row{display:flex;align-items:center;justify-content:space-between;padding-top:12px;border-top:1px solid var(--line);
+  transition:border-color .4s}
+.folio:hover .open-row{border-color:color-mix(in srgb, var(--accent) 35%, var(--line))}
+.open-row .vol{font-family:"Cinzel",serif;font-size:0.58rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--ink-mute)}
+.open-row .open{font-family:"Cinzel",serif;font-size:0.66rem;letter-spacing:0.32em;text-transform:uppercase;color:var(--accent);
+  display:inline-flex;align-items:center;gap:8px;transition:gap .4s, color .4s}
+.folio:hover .open-row .open{gap:14px}
+.open-row .open .arrow{width:22px;height:1px;background:currentColor;position:relative;transition:width .4s}
+.folio:hover .open-row .open .arrow{width:30px}
+.open-row .open .arrow::after{content:"";position:absolute;right:0;top:-3px;width:7px;height:7px;border-top:1px solid currentColor;border-right:1px solid currentColor;transform:rotate(45deg)}
+
+/* ============ FOOTER ============ */
+.colophon{
+  margin-top:72px;text-align:center;font-family:"Cinzel",serif;letter-spacing:0.3em;text-transform:uppercase;font-size:0.58rem;color:var(--ink-faint);
+}
+.colophon .sep{color:var(--gold-dim);margin:0 12px}
+
+/* ============ REDUCE MOTION ============ */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:0.001ms !important;animation-iteration-count:1 !important;transition-duration:0.001ms !important}
+  .atmos,.mote,.starlight{display:none}
+}
 </style>
-<style type="text/css">:root img[width="728"][height="90"], :root [href="https://adstub.net/cina777/"], :root [href="https://adstub.net/arab777/"], :root [href="https://adstub.net/ratu89/"], :root [href="https://adstub.net/judi89/"], :root [href^="//mage98rquewz.com/"], :root [href^="//x4pollyxxpush.com/"], :root span[id^="ezoic-pub-ad-placeholder-"], :root ins.adsbygoogle[data-ad-slot], :root ins.adsbygoogle[data-ad-client], :root img[src^="https://s-img.adskeeper.com/"], :root guj-ad, :root gpt-ad, :root div[ow-ad-unit-wrapper], :root div[id^="zergnet-widget"], :root div[id^="vuukle-ad-"], :root div[id^="taboola-stream-"], :root div[id^="sticky_ad_"], :root div[id^="st"][style^="z-index: 999999999;"], :root div[id^="rc-widget-"], :root div[id^="mrec-leaderboard-"], :root div[id^="gpt_ad_"], :root div[id^="ezoic-pub-ad-"], :root div[id^="dfp-ad-"], :root div[id^="crt-"][style], :root div[id^="apn_native_ad_slot_"], :root div[id^="adspot-"], :root div[id^="adrotate_widgets-"], :root ps-connatix-module, :root div[id^="ad_position_"], :root div[id^="ad-div-"], :root div[id*="ScriptRoot"], :root div[id*="MarketGid"], :root [href="https://adstub.net/rusia777/"], :root div[data-id-advertdfpconf], :root div[data-dfp-id], :root hl-adsense, :root div[data-contentexchange-widget], :root div[data-alias="300x250 Ad 2"], :root div[data-adzone], :root div[data-adunit-path], :root div[data-adname], :root div[data-ad-placeholder], :root a[href^="https://osfultrbriolenai.info/"], :root div[class^="Adstyled__AdWrapper-"], :root a[href^="https://go.xlviiirdr.com"], :root div[class$="-adlabel"], :root display-ads, :root a[href^="https://go.grinsbest.com/"], :root citrus-ad-wrapper, :root a[href^="https://s.zlinkd.com/"], :root bottomadblock, :root amp-fx-flying-carpet, :root amp-embed[type="taboola"], :root amp-connatix-player, :root div[id^="google_dfp_"], :root ad-slot, :root a[href^="https://www.purevpn.com/"][href*="&utm_source=aff-"], :root a[href^="https://www.onlineusershielder.com/"], :root a[href^="https://financeads.net/tc.php?"], :root a[href^="https://www.mrskin.com/tour"], :root a[href^="https://www.infowarsstore.com/"] > img, :root a[href^="https://ak.psaltauw.net/"], :root broadstreet-zone-container, :root a[href^="https://www.highperformancecpmgate.com/"], :root amp-ad, :root a[href^="https://www.highcpmrevenuenetwork.com/"], :root a[href^="https://www.get-express-vpn.com/offer/"], :root a[href^="https://lnkxt.bannerator.com/"], :root a[href^="https://www.geekbuying.com/dynamic-ads/"], :root [href^="https://groorsoa.net/"], :root a[href^="https://www.financeads.net/tc.php?"], :root a[href^="https://www.effectiveratecpm.com/"], :root [href^="https://www.herbanomic.com/"] > img, :root a[href^="https://www.dql2clk.com/"], :root a[href^="https://explore-site.com/"], :root a[href^="https://www.brazzersnetwork.com/landing/"], :root [data-template-type="nativead"], :root a[href^="https://www.adultempire.com/"][href*="?partner_id="], :root a[href^="https://www.nutaku.net/signup/landing/"], :root a[href^="https://www.dating-finder.com/signup/?ai_d="], :root a[href^="https://wolf-327b.com/"], :root a[href^="https://voluum.prom-xcams.com/"], :root a[href^="https://twinrdsyte.com/"], :root a[href^="https://twinrdsrv.com/"], :root a[href^="https://trk.nfl-online-streams.club/"], :root a[href^="https://tracking.avapartner.com/"], :root a[href^="https://track.wg-aff.com"], :root a[href^="https://track.ultravpn.com/"], :root a[href^="https://track.afcpatrk.com/"], :root a[href^="https://track.adform.net/"], :root a[href^="https://torguard.net/aff.php"] > img, :root [data-identity="adhesive-ad"], :root a[href^="https://tc.tradetracker.net/"] > img, :root a[href^="https://tatrck.com/"], :root [href^="https://zstacklife.com/"] img, :root a[href^="https://click.candyoffers.com/"], :root a[href^="https://t.aslnk.link/"], :root a[onmousedown^="this.href='https://paid.outbrain.com/network/redir?"], :root a[href^="https://t.ajump1.com/"], :root a[href^="https://t.adating.link/"], :root a[href^="https://go.trackitalltheway.com/"], :root [href^="https://track.fiverr.com/visit/"] > img, :root a[href^="https://syndication.exoclick.com/"], :root a[href^="https://syndication.dynsrvtbg.com/"], :root div[data-alias="300x250 Ad 1"], :root a[href^="https://syndicate.contentsserved.com/"], :root a[href^="https://svb-analytics.trackerrr.com/"], :root a[onmousedown^="this.href='https://paid.outbrain.com/network/redir?"] + .ob_source, :root a[href^="http://www.iyalc.com/"], :root a[href^="https://claring-loccelkin.com/"], :root a[href^="https://stardomcoit.com/"], :root a[href^="https://track.aftrk5.com/"], :root a[href^="https://slkmis.com/"], :root a[href^="https://myclick-2.com/"], :root a[href^="https://sexynearme.com/"], :root a[href^="https://s.zlinkt.com/"], :root [data-ad-manager-id], :root a[href^="https://s.zlinkr.com/"], :root [href="https://adstub.net/gaza88/"], :root a[href^="https://ad.doubleclick.net/"], :root a[href^="https://static.fleshlight.com/images/banners/"], :root a[href^="https://s.zlink7.com/"], :root a[href^="https://s.ma3ion.com/"], :root a[href^="https://www.privateinternetaccess.com/"] > img, :root a[href^="https://s.gentlefieldpattern.com/"], :root a[href^="https://s.eunow4u.com/"], :root a[href^="https://random-affiliate.atimaze.com/"], :root #kt_player > div[style$="display: block;"][style*="inset: 0px;"], :root [href$="/sexdating.php"], :root a[href^="https://quotationfirearmrevision.com/"], :root a[href^="https://pubads.g.doubleclick.net/"], :root a[href^="https://prf.hn/click/"][href*="/camref:"] > img, :root a[href^="https://serve.awmdelivery.com/"], :root a[href^="https://www.dating-finder.com/?ai_d="], :root a[href^="https://prf.hn/click/"][href*="/adref:"] > img, :root [href^="https://ap.octopuspop.com/click/"] > img, :root app-ad, :root a[href^="https://postback1win.com/"], :root a[href^="https://a.adtng.com/"], :root a[href^="https://playnano.online/offerwalls/?ref="], :root a[href^="https://mmwebhandler.aff-online.com/"], :root a[href^="https://www.bet365.com/"][href*="affiliate="], :root a[href^="https://pb-track.com/"], :root a[href^="https://pb-front.com/"], :root a[href^="https://paid.outbrain.com/network/redir?"], :root a[href^="https://streamate.com/landing/click/"], :root a[href^="https://upsups.click/"], :root a[href^="https://ndt5.net/"], :root a[href^="https://natour.naughtyamerica.com/track/"], :root a[href^="https://mediaserver.entainpartners.com/renderBanner.do?"], :root [data-ad-name], :root a[href^="https://loboclick.com/"], :root a[href^="https://lead1.pl/"], :root a[href^="https://landing.brazzersnetwork.com/"], :root a[href^="https://juicyads.in/"], :root a[href^="https://snowdayonline.xyz/"], :root a[href^="https://join.dreamsexworld.com/"], :root a[href^="https://join.bannedsextapes.com/track/"], :root a[href^="https://jaxofuna.com/"], :root a[href^="https://italarizege.xyz/"], :root a[href^="https://s.happyleafmotion.com/"], :root a[href^="https://identicaldrench.com/"], :root ad-shield-ads, :root a[href^="https://hot-growngames.life/"], :root a[href^="https://helmethomicidal.com/"], :root display-ad-component, :root a[href^="https://golinks.work/"], :root a[href^="https://s.zlinkn.com/"], :root a[href^="https://go.xxxvjmp.com/"], :root a[href^="https://go.xxxjmp.com"], :root a[href^="https://zirdough.net/"], :root [class^="tile-picker__CitrusBannerContainer-sc-"], :root a[href^="https://go.xxxiijmp.com"], :root a[href^="https://go.xtbaffiliates.com/"], :root [data-role="tile-ads-module"], :root a[href^="https://go.xlviirdr.com"], :root a[href^="https://go.xlivrdr.com"], :root a[href^="https://ismlks.com/"], :root [href^="https://www.mypillow.com/"] > img, :root a[href^="https://go.xlirdr.com"], :root [data-css-class="dfp-inarticle"], :root a[href^="https://go.tmrjmp.com"], :root a[href^="https://go.markets.com/visit/?bta="], :root a[href^="https://billing.purevpn.com/aff.php"] > img, :root a[href^="https://go.hpyrdr.com/"], :root a[href^="https://lijavaxa.com/"], :root a[href^="https://go.goaserv.com/"], :root a[href^="https://go.etoro.com/"] > img, :root a[href^="https://go.dmzjmp.com"], :root a[href^="https://www.bang.com/?aff="], :root #mgb-container > #mgb, :root a[href^="https://go.admjmp.com"], :root a[href^="https://get.surfshark.net/aff_c?"][href*="&aff_id="] > img, :root a[href^="https://datewhisper.life/"], :root a[href^="https://click.linksynergy.com/fs-bin/"] > img, :root a[href^="https://get-link.xyz/"], :root a[href^="https://www.mrskin.com/account/"], :root a[href^="https://www.adskeeper.com"], :root a[data-redirect^="https://paid.outbrain.com/network/redir?"], :root [href^="https://clicks.affstrack.com/"] > img, :root a[href^="https://engine.phn.doublepimp.com/"], :root a[href^="https://dl-protect.net/"], :root a[href*=".foxqck.com/"], :root a[href^="https://ctosrd.com/"], :root a[href^="https://clixtrac.com/"], :root a[href^="https://go.bushheel.com/"], :root a[href^="https://ctjdwm.com/"], :root div[data-ad-wrapper], :root .gnt_em_vp_c[data-g-s="vp_dk"], :root [href="//sexcams.plus/"], :root a[href^="https://camfapr.com/landing/click/"], :root a[href^="https://prf.hn/click/"][href*="/creativeref:"] > img, :root a[href*="&maxads="], :root a[href^="http://www.adultempire.com/unlimited/promo?"][href*="&partner_id="], :root a[href^="https://1betandgonow.com/"], :root a[href^="https://chaturbate.com/in/?"], :root a[href^="https://t.ajrkm1.com/"], :root a[href^="https://bongacams10.com/track?"], :root a[href*=".g2afse.com/"], :root a[href^="https://bodelen.com/"], :root a[href^="//hoodingluster.com/"], :root a[href^="https://black77854.com/"], :root a[href^="https://getmatchedlocally.com/"], :root app-advertisement, :root a[href^="https://rixofa.com/"], :root a[href^="https://best-experience-cool.com/"], :root [data-taboola-options], :root a[href^="https://believessway.com/"], :root a[href^="https://Click.ggpickaff.com/"], :root a[href^="https://banners.livepartners.com/"], :root a[href^="http://revolvemockerycopper.com/"], :root a[href^="https://awptjmp.com/"], :root a[href^="https://join.sexworld3d.com/track/"], :root a[href^="https://aweptjmp.com/"], :root a[href^="https://ausoafab.net/"], :root a[href^="https://clicks.pipaffiliates.com/"], :root a[href^="https://aj1070.online/"], :root a[href^="https://a.bestcontentoperation.top/"], :root a[href^="https://adultfriendfinder.com/go/"], :root a[href^="https://ads.planetwin365affiliate.com/"], :root a[href^="https://ads.leovegas.com/"], :root a[href^="https://go.xlvirdr.com"], :root img[src^="https://images.purevpnaffiliates.com"], :root a[href^="https://porntubemate.com/"], :root a[href^="https://click.dtiserv2.com/"], :root a[href^="https://clickadilla.com/"], :root a[href^="https://a.medfoodhome.com/"], :root a[href^="https://cam4com.go2cloud.org/"], :root .nya-slot[style], :root a[href^="https://a.bestcontentweb.top/"], :root atf-ad-slot, :root a[href^="https://a2.adform.net/"], :root a[href^="https://a.candyai.love/"], :root .banner-img > .pbl, :root [data-m-ad-id], :root a[href^="https://a-ads.com/"], :root a[href^="https://1winpb.com/"], :root div[id^="optidigital-adslot"], :root [href^="https://wsup.ai/"], :root a[href^="https://123-stream.org/"], :root a[href^="https://in.rabbtrk.com/"], :root a[href^="http://www.h4trck.com/"], :root [href^="https://a.acebet.com/api/click?"], :root a[href^="http://www.friendlyduck.com/AF_"], :root a[href^="http://partners.etoro.com/"], :root [href="https://chaturbate.jjgirls.com/"] > img, :root a[href^="http://cam4com.go2cloud.org/aff_c?"], :root a[href^="https://ads.betfair.com/redirect.aspx?"], :root amp-ad-custom, :root a[href^="http://trk.globwo.online/"], :root a[onclick^="window.location.replace('https://random-affiliate.atimaze.com/"], :root a[href^="https://bongacams2.com/track?"], :root a-ad, :root a[href^="https://offhandpump.com/"], :root a[href^="http://stickingrepute.com/"], :root #slashboxes > .deals-rail, :root div[aria-label="Ads"], :root [href^="http://mypillow.com/"] > img, :root a[href^="http://bongacams.com/track?"], :root a[href^="//startgaming.net/tienda/" i], :root a[href^="https://a.medfoodsafety.com/"], :root a[href^="//go.eabids.com/"], :root a[href^=" https://www.friendlyduck.com/AF_"], :root [data-cl-spot-id], :root a[href*="/jump/next.php?r="], :root a[href^="https://go.nordvpn.net/aff"] > img, :root .\[\&_\.gdprAdTransparencyCogWheelButton\]\:\!pjra-z-\[5\], :root [href^="http://clicks.totemcash.com/"], :root a[href^="https://ad.zanox.com/ppc/"] > img, :root [data-d-ad-id], :root a[href*=".engine.adglare.net/"], :root div[id^="lazyad-"], :root a[href^="http://com-1.pro/"], :root [href^="https://www.profitablegatecpm.com/"], :root a[href*=".cfm?domain="][href*="&fp="], :root a[href^="https://ab.advertiserurl.com/aff/"], :root a[data-oburl^="https://paid.outbrain.com/network/redir?"], :root [id^="section-ad-banner"], :root [id^="ad_slider"], :root a[href^="https://www.goldenfrog.com/vyprvpn?offer_id="][href*="&aff_id="], :root a[href^="https://wmctjd.com/"], :root a[href*="//jjgirls.com/sex/Chaturbate"], :root [id^="ad-wrap-"], :root [href^="https://zone.gotrackier.com/"], :root a[href^="http://sarcasmadvisor.com/"], :root [href^="https://www.restoro.com/"], :root a[href^="https://track.totalav.com/"], :root a[href^="https://ctrdwm.com/"], :root [href^="https://www.targetingpartner.com/"], :root a[href^="https://join.virtuallust3d.com/"], :root .section-subheader > .section-hotel-prices-header, :root [href^="https://www.hostg.xyz/"] > img, :root a[href^="https://bngpt.com/"], :root a[href^="https://www.sheetmusicplus.com/"][href*="?aff_id="], :root a[href^="http://adultfriendfinder.com/go/"], :root a[href^="https://fastestvpn.com/lifetime-special-deal?a_aid="], :root a[href^="https://tour.mrskin.com/"], :root a[href^="https://s.zlink3.com/"], :root a[href^="http://sneakyadministration.com/"], :root [href^="https://www.brighteonstore.com/products/"] img, :root div[id^="ad-position-"], :root a[href^="https://www.toprevenuegate.com/"], :root a[href^="https://bc.game/"], :root a[href^="http://join.brokestraightboys.com/track/"], :root div[id^="div-ads-"], :root [href^="https://rapidgator.net/article/premium/ref/"], :root [href^="https://join.girlsoutwest.com/"], :root a[href^="https://activate-game.com/"], :root .scroll-fixable.rail-right > .deals-rail, :root [data-wpas-zoneid], :root a[href^="https://track.aftrk3.com/"], :root [href^="https://join3.bannedsextapes.com"], :root div[id^="adngin-"], :root [data-rc-widget], :root span[data-ez-ph-id], :root [href^="https://track.aftrk1.com/"], :root [href^="https://join.playboyplus.com/track/"], :root a[href^="https://go.xxxijmp.com"], :root [href^="https://istlnkcl.com/"], :root a[href^="https://trk.softonixs.xyz/"], :root div[data-adunit], :root app-large-ad, :root [href^="https://turtlebids.irauctions.com/"] img, :root a[href^="https://iqbroker.com/"][href*="?aff="], :root [href^="https://rpwmct.com/"], :root [href^="https://wct.link/click?"], :root a[href^="https://t.acam.link/"], :root a[href^="https://go.strpjmp.com/"], :root [href^="https://url.totaladblock.com/"], :root a[href^="https://go.rmishe.com/"], :root [href^="https://ilovemyfreedoms.com/landing-"], :root [href="https://adstub.net/indo666/"], :root [href^="https://glersakr.com/"], :root a[href^="https://tm-offers.gamingadult.com/"], :root [href^="https://charmingdatings.life/"], :root [data-id^="div-gpt-ad"], :root a[href^="https://tracker.loropartners.com/"], :root [href^="https://awbbjmp.com/"], :root a[href^="https://www.friendlyduck.com/AF_"], :root [href^="https://ad1.adfarm1.adition.com/"], :root a[href^="https://t.ajrkm3.com/"], :root in-page-message[doskip], :root [href^="https://aads.com/campaigns/"], :root a[href^="https://fc.lc/ref/"], :root a[href^="https://go.bbrdbr.com"], :root a[href^="http://tc.tradetracker.net/"] > img, :root a[href^="https://bngprm.com/"], :root [href^="https://shiftnetwork.infusionsoft.com/go/"] > img, :root [href^="http://www.mypillow.com/"] > img, :root .ob_container .item-container-obpd, :root [id^="div-gpt-ad"], :root [href="https://jdrucker.com/gold"] > img, :root a[href^="https://join.virtualtaboo.com/track/"], :root [id^="ad_sky"], :root [name^="google_ads_iframe"], :root aside[id^="adrotate_widgets-"], :root a[href^="https://www.liquidfire.mobi/"], :root DFP-AD, :root .grid > .container > #aside-promotion, :root [data-type="ad-vertical"], :root [href^="https://go.xlrdr.com"], :root a[href^="https://s.cant3am.com/"], :root [data-testid^="taboola-"], :root [data-testid^="section-AdRowBillboard"], :root a[href^="https://track.1234sd123.com/"], :root zeus-ad, :root [data-testid="prism-ad-wrapper"], :root [href^="https://ad.admitad.com/"], :root [href^="https://mypillow.com/"] > img, :root [data-testid="ad_testID"], :root a[href^="https://stellarcashflow.net/trck/"], :root [data-mobile-ad-id], :root [data-dynamic-ads], :root a[href^="https://gamingadlt.com/?offer="], :root [data-desktop-ad-id], :root a[href^="https://go.rmhfrtnd.com"], :root a[href^="https://pb-imc.com/"], :root a[href^="https://www8.smartadserver.com/"], :root topadblock, :root a[href^="//s.zlinkd.com/"], :root [href^="https://mypatriotsupply.com/"] > img, :root [data-testid="adBanner-wrapper"], :root [href^="https://mylead.global/stl/"] > img, :root a[href*=".adsrv.eacdn.com/"], :root [href^="https://antiagingbed.com/discount/"] > img, :root #modal[doskip][prclck], :root #teaser1[style^="width:autopx;"], :root [href^="https://www.cloudways.com/en/?id"], :root [data-asg-ins], :root [data-block-type="ad"], :root [data-ad-width], :root a[href^="https://clickins.slixa.com/"], :root [onclick*="content.ad/"], :root a[href^="https://go.cmtaffiliates.com/"], :root [href^="https://optimizedelite.com/"] > img, :root div[data-ad-region], :root AMP-AD, :root [data-ad-cls], :root a[href^="https://www.adxsrve.com/"], :root a[href^="https://click.Ggpickaff.com/"], :root [data-ez-name], :root a[href^="https://go.mnaspm.com/"], :root a[href^="https://service.bv-aff-trx.com/"], :root a[href^="https://6-partner.com/"], :root [class^="s2nPlayer"], :root a[href^="https://traffdaq.com/"], :root [data-testid="commercial-label-taboola"], :root [class^="div-gpt-ad"], :root [href^="https://affiliate.fastcomet.com/"] > img, :root [class^="adDisplay-module"], :root a[href^="https://adclick.g.doubleclick.net/"], :root [data-freestar-ad][id], :root AD-SLOT, :root a[href^="https://combodef.com/"], :root a[href^="https://click.hoolig.app/"], :root a[href^="https://www.googleadservices.com/pagead/aclk?"] > img, :root [data-ad-module], :root a[href^="https://a.bestcontentfood.top/"], :root #kt_player > a[target="_blank"], :root a[href^="https://go.skinstrip.net"][href*="?campaignId="], :root #teaser2[style^="width:autopx;"], :root [data-revive-zoneid], :root a[href^="https://losingoldfry.com/"], :root div[id^="div-gpt-"], :root a[href^="https://gml-grp.com/"], :root .ob_dual_right > .ob_ads_header ~ .odb_div, :root div[data-ad-targeting], :root a[style="width:100%;height:100%;z-index:10000000000000000;position:absolute;top:0;left:0;"], :root [href^="https://www.avantlink.com/click.php"] img, :root #teaser3[style^="width:autopx;"], :root a[href^="https://go.hpyjmp.com"], :root iframe[scrolling="no"][sandbox*="allow-popups allow-modals"][style^="width: 100%; height: 100%; border: none;"], :root [href^="https://mystore.com/"] > img, :root [class^="amp-ad-"], :root a[href^="https://wittered-mainging.com/"], :root #teaser3[style="width: 100%;text-align: center;display: scroll;position:fixed;bottom: 0;margin: 0 auto;z-index: 103;"] { display: none !important; }</style><style type="text/css">:root img[width="728"][height="90"], :root [href="https://adstub.net/cina777/"], :root [href="https://adstub.net/arab777/"], :root [href="https://adstub.net/ratu89/"], :root [href="https://adstub.net/judi89/"], :root [href^="//mage98rquewz.com/"], :root [href^="//x4pollyxxpush.com/"], :root span[id^="ezoic-pub-ad-placeholder-"], :root ins.adsbygoogle[data-ad-slot], :root ins.adsbygoogle[data-ad-client], :root img[src^="https://s-img.adskeeper.com/"], :root guj-ad, :root gpt-ad, :root div[ow-ad-unit-wrapper], :root div[id^="zergnet-widget"], :root div[id^="vuukle-ad-"], :root div[id^="taboola-stream-"], :root div[id^="sticky_ad_"], :root div[id^="st"][style^="z-index: 999999999;"], :root div[id^="rc-widget-"], :root div[id^="mrec-leaderboard-"], :root div[id^="gpt_ad_"], :root div[id^="ezoic-pub-ad-"], :root div[id^="dfp-ad-"], :root div[id^="crt-"][style], :root div[id^="apn_native_ad_slot_"], :root div[id^="adspot-"], :root div[id^="adrotate_widgets-"], :root ps-connatix-module, :root div[id^="ad_position_"], :root div[id^="ad-div-"], :root div[id*="ScriptRoot"], :root div[id*="MarketGid"], :root [href="https://adstub.net/rusia777/"], :root div[data-id-advertdfpconf], :root div[data-dfp-id], :root hl-adsense, :root div[data-contentexchange-widget], :root div[data-alias="300x250 Ad 2"], :root div[data-adzone], :root div[data-adunit-path], :root div[data-adname], :root div[data-ad-placeholder], :root a[href^="https://osfultrbriolenai.info/"], :root div[class^="Adstyled__AdWrapper-"], :root a[href^="https://go.xlviiirdr.com"], :root div[class$="-adlabel"], :root display-ads, :root a[href^="https://go.grinsbest.com/"], :root citrus-ad-wrapper, :root a[href^="https://s.zlinkd.com/"], :root bottomadblock, :root amp-fx-flying-carpet, :root amp-embed[type="taboola"], :root amp-connatix-player, :root div[id^="google_dfp_"], :root ad-slot, :root a[href^="https://www.purevpn.com/"][href*="&utm_source=aff-"], :root a[href^="https://www.onlineusershielder.com/"], :root a[href^="https://financeads.net/tc.php?"], :root a[href^="https://www.mrskin.com/tour"], :root a[href^="https://www.infowarsstore.com/"] > img, :root a[href^="https://ak.psaltauw.net/"], :root broadstreet-zone-container, :root a[href^="https://www.highperformancecpmgate.com/"], :root amp-ad, :root a[href^="https://www.highcpmrevenuenetwork.com/"], :root a[href^="https://www.get-express-vpn.com/offer/"], :root a[href^="https://lnkxt.bannerator.com/"], :root a[href^="https://www.geekbuying.com/dynamic-ads/"], :root [href^="https://groorsoa.net/"], :root a[href^="https://www.financeads.net/tc.php?"], :root a[href^="https://www.effectiveratecpm.com/"], :root [href^="https://www.herbanomic.com/"] > img, :root a[href^="https://www.dql2clk.com/"], :root a[href^="https://explore-site.com/"], :root a[href^="https://www.brazzersnetwork.com/landing/"], :root [data-template-type="nativead"], :root a[href^="https://www.adultempire.com/"][href*="?partner_id="], :root a[href^="https://www.nutaku.net/signup/landing/"], :root a[href^="https://www.dating-finder.com/signup/?ai_d="], :root a[href^="https://wolf-327b.com/"], :root a[href^="https://voluum.prom-xcams.com/"], :root a[href^="https://twinrdsyte.com/"], :root a[href^="https://twinrdsrv.com/"], :root a[href^="https://trk.nfl-online-streams.club/"], :root a[href^="https://tracking.avapartner.com/"], :root a[href^="https://track.wg-aff.com"], :root a[href^="https://track.ultravpn.com/"], :root a[href^="https://track.afcpatrk.com/"], :root a[href^="https://track.adform.net/"], :root a[href^="https://torguard.net/aff.php"] > img, :root [data-identity="adhesive-ad"], :root a[href^="https://tc.tradetracker.net/"] > img, :root a[href^="https://tatrck.com/"], :root [href^="https://zstacklife.com/"] img, :root a[href^="https://click.candyoffers.com/"], :root a[href^="https://t.aslnk.link/"], :root a[onmousedown^="this.href='https://paid.outbrain.com/network/redir?"], :root a[href^="https://t.ajump1.com/"], :root a[href^="https://t.adating.link/"], :root a[href^="https://go.trackitalltheway.com/"], :root [href^="https://track.fiverr.com/visit/"] > img, :root a[href^="https://syndication.exoclick.com/"], :root a[href^="https://syndication.dynsrvtbg.com/"], :root div[data-alias="300x250 Ad 1"], :root a[href^="https://syndicate.contentsserved.com/"], :root a[href^="https://svb-analytics.trackerrr.com/"], :root a[onmousedown^="this.href='https://paid.outbrain.com/network/redir?"] + .ob_source, :root a[href^="http://www.iyalc.com/"], :root a[href^="https://claring-loccelkin.com/"], :root a[href^="https://stardomcoit.com/"], :root a[href^="https://track.aftrk5.com/"], :root a[href^="https://slkmis.com/"], :root a[href^="https://myclick-2.com/"], :root a[href^="https://sexynearme.com/"], :root a[href^="https://s.zlinkt.com/"], :root [data-ad-manager-id], :root a[href^="https://s.zlinkr.com/"], :root [href="https://adstub.net/gaza88/"], :root a[href^="https://ad.doubleclick.net/"], :root a[href^="https://static.fleshlight.com/images/banners/"], :root a[href^="https://s.zlink7.com/"], :root a[href^="https://s.ma3ion.com/"], :root a[href^="https://www.privateinternetaccess.com/"] > img, :root a[href^="https://s.gentlefieldpattern.com/"], :root a[href^="https://s.eunow4u.com/"], :root a[href^="https://random-affiliate.atimaze.com/"], :root #kt_player > div[style$="display: block;"][style*="inset: 0px;"], :root [href$="/sexdating.php"], :root a[href^="https://quotationfirearmrevision.com/"], :root a[href^="https://pubads.g.doubleclick.net/"], :root a[href^="https://prf.hn/click/"][href*="/camref:"] > img, :root a[href^="https://serve.awmdelivery.com/"], :root a[href^="https://www.dating-finder.com/?ai_d="], :root a[href^="https://prf.hn/click/"][href*="/adref:"] > img, :root [href^="https://ap.octopuspop.com/click/"] > img, :root app-ad, :root a[href^="https://postback1win.com/"], :root a[href^="https://a.adtng.com/"], :root a[href^="https://playnano.online/offerwalls/?ref="], :root a[href^="https://mmwebhandler.aff-online.com/"], :root a[href^="https://www.bet365.com/"][href*="affiliate="], :root a[href^="https://pb-track.com/"], :root a[href^="https://pb-front.com/"], :root a[href^="https://paid.outbrain.com/network/redir?"], :root a[href^="https://streamate.com/landing/click/"], :root a[href^="https://upsups.click/"], :root a[href^="https://ndt5.net/"], :root a[href^="https://natour.naughtyamerica.com/track/"], :root a[href^="https://mediaserver.entainpartners.com/renderBanner.do?"], :root [data-ad-name], :root a[href^="https://loboclick.com/"], :root a[href^="https://lead1.pl/"], :root a[href^="https://landing.brazzersnetwork.com/"], :root a[href^="https://juicyads.in/"], :root a[href^="https://snowdayonline.xyz/"], :root a[href^="https://join.dreamsexworld.com/"], :root a[href^="https://join.bannedsextapes.com/track/"], :root a[href^="https://jaxofuna.com/"], :root a[href^="https://italarizege.xyz/"], :root a[href^="https://s.happyleafmotion.com/"], :root a[href^="https://identicaldrench.com/"], :root ad-shield-ads, :root a[href^="https://hot-growngames.life/"], :root a[href^="https://helmethomicidal.com/"], :root display-ad-component, :root a[href^="https://golinks.work/"], :root a[href^="https://s.zlinkn.com/"], :root a[href^="https://go.xxxvjmp.com/"], :root a[href^="https://go.xxxjmp.com"], :root a[href^="https://zirdough.net/"], :root [class^="tile-picker__CitrusBannerContainer-sc-"], :root a[href^="https://go.xxxiijmp.com"], :root a[href^="https://go.xtbaffiliates.com/"], :root [data-role="tile-ads-module"], :root a[href^="https://go.xlviirdr.com"], :root a[href^="https://go.xlivrdr.com"], :root a[href^="https://ismlks.com/"], :root [href^="https://www.mypillow.com/"] > img, :root a[href^="https://go.xlirdr.com"], :root [data-css-class="dfp-inarticle"], :root a[href^="https://go.tmrjmp.com"], :root a[href^="https://go.markets.com/visit/?bta="], :root a[href^="https://billing.purevpn.com/aff.php"] > img, :root a[href^="https://go.hpyrdr.com/"], :root a[href^="https://lijavaxa.com/"], :root a[href^="https://go.goaserv.com/"], :root a[href^="https://go.etoro.com/"] > img, :root a[href^="https://go.dmzjmp.com"], :root a[href^="https://www.bang.com/?aff="], :root #mgb-container > #mgb, :root a[href^="https://go.admjmp.com"], :root a[href^="https://get.surfshark.net/aff_c?"][href*="&aff_id="] > img, :root a[href^="https://datewhisper.life/"], :root a[href^="https://click.linksynergy.com/fs-bin/"] > img, :root a[href^="https://get-link.xyz/"], :root a[href^="https://www.mrskin.com/account/"], :root a[href^="https://www.adskeeper.com"], :root a[data-redirect^="https://paid.outbrain.com/network/redir?"], :root [href^="https://clicks.affstrack.com/"] > img, :root a[href^="https://engine.phn.doublepimp.com/"], :root a[href^="https://dl-protect.net/"], :root a[href*=".foxqck.com/"], :root a[href^="https://ctosrd.com/"], :root a[href^="https://clixtrac.com/"], :root a[href^="https://go.bushheel.com/"], :root a[href^="https://ctjdwm.com/"], :root div[data-ad-wrapper], :root .gnt_em_vp_c[data-g-s="vp_dk"], :root [href="//sexcams.plus/"], :root a[href^="https://camfapr.com/landing/click/"], :root a[href^="https://prf.hn/click/"][href*="/creativeref:"] > img, :root a[href*="&maxads="], :root a[href^="http://www.adultempire.com/unlimited/promo?"][href*="&partner_id="], :root a[href^="https://1betandgonow.com/"], :root a[href^="https://chaturbate.com/in/?"], :root a[href^="https://t.ajrkm1.com/"], :root a[href^="https://bongacams10.com/track?"], :root a[href*=".g2afse.com/"], :root a[href^="https://bodelen.com/"], :root a[href^="//hoodingluster.com/"], :root a[href^="https://black77854.com/"], :root a[href^="https://getmatchedlocally.com/"], :root app-advertisement, :root a[href^="https://rixofa.com/"], :root a[href^="https://best-experience-cool.com/"], :root [data-taboola-options], :root a[href^="https://believessway.com/"], :root a[href^="https://Click.ggpickaff.com/"], :root a[href^="https://banners.livepartners.com/"], :root a[href^="http://revolvemockerycopper.com/"], :root a[href^="https://awptjmp.com/"], :root a[href^="https://join.sexworld3d.com/track/"], :root a[href^="https://aweptjmp.com/"], :root a[href^="https://ausoafab.net/"], :root a[href^="https://clicks.pipaffiliates.com/"], :root a[href^="https://aj1070.online/"], :root a[href^="https://a.bestcontentoperation.top/"], :root a[href^="https://adultfriendfinder.com/go/"], :root a[href^="https://ads.planetwin365affiliate.com/"], :root a[href^="https://ads.leovegas.com/"], :root a[href^="https://go.xlvirdr.com"], :root img[src^="https://images.purevpnaffiliates.com"], :root a[href^="https://porntubemate.com/"], :root a[href^="https://click.dtiserv2.com/"], :root a[href^="https://clickadilla.com/"], :root a[href^="https://a.medfoodhome.com/"], :root a[href^="https://cam4com.go2cloud.org/"], :root .nya-slot[style], :root a[href^="https://a.bestcontentweb.top/"], :root atf-ad-slot, :root a[href^="https://a2.adform.net/"], :root a[href^="https://a.candyai.love/"], :root .banner-img > .pbl, :root [data-m-ad-id], :root a[href^="https://a-ads.com/"], :root a[href^="https://1winpb.com/"], :root div[id^="optidigital-adslot"], :root [href^="https://wsup.ai/"], :root a[href^="https://123-stream.org/"], :root a[href^="https://in.rabbtrk.com/"], :root a[href^="http://www.h4trck.com/"], :root [href^="https://a.acebet.com/api/click?"], :root a[href^="http://www.friendlyduck.com/AF_"], :root a[href^="http://partners.etoro.com/"], :root [href="https://chaturbate.jjgirls.com/"] > img, :root a[href^="http://cam4com.go2cloud.org/aff_c?"], :root a[href^="https://ads.betfair.com/redirect.aspx?"], :root amp-ad-custom, :root a[href^="http://trk.globwo.online/"], :root a[onclick^="window.location.replace('https://random-affiliate.atimaze.com/"], :root a[href^="https://bongacams2.com/track?"], :root a-ad, :root a[href^="https://offhandpump.com/"], :root a[href^="http://stickingrepute.com/"], :root #slashboxes > .deals-rail, :root div[aria-label="Ads"], :root [href^="http://mypillow.com/"] > img, :root a[href^="http://bongacams.com/track?"], :root a[href^="//startgaming.net/tienda/" i], :root a[href^="https://a.medfoodsafety.com/"], :root a[href^="//go.eabids.com/"], :root a[href^=" https://www.friendlyduck.com/AF_"], :root [data-cl-spot-id], :root a[href*="/jump/next.php?r="], :root a[href^="https://go.nordvpn.net/aff"] > img, :root .\[\&_\.gdprAdTransparencyCogWheelButton\]\:\!pjra-z-\[5\], :root [href^="http://clicks.totemcash.com/"], :root a[href^="https://ad.zanox.com/ppc/"] > img, :root [data-d-ad-id], :root a[href*=".engine.adglare.net/"], :root div[id^="lazyad-"], :root a[href^="http://com-1.pro/"], :root [href^="https://www.profitablegatecpm.com/"], :root a[href*=".cfm?domain="][href*="&fp="], :root a[href^="https://ab.advertiserurl.com/aff/"], :root a[data-oburl^="https://paid.outbrain.com/network/redir?"], :root [id^="section-ad-banner"], :root [id^="ad_slider"], :root a[href^="https://www.goldenfrog.com/vyprvpn?offer_id="][href*="&aff_id="], :root a[href^="https://wmctjd.com/"], :root a[href*="//jjgirls.com/sex/Chaturbate"], :root [id^="ad-wrap-"], :root [href^="https://zone.gotrackier.com/"], :root a[href^="http://sarcasmadvisor.com/"], :root [href^="https://www.restoro.com/"], :root a[href^="https://track.totalav.com/"], :root a[href^="https://ctrdwm.com/"], :root [href^="https://www.targetingpartner.com/"], :root a[href^="https://join.virtuallust3d.com/"], :root .section-subheader > .section-hotel-prices-header, :root [href^="https://www.hostg.xyz/"] > img, :root a[href^="https://bngpt.com/"], :root a[href^="https://www.sheetmusicplus.com/"][href*="?aff_id="], :root a[href^="http://adultfriendfinder.com/go/"], :root a[href^="https://fastestvpn.com/lifetime-special-deal?a_aid="], :root a[href^="https://tour.mrskin.com/"], :root a[href^="https://s.zlink3.com/"], :root a[href^="http://sneakyadministration.com/"], :root [href^="https://www.brighteonstore.com/products/"] img, :root div[id^="ad-position-"], :root a[href^="https://www.toprevenuegate.com/"], :root a[href^="https://bc.game/"], :root a[href^="http://join.brokestraightboys.com/track/"], :root div[id^="div-ads-"], :root [href^="https://rapidgator.net/article/premium/ref/"], :root [href^="https://join.girlsoutwest.com/"], :root a[href^="https://activate-game.com/"], :root .scroll-fixable.rail-right > .deals-rail, :root [data-wpas-zoneid], :root a[href^="https://track.aftrk3.com/"], :root [href^="https://join3.bannedsextapes.com"], :root div[id^="adngin-"], :root [data-rc-widget], :root span[data-ez-ph-id], :root [href^="https://track.aftrk1.com/"], :root [href^="https://join.playboyplus.com/track/"], :root a[href^="https://go.xxxijmp.com"], :root [href^="https://istlnkcl.com/"], :root a[href^="https://trk.softonixs.xyz/"], :root div[data-adunit], :root app-large-ad, :root [href^="https://turtlebids.irauctions.com/"] img, :root a[href^="https://iqbroker.com/"][href*="?aff="], :root [href^="https://rpwmct.com/"], :root [href^="https://wct.link/click?"], :root a[href^="https://t.acam.link/"], :root a[href^="https://go.strpjmp.com/"], :root [href^="https://url.totaladblock.com/"], :root a[href^="https://go.rmishe.com/"], :root [href^="https://ilovemyfreedoms.com/landing-"], :root [href="https://adstub.net/indo666/"], :root [href^="https://glersakr.com/"], :root a[href^="https://tm-offers.gamingadult.com/"], :root [href^="https://charmingdatings.life/"], :root [data-id^="div-gpt-ad"], :root a[href^="https://tracker.loropartners.com/"], :root [href^="https://awbbjmp.com/"], :root a[href^="https://www.friendlyduck.com/AF_"], :root [href^="https://ad1.adfarm1.adition.com/"], :root a[href^="https://t.ajrkm3.com/"], :root in-page-message[doskip], :root [href^="https://aads.com/campaigns/"], :root a[href^="https://fc.lc/ref/"], :root a[href^="https://go.bbrdbr.com"], :root a[href^="http://tc.tradetracker.net/"] > img, :root a[href^="https://bngprm.com/"], :root [href^="https://shiftnetwork.infusionsoft.com/go/"] > img, :root [href^="http://www.mypillow.com/"] > img, :root .ob_container .item-container-obpd, :root [id^="div-gpt-ad"], :root [href="https://jdrucker.com/gold"] > img, :root a[href^="https://join.virtualtaboo.com/track/"], :root [id^="ad_sky"], :root [name^="google_ads_iframe"], :root aside[id^="adrotate_widgets-"], :root a[href^="https://www.liquidfire.mobi/"], :root DFP-AD, :root .grid > .container > #aside-promotion, :root [data-type="ad-vertical"], :root [href^="https://go.xlrdr.com"], :root a[href^="https://s.cant3am.com/"], :root [data-testid^="taboola-"], :root [data-testid^="section-AdRowBillboard"], :root a[href^="https://track.1234sd123.com/"], :root zeus-ad, :root [data-testid="prism-ad-wrapper"], :root [href^="https://ad.admitad.com/"], :root [href^="https://mypillow.com/"] > img, :root [data-testid="ad_testID"], :root a[href^="https://stellarcashflow.net/trck/"], :root [data-mobile-ad-id], :root [data-dynamic-ads], :root a[href^="https://gamingadlt.com/?offer="], :root [data-desktop-ad-id], :root a[href^="https://go.rmhfrtnd.com"], :root a[href^="https://pb-imc.com/"], :root a[href^="https://www8.smartadserver.com/"], :root topadblock, :root a[href^="//s.zlinkd.com/"], :root [href^="https://mypatriotsupply.com/"] > img, :root [data-testid="adBanner-wrapper"], :root [href^="https://mylead.global/stl/"] > img, :root a[href*=".adsrv.eacdn.com/"], :root [href^="https://antiagingbed.com/discount/"] > img, :root #modal[doskip][prclck], :root #teaser1[style^="width:autopx;"], :root [href^="https://www.cloudways.com/en/?id"], :root [data-asg-ins], :root [data-block-type="ad"], :root [data-ad-width], :root a[href^="https://clickins.slixa.com/"], :root [onclick*="content.ad/"], :root a[href^="https://go.cmtaffiliates.com/"], :root [href^="https://optimizedelite.com/"] > img, :root div[data-ad-region], :root AMP-AD, :root [data-ad-cls], :root a[href^="https://www.adxsrve.com/"], :root a[href^="https://click.Ggpickaff.com/"], :root [data-ez-name], :root a[href^="https://go.mnaspm.com/"], :root a[href^="https://service.bv-aff-trx.com/"], :root a[href^="https://6-partner.com/"], :root [class^="s2nPlayer"], :root a[href^="https://traffdaq.com/"], :root [data-testid="commercial-label-taboola"], :root [class^="div-gpt-ad"], :root [href^="https://affiliate.fastcomet.com/"] > img, :root [class^="adDisplay-module"], :root a[href^="https://adclick.g.doubleclick.net/"], :root [data-freestar-ad][id], :root AD-SLOT, :root a[href^="https://combodef.com/"], :root a[href^="https://click.hoolig.app/"], :root a[href^="https://www.googleadservices.com/pagead/aclk?"] > img, :root [data-ad-module], :root a[href^="https://a.bestcontentfood.top/"], :root #kt_player > a[target="_blank"], :root a[href^="https://go.skinstrip.net"][href*="?campaignId="], :root #teaser2[style^="width:autopx;"], :root [data-revive-zoneid], :root a[href^="https://losingoldfry.com/"], :root div[id^="div-gpt-"], :root a[href^="https://gml-grp.com/"], :root .ob_dual_right > .ob_ads_header ~ .odb_div, :root div[data-ad-targeting], :root a[style="width:100%;height:100%;z-index:10000000000000000;position:absolute;top:0;left:0;"], :root [href^="https://www.avantlink.com/click.php"] img, :root #teaser3[style^="width:autopx;"], :root a[href^="https://go.hpyjmp.com"], :root iframe[scrolling="no"][sandbox*="allow-popups allow-modals"][style^="width: 100%; height: 100%; border: none;"], :root [href^="https://mystore.com/"] > img, :root [class^="amp-ad-"], :root a[href^="https://wittered-mainging.com/"], :root #teaser3[style="width: 100%;text-align: center;display: scroll;position:fixed;bottom: 0;margin: 0 auto;z-index: 103;"] { display: none !important; }</style><style type="text/css">:root img[width="728"][height="90"], :root [href="https://adstub.net/cina777/"], :root [href="https://adstub.net/arab777/"], :root [href="https://adstub.net/ratu89/"], :root [href="https://adstub.net/judi89/"], :root [href^="//mage98rquewz.com/"], :root [href^="//x4pollyxxpush.com/"], :root span[id^="ezoic-pub-ad-placeholder-"], :root ins.adsbygoogle[data-ad-slot], :root ins.adsbygoogle[data-ad-client], :root img[src^="https://s-img.adskeeper.com/"], :root guj-ad, :root gpt-ad, :root div[ow-ad-unit-wrapper], :root div[id^="zergnet-widget"], :root div[id^="vuukle-ad-"], :root div[id^="taboola-stream-"], :root div[id^="sticky_ad_"], :root div[id^="st"][style^="z-index: 999999999;"], :root div[id^="rc-widget-"], :root div[id^="mrec-leaderboard-"], :root div[id^="gpt_ad_"], :root div[id^="ezoic-pub-ad-"], :root div[id^="dfp-ad-"], :root div[id^="crt-"][style], :root div[id^="apn_native_ad_slot_"], :root div[id^="adspot-"], :root div[id^="adrotate_widgets-"], :root ps-connatix-module, :root div[id^="ad_position_"], :root div[id^="ad-div-"], :root div[id*="ScriptRoot"], :root div[id*="MarketGid"], :root [href="https://adstub.net/rusia777/"], :root div[data-id-advertdfpconf], :root div[data-dfp-id], :root hl-adsense, :root div[data-contentexchange-widget], :root div[data-alias="300x250 Ad 2"], :root div[data-adzone], :root div[data-adunit-path], :root div[data-adname], :root div[data-ad-placeholder], :root a[href^="https://osfultrbriolenai.info/"], :root div[class^="Adstyled__AdWrapper-"], :root a[href^="https://go.xlviiirdr.com"], :root div[class$="-adlabel"], :root display-ads, :root a[href^="https://go.grinsbest.com/"], :root citrus-ad-wrapper, :root a[href^="https://s.zlinkd.com/"], :root bottomadblock, :root amp-fx-flying-carpet, :root amp-embed[type="taboola"], :root amp-connatix-player, :root div[id^="google_dfp_"], :root ad-slot, :root a[href^="https://www.purevpn.com/"][href*="&utm_source=aff-"], :root a[href^="https://www.onlineusershielder.com/"], :root a[href^="https://financeads.net/tc.php?"], :root a[href^="https://www.mrskin.com/tour"], :root a[href^="https://www.infowarsstore.com/"] > img, :root a[href^="https://ak.psaltauw.net/"], :root broadstreet-zone-container, :root a[href^="https://www.highperformancecpmgate.com/"], :root amp-ad, :root a[href^="https://www.highcpmrevenuenetwork.com/"], :root a[href^="https://www.get-express-vpn.com/offer/"], :root a[href^="https://lnkxt.bannerator.com/"], :root a[href^="https://www.geekbuying.com/dynamic-ads/"], :root [href^="https://groorsoa.net/"], :root a[href^="https://www.financeads.net/tc.php?"], :root a[href^="https://www.effectiveratecpm.com/"], :root [href^="https://www.herbanomic.com/"] > img, :root a[href^="https://www.dql2clk.com/"], :root a[href^="https://explore-site.com/"], :root a[href^="https://www.brazzersnetwork.com/landing/"], :root [data-template-type="nativead"], :root a[href^="https://www.adultempire.com/"][href*="?partner_id="], :root a[href^="https://www.nutaku.net/signup/landing/"], :root a[href^="https://www.dating-finder.com/signup/?ai_d="], :root a[href^="https://wolf-327b.com/"], :root a[href^="https://voluum.prom-xcams.com/"], :root a[href^="https://twinrdsyte.com/"], :root a[href^="https://twinrdsrv.com/"], :root a[href^="https://trk.nfl-online-streams.club/"], :root a[href^="https://tracking.avapartner.com/"], :root a[href^="https://track.wg-aff.com"], :root a[href^="https://track.ultravpn.com/"], :root a[href^="https://track.afcpatrk.com/"], :root a[href^="https://track.adform.net/"], :root a[href^="https://torguard.net/aff.php"] > img, :root [data-identity="adhesive-ad"], :root a[href^="https://tc.tradetracker.net/"] > img, :root a[href^="https://tatrck.com/"], :root [href^="https://zstacklife.com/"] img, :root a[href^="https://click.candyoffers.com/"], :root a[href^="https://t.aslnk.link/"], :root a[onmousedown^="this.href='https://paid.outbrain.com/network/redir?"], :root a[href^="https://t.ajump1.com/"], :root a[href^="https://t.adating.link/"], :root a[href^="https://go.trackitalltheway.com/"], :root [href^="https://track.fiverr.com/visit/"] > img, :root a[href^="https://syndication.exoclick.com/"], :root a[href^="https://syndication.dynsrvtbg.com/"], :root div[data-alias="300x250 Ad 1"], :root a[href^="https://syndicate.contentsserved.com/"], :root a[href^="https://svb-analytics.trackerrr.com/"], :root a[onmousedown^="this.href='https://paid.outbrain.com/network/redir?"] + .ob_source, :root a[href^="http://www.iyalc.com/"], :root a[href^="https://claring-loccelkin.com/"], :root a[href^="https://stardomcoit.com/"], :root a[href^="https://track.aftrk5.com/"], :root a[href^="https://slkmis.com/"], :root a[href^="https://myclick-2.com/"], :root a[href^="https://sexynearme.com/"], :root a[href^="https://s.zlinkt.com/"], :root [data-ad-manager-id], :root a[href^="https://s.zlinkr.com/"], :root [href="https://adstub.net/gaza88/"], :root a[href^="https://ad.doubleclick.net/"], :root a[href^="https://static.fleshlight.com/images/banners/"], :root a[href^="https://s.zlink7.com/"], :root a[href^="https://s.ma3ion.com/"], :root a[href^="https://www.privateinternetaccess.com/"] > img, :root a[href^="https://s.gentlefieldpattern.com/"], :root a[href^="https://s.eunow4u.com/"], :root a[href^="https://random-affiliate.atimaze.com/"], :root #kt_player > div[style$="display: block;"][style*="inset: 0px;"], :root [href$="/sexdating.php"], :root a[href^="https://quotationfirearmrevision.com/"], :root a[href^="https://pubads.g.doubleclick.net/"], :root a[href^="https://prf.hn/click/"][href*="/camref:"] > img, :root a[href^="https://serve.awmdelivery.com/"], :root a[href^="https://www.dating-finder.com/?ai_d="], :root a[href^="https://prf.hn/click/"][href*="/adref:"] > img, :root [href^="https://ap.octopuspop.com/click/"] > img, :root app-ad, :root a[href^="https://postback1win.com/"], :root a[href^="https://a.adtng.com/"], :root a[href^="https://playnano.online/offerwalls/?ref="], :root a[href^="https://mmwebhandler.aff-online.com/"], :root a[href^="https://www.bet365.com/"][href*="affiliate="], :root a[href^="https://pb-track.com/"], :root a[href^="https://pb-front.com/"], :root a[href^="https://paid.outbrain.com/network/redir?"], :root a[href^="https://streamate.com/landing/click/"], :root a[href^="https://upsups.click/"], :root a[href^="https://ndt5.net/"], :root a[href^="https://natour.naughtyamerica.com/track/"], :root a[href^="https://mediaserver.entainpartners.com/renderBanner.do?"], :root [data-ad-name], :root a[href^="https://loboclick.com/"], :root a[href^="https://lead1.pl/"], :root a[href^="https://landing.brazzersnetwork.com/"], :root a[href^="https://juicyads.in/"], :root a[href^="https://snowdayonline.xyz/"], :root a[href^="https://join.dreamsexworld.com/"], :root a[href^="https://join.bannedsextapes.com/track/"], :root a[href^="https://jaxofuna.com/"], :root a[href^="https://italarizege.xyz/"], :root a[href^="https://s.happyleafmotion.com/"], :root a[href^="https://identicaldrench.com/"], :root ad-shield-ads, :root a[href^="https://hot-growngames.life/"], :root a[href^="https://helmethomicidal.com/"], :root display-ad-component, :root a[href^="https://golinks.work/"], :root a[href^="https://s.zlinkn.com/"], :root a[href^="https://go.xxxvjmp.com/"], :root a[href^="https://go.xxxjmp.com"], :root a[href^="https://zirdough.net/"], :root [class^="tile-picker__CitrusBannerContainer-sc-"], :root a[href^="https://go.xxxiijmp.com"], :root a[href^="https://go.xtbaffiliates.com/"], :root [data-role="tile-ads-module"], :root a[href^="https://go.xlviirdr.com"], :root a[href^="https://go.xlivrdr.com"], :root a[href^="https://ismlks.com/"], :root [href^="https://www.mypillow.com/"] > img, :root a[href^="https://go.xlirdr.com"], :root [data-css-class="dfp-inarticle"], :root a[href^="https://go.tmrjmp.com"], :root a[href^="https://go.markets.com/visit/?bta="], :root a[href^="https://billing.purevpn.com/aff.php"] > img, :root a[href^="https://go.hpyrdr.com/"], :root a[href^="https://lijavaxa.com/"], :root a[href^="https://go.goaserv.com/"], :root a[href^="https://go.etoro.com/"] > img, :root a[href^="https://go.dmzjmp.com"], :root a[href^="https://www.bang.com/?aff="], :root #mgb-container > #mgb, :root a[href^="https://go.admjmp.com"], :root a[href^="https://get.surfshark.net/aff_c?"][href*="&aff_id="] > img, :root a[href^="https://datewhisper.life/"], :root a[href^="https://click.linksynergy.com/fs-bin/"] > img, :root a[href^="https://get-link.xyz/"], :root a[href^="https://www.mrskin.com/account/"], :root a[href^="https://www.adskeeper.com"], :root a[data-redirect^="https://paid.outbrain.com/network/redir?"], :root [href^="https://clicks.affstrack.com/"] > img, :root a[href^="https://engine.phn.doublepimp.com/"], :root a[href^="https://dl-protect.net/"], :root a[href*=".foxqck.com/"], :root a[href^="https://ctosrd.com/"], :root a[href^="https://clixtrac.com/"], :root a[href^="https://go.bushheel.com/"], :root a[href^="https://ctjdwm.com/"], :root div[data-ad-wrapper], :root .gnt_em_vp_c[data-g-s="vp_dk"], :root [href="//sexcams.plus/"], :root a[href^="https://camfapr.com/landing/click/"], :root a[href^="https://prf.hn/click/"][href*="/creativeref:"] > img, :root a[href*="&maxads="], :root a[href^="http://www.adultempire.com/unlimited/promo?"][href*="&partner_id="], :root a[href^="https://1betandgonow.com/"], :root a[href^="https://chaturbate.com/in/?"], :root a[href^="https://t.ajrkm1.com/"], :root a[href^="https://bongacams10.com/track?"], :root a[href*=".g2afse.com/"], :root a[href^="https://bodelen.com/"], :root a[href^="//hoodingluster.com/"], :root a[href^="https://black77854.com/"], :root a[href^="https://getmatchedlocally.com/"], :root app-advertisement, :root a[href^="https://rixofa.com/"], :root a[href^="https://best-experience-cool.com/"], :root [data-taboola-options], :root a[href^="https://believessway.com/"], :root a[href^="https://Click.ggpickaff.com/"], :root a[href^="https://banners.livepartners.com/"], :root a[href^="http://revolvemockerycopper.com/"], :root a[href^="https://awptjmp.com/"], :root a[href^="https://join.sexworld3d.com/track/"], :root a[href^="https://aweptjmp.com/"], :root a[href^="https://ausoafab.net/"], :root a[href^="https://clicks.pipaffiliates.com/"], :root a[href^="https://aj1070.online/"], :root a[href^="https://a.bestcontentoperation.top/"], :root a[href^="https://adultfriendfinder.com/go/"], :root a[href^="https://ads.planetwin365affiliate.com/"], :root a[href^="https://ads.leovegas.com/"], :root a[href^="https://go.xlvirdr.com"], :root img[src^="https://images.purevpnaffiliates.com"], :root a[href^="https://porntubemate.com/"], :root a[href^="https://click.dtiserv2.com/"], :root a[href^="https://clickadilla.com/"], :root a[href^="https://a.medfoodhome.com/"], :root a[href^="https://cam4com.go2cloud.org/"], :root .nya-slot[style], :root a[href^="https://a.bestcontentweb.top/"], :root atf-ad-slot, :root a[href^="https://a2.adform.net/"], :root a[href^="https://a.candyai.love/"], :root .banner-img > .pbl, :root [data-m-ad-id], :root a[href^="https://a-ads.com/"], :root a[href^="https://1winpb.com/"], :root div[id^="optidigital-adslot"], :root [href^="https://wsup.ai/"], :root a[href^="https://123-stream.org/"], :root a[href^="https://in.rabbtrk.com/"], :root a[href^="http://www.h4trck.com/"], :root [href^="https://a.acebet.com/api/click?"], :root a[href^="http://www.friendlyduck.com/AF_"], :root a[href^="http://partners.etoro.com/"], :root [href="https://chaturbate.jjgirls.com/"] > img, :root a[href^="http://cam4com.go2cloud.org/aff_c?"], :root a[href^="https://ads.betfair.com/redirect.aspx?"], :root amp-ad-custom, :root a[href^="http://trk.globwo.online/"], :root a[onclick^="window.location.replace('https://random-affiliate.atimaze.com/"], :root a[href^="https://bongacams2.com/track?"], :root a-ad, :root a[href^="https://offhandpump.com/"], :root a[href^="http://stickingrepute.com/"], :root #slashboxes > .deals-rail, :root div[aria-label="Ads"], :root [href^="http://mypillow.com/"] > img, :root a[href^="http://bongacams.com/track?"], :root a[href^="//startgaming.net/tienda/" i], :root a[href^="https://a.medfoodsafety.com/"], :root a[href^="//go.eabids.com/"], :root a[href^=" https://www.friendlyduck.com/AF_"], :root [data-cl-spot-id], :root a[href*="/jump/next.php?r="], :root a[href^="https://go.nordvpn.net/aff"] > img, :root .\[\&_\.gdprAdTransparencyCogWheelButton\]\:\!pjra-z-\[5\], :root [href^="http://clicks.totemcash.com/"], :root a[href^="https://ad.zanox.com/ppc/"] > img, :root [data-d-ad-id], :root a[href*=".engine.adglare.net/"], :root div[id^="lazyad-"], :root a[href^="http://com-1.pro/"], :root [href^="https://www.profitablegatecpm.com/"], :root a[href*=".cfm?domain="][href*="&fp="], :root a[href^="https://ab.advertiserurl.com/aff/"], :root a[data-oburl^="https://paid.outbrain.com/network/redir?"], :root [id^="section-ad-banner"], :root [id^="ad_slider"], :root a[href^="https://www.goldenfrog.com/vyprvpn?offer_id="][href*="&aff_id="], :root a[href^="https://wmctjd.com/"], :root a[href*="//jjgirls.com/sex/Chaturbate"], :root [id^="ad-wrap-"], :root [href^="https://zone.gotrackier.com/"], :root a[href^="http://sarcasmadvisor.com/"], :root [href^="https://www.restoro.com/"], :root a[href^="https://track.totalav.com/"], :root a[href^="https://ctrdwm.com/"], :root [href^="https://www.targetingpartner.com/"], :root a[href^="https://join.virtuallust3d.com/"], :root .section-subheader > .section-hotel-prices-header, :root [href^="https://www.hostg.xyz/"] > img, :root a[href^="https://bngpt.com/"], :root a[href^="https://www.sheetmusicplus.com/"][href*="?aff_id="], :root a[href^="http://adultfriendfinder.com/go/"], :root a[href^="https://fastestvpn.com/lifetime-special-deal?a_aid="], :root a[href^="https://tour.mrskin.com/"], :root a[href^="https://s.zlink3.com/"], :root a[href^="http://sneakyadministration.com/"], :root [href^="https://www.brighteonstore.com/products/"] img, :root div[id^="ad-position-"], :root a[href^="https://www.toprevenuegate.com/"], :root a[href^="https://bc.game/"], :root a[href^="http://join.brokestraightboys.com/track/"], :root div[id^="div-ads-"], :root [href^="https://rapidgator.net/article/premium/ref/"], :root [href^="https://join.girlsoutwest.com/"], :root a[href^="https://activate-game.com/"], :root .scroll-fixable.rail-right > .deals-rail, :root [data-wpas-zoneid], :root a[href^="https://track.aftrk3.com/"], :root [href^="https://join3.bannedsextapes.com"], :root div[id^="adngin-"], :root [data-rc-widget], :root span[data-ez-ph-id], :root [href^="https://track.aftrk1.com/"], :root [href^="https://join.playboyplus.com/track/"], :root a[href^="https://go.xxxijmp.com"], :root [href^="https://istlnkcl.com/"], :root a[href^="https://trk.softonixs.xyz/"], :root div[data-adunit], :root app-large-ad, :root [href^="https://turtlebids.irauctions.com/"] img, :root a[href^="https://iqbroker.com/"][href*="?aff="], :root [href^="https://rpwmct.com/"], :root [href^="https://wct.link/click?"], :root a[href^="https://t.acam.link/"], :root a[href^="https://go.strpjmp.com/"], :root [href^="https://url.totaladblock.com/"], :root a[href^="https://go.rmishe.com/"], :root [href^="https://ilovemyfreedoms.com/landing-"], :root [href="https://adstub.net/indo666/"], :root [href^="https://glersakr.com/"], :root a[href^="https://tm-offers.gamingadult.com/"], :root [href^="https://charmingdatings.life/"], :root [data-id^="div-gpt-ad"], :root a[href^="https://tracker.loropartners.com/"], :root [href^="https://awbbjmp.com/"], :root a[href^="https://www.friendlyduck.com/AF_"], :root [href^="https://ad1.adfarm1.adition.com/"], :root a[href^="https://t.ajrkm3.com/"], :root in-page-message[doskip], :root [href^="https://aads.com/campaigns/"], :root a[href^="https://fc.lc/ref/"], :root a[href^="https://go.bbrdbr.com"], :root a[href^="http://tc.tradetracker.net/"] > img, :root a[href^="https://bngprm.com/"], :root [href^="https://shiftnetwork.infusionsoft.com/go/"] > img, :root [href^="http://www.mypillow.com/"] > img, :root .ob_container .item-container-obpd, :root [id^="div-gpt-ad"], :root [href="https://jdrucker.com/gold"] > img, :root a[href^="https://join.virtualtaboo.com/track/"], :root [id^="ad_sky"], :root [name^="google_ads_iframe"], :root aside[id^="adrotate_widgets-"], :root a[href^="https://www.liquidfire.mobi/"], :root DFP-AD, :root .grid > .container > #aside-promotion, :root [data-type="ad-vertical"], :root [href^="https://go.xlrdr.com"], :root a[href^="https://s.cant3am.com/"], :root [data-testid^="taboola-"], :root [data-testid^="section-AdRowBillboard"], :root a[href^="https://track.1234sd123.com/"], :root zeus-ad, :root [data-testid="prism-ad-wrapper"], :root [href^="https://ad.admitad.com/"], :root [href^="https://mypillow.com/"] > img, :root [data-testid="ad_testID"], :root a[href^="https://stellarcashflow.net/trck/"], :root [data-mobile-ad-id], :root [data-dynamic-ads], :root a[href^="https://gamingadlt.com/?offer="], :root [data-desktop-ad-id], :root a[href^="https://go.rmhfrtnd.com"], :root a[href^="https://pb-imc.com/"], :root a[href^="https://www8.smartadserver.com/"], :root topadblock, :root a[href^="//s.zlinkd.com/"], :root [href^="https://mypatriotsupply.com/"] > img, :root [data-testid="adBanner-wrapper"], :root [href^="https://mylead.global/stl/"] > img, :root a[href*=".adsrv.eacdn.com/"], :root [href^="https://antiagingbed.com/discount/"] > img, :root #modal[doskip][prclck], :root #teaser1[style^="width:autopx;"], :root [href^="https://www.cloudways.com/en/?id"], :root [data-asg-ins], :root [data-block-type="ad"], :root [data-ad-width], :root a[href^="https://clickins.slixa.com/"], :root [onclick*="content.ad/"], :root a[href^="https://go.cmtaffiliates.com/"], :root [href^="https://optimizedelite.com/"] > img, :root div[data-ad-region], :root AMP-AD, :root [data-ad-cls], :root a[href^="https://www.adxsrve.com/"], :root a[href^="https://click.Ggpickaff.com/"], :root [data-ez-name], :root a[href^="https://go.mnaspm.com/"], :root a[href^="https://service.bv-aff-trx.com/"], :root a[href^="https://6-partner.com/"], :root [class^="s2nPlayer"], :root a[href^="https://traffdaq.com/"], :root [data-testid="commercial-label-taboola"], :root [class^="div-gpt-ad"], :root [href^="https://affiliate.fastcomet.com/"] > img, :root [class^="adDisplay-module"], :root a[href^="https://adclick.g.doubleclick.net/"], :root [data-freestar-ad][id], :root AD-SLOT, :root a[href^="https://combodef.com/"], :root a[href^="https://click.hoolig.app/"], :root a[href^="https://www.googleadservices.com/pagead/aclk?"] > img, :root [data-ad-module], :root a[href^="https://a.bestcontentfood.top/"], :root #kt_player > a[target="_blank"], :root a[href^="https://go.skinstrip.net"][href*="?campaignId="], :root #teaser2[style^="width:autopx;"], :root [data-revive-zoneid], :root a[href^="https://losingoldfry.com/"], :root div[id^="div-gpt-"], :root a[href^="https://gml-grp.com/"], :root .ob_dual_right > .ob_ads_header ~ .odb_div, :root div[data-ad-targeting], :root a[style="width:100%;height:100%;z-index:10000000000000000;position:absolute;top:0;left:0;"], :root [href^="https://www.avantlink.com/click.php"] img, :root #teaser3[style^="width:autopx;"], :root a[href^="https://go.hpyjmp.com"], :root iframe[scrolling="no"][sandbox*="allow-popups allow-modals"][style^="width: 100%; height: 100%; border: none;"], :root [href^="https://mystore.com/"] > img, :root [class^="amp-ad-"], :root a[href^="https://wittered-mainging.com/"], :root #teaser3[style="width: 100%;text-align: center;display: scroll;position:fixed;bottom: 0;margin: 0 auto;z-index: 103;"] { display: none !important; }</style></head>
-<body style="">
-  <a class="enter-game-btn" href="game.html">
-    Enter the Game
-    <span class="btn-arrow"></span>
-  </a>
-  <div class="page">
+</head>
+<body>
 
-    <!-- ============== HEADER ============== -->
-    <header class="shelf-head">
-      <div class="seal-rule">
-        <span class="line"></span>
-        <svg class="glyph" viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1">
-          <circle cx="30" cy="30" r="26"></circle>
-          <circle cx="30" cy="30" r="14"></circle>
-          <path d="M30 4 L34 30 L30 56 L26 30 Z" fill="currentColor" stroke="none" style="opacity:.2"></path>
-          <line x1="30" y1="2" x2="30" y2="58"></line>
-          <line x1="2" y1="30" x2="58" y2="30"></line>
-          <line x1="10" y1="10" x2="50" y2="50"></line>
-          <line x1="50" y1="10" x2="10" y2="50"></line>
-          <circle cx="30" cy="30" r="2.5" fill="currentColor" stroke="none"></circle>
+<a class="enter-game-btn" href="game.html">
+  Enter the Game
+  <span class="btn-arrow"></span>
+</a>
+
+<!-- ============ ATMOSPHERE ============ -->
+<div class="atmos" id="atmos" aria-hidden="true"></div>
+
+<div class="page">
+
+  <!-- ============ HEADER ============ -->
+  <header class="shelf-head">
+    <div class="seal-rule">
+      <span class="line"></span>
+      <svg class="glyph" viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1">
+        <circle cx="30" cy="30" r="26"/>
+        <circle cx="30" cy="30" r="14"/>
+        <path d="M30 4 L34 30 L30 56 L26 30 Z" fill="currentColor" stroke="none" style="opacity:.2"/>
+        <line x1="30" y1="2"  x2="30" y2="58"/>
+        <line x1="2"  y1="30" x2="58" y2="30"/>
+        <line x1="10" y1="10" x2="50" y2="50"/>
+        <line x1="50" y1="10" x2="10" y2="50"/>
+        <circle cx="30" cy="30" r="2.5" fill="currentColor" stroke="none"/>
+      </svg>
+      <span class="line"></span>
+    </div>
+    <div class="smallcaps">The Veiled Codex</div>
+    <h1 class="title">Roster of Folios</h1>
+    <div class="subtitle">
+      Bound and indexed in the chapter-house archive, each volume an oath, a name, a life set down by the Watcher's scribes.
+    </div>
+
+    <div class="meta-row">
+      <div class="meta-cell"><div class="k">Volumes Filed</div><div class="v">VI of VI</div></div>
+      <div class="meta-cell"><div class="k">Annum</div><div class="v">Helmus CC</div></div>
+      <div class="meta-cell"><div class="k">Archivist</div><div class="v">br. Aelwin</div></div>
+      <div class="meta-cell"><div class="k">Seal</div><div class="v">Veiled Watch</div></div>
+    </div>
+  </header>
+
+  <!-- ============ CHRONICLE BANNER ============ -->
+  <div class="chronicle-banner">
+    <span class="cb-corner-bl"></span>
+    <span class="cb-corner-br"></span>
+    <span class="bg-sigil left">✦</span>
+    <span class="bg-sigil right">❦</span>
+    <div class="cb-rule">
+      <span class="r"></span><span class="g">✦</span><span class="r"></span>
+    </div>
+    <span class="cb-eyebrow">The Veiled Codex — Chronicle</span>
+    <h2 class="cb-title">Heroes of Borderland</h2>
+    <p class="cb-sub">Before their names were remembered across the land, five travelers were each searching for something in their own lives. Read how their paths converged.</p>
+    <a class="cb-btn" href="story.html">
+      Read the Chronicle
+      <span class="arr"></span>
+    </a>
+    <div class="cb-rule" style="margin-top:28px;margin-bottom:0">
+      <span class="r"></span><span class="g">✦</span><span class="r"></span>
+    </div>
+  </div>
+
+  <!-- ============ SHELF ============ -->
+  <div class="shelf-label">
+    <span class="num">I</span>
+    <span class="lbl">Active Sworn</span>
+    <span class="rule"></span>
+    <span class="count">06 / 06 enscribed</span>
+  </div>
+
+  <div class="folio-grid" id="folio-grid">
+
+    <!-- ===== Aurora — paladin / peril ===== -->
+    <a class="folio peril" href="Aurora Elaris.html">
+      <i class="corner-bl"></i><i class="corner-br"></i>
+      <div class="sigil" aria-hidden="true">
+        <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.3">
+          <path d="M16 3 L20 11 H28 L22 16 L24 24 L16 19 L8 24 L10 16 L4 11 H12 Z"/>
         </svg>
-        <span class="line"></span>
       </div>
-      <div class="smallcaps">The Veiled Codex</div>
-      <h1 class="title">Roster of Folios</h1>
-      <div class="subtitle">
-        Bound and indexed in the chapter-house archive, each volume an oath, a name, a life set down by the Watcher's scribes.
+      <div class="pane">
+        <div class="fx-layer fx-bleed"></div>
+        <div class="accent-glow"></div>
+        <div class="folio-num">Folio · I</div>
+        <img src="assets/aurora-card.jpg" alt="Aurora Elaris">
+        <div class="ident">
+          <div class="race">Wood Elf · 200 yrs</div>
+          <h3 class="name">Aurora Elaris</h3>
+          <div class="epithet">— the Ice Queen of Caelthwyn</div>
+        </div>
       </div>
-
-      <div class="meta-row">
-        <div class="meta-cell"><div class="k">Volumes Filed</div><div class="v">VI of VI</div></div>
-        <div class="meta-cell"><div class="k">Annum</div><div class="v">Helmus CC</div></div>
-        <div class="meta-cell"><div class="k">Archivist</div><div class="v">br. Aelwin</div></div>
-        <div class="meta-cell"><div class="k">Seal</div><div class="v">Veiled Watch</div></div>
+      <div class="body">
+        <div class="stat-row">
+          <div class="c"><div class="k">Class</div><div class="v">Paladin</div></div>
+          <div class="c"><div class="k">Oath</div><div class="v">Vengeance</div></div>
+          <div class="c"><div class="k">Order</div><div class="v">Watch</div></div>
+        </div>
+        <div class="blurb">"If justice requires sin, then I will become the sinner." The chapel is silent. Her sword is not yet drawn.</div>
+        <div class="open-row">
+          <span class="vol">Vol. I · 198 pp.</span>
+          <span class="open">Open Folio<span class="arrow"></span></span>
+        </div>
       </div>
-    </header>
+    </a>
 
-    <!-- ============== CHRONICLE BANNER ============== -->
-    <div class="chronicle-banner">
-      <span class="cb-corner-bl"></span>
-      <span class="cb-corner-br"></span>
-      <div class="cb-rule">
-        <span class="r"></span>
-        <span class="g">✦</span>
-        <span class="r"></span>
+    <!-- ===== Aython — bard ===== -->
+    <a class="folio bard" href="Aython Ashvail Aurelius.html">
+      <i class="corner-bl"></i><i class="corner-br"></i>
+      <div class="sigil" aria-hidden="true">
+        <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.3">
+          <path d="M16 3 L20 8 V20 A4 4 0 0 1 12 20 V8 Z"/>
+          <line x1="20" y1="8" x2="26" y2="4"/>
+          <circle cx="14" cy="16" r="1.4" fill="currentColor"/>
+        </svg>
       </div>
-      <span class="cb-eyebrow">The Veiled Codex — Chronicle</span>
-      <h2 class="cb-title">Heroes of Borderland</h2>
-      <p class="cb-sub">Before their names were remembered across the land, five travelers were each searching for something in their own lives. Read how their paths converged.</p>
-      <a class="cb-btn" href="story.html">
-        Read the Chronicle
-        <span class="arr"></span>
-      </a>
-      <div class="cb-rule" style="margin-top:28px;margin-bottom:0">
-        <span class="r"></span>
-        <span class="g">✦</span>
-        <span class="r"></span>
+      <div class="pane">
+        <div class="fx-layer"><div class="fx-drip"></div></div>
+        <div class="accent-glow"></div>
+        <div class="folio-num">Folio · II</div>
+        <img src="assets/aython-card.jpg" alt="Aython Ashvail Aurelius">
+        <div class="ident">
+          <div class="race">Human · 25 yrs</div>
+          <h3 class="name">Aython Aurelius</h3>
+          <div class="epithet">— the Prince of the Night</div>
+        </div>
       </div>
-    </div>
+      <div class="body">
+        <div class="stat-row">
+          <div class="c"><div class="k">Class</div><div class="v">Bard</div></div>
+          <div class="c"><div class="k">House</div><div class="v">Aurelius</div></div>
+          <div class="c"><div class="k">Coin</div><div class="v">115 GP</div></div>
+        </div>
+        <div class="blurb">"No one is an enemy until they refuse the cup." Disinherited, debt-chased, and still buying the next round.</div>
+        <div class="open-row">
+          <span class="vol">Vol. II · 87 pp.</span>
+          <span class="open">Open Folio<span class="arrow"></span></span>
+        </div>
+      </div>
+    </a>
 
-    <!-- ============== SHELF: ACTIVE ============== -->
-    <div class="shelf-label">
-      <span class="num">I</span>
-      <span class="lbl">Active Sworn</span>
-      <span class="rule"></span>
-      <span class="count">06 / 06 enscribed</span>
-    </div>
+    <!-- ===== Kael Veranth — sorcerer / ember ===== -->
+    <a class="folio ember" href="Kael Veranth.html">
+      <i class="corner-bl"></i><i class="corner-br"></i>
+      <div class="sigil" aria-hidden="true">
+        <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.3">
+          <path d="M16 3 C11 9 8 14 8 19 a8 8 0 0 0 16 0 c0 -5 -3 -10 -8 -16 z"/>
+          <path d="M16 11 C13 14 12 16 12 18 a4 4 0 0 0 8 0 c0 -2 -1 -4 -4 -7 z" fill="currentColor" style="opacity:0.35"/>
+        </svg>
+      </div>
+      <div class="pane">
+        <div class="fx-layer fx-ember">
+          <span class="e" style="--dx:8px"></span>
+          <span class="e" style="--dx:-12px"></span>
+          <span class="e" style="--dx:18px"></span>
+          <span class="e" style="--dx:-6px"></span>
+          <span class="e" style="--dx:14px"></span>
+        </div>
+        <div class="accent-glow"></div>
+        <div class="folio-num">Folio · III</div>
+        <img src="assets/kael-veranth-card.jpg" alt="Kael Veranth">
+        <div class="ident">
+          <div class="race">Human · 21 yrs</div>
+          <h3 class="name">Kael Veranth</h3>
+          <div class="epithet">— the Ashen Sorcerer</div>
+        </div>
+      </div>
+      <div class="body">
+        <div class="stat-row">
+          <div class="c"><div class="k">Class</div><div class="v">Sorcerer</div></div>
+          <div class="c"><div class="k">Bloodline</div><div class="v">Draconic</div></div>
+          <div class="c"><div class="k">Mood</div><div class="v">Chaotic N</div></div>
+        </div>
+        <div class="blurb">"I burned everything I loved — so I could learn how to protect what remains." Hunted by dragon cults who name him their heir.</div>
+        <div class="open-row">
+          <span class="vol">Vol. III · 142 pp.</span>
+          <span class="open">Open Folio<span class="arrow"></span></span>
+        </div>
+      </div>
+    </a>
 
-    <div class="folio-grid">
-
-      <!-- ===== Aurora — filled ===== -->
-      <a class="folio peril" href="Aurora Elaris.html">
-        <i class="corner-bl"></i><i class="corner-br"></i>
-
-        <div class="pane">
-          <div class="folio-num">Folio · I</div>
-          <img src="assets/aurora-card.jpg" alt="Aurora Elaris">
-          <div class="ident">
-            <div class="race">Wood Elf · 200 yrs</div>
-            <h3 class="name">Aurora Elaris</h3>
-            <div class="epithet">— the Ice Queen of Caelthwyn</div>
+    <!-- ===== Anuchit — monk / halo ===== -->
+    <a class="folio halo" href="Anuchit Thepsuang.html">
+      <i class="corner-bl"></i><i class="corner-br"></i>
+      <div class="sigil" aria-hidden="true">
+        <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.3">
+          <circle cx="16" cy="16" r="12"/>
+          <circle cx="16" cy="16" r="6"/>
+          <path d="M16 4 V28 M4 16 H28 M7 7 L25 25 M25 7 L7 25"/>
+          <circle cx="16" cy="16" r="2" fill="currentColor"/>
+        </svg>
+      </div>
+      <div class="pane">
+        <div class="fx-layer">
+          <div class="fx-halo">
+            <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="0.6">
+              <circle cx="50" cy="50" r="46" stroke-dasharray="3 5"/>
+              <circle cx="50" cy="50" r="36"/>
+              <circle cx="50" cy="50" r="26" stroke-width="1.4"/>
+            </svg>
           </div>
         </div>
+        <div class="accent-glow"></div>
+        <div class="folio-num">Folio · IV</div>
+        <img src="assets/anuchit-card.jpg" alt="Anuchit Thepsuang">
+        <div class="ident">
+          <div class="race">Aasimar · 23 yrs</div>
+          <h3 class="name">Anuchit Thepsuang</h3>
+          <div class="epithet">— the Confused Heir of Heaven</div>
+        </div>
+      </div>
+      <div class="body">
+        <div class="stat-row">
+          <div class="c"><div class="k">Class</div><div class="v">Monk</div></div>
+          <div class="c"><div class="k">Path</div><div class="v">Open Hand</div></div>
+          <div class="c"><div class="k">Align</div><div class="v">Neutral G</div></div>
+        </div>
+        <div class="blurb">"I survived because of something inside me — but I still don't know what it is." A celestial sigil glows on his forehead; he refuses to speak of it.</div>
+        <div class="open-row">
+          <span class="vol">Vol. IV · 94 pp.</span>
+          <span class="open">Open Folio<span class="arrow"></span></span>
+        </div>
+      </div>
+    </a>
 
-        <div class="body">
-          <div class="stat-row">
-            <div class="c"><div class="k">Class</div><div class="v">Paladin</div></div>
-            <div class="c"><div class="k">Oath</div><div class="v">Vengeance</div></div>
-            <div class="c"><div class="k">Order</div><div class="v">Watch</div></div>
-          </div>
-          <div class="blurb">
-            “If justice requires sin, then I will become the sinner.” The chapel is silent. Her sword is not yet drawn.
-          </div>
-          <div class="open-row">
-            <span class="vol">Vol. I · 198 pp.</span>
-            <span class="open">Open Folio<span class="arrow"></span></span>
+    <!-- ===== Kael Vorn — ranger / hellfire ===== -->
+    <a class="folio hellfire" href="Kael Vorn.html">
+      <i class="corner-bl"></i><i class="corner-br"></i>
+      <div class="sigil" aria-hidden="true">
+        <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.3">
+          <path d="M8 4 L12 10 L16 6 L20 10 L24 4 L24 16 C24 22 16 28 16 28 C16 28 8 22 8 16 Z"/>
+          <circle cx="13" cy="12" r="0.8" fill="currentColor"/>
+          <circle cx="19" cy="12" r="0.8" fill="currentColor"/>
+        </svg>
+      </div>
+      <div class="pane">
+        <div class="fx-layer">
+          <div class="fx-scope">
+            <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="0.7">
+              <circle cx="50" cy="50" r="44" stroke-dasharray="3 3"/>
+              <circle cx="50" cy="50" r="30"/>
+              <path d="M50 4 V20 M50 80 V96 M4 50 H20 M80 50 H96"/>
+              <line x1="50" y1="40" x2="50" y2="60"/>
+              <line x1="40" y1="50" x2="60" y2="50"/>
+              <circle cx="50" cy="50" r="2" fill="currentColor"/>
+            </svg>
           </div>
         </div>
-      </a>
+        <div class="accent-glow"></div>
+        <div class="folio-num">Folio · V</div>
+        <img src="assets/kael-vorn-card.jpg" alt="Kael Vorn">
+        <div class="ident">
+          <div class="race">Tiefling · 27 yrs</div>
+          <h3 class="name">Kael Vorn</h3>
+          <div class="epithet">— the Lone Hunter</div>
+        </div>
+      </div>
+      <div class="body">
+        <div class="stat-row">
+          <div class="c"><div class="k">Class</div><div class="v">Ranger</div></div>
+          <div class="c"><div class="k">Legacy</div><div class="v">Infernal</div></div>
+          <div class="c"><div class="k">Vow</div><div class="v">Chaotic E</div></div>
+        </div>
+        <div class="blurb">"I can stare a hellhound in the eye without blinking. The straight, simple way is the best way."</div>
+        <div class="open-row">
+          <span class="vol">Vol. V · 116 pp.</span>
+          <span class="open">Open Folio<span class="arrow"></span></span>
+        </div>
+      </div>
+    </a>
 
-      <!-- ===== Aython — filled ===== -->
-      <a class="folio" href="Aython Ashvail Aurelius.html">
-        <i class="corner-bl"></i><i class="corner-br"></i>
-
-        <div class="pane">
-          <div class="folio-num">Folio · II</div>
-          <img src="assets/aython-card.jpg" alt="Aython Ashvail Aurelius">
-          <div class="ident">
-            <div class="race">Human · 25 yrs</div>
-            <h3 class="name">Aython Aurelius</h3>
-            <div class="epithet">— the Prince of the Night</div>
-          </div>
+    <!-- ===== Jen Corner — cleric / crow ===== -->
+    <a class="folio crow" href="Jen Corner.html">
+      <i class="corner-bl"></i><i class="corner-br"></i>
+      <div class="sigil" aria-hidden="true">
+        <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.3">
+          <path d="M8 22 Q12 16 18 16 L24 14 Q28 14 26 18 L24 20 L22 24 L18 26 L12 24 Z"/>
+          <ellipse cx="22" cy="16" rx="1" ry="1" fill="currentColor"/>
+        </svg>
+      </div>
+      <div class="pane">
+        <div class="fx-layer fx-crow">
+          <span class="bird b1"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 12 L6 9 L10 11 L14 8 L18 10 L22 7 L20 10 L16 13 L12 11 L8 14 L4 13 Z"/></svg></span>
+          <span class="bird b2"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 12 L6 9 L10 11 L14 8 L18 10 L22 7 L20 10 L16 13 L12 11 L8 14 L4 13 Z"/></svg></span>
+          <span class="bird b3"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 12 L6 9 L10 11 L14 8 L18 10 L22 7 L20 10 L16 13 L12 11 L8 14 L4 13 Z"/></svg></span>
         </div>
-
-        <div class="body">
-          <div class="stat-row">
-            <div class="c"><div class="k">Class</div><div class="v">Bard</div></div>
-            <div class="c"><div class="k">House</div><div class="v">Aurelius</div></div>
-            <div class="c"><div class="k">Coin</div><div class="v">115 GP</div></div>
-          </div>
-          <div class="blurb">
-            “No one is an enemy until they refuse the cup.” Disinherited, debt-chased, and still buying the next round.
-          </div>
-          <div class="open-row">
-            <span class="vol">Vol. II · 87 pp.</span>
-            <span class="open">Open Folio<span class="arrow"></span></span>
-          </div>
+        <div class="accent-glow"></div>
+        <div class="folio-num">Folio · VI</div>
+        <img src="assets/jen-corner-card.jpg" alt="Jen Corner">
+        <div class="ident">
+          <div class="race">Human · 24 yrs</div>
+          <h3 class="name">Jen Corner</h3>
+          <div class="epithet">— the Crow's Cleric</div>
         </div>
-      </a>
-      <a class="folio ember" href="Kael Veranth.html">
-        <i class="corner-bl"></i><i class="corner-br"></i>
-        <div class="pane">
-          <div class="folio-num">Folio · III</div>
-          <img src="assets/kael-veranth-card.jpg" alt="Kael Veranth">
-          <div class="ident">
-            <div class="race">Human · 21 yrs</div>
-            <h3 class="name">Kael Veranth</h3>
-            <div class="epithet">— the Ashen Sorcerer</div>
-          </div>
+      </div>
+      <div class="body">
+        <div class="stat-row">
+          <div class="c"><div class="k">Class</div><div class="v">Cleric</div></div>
+          <div class="c"><div class="k">Faith</div><div class="v">Old Spirits</div></div>
+          <div class="c"><div class="k">Hunted</div><div class="v">Silver Ch.</div></div>
         </div>
-        <div class="body">
-          <div class="stat-row">
-            <div class="c"><div class="k">Class</div><div class="v">Sorcerer</div></div>
-            <div class="c"><div class="k">Bloodline</div><div class="v">Draconic</div></div>
-            <div class="c"><div class="k">Mood</div><div class="v">Chaotic N</div></div>
-          </div>
-          <div class="blurb">“I burned everything I loved — so I could learn how to protect what remains.” Hunted by dragon cults who name him their heir.</div>
-          <div class="open-row">
-            <span class="vol">Vol. III · 142 pp.</span>
-            <span class="open">Open Folio<span class="arrow"></span></span>
-          </div>
+        <div class="blurb">"I always have a backup plan — because this world has no mercy for those who hesitate." Her crow is always one step ahead.</div>
+        <div class="open-row">
+          <span class="vol">Vol. VI · 103 pp.</span>
+          <span class="open">Open Folio<span class="arrow"></span></span>
         </div>
-      </a>
-      <a class="folio halo" href="Anuchit Thepsuang.html">
-        <i class="corner-bl"></i><i class="corner-br"></i>
-        <div class="pane">
-          <div class="folio-num">Folio · IV</div>
-          <img src="assets/anuchit-card.jpg" alt="Anuchit Thepsuang" style="width: 286.604px; height: 573.208px;">
-          <div class="ident">
-            <div class="race">Aasimar · 23 yrs</div>
-            <h3 class="name">Anuchit Thepsuang</h3>
-            <div class="epithet">— the Confused Heir of Heaven</div>
-          </div>
-        </div>
-        <div class="body">
-          <div class="stat-row">
-            <div class="c"><div class="k">Class</div><div class="v">Monk</div></div>
-            <div class="c"><div class="k">Path</div><div class="v">Open Hand</div></div>
-            <div class="c"><div class="k">Align</div><div class="v">Neutral G</div></div>
-          </div>
-          <div class="blurb">"I survived because of something inside me — but I still don't know what it is." A celestial sigil glows on his forehead; he refuses to speak of it.</div>
-          <div class="open-row">
-            <span class="vol">Vol. IV · 94 pp.</span>
-            <span class="open">Open Folio<span class="arrow"></span></span>
-          </div>
-        </div>
-      </a>
-
-      <a class="folio hellfire" href="Kael Vorn.html">
-        <i class="corner-bl"></i><i class="corner-br"></i>
-        <div class="pane">
-          <div class="folio-num">Folio · V</div>
-          <img src="assets/kael-vorn-card.jpg" alt="Kael Vorn">
-          <div class="ident">
-            <div class="race">Tiefling · 27 ปี</div>
-            <h3 class="name">Kael Vorn</h3>
-            <div class="epithet">— เคล วอร์น — นักล่าผู้โดดเดี่ยว</div>
-          </div>
-        </div>
-        <div class="body">
-          <div class="stat-row">
-            <div class="c"><div class="k">Class</div><div class="v">Ranger</div></div>
-            <div class="c"><div class="k">Legacy</div><div class="v">Infernal</div></div>
-            <div class="c"><div class="k">Vow</div><div class="v">Chaotic E</div></div>
-          </div>
-          <div class="blurb">"ฉันจ้องตาเฮลฮาวด์ได้โดยไม่กระพริบ และเผชิญปัญหาตรงๆ ทางออกที่ตรงและเรียบง่ายคือทางที่ดีที่สุด."</div>
-          <div class="open-row">
-            <span class="vol">Vol. V · 116 pp.</span>
-            <span class="open">Open Folio<span class="arrow"></span></span>
-          </div>
-        </div>
-      </a>
-
-      <a class="folio crow" href="Jen Corner.html">
-        <i class="corner-bl"></i><i class="corner-br"></i>
-        <div class="pane">
-          <div class="folio-num">Folio · VI</div>
-          <img src="assets/jen-corner-card.jpg" alt="Jen Corner">
-          <div class="ident">
-            <div class="race">Human · 24 ปี</div>
-            <h3 class="name">Jen Corner</h3>
-            <div class="epithet">— เจน คอร์เนอร์ — อดีตอาชญากร เซเลติก</div>
-          </div>
-        </div>
-        <div class="body">
-          <div class="stat-row">
-            <div class="c"><div class="k">Class</div><div class="v">Cleric</div></div>
-            <div class="c"><div class="k">Faith</div><div class="v">Old Spirits</div></div>
-            <div class="c"><div class="k">Hunted</div><div class="v">Silver Ch.</div></div>
-          </div>
-          <div class="blurb">"ฉันมีแผนสำรองเสมอ… เพราะโลกนี้ไม่ปราณีคนที่ลังเล." เพื่อนคืออีกาที่ไม่เคยจากไป.</div>
-          <div class="open-row">
-            <span class="vol">Vol. VI · 103 pp.</span>
-            <span class="open">Open Folio<span class="arrow"></span></span>
-          </div>
-        </div>
-      </a>
-
-    </div>
-
-    <!-- ============== FOOTER ============== -->
-    <div class="colophon">
-      The Veiled Codex <span class="sep">·</span> Roster of Folios <span class="sep">·</span> Annum Helmus CC
-    </div>
+      </div>
+    </a>
 
   </div>
 
+  <div class="colophon">
+    The Veiled Codex <span class="sep">·</span> Roster of Folios <span class="sep">·</span> Annum Helmus CC
+  </div>
 
-</body></html>
+</div>
+
+<script>
+  // ====== 1. Drifting motes ======
+  (function(){
+    const box = document.getElementById('atmos');
+    if (!box) return;
+    const N = 18;
+    for (let i=0;i<N;i++){
+      const m = document.createElement('div');
+      m.className = 'mote';
+      const left = Math.random()*100;
+      const dur  = 14 + Math.random()*16;
+      const del  = Math.random()*dur;
+      const dx   = (Math.random()*100 - 50) + 'px';
+      const sz   = 2 + Math.random()*2;
+      m.style.left = left + '%';
+      m.style.width = sz+'px';
+      m.style.height = sz+'px';
+      m.style.animationDuration = dur + 's';
+      m.style.animationDelay = '-' + del + 's';
+      m.style.setProperty('--dx', dx);
+      box.appendChild(m);
+    }
+  })();
+
+  // ====== 2. Folio scroll reveal ======
+  (function(){
+    const folios = document.querySelectorAll('.folio');
+    if (!('IntersectionObserver' in window)){
+      folios.forEach(f => f.classList.add('in'));
+      return;
+    }
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting){
+          e.target.classList.add('in');
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -8% 0px' });
+    folios.forEach(f => io.observe(f));
+  })();
+
+  // ====== 3. Subtle parallax tilt on folio cards ======
+  (function(){
+    if (matchMedia('(hover:none)').matches || matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+    const cards = document.querySelectorAll('.folio');
+    cards.forEach(card => {
+      const img = card.querySelector('.pane img');
+      card.addEventListener('mousemove', (e) => {
+        const r = card.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width  - 0.5; // -0.5 .. 0.5
+        const y = (e.clientY - r.top)  / r.height - 0.5;
+        const rx = (-y * 6).toFixed(2);
+        const ry = (x * 6).toFixed(2);
+        card.style.transform = `perspective(1000px) translateY(-6px) rotateX(${rx}deg) rotateY(${ry}deg)`;
+        if (img) img.style.transform = `scale(1.06) translate(${x*-10}px, ${y*-10}px)`;
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = '';
+        if (img) img.style.transform = '';
+      });
+    });
+  })();
+</script>
+
+</body>
+</html>

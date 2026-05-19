@@ -5,6 +5,7 @@
 <title>Jen Corner — Codex of the Crow</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="stylesheet" href="shared.css">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@400;500&family=UnifrakturCook:wght@700&display=swap" rel="stylesheet" />
 <style>
 :root{
   --bg-deep:#050a0a;
@@ -36,8 +37,6 @@ body{
     var(--bg-deep);
   overflow-x:hidden;
 }
-
-h1,h2,h3,h4{color:var(--ink)}
 em,i{font-style:italic;color:var(--ink-soft)}
 .th{font-family:"Noto Serif Thai",serif;letter-spacing:0}
 .gothic{font-family:"UnifrakturCook","Cinzel",serif;font-weight:700;letter-spacing:0.02em}
@@ -323,6 +322,211 @@ em,i{font-style:italic;color:var(--ink-soft)}
 }
 .flying-raven svg{width:100%;height:100%;color:var(--raven);filter:drop-shadow(0 4px 8px rgba(0,0,0,0.7))}
 
+/* ============ CROW EYES — ดวงตาอีกาในเงามืด ============ */
+.eye-layer{
+  position:fixed;inset:0;pointer-events:none;z-index:60;overflow:hidden;
+}
+.crow-eyes{
+  position:absolute;
+  display:flex;gap:14px;align-items:center;
+  opacity:0;
+  filter:drop-shadow(0 0 6px rgba(255, 200, 80, 0.4));
+  animation: eyes-appear 14s infinite;
+}
+.crow-eyes .eye{
+  position:relative;
+  width:10px;height:10px;border-radius:50%;
+  background:radial-gradient(circle at 40% 40%, #fff5c8 0%, #ffd566 18%, #d99320 45%, #6a3d0a 80%, #1a0a00 100%);
+  box-shadow:
+    0 0 8px rgba(255, 200, 80, 0.9),
+    0 0 18px rgba(255, 160, 40, 0.55),
+    0 0 36px rgba(220, 100, 30, 0.25);
+  animation: blink 5.5s infinite;
+}
+.crow-eyes .eye::after{
+  content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:3px;height:3px;border-radius:50%;background:#0a0500;
+}
+.crow-eyes .eye:nth-child(2){animation-delay:0.18s}
+
+/* faint shadow head behind each pair */
+.crow-eyes::before{
+  content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:80px;height:48px;border-radius:50%;
+  background:radial-gradient(ellipse at center, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 40%, transparent 70%);
+  z-index:-1;
+}
+
+/* per-pair positions and timings */
+.crow-eyes.e1{top:14%;left:3%;  animation-delay:1s;   transform:rotate(-4deg)}
+.crow-eyes.e2{top:42%;right:2%; animation-delay:5s;   transform:rotate(3deg)}
+.crow-eyes.e3{bottom:18%;left:5%;animation-delay:9s;   transform:rotate(-2deg)}
+.crow-eyes.e4{top:68%;right:6%; animation-delay:3s;   transform:rotate(5deg)}
+.crow-eyes.e5{top:8%;right:18%; animation-delay:11s;  transform:rotate(-6deg)}
+.crow-eyes.e6{bottom:6%;right:24%;animation-delay:7s;  transform:rotate(2deg)}
+
+@keyframes eyes-appear{
+  0%   { opacity:0; }
+  8%   { opacity:0.9; }
+  18%  { opacity:0.85; }
+  25%  { opacity:0; }
+  100% { opacity:0; }
+}
+@keyframes blink{
+  0%, 40%, 44%, 100% { transform:scaleY(1); }
+  42% { transform:scaleY(0.05); }
+  72% { transform:scaleY(1); }
+  74% { transform:scaleY(0.05); }
+  76% { transform:scaleY(1); }
+}
+
+/* ============ DRIFTING FEATHERS ============ */
+.feather{
+  position:fixed;pointer-events:none;z-index:55;
+  width:12px;height:26px;opacity:0;
+  color:#0a0a0a;
+}
+.feather svg{width:100%;height:100%;filter:drop-shadow(0 2px 3px rgba(0,0,0,0.6))}
+.feather.f1{left:8%;  animation: feather-fall 22s linear infinite; animation-delay:0s}
+.feather.f2{left:34%; animation: feather-fall 28s linear infinite; animation-delay:8s}
+.feather.f3{left:62%; animation: feather-fall 26s linear infinite; animation-delay:16s}
+.feather.f4{left:88%; animation: feather-fall 30s linear infinite; animation-delay:4s}
+.feather.f5{left:22%; animation: feather-fall 24s linear infinite; animation-delay:12s}
+
+@keyframes feather-fall{
+  0%   { top:-6%;  opacity:0; transform:translateX(0) rotate(0deg); }
+  8%   { opacity:0.45; }
+  50%  { transform:translateX(40px) rotate(180deg); }
+  92%  { opacity:0.3; }
+  100% { top:106%; opacity:0; transform:translateX(-30px) rotate(360deg); }
+}
+
+/* ============ ATMOSPHERIC FOG ============ */
+.fog{
+  position:fixed;inset:0;pointer-events:none;z-index:45;
+  background:
+    radial-gradient(600px 300px at 20% 30%, rgba(95,164,148,0.04), transparent 60%),
+    radial-gradient(800px 400px at 80% 70%, rgba(20,40,40,0.18), transparent 70%);
+  animation: fog-drift 26s ease-in-out infinite alternate;
+}
+@keyframes fog-drift{
+  0%   { transform:translateX(0) translateY(0); opacity:0.7; }
+  100% { transform:translateX(40px) translateY(-20px); opacity:1; }
+}
+
+/* ============ ANIMATED ENTRANCES ============ */
+.fade-up{opacity:0; transform:translateY(20px); transition:opacity 1.2s cubic-bezier(.2,.7,.2,1), transform 1.2s cubic-bezier(.2,.7,.2,1)}
+.fade-up.in{opacity:1; transform:translateY(0)}
+
+/* portrait subtle breathing */
+.portrait-frame img{
+  animation: portrait-breathe 9s ease-in-out infinite alternate;
+}
+@keyframes portrait-breathe{
+  0%   { transform:scale(1.0); filter:contrast(1.06) saturate(0.95) brightness(0.97); }
+  100% { transform:scale(1.025); filter:contrast(1.1) saturate(1) brightness(1.02); }
+}
+
+/* portrait eye-glint — ดวงตาในภาพวาว */
+.portrait-eye-glint{
+  position:absolute;
+  width:8px;height:8px;border-radius:50%;
+  background:radial-gradient(circle, rgba(255,220,140,0.95), rgba(255,180,80,0.3) 50%, transparent 70%);
+  pointer-events:none;
+  z-index:3;
+  opacity:0;
+  animation: glint 8s infinite;
+  mix-blend-mode:screen;
+}
+.portrait-eye-glint.g1{top:30%;left:40%}
+.portrait-eye-glint.g2{top:30%;left:55%; animation-delay:0.15s}
+@keyframes glint{
+  0%, 88%, 100% { opacity:0; }
+  90%, 94% { opacity:0.85; }
+}
+
+/* knot subtle pulse */
+.knot svg{
+  animation: knot-pulse 6s ease-in-out infinite alternate;
+}
+@keyframes knot-pulse{
+  0%   { transform:scale(1) rotate(0deg); opacity:.7; }
+  100% { transform:scale(1.08) rotate(8deg); opacity:1; }
+}
+
+/* ribbon sway */
+.ribbon{
+  transform-origin:top center;
+  animation: ribbon-sway 7s ease-in-out infinite alternate;
+}
+@keyframes ribbon-sway{
+  0%   { transform:rotate(-1.2deg) translateY(0); }
+  100% { transform:rotate(1.4deg) translateY(2px); }
+}
+
+/* title glow pulse */
+.title-area .name-en{
+  animation: title-glow 5s ease-in-out infinite alternate;
+}
+@keyframes title-glow{
+  0%   { text-shadow: 0 0 22px rgba(189,163,106,0.12); }
+  100% { text-shadow: 0 0 38px rgba(189,163,106,0.32), 0 0 8px rgba(95,164,148,0.18); }
+}
+
+/* score cells: faint flicker on hover */
+.score{transition:border-color .35s, background .35s, transform .35s}
+.score:hover{border-color:var(--vellum);background:#1a2828;transform:translateY(-2px)}
+
+/* raven sidebar — eye glint */
+.raven-side .crow-img::before{
+  content:"";position:absolute;
+  top:36%;left:48%;
+  width:9px;height:9px;border-radius:50%;
+  background:radial-gradient(circle, rgba(255,210,120,0.95), rgba(255,150,40,0.4) 45%, transparent 70%);
+  z-index:2;mix-blend-mode:screen;opacity:0;
+  animation: raven-eye 6s infinite;
+}
+@keyframes raven-eye{
+  0%, 30%, 100% { opacity:0; }
+  10%, 18% { opacity:0.9; }
+  60%, 68% { opacity:0.7; }
+}
+
+/* cornice slow rotate */
+.cornice{transition:opacity .8s, color .6s}
+.cornice svg path, .cornice svg circle{transition:stroke .6s}
+.book:hover .cornice{opacity:1; color:var(--vellum)}
+
+/* ============ STALKING EYES (cursor follower) ============ */
+.stalker{
+  position:fixed;left:0;top:0;z-index:65;pointer-events:none;
+  display:flex;gap:16px;align-items:center;
+  opacity:0;transition:opacity 1.2s ease;
+  filter:drop-shadow(0 0 10px rgba(255,200,80,0.5));
+  transform:translate(-1000px,-1000px);
+}
+.stalker.show{opacity:0.85}
+.stalker::before{
+  content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:120px;height:60px;border-radius:50%;
+  background:radial-gradient(ellipse at center, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 35%, transparent 70%);
+  z-index:-1;
+}
+.stalker .seye{
+  width:11px;height:11px;border-radius:50%;position:relative;
+  background:radial-gradient(circle at 40% 40%, #fff5c8 0%, #ffd566 18%, #d99320 45%, #6a3d0a 80%, #1a0a00 100%);
+  box-shadow:
+    0 0 10px rgba(255,200,80,0.95),
+    0 0 22px rgba(255,160,40,0.55),
+    0 0 44px rgba(220,100,30,0.25);
+  animation: blink 4.5s infinite;
+}
+.stalker .seye::after{
+  content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:3.5px;height:3.5px;border-radius:50%;background:#0a0500;
+}
+.stalker .seye:nth-child(2){animation-delay:0.22s}
+
 /* ============ RESPONSIVE ============ */
 @media (max-width:1024px){
   .book{grid-template-columns:1fr;background:linear-gradient(180deg, var(--bg-page), var(--bg-page-2));box-shadow:none;border-left:none;border-right:none}
@@ -348,6 +552,26 @@ em,i{font-style:italic;color:var(--ink-soft)}
 <body>
 
 <a class="back-link" href="index.html"><span class="arr"></span>Back to Codex</a>
+
+<!-- ATMOSPHERIC FOG -->
+<div class="fog" aria-hidden="true"></div>
+
+<!-- ดวงตาอีกาในเงามืด — CROW EYES WATCHING -->
+<div class="eye-layer" aria-hidden="true">
+  <div class="crow-eyes e1"><span class="eye"></span><span class="eye"></span></div>
+  <div class="crow-eyes e2"><span class="eye"></span><span class="eye"></span></div>
+  <div class="crow-eyes e3"><span class="eye"></span><span class="eye"></span></div>
+  <div class="crow-eyes e4"><span class="eye"></span><span class="eye"></span></div>
+  <div class="crow-eyes e5"><span class="eye"></span><span class="eye"></span></div>
+  <div class="crow-eyes e6"><span class="eye"></span><span class="eye"></span></div>
+</div>
+
+<!-- DRIFTING BLACK FEATHERS -->
+<div class="feather f1" aria-hidden="true"><svg viewBox="0 0 12 26" fill="currentColor"><path d="M6 0 C9 6 11 12 10 18 C9 22 7 25 6 26 C5 25 3 22 2 18 C1 12 3 6 6 0 Z"/><line x1="6" y1="2" x2="6" y2="24" stroke="#222" stroke-width="0.6"/></svg></div>
+<div class="feather f2" aria-hidden="true"><svg viewBox="0 0 12 26" fill="currentColor"><path d="M6 0 C9 6 11 12 10 18 C9 22 7 25 6 26 C5 25 3 22 2 18 C1 12 3 6 6 0 Z"/><line x1="6" y1="2" x2="6" y2="24" stroke="#222" stroke-width="0.6"/></svg></div>
+<div class="feather f3" aria-hidden="true"><svg viewBox="0 0 12 26" fill="currentColor"><path d="M6 0 C9 6 11 12 10 18 C9 22 7 25 6 26 C5 25 3 22 2 18 C1 12 3 6 6 0 Z"/><line x1="6" y1="2" x2="6" y2="24" stroke="#222" stroke-width="0.6"/></svg></div>
+<div class="feather f4" aria-hidden="true"><svg viewBox="0 0 12 26" fill="currentColor"><path d="M6 0 C9 6 11 12 10 18 C9 22 7 25 6 26 C5 25 3 22 2 18 C1 12 3 6 6 0 Z"/><line x1="6" y1="2" x2="6" y2="24" stroke="#222" stroke-width="0.6"/></svg></div>
+<div class="feather f5" aria-hidden="true"><svg viewBox="0 0 12 26" fill="currentColor"><path d="M6 0 C9 6 11 12 10 18 C9 22 7 25 6 26 C5 25 3 22 2 18 C1 12 3 6 6 0 Z"/><line x1="6" y1="2" x2="6" y2="24" stroke="#222" stroke-width="0.6"/></svg></div>
 
 <div class="binding">
 
@@ -378,7 +602,7 @@ em,i{font-style:italic;color:var(--ink-soft)}
         <circle cx="20" cy="20" r="6"/>
       </svg></div>
 
-      <div class="title-area">
+      <div class="title-area fade-up">
         <div class="codex">— Codex of the Crow · Folio VI —</div>
         <h1 class="name-en">Jen Corner</h1>
         <div class="name-th">เจน คอร์เนอร์</div>
@@ -387,9 +611,11 @@ em,i{font-style:italic;color:var(--ink-soft)}
       </div>
 
       <!-- Portrait -->
-      <div class="portrait-wrap">
+      <div class="portrait-wrap fade-up">
         <div class="portrait-frame">
           <img src="assets/jen-corner-portrait.jpg" alt="Jen Corner" />
+          <span class="portrait-eye-glint g1" aria-hidden="true"></span>
+          <span class="portrait-eye-glint g2" aria-hidden="true"></span>
           <div class="marg">
             <div class="lbl">Plate I — The Crow on the Shoulder</div>
             <div class="desc">"I always have a backup plan — because this world has no mercy for those who hesitate."</div>
@@ -408,8 +634,8 @@ em,i{font-style:italic;color:var(--ink-soft)}
       </div>
 
       <!-- Basic info -->
-      <div class="cap">Of His Person <span class="th">— ข้อมูลพื้นฐาน</span><span class="line"></span></div>
-      <div class="slate">
+      <div class="cap fade-up">Of His Person <span class="th">— ข้อมูลพื้นฐาน</span><span class="line"></span></div>
+      <div class="slate fade-up">
         <div class="rows">
           <div class="k">เผ่าพันธุ์</div><div class="v">มนุษย์ <span class="en">(Human · Celtic blood)</span></div>
           <div class="k">อาชีพ</div>   <div class="v">Cleric · Protector — Lv. 1</div>
@@ -422,7 +648,7 @@ em,i{font-style:italic;color:var(--ink-soft)}
       </div>
 
       <!-- Appearance -->
-      <div class="cap">Of His Likeness <span class="th">— รูปลักษณ์</span><span class="line"></span></div>
+      <div class="cap fade-up">Of His Likeness <span class="th">— รูปลักษณ์</span><span class="line"></span></div>
       <ul class="bullet-list" style="margin-bottom:30px">
         <li>ผมสีดำเข้ม <span class="en">— charcoal black, lank from rain.</span></li>
         <li>ดวงตาสีน้ำตาลเข้ม คมชัดและสังเกต <span class="en">— sharp brown, always counting exits.</span></li>
@@ -433,7 +659,7 @@ em,i{font-style:italic;color:var(--ink-soft)}
       </ul>
 
       <!-- Personality -->
-      <div class="cap">Of His Disposition <span class="th">— บุคลิกภาพ</span><span class="line"></span></div>
+      <div class="cap fade-up">Of His Disposition <span class="th">— บุคลิกภาพ</span><span class="line"></span></div>
       <ul class="bullet-list">
         <li>เย็นชา · สงบนิ่ง · สังเกตทุกอย่างเงียบๆ.</li>
         <li>ไม่ค่อยยิ้ม แต่เมื่อยิ้มคือรอยยิ้มเศร้าๆ.</li>
@@ -466,8 +692,8 @@ em,i{font-style:italic;color:var(--ink-soft)}
       </svg></div>
 
       <!-- Ability scores -->
-      <div class="cap">Of His Powers <span class="th">— ค่าสถานะ</span><span class="line"></span></div>
-      <div class="scores">
+      <div class="cap fade-up">Of His Powers <span class="th">— ค่าสถานะ</span><span class="line"></span></div>
+      <div class="scores fade-up">
         <div class="score"><div class="ab">STR</div><div class="sc">8</div><div class="mod">−1</div></div>
         <div class="score"><div class="ab">DEX</div><div class="sc">16</div><div class="mod">+3</div></div>
         <div class="score"><div class="ab">CON</div><div class="sc">15</div><div class="mod">+2</div></div>
@@ -499,8 +725,8 @@ em,i{font-style:italic;color:var(--ink-soft)}
       </ul>
 
       <!-- Raven companion -->
-      <div class="cap">Of His Comrade <span class="th">— เพื่อนร่วมทาง</span><span class="line"></span></div>
-      <div class="raven-side">
+      <div class="cap fade-up">Of His Comrade <span class="th">— เพื่อนร่วมทาง</span><span class="line"></span></div>
+      <div class="raven-side fade-up">
         <div class="crow-img">
           <img src="assets/jen-corner-raven.jpg" alt="The Crow"/>
         </div>
@@ -517,8 +743,8 @@ em,i{font-style:italic;color:var(--ink-soft)}
       </div>
 
       <!-- Likes / Dislikes -->
-      <div class="cap">Of His Heart <span class="th">— สิ่งที่ชอบและไม่ชอบ</span><span class="line"></span></div>
-      <div class="dual">
+      <div class="cap fade-up">Of His Heart <span class="th">— สิ่งที่ชอบและไม่ชอบ</span><span class="line"></span></div>
+      <div class="dual fade-up">
         <div>
           <h4>Loved <span class="th">สิ่งที่ชอบ</span></h4>
           <ul>
@@ -552,8 +778,8 @@ em,i{font-style:italic;color:var(--ink-soft)}
       </ul>
 
       <!-- Equipment -->
-      <div class="cap">Of His Goods <span class="th">— อุปกรณ์</span><span class="line"></span></div>
-      <div class="inv">
+      <div class="cap fade-up">Of His Goods <span class="th">— อุปกรณ์</span><span class="line"></span></div>
+      <div class="inv fade-up">
         <div class="inv-cell"><div class="gl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 3 L8 7 L12 11 L16 7 Z"/><path d="M12 11 L9 18 L12 22 L15 18 Z"/></svg></div><div><div class="nm">Mace</div><div class="nm-th">กระบอง</div></div></div>
         <div class="inv-cell"><div class="gl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/></svg></div><div><div class="nm">Round Shield</div><div class="nm-th">โล่กลม</div></div></div>
         <div class="inv-cell"><div class="gl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M5 4 L12 6 L19 4 V14 C19 18 16 21 12 22 C8 21 5 18 5 14 Z"/></svg></div><div><div class="nm">Chain Armor</div><div class="nm-th">เกราะโซ่</div></div></div>
@@ -578,7 +804,7 @@ em,i{font-style:italic;color:var(--ink-soft)}
       </div>
 
       <!-- Oaths -->
-      <div class="oaths">
+      <div class="oaths fade-up">
         <h4>— Of His Oaths · คำสาบาน —</h4>
         <div class="row">
           <div class="oath">
@@ -613,6 +839,11 @@ em,i{font-style:italic;color:var(--ink-soft)}
     Codex of the Veiled Watch · Folio VI of VIII · Codex of the Crow · เจน คอร์เนอร์
   </div>
 
+</div>
+
+<!-- ============ STALKING CROW EYES — ดวงตาที่ตามเฝ้า ============ -->
+<div class="stalker" id="stalker" aria-hidden="true">
+  <span class="seye"></span><span class="seye"></span>
 </div>
 
 <!-- ============ FLOATING RAVEN ============ -->
@@ -660,6 +891,83 @@ em,i{font-style:italic;color:var(--ink-soft)}
     }
     r.style.opacity = '0.4';
     raf = requestAnimationFrame(tick);
+  })();
+
+  /* ============ STALKING CROW EYES ============
+     A pair of eyes that lurk far behind the cursor — they appear after the
+     cursor has been still for a moment, drift slowly toward it from the dark,
+     and vanish the instant the cursor moves quickly. Matches Jen's "always
+     counting exits" — something is always watching from the shadows. */
+  (function(){
+    const s = document.getElementById('stalker');
+    if (!s || window.innerWidth < 1024) return;
+    let mx = window.innerWidth/2, my = window.innerHeight/2;
+    let sx = -200, sy = -200;
+    let lastMove = performance.now();
+    let visible = false;
+
+    document.addEventListener('mousemove', (e) => {
+      // measure speed -> hide eyes if cursor darts
+      const now = performance.now();
+      const dt = Math.max(1, now - lastMove);
+      const dx = e.clientX - mx, dy = e.clientY - my;
+      const speed = Math.hypot(dx, dy) / dt;
+      mx = e.clientX; my = e.clientY;
+      lastMove = now;
+      if (speed > 0.9) {
+        s.classList.remove('show');
+        visible = false;
+      }
+    });
+
+    function tick(){
+      const now = performance.now();
+      const still = now - lastMove;
+      // appear when cursor has been calm for ~1.4s
+      if (still > 1400 && !visible) { s.classList.add('show'); visible = true; }
+      // drift slowly toward an offset behind/below the cursor
+      const tx = mx - 140, ty = my + 60;
+      sx += (tx - sx) * 0.012;
+      sy += (ty - sy) * 0.012;
+      // subtle bob
+      const bob = Math.sin(now/700) * 1.5;
+      s.style.transform = `translate(${sx}px, ${sy + bob}px)`;
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  })();
+
+  /* ============ SCROLL REVEAL ============ */
+  (function(){
+    const els = document.querySelectorAll('.fade-up');
+    if (!els.length) return;
+    if (!('IntersectionObserver' in window)) {
+      els.forEach(el => el.classList.add('in'));
+      return;
+    }
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(en => {
+        if (en.isIntersecting) {
+          en.target.classList.add('in');
+          io.unobserve(en.target);
+        }
+      });
+    }, { threshold: 0.05, rootMargin: '0px 0px -20px 0px' });
+    els.forEach(el => io.observe(el));
+
+    // Immediate reveal for anything already in the viewport on load —
+    // IO can be slow or skip elements that are intersecting at first paint.
+    requestAnimationFrame(() => {
+      els.forEach(el => {
+        const r = el.getBoundingClientRect();
+        if (r.top < window.innerHeight && r.bottom > 0) {
+          el.classList.add('in');
+          io.unobserve(el);
+        }
+      });
+    });
+    // Final safety net — never let the page stick at opacity 0.
+    setTimeout(() => { els.forEach(el => el.classList.add('in')); }, 1500);
   })();
 </script>
 

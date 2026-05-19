@@ -263,6 +263,21 @@ export async function startWebServer(): Promise<void> {
   if (!fs.existsSync(monstersDir)) fs.mkdirSync(monstersDir, { recursive: true });
   await app.register(FastifyStatic, { root: monstersDir, prefix: "/monsters/", decorateReply: false });
 
+  // ── Clean URL Routes ───────────────────────────────────────────────────
+  app.get("/story", (_req, reply) => reply.sendFile("story.html"));
+  app.get("/game",  (_req, reply) => reply.sendFile("game.html"));
+  const folioMap: Record<string, string> = {
+    "aurora":       "Aurora Elaris.html",
+    "aython":       "Aython Ashvail Aurelius.html",
+    "kael-veranth": "Kael Veranth.html",
+    "anuchit":      "Anuchit Thepsuang.html",
+    "kael-vorn":    "Kael Vorn.html",
+    "jen":          "Jen Corner.html",
+  };
+  for (const [slug, file] of Object.entries(folioMap)) {
+    app.get(`/folio/${slug}`, (_req, reply) => reply.sendFile(file));
+  }
+
   // ── Auth ──────────────────────────────────────────────────────────────
 
   // Check if username exists

@@ -1,0 +1,11 @@
+{
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/folio/aurora",       "destination": "/Aurora Elaris.html" },
+    { "source": "/folio/aython",       "destination": "/Aython Ashvail Aurelius.html" },
+    { "source": "/folio/kael-veranth", "destination": "/Kael Veranth.html" },
+    { "source": "/folio/anuchit",      "destination": "/Anuchit Thepsuang.html" },
+    { "source": "/folio/kael-vorn",    "destination": "/Kael Vorn.html" },
+    { "source": "/folio/jen",          "destination": "/Jen Corner.html" }
+  ]
+}

@@ -440,6 +440,68 @@ body.th-active .chapter-body{font-family:"Noto Serif Thai",serif;font-size:1.06r
 }
 body.th-active .dm-voice p{font-family:"Noto Serif Thai",serif;font-size:.95rem;line-height:1.9}
 
+/* ── CHAPTER IMAGES ─────────────────────────────────────────── */
+.chapter-imgs{margin-top:28px;display:grid;gap:12px}
+.chapter-imgs.c-1{grid-template-columns:1fr}
+.chapter-imgs.c-2{grid-template-columns:1fr 1fr}
+.chapter-imgs.c-3{grid-template-columns:1fr 1fr 1fr}
+
+.chapter-img-frame{
+  position:relative;margin:0;padding:5px;
+  background:var(--bg-deep);
+  border:1px solid color-mix(in srgb,var(--accent) 38%,var(--line));
+  box-shadow:0 4px 28px rgba(0,0,0,.6),inset 0 0 24px rgba(0,0,0,.4);
+  overflow:hidden;
+  transition:border-color .4s,box-shadow .4s;
+}
+.chapter-img-frame:hover{
+  border-color:color-mix(in srgb,var(--accent) 70%,transparent);
+  box-shadow:0 8px 48px rgba(0,0,0,.75),0 0 24px color-mix(in srgb,var(--accent) 18%,transparent);
+}
+.chapter-img-frame img,.chapter-img-frame video{
+  display:block;width:100%;height:220px;object-fit:cover;
+  filter:sepia(.12) brightness(.85) contrast(1.1);
+  transition:filter .45s ease,transform .55s ease;
+}
+.chapter-imgs.c-1 .chapter-img-frame img,.chapter-imgs.c-1 .chapter-img-frame video{height:340px}
+.chapter-img-frame:hover img,.chapter-img-frame:hover video{
+  filter:sepia(.04) brightness(.95) contrast(1.05);
+  transform:scale(1.025);
+}
+
+/* corner marks */
+.img-c{
+  position:absolute;width:13px;height:13px;z-index:3;
+  border-color:var(--accent);border-style:solid;border-width:0;opacity:.7;
+  transition:opacity .3s;
+}
+.chapter-img-frame:hover .img-c{opacity:1}
+.img-c-tl{top:3px;left:3px;border-top-width:2px;border-left-width:2px}
+.img-c-tr{top:3px;right:3px;border-top-width:2px;border-right-width:2px}
+.img-c-bl{bottom:3px;left:3px;border-bottom-width:2px;border-left-width:2px}
+.img-c-br{bottom:3px;right:3px;border-bottom-width:2px;border-right-width:2px}
+
+/* caption on hover */
+.chapter-img-cap{
+  position:absolute;bottom:0;left:0;right:0;padding:18px 12px 8px;
+  background:linear-gradient(transparent,rgba(0,0,0,.8) 55%);
+  font-family:"Cinzel",serif;font-size:.48rem;letter-spacing:.26em;
+  text-transform:uppercase;color:var(--accent);
+  opacity:0;transition:opacity .3s;z-index:2;
+}
+.chapter-img-frame:hover .chapter-img-cap{opacity:1}
+
+.chapter-img-solo{margin:28px 0;display:block}
+.chapter-img-solo img,.chapter-img-solo video{height:300px}
+
+@media (max-width:700px){
+  .chapter-imgs.c-2,.chapter-imgs.c-3{grid-template-columns:1fr 1fr}
+  .chapter-imgs.c-1 .chapter-img-frame img,.chapter-img-frame img,.chapter-imgs.c-1 .chapter-img-frame video,.chapter-img-frame video{height:180px}
+}
+@media (max-width:480px){
+  .chapter-imgs.c-2,.chapter-imgs.c-3{grid-template-columns:1fr}
+}
+
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important}
   .shader-wallpaper,.cosmos,.chapter-fx,.shooting-star{display:none}
@@ -571,12 +633,24 @@ body.th-active .dm-voice p{font-family:"Noto Serif Thai",serif;font-size:.95rem;
               <p>The gate guards were the bored kind, which was worse than hostile. Hostility could be charmed. Boredom simply didn't care. When Aython finally reached the front and invoked his family name — House Aurelius, of the capital, surely they had heard — one guard picked at his thumbnail and the other looked somewhere past his left shoulder.</p>
               <p>But Aython had been performing nobility since before he understood what nobility actually was. He straightened. He let silence do its work. He spoke again, slower, lower, as if granting the men a private audience. By the time he gestured at the four figures behind him, the guards were nodding before they'd consciously decided to.</p>
               <p>In the brief stillness under the archway's shadow, all five of them stood together for perhaps the first time without moving. Aython adjusted his cloak. Vorn watched the treeline beyond the wall. Jen read the gate's crest with the idle focus of someone cataloguing exits. Anuchit stood very still, hand half-raised, as though listening to something none of the others could hear. Veranth stood slightly apart, as always. No one spoke. No one needed to. They walked through.</p>
+              <figure class="chapter-img-frame chapter-img-solo">
+                <span class="img-c img-c-tl"></span><span class="img-c img-c-tr"></span>
+                <span class="img-c img-c-bl"></span><span class="img-c img-c-br"></span>
+                <img src="sessions/img/ch1-gates.jpg" alt="At the Gates of Borderland" loading="lazy">
+                <span class="chapter-img-cap">At the Gates of Borderland</span>
+              </figure>
             </div>
             <div class="lang-th">
               <p>เมือง Borderland ชายแดนมีกลิ่นของฝุ่น สัตว์เลี้ยง และความสิ้นหวังของคนที่ไม่มีที่อื่นจะไปอีกแล้ว คุณอยู่ท้ายแถวที่เคลื่อนช้า ห้าคนพร้อมห้าเหตุผลที่ต่างกันสิ้นเชิง ไม่มีใครบอกอีกคน ประตูเมืองอยู่เบื้องหน้า คุณนับเหรียญในกระเป๋าโดยไม่ต้องมอง และรู้อยู่แล้วว่าเหลือน้อยแค่ไหน</p>
               <p>ทหารยามที่นี่เป็นประเภทเบื่องาน ซึ่งร้ายกว่าประเภทอยากต่อยด้วยซ้ำ ความก้าวร้าวพอใช้เสน่ห์สยบได้ แต่ความเบื่อหน่ายนั้นไม่สนใจอะไรทั้งนั้น เมื่อ Aython เอ่ยชื่อตระกูล — Aurelius แห่งนครหลวง พวกท่านคงเคยได้ยิน — ยามคนหนึ่งแคะเล็บหัวแม่มือ อีกคนเมินสายตาผ่านไหล่ซ้ายของเขา</p>
               <p>แต่ Aython ฝึกแสดงความสูงศักดิ์มาตั้งแต่ก่อนจะเข้าใจว่ามันคืออะไร เขาตั้งร่าง ปล่อยให้ความเงียบทำหน้าที่ก่อน แล้วค่อยพูดอีกครั้ง ช้าลง เบาลง ราวกับกำลังให้ทั้งสองได้รับเสด็จแบบส่วนตัว เมื่อเขาหันชี้ไปยังสี่ร่างข้างหลัง ยามทั้งสองพยักหน้าก่อนที่ตัวเองจะทันรู้ว่าตัดสินใจแล้ว</p>
               <p>ในความเงียบชั่วครู่ใต้เงาของซุ้มประตู ทั้งห้าคนยืนรวมกันเป็นครั้งแรกโดยไม่มีใครขยับ Aython ปรับผ้าคลุม Vorn จ้องมองแนวป่าเหนือกำแพง Jen อ่านตราสัญลักษณ์ด้วยสายตาคนที่กำลังนับทางออก Anuchit ยืนนิ่ง มือยกขึ้นครึ่งทาง ราวกับกำลังฟังบางอย่างที่คนอื่นไม่ได้ยิน Veranth อยู่ห่างออกมาเล็กน้อย เหมือนเคย ไม่มีใครพูด ไม่จำเป็น พวกเขาเดินผ่าน</p>
+              <figure class="chapter-img-frame chapter-img-solo">
+                <span class="img-c img-c-tl"></span><span class="img-c img-c-tr"></span>
+                <span class="img-c img-c-bl"></span><span class="img-c img-c-br"></span>
+                <img src="sessions/img/ch1-gates.jpg" alt="At the Gates of Borderland" loading="lazy">
+                <span class="chapter-img-cap">At the Gates of Borderland</span>
+              </figure>
             </div>
           </div>
         </div>
@@ -609,15 +683,39 @@ body.th-active .dm-voice p{font-family:"Noto Serif Thai",serif;font-size:.95rem;
               <p>The temple has the look of a place that once believed in itself. You move through it now — checking, cataloguing, hoping — and the candles gutter in drafts from cracks in the wall, throwing shadows across a stone deity worn smooth by hands that long predated yours. The offering dish is nearly empty. The vestry is locked. Whatever you came looking for, this place spent it long ago.</p>
               <p>Anuchit sat in a pew near the altar and folded his hands. He was not praying — he didn't know what to pray to, or whether anything would hear — but the posture helped him think. He had survived something that should have killed him. He still didn't know why. The answer felt close in the quiet, like a word on the tip of a tongue. Jen passed behind him on her way back from the vestry. Their eyes met for half a second. She had slipped a small coin from the offering dish into her sleeve. Neither of them said anything. Some things didn't need saying.</p>
               <p>Veranth found the scriptorium locked. When he talked the attending monk into opening it, he found three shelves of ordinary hymnals, a water-damaged codex on farming, and dust. He took a Bible from the rack by the door on the way out — not because he wanted it, but because it seemed like something a person should have if they were going to figure out the rules of a world that kept putting divine marks on people. He opened to the first page. Someone had written a name inside the front cover in careful, deliberate script. A name he couldn't place. He closed it and tucked it under his arm.</p>
+              <figure class="chapter-img-frame chapter-img-solo">
+                <span class="img-c img-c-tl"></span><span class="img-c img-c-tr"></span>
+                <span class="img-c img-c-bl"></span><span class="img-c img-c-br"></span>
+                <img src="sessions/img/ch2-temple.jpg" alt="The Temple of Borderland" loading="lazy">
+                <span class="chapter-img-cap">The Temple of Borderland</span>
+              </figure>
               <p>Across the city at the Drunken Dragon, noise was the opposite kind of religion. Aython was two drinks ahead of the room and climbing, the crowd around him exactly the kind that wanted to be part of something. He gave them something to be part of. Vorn had removed himself to a corner table, watching a one-handed old man who had been nursing the same drink for an hour — lifting and setting down that truncated arm with a faint look of surprise, as if the absence still caught him off guard. When Vorn sat across from him without asking, the old man didn't look up. "Lost it protecting something," he said, to no one in particular. "Thought it was worth it at the time." Vorn waited. The man didn't say more. Not yet.</p>
               <p>When the other three arrived and joined the contest, Aython was somehow still standing at the end — barely, chin lifted against all physical evidence that he should fall. He looked at the prize in front of him, then pushed it back toward Albus. "Tonight," he said, with the careful diction of a man concentrating hard on each syllable, "everyone drinks." The crowd erupted. Aython smiled the smile of a man who understood that some investments had no financial return.</p>
+              <figure class="chapter-img-frame chapter-img-solo">
+                <span class="img-c img-c-tl"></span><span class="img-c img-c-tr"></span>
+                <span class="img-c img-c-bl"></span><span class="img-c img-c-br"></span>
+                <img src="sessions/img/ch2-drinking.jpg" alt="Tonight, Everyone Drinks" loading="lazy">
+                <span class="chapter-img-cap">Tonight, Everyone Drinks</span>
+              </figure>
             </div>
             <div class="lang-th">
               <p>โบสถ์แห่งนี้ดูเหมือนสถานที่ที่เคยเชื่อมั่นในตัวเองมาก่อน คุณเดินผ่านมันตอนนี้ ตรวจสอบ จดจำ หวัง และเทียนไขระริกในลมจากรอยแตกของผนัง พาดเงาบนใบหน้าเทพหินที่ถูกลูบจนเกลี้ยงจากมือนับไม่ถ้วนที่นานก่อนมือของคุณ จานบริจาคแทบว่างเปล่า ห้องเครื่องใช้ถูกล็อก ไม่ว่าคุณมาตามหาอะไร สถานที่นี้ใช้มันหมดไปนานแล้ว</p>
               <p>Anuchit นั่งบนม้านั่งข้างแท่นบูชาและประสานมือ เขาไม่ได้สวดมนต์ — ไม่รู้จะสวดถึงใคร หรือว่าจะมีอะไรได้ยิน — แต่ท่าทางช่วยให้คิดได้ชัดขึ้น เขารอดจากบางอย่างที่ควรจะฆ่าเขาได้ แต่ยังไม่รู้ว่าทำไม คำตอบรู้สึกใกล้มือในความเงียบนั้น เหมือนคำที่ติดอยู่ที่ปลายลิ้น Jen ผ่านมาข้างหลังเขาระหว่างเดินกลับจากห้องเครื่องใช้ สายตาทั้งสองปะกันครึ่งวินาที เธอเพิ่งเขยิบเหรียญบริจาคเม็ดเล็กใส่แขนเสื้อ ไม่มีใครพูดอะไร บางเรื่องไม่ต้องพูด</p>
               <p>Veranth พบว่าห้องคัมภีร์ถูกล็อก เมื่อพูดจนพระหนุ่มยอมเปิดให้ พบชั้นสามชั้นเต็มไปด้วยหนังสือเพลงสวดธรรมดา คัมภีร์ว่าด้วยการเกษตรที่เสียหายจากน้ำ และฝุ่น เขาหยิบ Bible จากชั้นข้างประตูก่อนออกมา ไม่ใช่เพราะต้องการ แต่เพราะรู้สึกว่านั่นคือสิ่งที่คนควรมีถ้าจะพยายามทำความเข้าใจกฎของโลกที่ชอบประทับตราศักดิ์สิทธิ์บนผู้คน เขาเปิดไปหน้าแรก มีคนเขียนชื่อไว้ในปกด้านในด้วยลายมืออย่างระมัดระวัง ชื่อที่เขาจำไม่ได้ว่าเคยได้ยินที่ไหน เขาปิดหนังสือแล้วเหน็บไว้ใต้แขน</p>
+              <figure class="chapter-img-frame chapter-img-solo">
+                <span class="img-c img-c-tl"></span><span class="img-c img-c-tr"></span>
+                <span class="img-c img-c-bl"></span><span class="img-c img-c-br"></span>
+                <img src="sessions/img/ch2-temple.jpg" alt="The Temple of Borderland" loading="lazy">
+                <span class="chapter-img-cap">The Temple of Borderland</span>
+              </figure>
               <p>อีกฟากเมืองที่ Drunken Dragon เสียงอึกทึกเป็นศาสนาอีกแบบ Aython ดื่มนำผู้คนไปสองแก้วและยังไม่หยุด ฝูงชนที่รวมตัวเป็นประเภทที่อยากเป็นส่วนหนึ่งของบางอย่าง เขาให้สิ่งนั้นกับพวกเขา Vorn ถอยไปนั่งที่มุมห้อง จับตาดูชายแก่มือด้วนที่จิบเหล้าแก้วเดิมมาชั่วโมงแล้ว ยกแขนที่สิ้นสุดตรงข้อมือขึ้นแล้ววางลงซ้ำๆ ด้วยสีหน้าแปลกใจเล็กน้อยราวกับการสูญเสียยังคงจับโกหกเขาอยู่ เมื่อ Vorn นั่งลงตรงข้ามโดยไม่ถามก่อน ชายแก่ไม่ได้แหงนมอง "เสียไปเพื่อปกป้องบางอย่าง" เขาพูดกับอากาศ "คิดว่าคุ้ม ตอนนั้น" Vorn รอ ชายแก่ไม่พูดต่อ ยังไม่ใช่ตอนนี้</p>
               <p>เมื่ออีกสามคนมาสมทบและการแข่งขันกลายเป็นห้าฝ่าย Aython หาแรงได้จากที่ไหนไม่รู้ เขาเป็นคนสุดท้ายที่ยังตั้งตรงได้ คางยกขึ้นสู้กับหลักฐานทางกายภาพทุกชิ้น เมื่อรางวัลถูกวางตรงหน้า เขามองอยู่ครู่แล้วเขยิบกลับให้ Albus "คืนนี้" เขาพูดด้วยการออกเสียงอย่างระมัดระวังของคนที่ตั้งใจกับทุกพยางค์ "ทุกคนดื่ม" ฝูงชนระเบิดออก Aython ยิ้มแบบคนที่รู้ว่าการลงทุนบางอย่างไม่มีผลตอบแทนทางการเงิน</p>
+              <figure class="chapter-img-frame chapter-img-solo">
+                <span class="img-c img-c-tl"></span><span class="img-c img-c-tr"></span>
+                <span class="img-c img-c-bl"></span><span class="img-c img-c-br"></span>
+                <img src="sessions/img/ch2-drinking.jpg" alt="Tonight, Everyone Drinks" loading="lazy">
+                <span class="chapter-img-cap">Tonight, Everyone Drinks</span>
+              </figure>
             </div>
           </div>
         </div>
@@ -649,16 +747,52 @@ body.th-active .dm-voice p{font-family:"Noto Serif Thai",serif;font-size:.95rem;
             <div class="lang-en">
               <p>You are back at the temple, this time with the full party, this time with a plan. Vorn's approach was direct: he leaned across the vestry table, placed one hand flat on the wood, and explained to Father Flassia, in plain terms, the benefits of cooperation. Flassia stared at the hand. Then at Vorn. Then back at the hand. Nothing came out of his mouth except a faint, sustained vowel sound. You watch Aython step smoothly in front of Vorn — the way someone moves when they've done exactly this before.</p>
               <p>What followed was a masterpiece of misdirection. Aython's voice dropped to the register of a man sharing a confidence. His family, he explained, maintained certain… relationships with the higher offices of the church. Appointments had been made. Appointments could be made again. He watched Flassia's spine straighten fraction by fraction, the exhaustion in his face replaced by something Aython recognized immediately: the dangerous brightness of a man beginning to want something. By the time Aython finished, Flassia had offered the communion wine stored for weddings, produced paper and ink, and was composing a letter of introduction to the city lord with the focused energy of someone writing their own future. Aython did not correct any of his assumptions.</p>
+              <figure class="chapter-img-frame chapter-img-solo">
+                <span class="img-c img-c-tl"></span><span class="img-c img-c-tr"></span>
+                <span class="img-c img-c-bl"></span><span class="img-c img-c-br"></span>
+                <img src="sessions/img/ch3-pope.jpg" alt="The Pope's Gambit" loading="lazy">
+                <span class="chapter-img-cap">The Pope's Gambit</span>
+              </figure>
               <p>Jen stood at the altar performing last rites for a grieving family, mouthing words she didn't believe to a god she wasn't sure existed, while her hands made the correct gestures from long practice. She did it perfectly. That bothered her more than she expected.</p>
+              <figure class="chapter-img-frame chapter-img-solo">
+                <span class="img-c img-c-tl"></span><span class="img-c img-c-tr"></span>
+                <span class="img-c img-c-bl"></span><span class="img-c img-c-br"></span>
+                <img src="sessions/img/ch3-ceremony.jpg" alt="Hollow Rites" loading="lazy">
+                <span class="chapter-img-cap">Hollow Rites</span>
+              </figure>
               <p>Veranth turned the Bible over in his hands outside the locked scriptorium and thought about the name written inside it. He'd checked — the scriptorium held nothing but ordinary texts. Whatever power this place had once possessed had long since departed, taken or spent or simply forgotten. The Bible was an ordinary book. The name in it was an ordinary name. And yet he kept thinking about it. He tucked the book away and said nothing to the others.</p>
               <p>At the forge, the plan was simple: help Calistra with her work, earn goodwill, ask about the one-handed man's lost treasure. The execution was less simple. Within ten minutes the party had managed to misplace a set of tongs, overheat a blade Calistra had been working on for three days, and cause a minor incident involving a bucket of water and the wrong part of the furnace. Calistra pointed at the door with the quiet authority of someone who had been doing this long enough to know when to cut her losses. They went.</p>
+              <figure class="chapter-img-frame chapter-img-solo">
+                <span class="img-c img-c-tl"></span><span class="img-c img-c-tr"></span>
+                <span class="img-c img-c-bl"></span><span class="img-c img-c-br"></span>
+                <img src="sessions/img/ch3-forge.jpg" alt="The Empty Forge" loading="lazy">
+                <span class="chapter-img-cap">The Empty Forge</span>
+              </figure>
             </div>
             <div class="lang-th">
               <p>คุณกลับมาที่โบสถ์อีกครั้ง คราวนี้พร้อมทั้งกลุ่ม คราวนี้มีแผน วิธีของ Vorn ตรงไปตรงมา เขาโน้มตัวข้ามโต๊ะในห้องเครื่องใช้ วางมือราบบนไม้ แล้วอธิบายให้ Father Flassia ฟังอย่างชัดเจนว่าการให้ความร่วมมือจะเป็นประโยชน์อย่างไร Flassia จ้องมือ แล้วมองไปที่ Vorn แล้วกลับมาที่มือ ไม่มีอะไรออกจากปากนอกจากเสียงสระพร่าเพ้อ คุณเฝ้าดู Aython ก้าวเข้ามาข้างหน้าอย่างลื่นไหล แบบคนที่เคยทำเช่นนี้มาก่อน</p>
               <p>สิ่งที่ตามมาคือผลงานชั้นเลิศแห่งการหลอกล่อ เสียงของ Aython ลดลงสู่ระดับคนที่กำลังฝากความลับ ตระกูลของเขา เขาอธิบาย มีความสัมพันธ์บางอย่างกับตำแหน่งสูงของศาสนจักร การแต่งตั้งเคยเกิดขึ้น และสามารถเกิดขึ้นได้อีก เขาเฝ้าดู Flassia ค่อยๆ ตั้งตัวตรงขึ้นทีละนิด ความเหนื่อยหน่ายบนใบหน้าถูกแทนที่ด้วยสิ่งที่ Aython รู้จักดี — ประกายอันตรายของคนที่กำลังเริ่มอยากได้บางอย่าง เมื่อ Aython พูดจบ Flassia ได้เสนอเหล้าองุ่นมิสซาที่เก็บไว้สำหรับงานแต่ง หยิบกระดาษและหมึก และกำลังเขียนจดหมายแนะนำตัวถึงเจ้าเมืองด้วยพลังงานของคนที่กำลังเขียนอนาคตตัวเอง Aython ไม่ได้แก้ไขความเข้าใจผิดใดๆ ของเขา</p>
+              <figure class="chapter-img-frame chapter-img-solo">
+                <span class="img-c img-c-tl"></span><span class="img-c img-c-tr"></span>
+                <span class="img-c img-c-bl"></span><span class="img-c img-c-br"></span>
+                <img src="sessions/img/ch3-pope.jpg" alt="The Pope's Gambit" loading="lazy">
+                <span class="chapter-img-cap">The Pope's Gambit</span>
+              </figure>
               <p>Jen ยืนที่แท่นบูชาทำพิธีศพให้ครอบครัวที่โศกเศร้า ขยับริมฝีปากตามคำสวดที่เธอไม่เชื่อ ถวายแก่เทพที่เธอไม่แน่ใจว่ามีอยู่จริง ขณะที่มือเคลื่อนไหวถูกต้องสมบูรณ์ด้วยความเคยชิน เธอทำได้อย่างสมบูรณ์แบบ และนั่นกลับทำให้เธอรู้สึกแปลกกว่าที่คาด</p>
+              <figure class="chapter-img-frame chapter-img-solo">
+                <span class="img-c img-c-tl"></span><span class="img-c img-c-tr"></span>
+                <span class="img-c img-c-bl"></span><span class="img-c img-c-br"></span>
+                <img src="sessions/img/ch3-ceremony.jpg" alt="Hollow Rites" loading="lazy">
+                <span class="chapter-img-cap">Hollow Rites</span>
+              </figure>
               <p>Veranth พลิก Bible ไปมาในมือนอกห้องคัมภีร์ที่ถูกล็อก คิดถึงชื่อที่เขียนไว้ข้างใน เขาตรวจแล้ว — ข้างในมีแต่ตำราธรรมดา อำนาจใดก็ตามที่สถานที่นี้เคยมีได้จากไปนานแล้ว ถูกพาไปหรือหมดสิ้นหรือเพียงแค่ถูกลืม Bible เป็นหนังสือธรรมดา ชื่อในนั้นเป็นชื่อธรรมดา แต่เขาก็ยังคิดถึงมันอยู่ดี เขาเก็บหนังสือไว้และไม่พูดอะไรกับใคร</p>
               <p>ที่โรงเหล็ก แผนเรียบง่าย — ช่วย Calistra ทำงาน สร้างความไว้วางใจ แล้วถามเรื่องสมบัติที่ชายแก่มือด้วนเคยมี การลงมือทำไม่ได้เรียบง่ายเท่านั้น ภายในสิบนาที ปาร์ตี้ทำให้คีมหายไปหนึ่งชุด ทำให้ใบมีดที่ Calistra ทำงานมาสามวันร้อนเกินไป และทำให้เกิดเหตุการณ์เล็กน้อยเกี่ยวกับถังน้ำและส่วนผิดของเตาเผา Calistra ชี้ไปที่ประตูด้วยอำนาจเงียบของคนที่อยู่ในวงการมานานพอจะรู้เมื่อไหรควรตัดจบ พวกเขาออกไป</p>
+              <figure class="chapter-img-frame chapter-img-solo">
+                <span class="img-c img-c-tl"></span><span class="img-c img-c-tr"></span>
+                <span class="img-c img-c-bl"></span><span class="img-c img-c-br"></span>
+                <img src="sessions/img/ch3-forge.jpg" alt="The Empty Forge" loading="lazy">
+                <span class="chapter-img-cap">The Empty Forge</span>
+              </figure>
             </div>
           </div>
         </div>
@@ -691,13 +825,37 @@ body.th-active .dm-voice p{font-family:"Noto Serif Thai",serif;font-size:.95rem;
             <div class="lang-en">
               <p>The feast Aython paid for is consuming the Drunken Dragon from the inside out — smoke, noise, a soldier attempting a song no one knows but everyone joins. You are somewhere in the middle of it, warm and fed and briefly, genuinely at rest. The road to the Chaos Cave is waiting. It can wait a little longer. Tonight the city thinks your party is worth celebrating, and you've learned not to argue with that.</p>
               <p>The old man was drunk enough by midnight to stop being careful. Vorn had positioned himself close without appearing to, and when the man finally leaned in and said it — a magical sword, a cave called the Chaos Cave, somewhere in the hills east of the road, somewhere almost no one came back from — Vorn listened to every word and said nothing. He turned his flask slowly in his hands after the man fell asleep in his chair. He thought about why he was still sitting at this table with these particular people. He didn't reach a conclusion. He kept turning the flask.</p>
+              <figure class="chapter-img-frame chapter-img-solo">
+                <span class="img-c img-c-tl"></span><span class="img-c img-c-tr"></span>
+                <span class="img-c img-c-bl"></span><span class="img-c img-c-br"></span>
+                <img src="sessions/img/ch4-oldman.jpg" alt="The Secret of Cave of Chaos" loading="lazy">
+                <span class="chapter-img-cap">The Secret of Cave of Chaos</span>
+              </figure>
               <p>Aython's request had been, by his own standards, entirely reasonable. He was exhausted. He was a nobleman. He wanted a bath drawn and someone to help with it, as he was accustomed to at home. What he got was two very large men with soap and purpose, sent by Albus with what Aython could only describe as enthusiasm. From the next room, Veranth watched through a crack in the door and decided to help in his own way — a minor illusion, a small act of mercy, turning the two figures into something more suited to Aython's preferences. The spell landed. The image took hold. Aython looked at what was in front of him, looked at what the illusion showed him, and something behind his eyes went quietly, completely dark. He endured the bath in silence, staring at a fixed point on the wall, while the scrubbing continued with considerable vigor. Veranth pressed his face against the doorframe to keep from making a sound. In the morning, neither of them mentioned it.</p>
+              <figure class="chapter-img-frame chapter-img-solo">
+                <span class="img-c img-c-tl"></span><span class="img-c img-c-tr"></span>
+                <span class="img-c img-c-bl"></span><span class="img-c img-c-br"></span>
+                <img src="sessions/img/ch4-bath.jpg" alt="Noble Accommodation" loading="lazy">
+                <span class="chapter-img-cap">Noble Accommodation</span>
+              </figure>
               <p>The guide agreed to take them for twenty-five gold, a place on the carriage, and the understanding that the large man would be coming along as personal attendant. Aython shook his hand over breakfast with the practiced grace of someone closing a deal he considered entirely favorable. He was running out of money. He was always running out of money. But the road ahead existed, and the sword was there, and the party was fed and rested and moving. Some mornings that had to be enough.</p>
             </div>
             <div class="lang-th">
               <p>งานเลี้ยงที่ Aython ซื้อไว้กำลังกลืนกิน Drunken Dragon จากข้างใน — ควัน เสียง ทหารพยายามร้องเพลงที่ไม่มีใครรู้แต่ทุกคนก็ร่วมร้อง คุณอยู่ที่ไหนสักแห่งท่ามกลางนั้น อบอุ่น อิ่ม และพักผ่อนจริงๆ ชั่วครู่ ถนนไปยัง Cave of Chaos กำลังรอ มันรอได้อีกนิด คืนนี้เมืองคิดว่าปาร์ตี้ของคุณคุ้มค่าแก่การเฉลิมฉลอง และคุณเรียนรู้แล้วว่าไม่ควรเถียง</p>
               <p>ชายแก่เมามากพอในเที่ยงคืนจนหยุดระวังตัว Vorn จัดตำแหน่งตัวเองใกล้โดยไม่ดูเจตนา และเมื่อชายแก่โน้มตัวเข้ามาแล้วพูด — ดาบเวทมนตร์ ถ้ำชื่อ Cave of Chaos ในเนินเขาทางตะวันออกของถนน ที่แทบไม่มีใครกลับมาได้ — Vorn ฟังทุกคำโดยไม่พูดอะไร เขาหมุน flask ช้าๆ ในมือหลังจากชายแก่หลับในเก้าอี้ คิดถึงเหตุผลที่ยังนั่งอยู่ที่โต๊ะนี้กับคนกลุ่มนี้ ไม่ได้ข้อสรุป เขาหมุน flask ต่อ</p>
+              <figure class="chapter-img-frame chapter-img-solo">
+                <span class="img-c img-c-tl"></span><span class="img-c img-c-tr"></span>
+                <span class="img-c img-c-bl"></span><span class="img-c img-c-br"></span>
+                <img src="sessions/img/ch4-oldman.jpg" alt="The Secret of Cave of Chaos" loading="lazy">
+                <span class="chapter-img-cap">The Secret of Cave of Chaos</span>
+              </figure>
               <p>คำขอของ Aython ตามมาตรฐานของตัวเองนั้นสมเหตุสมผลอย่างยิ่ง เขาเหนื่อย เขาเป็นขุนนาง เขาอยากอาบน้ำและมีคนช่วย อย่างที่เคยได้รับที่บ้าน สิ่งที่ได้มาคือชายร่างใหญ่สองคนพร้อมสบู่และเจตนาอันแน่วแน่ ส่งมาโดย Albus ด้วยสิ่งที่ Aython จะอธิบายได้แค่ว่าคือความกระตือรือร้น จากห้องถัดไป Veranth มองผ่านรอยแตกของประตูและตัดสินใจช่วยในแบบของตัวเอง — ภาพหลอนเล็กน้อย ความกรุณาเล็กน้อย เปลี่ยนสองร่างให้เป็นสิ่งที่ตรงกับความต้องการมากกว่า เวทย์สำเร็จ ภาพปรากฏขึ้น Aython มองสิ่งที่อยู่ข้างหน้า มองสิ่งที่ภาพหลอนแสดงให้เห็น และบางอย่างข้างหลังดวงตาของเขาก็ดับลงเงียบๆ อย่างสมบูรณ์ เขาทนการอาบน้ำในความเงียบ จ้องจุดคงที่บนผนัง ขณะที่การขัดตัวยังคงดำเนินต่อด้วยพลังงานอย่างมาก Veranth กดหน้าไว้กับขอบประตูเพื่อไม่ให้เปล่งเสียงออกมา เช้าวันถัดมาไม่มีใครพูดถึงเรื่องนี้</p>
+              <figure class="chapter-img-frame chapter-img-solo">
+                <span class="img-c img-c-tl"></span><span class="img-c img-c-tr"></span>
+                <span class="img-c img-c-bl"></span><span class="img-c img-c-br"></span>
+                <img src="sessions/img/ch4-bath.jpg" alt="Noble Accommodation" loading="lazy">
+                <span class="chapter-img-cap">Noble Accommodation</span>
+              </figure>
               <p>ไกด์ตกลงพาไปในราคา 25 Gold พร้อมที่นั่งบนรถม้าและความเข้าใจว่าชายร่างใหญ่จะมาด้วยในฐานะผู้ช่วยส่วนตัว Aython จับมือเขาระหว่างอาหารเช้าด้วยความสง่างามของคนที่กำลังปิดดีลที่ตัวเองเห็นว่าได้เปรียบทั้งหมด เขากำลังจะหมดเงิน เขาหมดเงินอยู่เสมอ แต่ถนนข้างหน้ามีอยู่จริง ดาบนั้นอยู่ที่นั่น และปาร์ตี้อิ่มและพักผ่อนแล้วและกำลังเคลื่อนไหว บางเช้าแค่นั้นก็เพียงพอแล้ว</p>
             </div>
           </div>
@@ -732,15 +890,51 @@ body.th-active .dm-voice p{font-family:"Noto Serif Thai",serif;font-size:.95rem;
             <div class="lang-en">
               <p>The mist comes in low between the trees, and you feel the carriage slow before you hear anything. Then you hear it: the displacement of undergrowth, the careful placement of feet that don't belong to the forest. Around you, the party has gone quiet in a particular way — not relaxed quiet, but the quiet of people who have started listening. Vorn's hand moves to his bow without a word. You understand immediately.</p>
               <p>They came from both sides at once. Prow had the measured confidence of someone who had done this many times and expected it to go as it always had — until a blade touched Aython's throat and Aython, to his credit, went very still and said nothing. That was the entire plan: freeze the talker, control the moment. It might have worked. Then Vorn exhaled.</p>
+              <figure class="chapter-img-frame chapter-img-solo">
+                <span class="img-c img-c-tl"></span><span class="img-c img-c-tr"></span>
+                <span class="img-c img-c-bl"></span><span class="img-c img-c-br"></span>
+                <img src="sessions/img/ch5-vorn.jpg" alt="Vorn · First Blood" loading="lazy">
+                <span class="chapter-img-cap">Vorn · First Blood</span>
+              </figure>
               <p>The shot crossed twenty feet and ended one of the bandits before he'd finished his first breath of the ambush. The others hesitated — that single, fatal beat — and into that hesitation Veranth stepped. Those who saw it afterward described the change in his eyes first: a shift from dark to something amber and lit from within, the pupils narrowing to vertical slits. The Fireball that left his hands was not like spells they had read about or seen demonstrated in controlled conditions. It was the color of the inside of a furnace and it made a sound like the air itself being abolished. Two bandits simply ceased to be. A third stumbled out of the radius with his clothes on fire, and Anuchit met him with the kind of efficiency that didn't leave room for drama. Vorn finished it. Jen's hands were already moving toward Veranth before the smoke cleared — the spell had cost him, visibly, the way a fire costs the wood it burns through.</p>
+              <figure class="chapter-img-frame chapter-img-solo">
+                <span class="img-c img-c-tl"></span><span class="img-c img-c-tr"></span>
+                <span class="img-c img-c-bl"></span><span class="img-c img-c-br"></span>
+                <video src="sessions/img/ch5-veranth.mp4" autoplay loop muted playsinline></video>
+                <span class="chapter-img-cap">Veranth · Dragon's Fire</span>
+              </figure>
               <p>Prow tried to use the old man as leverage, arm across his throat, backing toward the trees. Jen's disarm was precise enough that Prow looked at his own empty hand with genuine surprise. In the seconds that followed, Aython talked — smooth, warm, absolutely earnest — and watched Prow's shoulders drop by degrees. Almost. Something behind Prow's eyes was calculating even as his voice softened and his head nodded along. When the opening came, he took it without hesitation: a pivot, three steps, and the mist took him.</p>
+              <figure class="chapter-img-frame chapter-img-solo">
+                <span class="img-c img-c-tl"></span><span class="img-c img-c-tr"></span>
+                <span class="img-c img-c-bl"></span><span class="img-c img-c-br"></span>
+                <img src="sessions/img/ch5-anuchit.jpg" alt="Anuchit · The Monk Strikes" loading="lazy">
+                <span class="chapter-img-cap">Anuchit · The Monk Strikes</span>
+              </figure>
               <p>Aython stood at the treeline for a moment looking at where Prow had been. Then, quietly, alone, he laughed. Not the performance laugh he used in taverns. Something smaller. The others exchanged a look. No one asked. The carriage driver had watched the entire encounter from his seat with wide eyes and hands tight on the reins. He didn't speak for another two miles. When he finally did, it was only to ask if they were close. They were.</p>
             </div>
             <div class="lang-th">
               <p>หมอกเลื้อยต่ำระหว่างต้นไม้ และคุณรู้สึกว่ารถม้าชะลอก่อนที่จะได้ยินอะไร แล้วก็ได้ยิน การกระทบของพุ่มไม้ การวางเท้าอย่างระวังที่ไม่ได้เป็นของป่า รอบๆ คุณปาร์ตี้เงียบไปในแบบนั้นเฉพาะ ไม่ใช่เงียบสบาย แต่เงียบของคนที่เริ่มฟังหาบางอย่าง มือของ Vorn เลื้อยไปหาธนูโดยไม่พูดอะไร คุณเข้าใจทันที</p>
               <p>พวกเขามาจากสองข้างพร้อมกัน Prow มีความมั่นใจแบบคนที่ทำเรื่องนี้มาหลายครั้งและคาดว่าจะเป็นไปอย่างที่เคย — จนกระทั่งดาบแตะลำคอ Aython และ Aython ด้วยความดีของเขา ยืนนิ่งมากและไม่พูดอะไร นั่นคือแผนทั้งหมด หยุดคนพูด ควบคุมช่วงเวลา มันอาจได้ผล ถ้าไม่ใช่เพราะ Vorn หายใจออก</p>
+              <figure class="chapter-img-frame chapter-img-solo">
+                <span class="img-c img-c-tl"></span><span class="img-c img-c-tr"></span>
+                <span class="img-c img-c-bl"></span><span class="img-c img-c-br"></span>
+                <img src="sessions/img/ch5-vorn.jpg" alt="Vorn · First Blood" loading="lazy">
+                <span class="chapter-img-cap">Vorn · First Blood</span>
+              </figure>
               <p>ลูกธนูข้ามยี่สิบฟุตและจบโจรคนหนึ่งก่อนที่เขาจะหายใจครั้งแรกของการซุ่มโจมตีได้ครบ คนอื่นลังเลชั่วขณะร้ายกาจนั้น และเข้าสู่ความลังเลนั้น Veranth ก้าวออกมา คนที่เห็นเหตุการณ์ในภายหลังต่างบรรยายดวงตาที่เปลี่ยนไปก่อน จากดำไปสู่บางอย่างสีอำพันที่ส่องสว่างจากข้างใน ม่านตาบีบลงเป็นรูปแนวตั้ง Fireball ที่ออกมาจากมือของเขาไม่เหมือนเวทย์ที่พวกเขาเคยอ่านหรือเห็นในสภาวะควบคุม มันสีเหมือนข้างในเตาเผาและทำเสียงเหมือนอากาศถูกยกเลิก โจรสองคนหายไปเลย คนที่สามสะดุดออกมาจากรัศมีพร้อมเสื้อที่ลุกไหม้ และ Anuchit รับเขาด้วยประสิทธิภาพแบบที่ไม่เหลือที่ว่างสำหรับดราม่า Vorn จัดการปิดฉาก มือของ Jen เคลื่อนไปหา Veranth ก่อนควันจะจาง — เวทย์ทิ้งร่องรอยไว้บนเขาอย่างเห็นได้ชัด เหมือนที่ไฟทิ้งร่องรอยไว้บนไม้ที่ถูกเผา</p>
+              <figure class="chapter-img-frame chapter-img-solo">
+                <span class="img-c img-c-tl"></span><span class="img-c img-c-tr"></span>
+                <span class="img-c img-c-bl"></span><span class="img-c img-c-br"></span>
+                <video src="sessions/img/ch5-veranth.mp4" autoplay loop muted playsinline></video>
+                <span class="chapter-img-cap">Veranth · Dragon's Fire</span>
+              </figure>
               <p>Prow พยายามใช้ชายแก่เป็นโล่ แขนพาดคอ ถอยหลังเข้าหาต้นไม้ การปลดอาวุธของ Jen แม่นยำพอให้ Prow มองมือเปล่าของตัวเองด้วยความประหลาดใจแท้จริง ในวินาทีที่ตามมา Aython พูด — เรียบ อบอุ่น จริงใจอย่างยิ่ง — และเฝ้าดูไหล่ของ Prow ค่อยๆ ลดลงทีละน้อย เกือบแล้ว บางอย่างข้างหลังดวงตาของ Prow กำลังคำนวณแม้ขณะที่เสียงของเขาอ่อนลงและหัวพยักตาม เมื่อโอกาสมา เขาคว้าไว้โดยไม่ลังเล หมุนตัว สามก้าว หมอกรับเขาไป</p>
+              <figure class="chapter-img-frame chapter-img-solo">
+                <span class="img-c img-c-tl"></span><span class="img-c img-c-tr"></span>
+                <span class="img-c img-c-bl"></span><span class="img-c img-c-br"></span>
+                <img src="sessions/img/ch5-anuchit.jpg" alt="Anuchit · The Monk Strikes" loading="lazy">
+                <span class="chapter-img-cap">Anuchit · The Monk Strikes</span>
+              </figure>
               <p>Aython ยืนอยู่ที่ขอบป่าครู่หนึ่ง มองที่ที่ Prow เคยอยู่ แล้วในความเงียบ คนเดียว เขาหัวเราะ ไม่ใช่เสียงหัวเราะแสดงที่เขาใช้ในร้านเหล้า แต่เป็นบางอย่างที่เล็กกว่า คนอื่นแลกสายตากัน ไม่มีใครถาม คนขับรถม้าจ้องดูเหตุการณ์ทั้งหมดจากที่นั่งของตัวเองด้วยดวงตากลมโตและมือกำบังเหียนแน่น เขาไม่พูดอีกสองไมล์ เมื่อพูดในที่สุด ถามเพียงว่าใกล้แล้วหรือยัง ใกล้แล้ว</p>
             </div>
           </div>

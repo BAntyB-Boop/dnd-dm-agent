@@ -2,8 +2,11 @@
 
 const $ = id => document.getElementById(id);
 
-const WS_URL = `ws://${location.host}/ws`;
-const API_URL = `${location.protocol}//${location.host}/api/state`;
+const _backend = (window.BACKEND_URL || "").replace(/\/$/, "");
+const _wsHost   = _backend ? _backend.replace(/^https?:\/\//, "") : location.host;
+const _wsProto  = (_backend.startsWith("https") || location.protocol === "https:") ? "wss" : "ws";
+const WS_URL  = `${_wsProto}://${_wsHost}/ws`;
+const API_URL = _backend ? `${_backend}/api/state` : `${location.protocol}//${location.host}/api/state`;
 
 const WEATHER_ICONS = {
   clear: '☀️', cloudy: '☁️', rainy: '🌧️', stormy: '⛈️',

@@ -277,6 +277,10 @@ export async function startWebServer(): Promise<void> {
   for (const [slug, file] of Object.entries(folioMap)) {
     app.get(`/folio/${slug}`, (_req, reply) => reply.sendFile(file));
   }
+  app.get("/sessions/:slug", (req, reply) => {
+    const { slug } = req.params as { slug: string };
+    return reply.sendFile(`sessions/${slug}.html`);
+  });
 
   // ── Auth ──────────────────────────────────────────────────────────────
 

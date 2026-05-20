@@ -191,6 +191,9 @@ h1.title{
 .cb-btn .arr{width:20px;height:1px;background:currentColor;position:relative;transition:width .3s;flex-shrink:0}
 .cb-btn:hover .arr{width:28px}
 .cb-btn .arr::after{content:"";position:absolute;right:0;top:-3px;width:7px;height:7px;border-right:1px solid currentColor;border-top:1px solid currentColor;transform:rotate(45deg)}
+.cb-btns{display:inline-flex;flex-wrap:wrap;gap:14px;justify-content:center}
+.cb-btn-secondary{color:var(--ink-mute);border-color:var(--line)}
+.cb-btn-secondary:hover{color:var(--ink);border-color:var(--gold-dim)}
 
 /* ============ SHELF LABEL ============ */
 .shelf-label{
@@ -503,10 +506,16 @@ h1.title{
     <span class="cb-eyebrow">The Veiled Codex — Chronicle</span>
     <h2 class="cb-title">Heroes of Borderland</h2>
     <p class="cb-sub">Before their names were remembered across the land, five travelers were each searching for something in their own lives. Read how their paths converged.</p>
-    <a class="cb-btn" href="/story">
-      Read the Chronicle
-      <span class="arr"></span>
-    </a>
+    <div class="cb-btns">
+      <a class="cb-btn" href="/story">
+        Read the Chronicle
+        <span class="arr"></span>
+      </a>
+      <a class="cb-btn cb-btn-secondary" href="/sessions/session-1">
+        Session I
+        <span class="arr"></span>
+      </a>
+    </div>
     <div class="cb-rule" style="margin-top:28px;margin-bottom:0">
       <span class="r"></span><span class="g">✦</span><span class="r"></span>
     </div>

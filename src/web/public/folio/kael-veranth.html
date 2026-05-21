@@ -6,6 +6,7 @@
 <title>Kael Veranth — Ashen Chronicle</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="stylesheet" href="shared.css">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Noto+Serif+Thai:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg-deep:#070405;
@@ -376,6 +377,226 @@ em,i{font-style:italic;color:var(--ink-soft)}
   .end-quote{font-size:1.3rem}
   .story{padding:80px 18px 48px}
 }
+
+/* ===== GRIMOIRE TRIGGER BUTTON ===== */
+.grm-trigger-wrap{text-align:center;margin:72px 0 0}
+.grm-trigger{
+  display:inline-flex;align-items:center;justify-content:center;gap:16px;
+  padding:17px 38px;
+  background:transparent;
+  border:1px solid rgba(200,100,0,.35);
+  cursor:pointer;color:var(--ember);
+  font-family:"Cinzel",serif;font-size:.78rem;letter-spacing:.3em;text-transform:uppercase;
+  transition:border-color .4s,box-shadow .4s,background .4s;
+  position:relative;overflow:hidden;
+}
+.grm-trigger::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(200,80,0,.1),transparent 60%);
+  opacity:0;transition:opacity .4s;
+}
+.grm-trigger:hover::after{opacity:1}
+.grm-trigger:hover{
+  border-color:rgba(255,150,50,.55);
+  box-shadow:0 0 28px rgba(200,80,0,.2),inset 0 0 24px rgba(180,60,0,.06);
+}
+.grm-trigger .tchain{display:flex;align-items:center;gap:1px}
+.grm-trigger .tcl{
+  display:inline-block;border:1.5px solid rgba(200,100,0,.5);border-radius:50%;
+  background:rgba(100,50,0,.3);
+  transition:border-color .3s,box-shadow .3s;
+}
+.grm-trigger .tcl.cv{width:9px;height:15px}
+.grm-trigger .tcl.ch{width:15px;height:9px;margin:0 -1px}
+.grm-trigger:hover .tcl{border-color:rgba(255,140,50,.7);box-shadow:0 0 5px rgba(255,100,0,.3)}
+
+/* ===== FIRE OVERLAY / FLASH ===== */
+.grm-fire-ov{
+  position:fixed;inset:0;z-index:1500;
+  pointer-events:none;opacity:0;
+  background:radial-gradient(ellipse 60% 50% at var(--ox,50%) var(--oy,50%),rgba(255,100,0,.9) 0%,rgba(220,50,0,.65) 35%,rgba(180,20,0,.25) 62%,transparent 80%);
+  transition:opacity .15s ease;
+}
+.grm-fire-ov.flare{opacity:1}
+/* Fire burst particles */
+.gfp{
+  position:fixed;pointer-events:none;border-radius:50%;z-index:1501;
+  background:radial-gradient(circle,rgba(255,255,200,.9) 0%,rgba(255,140,0,.8) 40%,transparent 80%);
+  animation:gfp-fly var(--dur,.7s) ease-out both;
+}
+@keyframes gfp-fly{
+  0%{transform:translate(0,0) scale(1);opacity:1}
+  80%{opacity:.4}
+  100%{transform:translate(var(--dx,0px),var(--dy,-80px)) scale(0.1);opacity:0}
+}
+/* ===== GRIMOIRE BG OVERLAY ===== */
+.grm-bg-ov{
+  position:fixed;inset:0;z-index:1502;
+  background:rgba(3,1,0,.92);
+  opacity:0;pointer-events:none;
+  transition:opacity .5s;
+}
+.grm-bg-ov.on{opacity:1;pointer-events:all}
+/* ===== GRIMOIRE OUTER WRAPPER ===== */
+.grm-outer{
+  position:fixed;left:50%;top:50%;
+  transform:translate(-50%,-50%) scale(.88);
+  z-index:1503;width:min(700px,96vw);
+  opacity:0;pointer-events:none;
+  transition:opacity .5s,transform .52s cubic-bezier(.18,.89,.32,1.22);
+}
+.grm-outer.on{opacity:1;transform:translate(-50%,-50%) scale(1);pointer-events:all}
+/* ===== CHAINS ===== */
+.grm-chains{position:absolute;top:-75px;left:0;right:0;bottom:0;pointer-events:none;z-index:10;overflow:visible}
+.grm-chain{position:absolute;display:flex;flex-direction:column;align-items:center}
+.grm-chain.tl{left:52px;top:0;transform-origin:top center;animation:chain-sway 4.8s ease-in-out infinite}
+.grm-chain.tr{right:52px;top:0;transform-origin:top center;animation:chain-sway 4.8s ease-in-out infinite 2.4s}
+@keyframes chain-sway{0%,100%{transform:rotate(-3.5deg)}50%{transform:rotate(3.5deg)}}
+/* Chain links */
+.cl{
+  display:block;border:2px solid #4a3218;border-radius:50%;
+  background:linear-gradient(135deg,#5a3e1c 0%,#261508 60%,#3a2510 100%);
+  box-shadow:0 0 3px rgba(180,80,0,.12),inset 0 1px 0 rgba(220,150,60,.08);
+  margin:-3px auto;
+}
+.cl.cv{width:11px;height:19px}
+.cl.ch{width:19px;height:11px;margin:-3px auto}
+.grm-chain .cl:first-child{
+  border-color:#7a5a28;
+  box-shadow:0 0 12px rgba(255,100,0,.35),0 0 24px rgba(200,60,0,.2),inset 0 1px 0 rgba(255,180,60,.15)
+}
+.grm-chain .cl:last-child{
+  border-color:#6a4820;
+  box-shadow:0 0 10px rgba(255,100,0,.3),0 0 18px rgba(200,60,0,.18)
+}
+/* ===== GRIMOIRE PARCHMENT BOX ===== */
+.grm-box{
+  position:relative;
+  background:
+    radial-gradient(ellipse 80% 40% at 15% 12%,rgba(180,70,0,.16) 0%,transparent 60%),
+    radial-gradient(ellipse 60% 50% at 85% 88%,rgba(140,50,0,.13) 0%,transparent 55%),
+    linear-gradient(158deg,#2e1d0d 0%,#1b0f06 30%,#221408 58%,#2a1c10 100%);
+  clip-path:polygon(
+    0% 3.1%,1.1% 0.9%,2.5% 2.3%,4% 0.2%,5.7% 1.7%,7.4% 0%,9.1% 2.1%,
+    11% 0.3%,13.2% 1.8%,15.2% 0%,17.2% 2.1%,19.4% 0.5%,21.7% 1.9%,24.1% 0%,
+    26.4% 2.2%,28.7% 0.3%,30.9% 1.9%,33.3% 0%,35.6% 2.1%,37.9% 0.4%,40.1% 1.9%,
+    42.5% 0%,44.8% 2.2%,47.1% 0.4%,49.3% 1.9%,51.7% 0%,54% 2.2%,56.2% 0.4%,
+    58.5% 1.9%,60.9% 0%,63.2% 2.1%,65.5% 0.4%,67.7% 1.9%,70.1% 0%,72.4% 2.2%,
+    74.7% 0.3%,76.9% 1.9%,79.2% 0%,81.5% 2.2%,83.8% 0.4%,86% 1.9%,88.4% 0%,
+    90.7% 2.1%,93% 0.4%,95.2% 1.9%,97.1% 0.2%,98.6% 1.8%,99.5% 0.5%,100% 2.1%,
+    99.5% 8%,100% 18%,99.4% 28%,100% 38%,99.6% 48%,100% 58%,99.4% 68%,100% 78%,99.6% 88%,100% 97.8%,
+    98.7% 100%,96.9% 98.1%,94.8% 100%,92.7% 97.9%,90.4% 100%,87.9% 98%,85.7% 100%,83.4% 98.1%,81% 100%,
+    78.5% 97.8%,76.1% 100%,73.6% 98.2%,71% 100%,68.4% 97.9%,65.9% 100%,63.4% 98.2%,60.8% 100%,
+    58.2% 97.8%,55.6% 100%,52.9% 98.2%,50.3% 100%,47.7% 97.8%,45% 100%,42.3% 98.2%,39.6% 100%,
+    36.9% 97.8%,34.2% 100%,31.4% 98.2%,28.7% 100%,26% 97.8%,23.3% 100%,20.5% 98.2%,17.8% 100%,
+    15% 97.8%,12.3% 100%,9.6% 98.1%,6.9% 100%,4.3% 97.8%,2% 100%,0.7% 98.3%,
+    0% 90%,0.5% 80%,0% 70%,0.4% 60%,0% 50%,0.5% 40%,0% 30%,0.4% 20%,0% 10%
+  );
+  padding:62px 54px 70px;
+  max-height:78vh;overflow-y:auto;
+  scrollbar-width:thin;scrollbar-color:rgba(200,80,0,.25) transparent;
+}
+.grm-box::-webkit-scrollbar{width:4px}
+.grm-box::-webkit-scrollbar-track{background:transparent}
+.grm-box::-webkit-scrollbar-thumb{background:rgba(200,80,0,.25);border-radius:2px}
+/* Parchment texture overlay */
+.grm-box::before{
+  content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(100,50,10,.032) 2px,rgba(100,50,10,.032) 3px);
+}
+/* Burn edge glow */
+.grm-box::after{
+  content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 100% 8% at 50% 0%,rgba(200,80,0,.22) 0%,transparent 100%),
+    radial-gradient(ellipse 100% 8% at 50% 100%,rgba(200,80,0,.18) 0%,transparent 100%),
+    radial-gradient(ellipse 8% 100% at 0% 50%,rgba(200,80,0,.12) 0%,transparent 100%),
+    radial-gradient(ellipse 8% 100% at 100% 50%,rgba(200,80,0,.12) 0%,transparent 100%);
+}
+/* ===== GRIMOIRE HEADER ===== */
+.grm-head{position:relative;z-index:1;text-align:center;margin-bottom:38px;padding-bottom:28px;border-bottom:1px solid rgba(200,100,0,.22)}
+.grm-icon{width:52px;height:52px;margin:0 auto 16px;color:var(--ember);filter:drop-shadow(0 0 14px rgba(255,100,0,.55))}
+.grm-title{
+  font-family:"Cinzel Decorative","Cinzel",serif;font-size:clamp(19px,3.6vw,30px);letter-spacing:.04em;
+  background:linear-gradient(180deg,#f5d08a 15%,#e08030 58%,#c04a00 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;
+  margin:0 0 8px;
+}
+.grm-subtitle{font-family:"Cinzel",serif;font-size:.65rem;letter-spacing:.32em;text-transform:uppercase;color:var(--ember-deep);opacity:.75}
+/* Language toggle */
+.grm-lang{display:flex;justify-content:center;gap:6px;margin-top:16px}
+.grm-lang button{
+  font-family:"Cinzel",serif;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;
+  padding:4px 14px;border:1px solid rgba(200,100,0,.28);background:transparent;
+  color:var(--ink-mute);cursor:pointer;transition:all .25s;
+}
+.grm-lang button.active{border-color:var(--ember);color:var(--ember);background:rgba(200,80,0,.1)}
+/* ===== SECTION ===== */
+.grm-section{position:relative;z-index:1;margin-bottom:44px}
+.grm-section:last-of-type{margin-bottom:0}
+.grm-sec-hd{display:flex;align-items:flex-start;gap:14px;margin-bottom:18px}
+.grm-sec-num{
+  font-family:"Cinzel Decorative","Cinzel",serif;font-size:3rem;line-height:1;
+  color:transparent;-webkit-text-stroke:1px rgba(200,80,0,.45);flex-shrink:0;margin-top:-2px
+}
+.grm-sec-label{flex:1}
+.grm-sec-title{font-family:"Cinzel",serif;font-size:1.02rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ember);margin:0 0 3px}
+.grm-sec-sub{font-family:"Cormorant Garamond","Noto Serif Thai",serif;font-size:.82rem;letter-spacing:.16em;color:var(--ink-mute);font-style:italic}
+.grm-divider{width:100%;height:1px;background:linear-gradient(to right,transparent,rgba(200,80,0,.32),transparent);margin:0 0 18px}
+/* Prose */
+.grm-prose{
+  font-family:"Cormorant Garamond","Noto Serif Thai",serif;
+  font-size:1.06rem;line-height:1.78;color:var(--ink-soft)
+}
+.grm-prose p{margin:0 0 14px}
+.grm-prose p:last-child{margin:0}
+.grm-prose .drop::first-letter{
+  font-family:"Cinzel Decorative","Cinzel",serif;font-weight:700;
+  font-size:3.1em;float:left;line-height:.88;padding:4px 10px 0 0;
+  color:var(--ember);filter:drop-shadow(0 0 8px rgba(255,100,0,.35))
+}
+.grm-prose em{color:#d07040;font-style:italic}
+.grm-quote{
+  margin:18px 0;padding:13px 18px 13px 16px;
+  border-left:2px solid rgba(200,80,0,.5);
+  font-style:italic;color:var(--ink-mute);font-size:1rem;line-height:1.65;
+  background:rgba(200,80,0,.04);
+}
+/* Lang show/hide — default: EN */
+.grm-th{display:none}
+.grm-box.lang-th .grm-en{display:none}
+.grm-box.lang-th .grm-th{display:revert}
+/* Close button (chain-break) */
+.grm-close-row{position:relative;z-index:5;display:flex;justify-content:flex-end;margin-bottom:18px}
+.grm-close-btn{
+  background:none;border:none;cursor:pointer;
+  display:flex;align-items:center;gap:0;padding:6px;
+  opacity:.65;transition:opacity .3s;
+}
+.grm-close-btn:hover{opacity:1}
+.grm-close-btn .ccl{
+  display:block;border:2px solid #5a3a18;border-radius:50%;
+  background:linear-gradient(135deg,#5a3e1c,#261508);
+  transition:transform .28s,border-color .28s,box-shadow .28s;
+  margin:-2px;
+}
+.grm-close-btn .ccl.cv{width:11px;height:18px}
+.grm-close-btn .ccl.ch{width:18px;height:11px}
+.grm-close-btn:hover .ccl.brk-a{transform:rotate(-22deg) translate(-2px,-3px);border-color:#ff5020;box-shadow:0 0 8px rgba(255,60,0,.5)}
+.grm-close-btn:hover .ccl.brk-b{transform:rotate(22deg) translate(2px,3px);border-color:#ff5020;box-shadow:0 0 8px rgba(255,60,0,.5)}
+.grm-close-btn:hover .ccl.ch{border-color:#ff6030;transform:scaleX(1.2);box-shadow:0 0 6px rgba(255,80,0,.4)}
+/* Footer */
+.grm-footer{
+  position:relative;z-index:1;margin-top:36px;padding-top:24px;
+  border-top:1px solid rgba(200,100,0,.18);
+  text-align:center;
+}
+.grm-foot-lbl{font-family:"Cinzel",serif;font-size:.62rem;letter-spacing:.28em;text-transform:uppercase;color:var(--ink-mute);margin-bottom:12px}
+/* Prologue / Climax / Epilogue variants */
+.grm-section.s-prologue .grm-sec-num{font-size:1.6rem;-webkit-text-stroke:1px rgba(200,80,0,.28);line-height:1.2}
+.grm-section.s-climax{border-top:1px solid rgba(255,80,0,.2);margin-top:10px;padding-top:28px}
+.grm-section.s-climax .grm-sec-num{-webkit-text-stroke:1px rgba(255,90,0,.65)}
+.grm-section.s-epilogue .grm-sec-num{font-size:1.5rem;opacity:.55}
 </style>
 </head>
 <body>
@@ -686,6 +907,20 @@ em,i{font-style:italic;color:var(--ink-soft)}
     </div>
   </section>
 
+  <!-- ========== GRIMOIRE TRIGGER ========== -->
+  <div class="grm-trigger-wrap">
+    <button class="grm-trigger" id="grmTrigger" aria-haspopup="dialog">
+      <span class="tchain">
+        <span class="tcl cv"></span><span class="tcl ch"></span><span class="tcl cv"></span><span class="tcl ch"></span><span class="tcl cv"></span>
+      </span>
+      <span class="grm-th">เปิดคัมภีร์ลับ</span>
+      <span class="grm-en">Open the Hidden Grimoire</span>
+      <span class="tchain">
+        <span class="tcl cv"></span><span class="tcl ch"></span><span class="tcl cv"></span><span class="tcl ch"></span><span class="tcl cv"></span>
+      </span>
+    </button>
+  </div>
+
   <!-- ========== END ========== -->
   <div class="cinema-end">
     <div class="end-quote">
@@ -696,6 +931,477 @@ em,i{font-style:italic;color:var(--ink-soft)}
 
   <div class="colophon">Codex of the Veiled Watch · Folio III of VIII · Ashen Chronicle</div>
 </div>
+
+<!-- ===== FIRE FLASH ===== -->
+<div class="grm-fire-ov" id="grmFireOv" aria-hidden="true"></div>
+
+<!-- ===== GRIMOIRE BG OVERLAY ===== -->
+<div class="grm-bg-ov" id="grmBgOv" aria-hidden="true"></div>
+
+<!-- ===== GRIMOIRE POPUP ===== -->
+<div class="grm-outer" id="grmOuter" role="dialog" aria-modal="true" aria-label="Hidden Grimoire of Kael Veranth" aria-hidden="true">
+
+  <!-- HANGING CHAINS -->
+  <div class="grm-chains" id="grmChains" aria-hidden="true"></div>
+
+  <!-- PARCHMENT BOX -->
+  <div class="grm-box" id="grmBox">
+
+    <!-- close row top -->
+    <div class="grm-close-row">
+      <button class="grm-close-btn" id="grmClose" aria-label="Close grimoire">
+        <span class="ccl cv brk-a"></span>
+        <span class="ccl ch"></span>
+        <span class="ccl cv brk-b"></span>
+      </button>
+    </div>
+
+    <!-- HEADER -->
+    <div class="grm-head">
+      <svg class="grm-icon" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- flame -->
+        <path d="M28 5 C23 13 19 18 19 26 a9 9 0 0 0 18 0 c0 -8 -4 -13 -9 -21 z" fill="currentColor" opacity=".9"/>
+        <path d="M28 17 C26 20 25 23 25 26 a3 3 0 0 0 6 0 c0 -3 -1 -6 -3 -9 z" fill="rgba(255,240,140,.75)"/>
+        <!-- chain arcs suggesting binding -->
+        <path d="M14 40 Q14 47 21 49 Q28 51 35 49 Q42 47 42 40" stroke="currentColor" stroke-width="1.8" stroke-opacity=".45" fill="none" stroke-linecap="round"/>
+        <path d="M12 38 Q11 31 18 28" stroke="currentColor" stroke-width="1.8" stroke-opacity=".3" fill="none" stroke-linecap="round"/>
+        <path d="M44 38 Q45 31 38 28" stroke="currentColor" stroke-width="1.8" stroke-opacity=".3" fill="none" stroke-linecap="round"/>
+      </svg>
+
+      <h2 class="grm-title grm-th">คัมภีร์ลับของแคเอล เวรันธ์</h2>
+      <h2 class="grm-title grm-en">The Hidden Grimoire of Kael Veranth</h2>
+      <div class="grm-subtitle">Ashen Chronicle · Draconic Bloodline · Folio III</div>
+
+      <div class="grm-lang">
+        <button data-toggle="th">ไทย</button>
+        <button data-toggle="en" class="active">EN</button>
+      </div>
+    </div>
+
+    <!-- ======= PROLOGUE ======= -->
+    <div class="grm-section s-prologue">
+      <div class="grm-sec-hd">
+        <span class="grm-sec-num">◦</span>
+        <div class="grm-sec-label">
+          <div class="grm-sec-title grm-th">บทนำ</div>
+          <div class="grm-sec-title grm-en">Prologue</div>
+          <div class="grm-sec-sub grm-th">ก่อนที่ทุกอย่างจะเริ่ม</div>
+          <div class="grm-sec-sub grm-en">Before Everything Began</div>
+        </div>
+      </div>
+      <div class="grm-divider"></div>
+      <div class="grm-prose grm-th">
+        <p class="drop">เขาเกิดมาพร้อมกับความร้อน ไม่ใช่ไข้ ไม่ใช่อาการป่วย — แต่เป็นความร้อนที่ซ่อนอยู่ใต้ผิวหนัง เหมือนถ่านที่ไม่มีวันดับสนิท แม่ของเขาไม่เคยพูดถึงมันตรงๆ เธอแค่โอบกอดเขาแน่นขึ้นทุกครั้งที่เขาตื่นจากฝันร้าย แล้วกระซิบว่า "ไม่เป็นไร ลูก มันแค่ฝัน"</p>
+        <p>แต่เธอรู้ เคลเห็นได้จากแววตาของเธอ — ความรักที่ปนอยู่กับความกลัวเล็กๆ ที่เธอพยายามซ่อน</p>
+        <p>บ้านของพวกเขาอยู่ชายขอบหมู่บ้าน Ember Creek ผู้คนที่นั่นใจดี เรียบง่าย และไม่สังเกตว่าเด็กชายของ Mira Veranth ไม่เคยหนาวแม้ในฤดูหนาว ไม่สังเกตว่าดวงตาสีอำพันของเขาส่องแสงจางๆ เมื่อโกรธ และไม่สังเกตว่าเกร็ดเล็กๆ สีทองแดงที่กระจายอยู่บนโหนกแก้มของเขา... ไม่ใช่รอยด่างธรรมดา</p>
+        <p>แม่เคยพูดถึงพ่อครั้งเดียว คืนฝนตกหนัก เขาถามตรงๆ ว่า "พ่อเป็นใคร?"</p>
+        <div class="grm-quote">"ชายที่มีดวงตาเหมือนไฟ" เธอบอกในที่สุด "และหัวใจที่ฉันไม่เคยเข้าใจจริงๆ"</div>
+        <p>เคลเก็บคำตอบนั้นไว้ในใจ และนอนฝันถึงมังกรทุกคืน</p>
+      </div>
+      <div class="grm-prose grm-en">
+        <p class="drop">He was born with heat. Not fever — but warmth that lived beneath the skin, like a coal that never fully dies. His mother never spoke of it directly. She only held him tighter when he woke from nightmares, and whispered: <em>"It's alright, child. Just a dream."</em></p>
+        <p>But she knew. Kael could see it in her eyes — love laced with a small, carefully hidden fear.</p>
+        <p>Their home sat at the edge of Ember Creek. The villagers didn't notice that Mira Veranth's boy never felt cold in winter, that his amber eyes faintly glowed when he was angry, that the copper-gold markings across his cheeks were not ordinary birthmarks.</p>
+        <p>His mother spoke of his father only once. A heavy rain. A direct question.</p>
+        <div class="grm-quote">"A man with eyes like fire," she finally said. "And a heart I never truly understood."</div>
+        <p>Kael kept that answer inside himself, and dreamed of dragons every night.</p>
+      </div>
+    </div>
+
+    <!-- ======= SECTION I ======= -->
+    <div class="grm-section">
+      <div class="grm-sec-hd">
+        <span class="grm-sec-num">I</span>
+        <div class="grm-sec-label">
+          <div class="grm-sec-title grm-th">คืนที่ทุกอย่างไหม้</div>
+          <div class="grm-sec-title grm-en">The Night Everything Burned</div>
+          <div class="grm-sec-sub grm-th">อายุสิบห้า คืนฤดูร้อน</div>
+          <div class="grm-sec-sub grm-en">Fifteen years old. A summer night.</div>
+        </div>
+      </div>
+      <div class="grm-divider"></div>
+      <div class="grm-prose grm-th">
+        <p class="drop">มันเริ่มจากเรื่องเล็กน้อย เพื่อนในหมู่บ้านพูดอะไรบางอย่างเกี่ยวกับแม่ของเขา เคลจำไม่ได้แล้วว่าพูดว่าอะไร สมองของเขาลบส่วนนั้นออกไปนานแล้ว เขาจำได้แค่ว่า... โกรธ โกรธแบบที่ไม่เคยรู้สึกมาก่อน</p>
+        <p>ความร้อนใต้ผิวหนังลุกขึ้นมาพร้อมกัน เขาพยายามกดมันไว้ แต่มันเหมือนพยายามกั้นแม่น้ำด้วยมือเปล่า</p>
+        <p>แล้วมันก็ออกมา ไม่ใช่แสงวูบเล็กๆ ไม่ใช่ประกายไฟจิ๋ว — แต่เป็นคลื่นเพลิงที่ระเบิดออกจากร่างเขาทุกทิศทาง บ้านหลังแรกติดไฟภายในวินาที ลมฤดูร้อนพัดไฟลามไปทั่วหมู่บ้านอย่างรวดเร็วราวกับมันหิวโหยมาตลอดชีวิต เคลยืนอยู่กลางวงล้อมของไฟ มือสั่น ไม่สามารถขยับได้</p>
+        <p>เขาได้ยินเสียงกรีดร้อง เสียงหนึ่งในนั้นเป็นเสียงแม่</p>
+        <p>เขาวิ่งเข้าไปในไฟ ไม่รู้สึกร้อน ร่างกายของเขาไม่รู้สึกอะไรเลย แต่ก็สายเกินไปแล้ว ทุกอย่างสายเกินไป</p>
+        <p>รุ่งเช้าตอนที่แสงแดดแรกสาดลงบน Ember Creek ที่กลายเป็นเถ้าถ่าน เคลคุกเข่าอยู่กลางซากปรักหักพัง มือกำเถ้าถ่านส่วนหนึ่งไว้แน่น แล้วค่อยๆ เทมันลงในขวดแก้วเล็กๆ ที่เขาพบข้างๆ ศพของแม่ เขาแขวนมันไว้รอบคอ แล้วเดินออกไปโดยไม่หันหลังกลับ</p>
+      </div>
+      <div class="grm-prose grm-en">
+        <p class="drop">It started from something small. A village friend said something about his mother. Kael no longer remembers what — his mind erased that part long ago. He only remembers that he was angry. Angry in a way he had never felt before.</p>
+        <p>The heat beneath his skin rose with him. He tried to hold it down — but it was like trying to dam a river with bare hands.</p>
+        <p>And then it came out. Not a small flash, not a tiny spark — but a wave of fire that exploded from his body in every direction. The first house caught in seconds. The summer wind spread the flames across the village as if they had been hungry all their life. He stood in the ring of fire, hands trembling, unable to move.</p>
+        <p>He heard screams. One of them was his mother's.</p>
+        <p>He ran into the fire. He felt no heat. His body felt nothing at all. But it was already too late. Everything was too late.</p>
+        <p>When the first light of dawn fell on Ember Creek — now ash — Kael knelt in the ruins, one hand gripping a fistful of cinders. He slowly poured them into a small glass bottle. He hung it around his neck. And walked away without looking back.</p>
+      </div>
+    </div>
+
+    <!-- ======= SECTION II ======= -->
+    <div class="grm-section">
+      <div class="grm-sec-hd">
+        <span class="grm-sec-num">II</span>
+        <div class="grm-sec-label">
+          <div class="grm-sec-title grm-th">ฤาษีและหน้ากาก</div>
+          <div class="grm-sec-title grm-en">The Hermit &amp; The Mask</div>
+          <div class="grm-sec-sub grm-th">สี่ปีในกระท่อมกลางป่า</div>
+          <div class="grm-sec-sub grm-en">Four years in a forest hut</div>
+        </div>
+      </div>
+      <div class="grm-divider"></div>
+      <div class="grm-prose grm-th">
+        <p class="drop">เขาเดินทางนานเท่าไหร่ ไม่รู้ จนกระทั่งล้มลงที่หน้ากระท่อมเล็กๆ กลางป่า ชายชราที่อาศัยอยู่ที่นั่นชื่อ Aldric ไม่ถามว่าเด็กหนุ่มมาจากที่ไหน ไม่ถามว่าทำไมดวงตาถึงบวมแดง เขาแค่อุ้มเคลเข้าไปในกระท่อม ชงชาสมุนไพร และวางถ้วยลงข้างๆ</p>
+        <div class="grm-quote">"ดื่มซะ แล้วนอน พรุ่งนี้ค่อยเล่า"</div>
+        <p>เคลอยู่กับ Aldric สี่ปี ชายชราสอนเขาเรื่องสมุนไพร การรักษา การควบคุมลมหายใจ และที่สำคัญที่สุด — วิธีรักษาคนอื่น ราวกับรู้ว่านั่นคือสิ่งเดียวที่จะดึงเด็กหนุ่มกลับมาจากขอบเหว</p>
+        <p>แต่สิ่งที่เขาเรียนรู้เองโดยที่ Aldric ไม่ได้สอน คือ หน้ากาก รอยยิ้มที่ดูอบอุ่น คำพูดที่ฟังดูใจดี การมองตาที่ทำให้คนรู้สึกว่าเขาสนใจจริงๆ — มันเป็นเกราะ บางกว่าเหล็กกล้า แต่แข็งแกร่งกว่าอะไรก็ตามที่เขารู้จัก</p>
+        <div class="grm-quote">"ถ้าฉันดีพอ ถ้าฉันช่วยคนได้มากพอ ความตายของพวกเขาก็จะมีความหมาย"</div>
+        <p>คืนก่อนที่เขาจะออกจากกระท่อม Aldric จับไหล่เขาไว้ แล้วพูดว่า "สิ่งที่เธอแบกอยู่นั้น... มันจะหนักขึ้นทุกวันถ้าเธอแบกคนเดียว" เคลยิ้มรอยยิ้มที่สวยงามที่สุดของเขา "ผมไม่ได้แบกอะไรครับ อาจารย์ ผมแค่เดินทาง"</p>
+        <p>Aldric มองตามหลังเขาไปนาน ก่อนที่จะพยักหน้าเบาๆ อย่างเศร้าใจ</p>
+      </div>
+      <div class="grm-prose grm-en">
+        <p class="drop">He walked for who knows how long — until he collapsed outside a small forest hut. The old man inside was called Aldric. He didn't ask where the young man came from. Didn't ask why his eyes were swollen red. He simply carried Kael inside, brewed herbal tea, and set the cup down beside him.</p>
+        <div class="grm-quote">"Drink this. Then sleep. Tell me tomorrow."</div>
+        <p>Kael stayed with Aldric for four years. The old man taught him herbs, healing, breath control — and most importantly, how to care for others. As if he somehow knew that was the only thing that could pull the young man back from the edge.</p>
+        <p>But the thing Kael learned on his own — which Aldric never taught — was the mask. The warm smile, the kind words, the attentive gaze that made people feel truly seen. It was armor. Thinner than steel, but stronger than anything else he knew.</p>
+        <div class="grm-quote">"If I'm good enough. If I help enough people — their deaths will have meaning."</div>
+        <p>The night before he left, Aldric held his shoulder. <em>"What you're carrying will grow heavier every day if you carry it alone."</em> Kael offered his most beautiful smile: <em>"I'm not carrying anything, Teacher. I'm just traveling."</em></p>
+        <p>Aldric watched him go for a long time, then nodded once — slowly, sadly.</p>
+      </div>
+    </div>
+
+    <!-- ======= SECTION III ======= -->
+    <div class="grm-section">
+      <div class="grm-sec-hd">
+        <span class="grm-sec-num">III</span>
+        <div class="grm-sec-label">
+          <div class="grm-sec-title grm-th">นักเดินทางที่มีรอยยิ้ม</div>
+          <div class="grm-sec-title grm-en">The Traveler with a Smile</div>
+          <div class="grm-sec-sub grm-th">หกปีถัดมา</div>
+          <div class="grm-sec-sub grm-en">The six years after</div>
+        </div>
+      </div>
+      <div class="grm-divider"></div>
+      <div class="grm-prose grm-th">
+        <p class="drop">หกปีถัดมา Kael Veranth กลายเป็นชื่อที่คนรู้จักในหลายเมือง ไม่ใช่เพราะเขาเป็นวีรบุรุษ แต่เพราะเขา<em>มีประโยชน์</em> เขารักษาคนป่วยในราคาถูก บางครั้งฟรี เขาฟังเรื่องราวของคนแปลกหน้าโดยไม่ตัดสิน และเขาจากไปก่อนที่ใครจะใกล้ชิดเขาได้จริงๆ เสมอ</p>
+        <div class="grm-quote">"คุณจะไม่อยู่อีกสักคืนไหม?" — "ขอบคุณมาก แต่มีคนอื่นที่ต้องการผมกว่านี้"</div>
+        <p>คำตอบนี้ใช้ได้กับทุกสถานการณ์ เพราะมันจริง — เสมอมีคนที่ต้องการเขา และเขาก็ต้องการออกไปจากที่นั้น</p>
+        <p>ฝันร้ายเรื่องมังกรไม่เคยหายไป ทุกคืนเขาเห็นสิ่งเดิม — เงาขนาดใหญ่ ปีกที่กางออกบดบังท้องฟ้า ดวงตาสีทองที่เหมือนกระจกสะท้อนหน้าตาเขาเองกลับมา และเสียงที่ไม่มีคำพูด แต่ดังก้องอยู่ในอก</p>
+        <div class="grm-quote"><em>มาหาข้า</em></div>
+        <p>เขาตื่นขึ้นมาเสมอก่อนรุ่งสาง นั่งในความมืด มือกำขวดเถ้าถ่าน และรอให้หัวใจเต้นช้าลง</p>
+      </div>
+      <div class="grm-prose grm-en">
+        <p class="drop">Over the next six years, Kael Veranth became a name people knew in many towns. Not as a hero — but as someone <em>useful</em>. He healed the sick for little, sometimes for free. He listened to strangers' stories without judgment. He helped with problems others didn't want to touch. And he always left before anyone could get truly close.</p>
+        <div class="grm-quote">"Won't you stay one more night?" — "Thank you, but there are others who need me more."</div>
+        <p>That answer worked in every situation. Because it was always true — there was always someone who needed him. And he always needed to leave.</p>
+        <p>The dragon nightmares never went away. Every night he saw the same thing — a massive shadow, wings spreading to block the sky, golden eyes that mirrored his own face back at him, and a wordless sound that resonated inside his chest.</p>
+        <div class="grm-quote"><em>Come to me.</em></div>
+        <p>He always woke before dawn. Sat in the dark. Hand gripping the ash bottle. Waiting for his heartbeat to slow.</p>
+      </div>
+    </div>
+
+    <!-- ======= SECTION IV ======= -->
+    <div class="grm-section">
+      <div class="grm-sec-hd">
+        <span class="grm-sec-num">IV</span>
+        <div class="grm-sec-label">
+          <div class="grm-sec-title grm-th">ปาร์ตี้และรอยร้าว</div>
+          <div class="grm-sec-title grm-en">The Party &amp; The Cracks</div>
+          <div class="grm-sec-sub grm-th">เมื่อชะตากรรมไม่ถามความเห็น</div>
+          <div class="grm-sec-sub grm-en">When fate doesn't ask permission</div>
+        </div>
+      </div>
+      <div class="grm-divider"></div>
+      <div class="grm-prose grm-th">
+        <p class="drop">เขาไม่ได้ตั้งใจจะร่วมเดินทางกับใคร แต่บางครั้งชะตากรรมก็ไม่ถามความเห็น เดือนแรก เคลเล่นบทนักรักษาที่มีประโยชน์ได้สมบูรณ์แบบ อบอุ่น เป็นมิตร น่าไว้วางใจ เขาจำชื่อ ความชอบ และสิ่งที่แต่ละคนกลัว เขาพูดสิ่งที่ถูกต้องในเวลาที่ถูกต้อง และไม่พูดอะไรเลยเกี่ยวกับตัวเอง</p>
+        <p>เดือนที่สอง รอยร้าวเล็กๆ เริ่มปรากฏ</p>
+        <div class="grm-quote">"เคล นายเป็นยังไงบ้าง?" — "โอเคครับ ขอบคุณที่ถาม แต่เล่าเรื่องของคุณดีกว่า น่าสนใจกว่าผมมาก" — "นายพูดแบบนี้ทุกครั้งเลยนะ" — "เพราะมันจริงทุกครั้ง"</div>
+        <p>แต่มีบางคนในปาร์ตี้ที่ไม่ยอมรับคำตอบนั้น มีบางคนที่มองผ่านรอยยิ้มไปเห็นบางอย่างข้างหลัง และไม่ว่าเคลจะผลักไสอย่างไร พวกเขาก็ยังคงอยู่ตรงนั้น — นั่นคือสิ่งที่อันตรายที่สุดที่เขาเคยพบ</p>
+        <p>เดือนที่สาม ลัทธิบูชามังกรโผล่ขึ้นมาในชีวิต ในฐานะข้อมูล — กลุ่มที่รู้เรื่องสายเลือดมังกร รู้เรื่อง Draconic Sorcery รู้เรื่องการควบคุมพลัง เคลหยุดและฟัง</p>
+        <div class="grm-quote">"คุณรู้เรื่องพ่อของผมไหม?" รอยยิ้มของตัวแทนลัทธิกว้างขึ้นในแบบที่ทำให้หนังหัวลุก "เรารู้ทุกอย่างที่คุณต้องการรู้ เคล เวรานธ์"</div>
+      </div>
+      <div class="grm-prose grm-en">
+        <p class="drop">He hadn't intended to travel with anyone. But sometimes fate doesn't ask for permission. The first month, Kael played the useful healer perfectly — warm, friendly, trustworthy. He memorized names, preferences, and fears. He said the right things at the right times, and said nothing about himself.</p>
+        <p>The second month, small cracks began to show.</p>
+        <div class="grm-quote">"Kael, how are you?" — "I'm fine, but tell me about you instead — much more interesting." — "You say that every time." — "Because it's true every time."</div>
+        <p>But some in the party wouldn't accept that answer. Some could look through the smile and see something behind it. No matter how hard Kael pushed them away, they stayed right there — and that was the most dangerous thing he had ever encountered.</p>
+        <p>The third month, a dragon cult appeared in his life. Not as enemies — as information. A group that knew about draconic bloodlines, about controlling the power. Kael stopped. Listened.</p>
+        <div class="grm-quote">"Do you know about my father?" The cult representative's smile widened in a way that made his skin crawl. "We know everything you want to know, Kael Veranth."</div>
+      </div>
+    </div>
+
+    <!-- ======= SECTION V ======= -->
+    <div class="grm-section">
+      <div class="grm-sec-hd">
+        <span class="grm-sec-num">V</span>
+        <div class="grm-sec-label">
+          <div class="grm-sec-title grm-th">เสียงในความมืด</div>
+          <div class="grm-sec-title grm-en">The Voice in the Dark</div>
+          <div class="grm-sec-sub grm-th">เมื่อเขื่อนร้าว</div>
+          <div class="grm-sec-sub grm-en">When the dam breaks</div>
+        </div>
+      </div>
+      <div class="grm-divider"></div>
+      <div class="grm-prose grm-th">
+        <p class="drop">ยิ่งเดินทางไกล เสียงในหัวก็ยิ่งดัง ไม่ใช่เสียงบ้า ไม่ใช่ภาพหลอน แต่เป็นเสียงกระซิบที่เกิดขึ้นในช่วงที่เขาเงียบที่สุด ตอนเฝ้ายาม ตอนเดินคนเดียว ตอนก่อนหลับ</p>
+        <div class="grm-quote"><em>ปล่อยข้าออกมา เธอรู้ว่าเธอต้องการข้า พวกเขาจะเจ็บปวดถ้าเธอไม่ยอมรับสิ่งที่เธอเป็น</em></div>
+        <p>เคลเรียนรู้ที่จะเพิกเฉย แต่การเพิกเฉยกับบางอย่างไม่ได้ทำให้มันหายไป มันแค่ทำให้มันสะสมขึ้นเรื่อยๆ เหมือนน้ำที่ถูกกั้นไว้หลังเขื่อน</p>
+        <p>วันที่เขื่อนร้าว เกิดขึ้นในการต่อสู้ครั้งหนึ่งที่ดุเดือดเกินไป เคลเห็นเพื่อนร่วมทางคนหนึ่งล้มลง ไม่รู้สึกตัว ศัตรูยังคงรุกคืบ และบางอย่างในตัวเขา — บางอย่างที่เขากดไว้หกปี — แตกออก</p>
+        <p>ไฟพุ่งออกจากมือเขา ร้อนกว่าที่เขาเคยปล่อย สว่างกว่าที่เขาเคยเห็น ศัตรูล้มลงทุกคน การต่อสู้จบในวินาที</p>
+        <p>แต่เมื่อควันจางลง เพื่อนร่วมทางมองเขาด้วยสายตาที่เขากลัวที่สุดในโลก ไม่ใช่ความกลัว ไม่ใช่ความเกลียดชัง แต่เป็น<em>ความเป็นห่วง</em></p>
+        <div class="grm-quote">"เคล... นายโอเคไหม?"</div>
+        <p>เขาหันหน้าหนี ล้างมือในลำธารข้างๆ แม้ว่ามือจะไม่เลอะอะไรเลย</p>
+      </div>
+      <div class="grm-prose grm-en">
+        <p class="drop">The further he traveled, the louder the voice grew. Not madness — but a whisper in his quietest moments. On watch duty. Walking alone. Before sleep.</p>
+        <div class="grm-quote"><em>Let me out. You know you need me. They will be hurt if you don't accept what you are.</em></div>
+        <p>Kael learned to ignore it. But ignoring something doesn't make it disappear. It only lets it accumulate — like water held behind a dam.</p>
+        <p>The day the dam cracked came during one fight that grew too fierce. Kael saw a companion fall unconscious. The enemy still advanced. And something inside him — something he had held down for six years — broke open.</p>
+        <p>Fire erupted from his hands. Hotter than anything he had ever released. Brighter than anything he had ever seen. Every enemy fell. The fight ended in seconds.</p>
+        <p>But when the smoke cleared, his companions looked at him with the expression he feared most in the world. Not fear. Not hatred. But <em>concern</em>.</p>
+        <div class="grm-quote">"Kael... are you okay?"</div>
+        <p>He turned away. Washed his hands in a nearby stream — though they weren't dirty with anything at all.</p>
+      </div>
+    </div>
+
+    <!-- ======= SECTION VI ======= -->
+    <div class="grm-section">
+      <div class="grm-sec-hd">
+        <span class="grm-sec-num">VI</span>
+        <div class="grm-sec-label">
+          <div class="grm-sec-title grm-th">ความจริงที่รอคอย</div>
+          <div class="grm-sec-title grm-en">The Truth That Waits</div>
+          <div class="grm-sec-sub grm-th">คืนก่อนถึงวิหาร</div>
+          <div class="grm-sec-sub grm-en">The night before the temple</div>
+        </div>
+      </div>
+      <div class="grm-divider"></div>
+      <div class="grm-prose grm-th">
+        <p class="drop">ลัทธิบูชามังกรนำทางพวกเขาสู่ดินแดนทางเหนือ ทุกก้าวที่เดินใกล้ขึ้น เกร็ดเล็กๆ บนใบหน้าเคลดูเหมือนจะเข้มขึ้น ส่องแสงมากขึ้น ราวกับตอบสนองต่อบางอย่างที่กำลังเข้าใกล้</p>
+        <p>ฝันของเขาชัดเจนขึ้นทุกคืน ไม่ใช่แค่เงาแล้ว แต่เป็นรูปร่าง เป็นใบหน้า เป็นดวงตาสีทองที่เหมือนของเขา แต่ลึกกว่า เก่ากว่า และ... รอคอยอยู่</p>
+        <p>คืนก่อนถึงวิหารของลัทธิ เคลนั่งอยู่คนเดียวข้างกองไฟ มือกำขวดเถ้าถ่าน เพื่อนร่วมทางมานั่งข้างๆ เขาโดยไม่พูดอะไร สักพักถึงพูด</p>
+        <div class="grm-quote">"คืนพรุ่งนี้อาจเป็นคืนสุดท้ายที่ทุกอย่างจะยังเป็นแบบนี้" — "ผมรู้" — "กลัวไหม?"</div>
+        <p>เขานิ่งนาน นานมากกว่าปกติ</p>
+        <div class="grm-quote">"ผมไม่รู้ว่าตัวเองรู้สึกยังไง มันนานมากแล้วที่ผมไม่ได้รู้สึกอะไรจริงๆ"</div>
+        <p>เพื่อนไม่ตอบอะไร แค่อยู่ตรงนั้น และเคลก็ไม่ได้ผลักไสคืนนั้น</p>
+      </div>
+      <div class="grm-prose grm-en">
+        <p class="drop">The cult guided them north. With every step closer, the small scales on Kael's face seemed to deepen, to glow more — as if responding to something approaching.</p>
+        <p>His dreams became clearer every night. Not just shadows anymore. But shapes. A face. Golden eyes like his own, but deeper, older — and <em>waiting</em>.</p>
+        <p>The night before the cult's temple, Kael sat alone by a campfire, gripping the ash bottle. A companion came to sit beside him without speaking. After a while, they spoke.</p>
+        <div class="grm-quote">"Tomorrow night, everything might be different." — "I know." — "Are you afraid?"</div>
+        <p>He was silent for a long time. Longer than usual.</p>
+        <div class="grm-quote">"I don't know what I feel. It's been so long since I felt anything real."</div>
+        <p>His companion said nothing. Just stayed there. And for the first time in a long while, Kael didn't push anyone away.</p>
+      </div>
+    </div>
+
+    <!-- ======= CLIMAX ======= -->
+    <div class="grm-section s-climax">
+      <div class="grm-sec-hd">
+        <span class="grm-sec-num">VII</span>
+        <div class="grm-sec-label">
+          <div class="grm-sec-title grm-th">ทางเลือกแห่งสายเลือด</div>
+          <div class="grm-sec-title grm-en">The Choice of Bloodline</div>
+          <div class="grm-sec-sub grm-th">ไคลแม็กซ์ — วิหารหินดำ</div>
+          <div class="grm-sec-sub grm-en">Climax — The black stone temple</div>
+        </div>
+      </div>
+      <div class="grm-divider"></div>
+      <div class="grm-prose grm-th">
+        <p class="drop">วิหารสร้างจากหินดำ ลึกใต้ภูเขาที่ทุกคนคิดว่าดับแล้ว แต่ไม่ได้ดับ มันแค่รอ เคลเดินลงบันไดแคบๆ ปาร์ตี้อยู่เบื้องหลัง แสงจากเกร็ดบนใบหน้าเขาส่องทางในความมืด จนกระทั่งเพื่อนพูดขึ้น "เคล... หน้านายกำลังเรืองแสง"</p>
+        <p>ตรงกลางห้องโถงกลาง เพื่อนร่วมทางที่ถูกจับไว้ก่อนหน้านั้นมัดอยู่กับเสาหิน บนบัลลังก์หินที่ปลายห้อง นั่งอยู่ในร่างมนุษย์ที่ไม่ค่อยพอดีกับการเป็นมนุษย์ คือสิ่งที่เคลฝันถึงมาตลอดสิบหกปี ดวงตาสีทองมองมาที่เขา</p>
+        <div class="grm-quote">"ลูกชาย"</div>
+        <p>"เราไม่จำเป็นต้องทำให้คืนนี้รุนแรง" พ่อมังกรพูด "เจ้าคือทายาทของสายเลือดที่เก่าแก่ที่สุด สิ่งที่เผาหมู่บ้านของเจ้า — มันไม่ใช่คำสาป มันคือมรดก"</p>
+        <div class="grm-quote">"มรดก" เคลพูดซ้ำ เสียงแบน "แม่ผมตาย" — "เพราะเจ้าไม่รู้จักตัวเอง ถ้าเจ้ายอมรับสิ่งที่เจ้าเป็นตั้งแต่แรก เธอคงยังมีชีวิตอยู่"</div>
+        <p>เคลหยุดหายใจ เพราะมันไม่ผิด ทั้งหมดเลย</p>
+        <p>พ่อยื่นมือออกมา "ยอมรับมรดกของเจ้า และข้าจะให้เจ้ามีพลังพอที่จะปกป้องทุกคนที่เจ้ารัก"</p>
+        <div class="grm-quote">"เคล — อย่าฟัง" (เสียงจากเพื่อนที่ถูกมัด) — "มันพูดถูก ทุกอย่างที่มันพูด ถูกหมดเลย" — "ผมรู้ แต่ฉันไม่ได้ถามว่ามันถูกไหม ฉันถามว่านายต้องการอะไร"</div>
+        <p>เคลหันมามอง เพื่อนมองกลับ — ไม่กลัว ไม่โกรธ ไม่ตัดสิน แค่มองเห็นเขาจริงๆ ทั้งๆ ที่รู้ทุกอย่าง ทั้งๆ ที่เห็นเกร็ดบนใบหน้าเขาส่องแสง</p>
+        <div class="grm-quote">"ฉันรู้ว่านายเป็นใครจริงๆ มาตลอด และฉันยังอยู่ตรงนี้"</div>
+        <p>บางอย่างในหน้าอกเคลร้าว ไม่ใช่แบบที่เจ็บ แต่แบบที่ปล่อยอะไรบางอย่างออกมา เหมือนหน้าต่างที่ถูกปิดมานานเกินไปเพิ่งถูกเปิด เขาหยิบขวดแก้วจากคอ</p>
+        <p>พ่อมังกรยิ้ม คิดว่าเขากำลังจะยอมรับ แต่เคลไม่ได้มองพ่อ เขามองขวดในมือตัวเอง เถ้าถ่านสีเทาที่เขาแบกมาหกปี</p>
+        <div class="grm-quote">"ผมแบกนี่ไว้เพราะกลัวว่าถ้าไม่มีมัน ผมจะลืมว่าตัวเองเป็นอะไร" — "แล้วมันทำให้เจ้าจำได้ไหม?" — "ใช่ มันทำให้ผมจำได้ว่าผมเป็นคนที่เผาบ้านตัวเอง เป็นคนที่ฆ่าแม่ตัวเอง เป็นคนที่ไม่คู่ควรกับความรัก... แต่มันไม่ได้ทำให้ผมจำได้ว่าตัวเองเดินมาไกลมากแค่ไหน"</div>
+        <p>เขากำขวดแน่น แล้วปล่อยมันตก</p>
+        <p>เสียงแก้วแตกกระทบหินก้องในวิหาร เถ้าถ่านกระจายบนพื้นหิน ลอยขึ้นเป็นฝุ่นเล็กๆ ในแสงเรืองรองของลาวา</p>
+        <div class="grm-quote">"ผมจะไม่ลืมสิ่งที่ผมทำ แต่ผมไม่ต้องการมันเพื่อจำว่าตัวเองเป็นใครอีกต่อไป พ่อพูดถูกว่าสายเลือดนี้เป็นส่วนหนึ่งของผม แต่มันไม่ใช่ทั้งหมดของผม ผมคือคนที่ Aldric สอนให้รักษาคน ผมคือคนที่ล้มเหลวในการผลักเพื่อนออกไป"</div>
+        <p>รอยยิ้มเล็กๆ ปรากฏขึ้น รอยยิ้มที่ครั้งนี้... ถึงดวงตา "และสำหรับครั้งแรกในชีวิต ผมคิดว่านั่นก็เพียงพอแล้ว"</p>
+      </div>
+      <div class="grm-prose grm-en">
+        <p class="drop">The temple was built of black stone, deep beneath a mountain everyone thought had gone cold. It hadn't. It was only waiting. As Kael descended the narrow stairs, the light from the scales on his face lit the darkness — until a companion spoke: <em>"Kael... your face is glowing."</em></p>
+        <p>At the center of the great hall, a companion taken earlier was bound to a stone pillar. On the throne at the far end, in a human shape that didn't quite fit a human form, sat the thing Kael had dreamed of for sixteen years. Golden eyes looked at him.</p>
+        <div class="grm-quote">"Son."</div>
+        <p>"We don't need to make this night violent. You are the heir of the oldest bloodline. What burned your village — it is not a curse. It is an inheritance."</p>
+        <div class="grm-quote">"Inheritance." Kael's voice was flat. "My mother died." — "Because you didn't know yourself. If you had accepted what you were from the beginning, she would still be alive."</div>
+        <p>Kael stopped breathing. Because none of it was wrong. Not even a little.</p>
+        <div class="grm-quote">"Kael — don't listen." (From the bound companion.) — "He's right. Everything he says is right." — "I know. But I'm not asking if he's right. I'm asking what <em>you</em> want."</div>
+        <p>Kael turned. His companion looked back — not afraid, not angry, not judging. Just <em>seeing</em>. Truly seeing him, knowing everything he had done, seeing the scales glow.</p>
+        <div class="grm-quote">"I've always known who you really are. And I'm still here."</div>
+        <p>Something in Kael's chest cracked. Not painfully — but in a way that released something. Like a window shut too long being finally opened. He reached up and took the glass bottle from his neck.</p>
+        <p>The dragon-father smiled, thinking he was accepting. But Kael wasn't looking at his father.</p>
+        <div class="grm-quote">"I've carried this because I was afraid that without it, I would forget what I am." — "And has it helped you remember?" — "Yes — it helped me remember that I'm someone who burned his own home. Who killed his own mother. Who doesn't deserve love. But it never helped me remember how far I've come."</div>
+        <p>He gripped the bottle tight. Then let it fall. The sound of breaking glass echoed through the vault. Ash scattered across the stone floor, drifting up as fine dust in the glow of lava light.</p>
+        <div class="grm-quote">"I will never forget what I did. But I no longer need this to remember who I am. The bloodline is part of me — but it is not all of me. I am the person Aldric taught to heal. I am the person who failed to push his friends away."</div>
+        <p>A small smile appeared. This time... it reached his eyes. <em>"And for the first time in my life, I think that's enough."</em></p>
+      </div>
+    </div>
+
+    <!-- ======= EPILOGUE ======= -->
+    <div class="grm-section s-epilogue">
+      <div class="grm-sec-hd">
+        <span class="grm-sec-num">∎</span>
+        <div class="grm-sec-label">
+          <div class="grm-sec-title grm-th">หลังจากไฟดับ</div>
+          <div class="grm-sec-title grm-en">After the Fire Dies</div>
+          <div class="grm-sec-sub grm-th">บทส่งท้าย</div>
+          <div class="grm-sec-sub grm-en">Epilogue</div>
+        </div>
+      </div>
+      <div class="grm-divider"></div>
+      <div class="grm-prose grm-th">
+        <p class="drop">การต่อสู้จบลง ผมจะไม่เล่าว่าจบอย่างไร เพราะนั่นไม่ใช่ใจความสำคัญ ใจความสำคัญคือตอนที่เคล เวรานธ์ ก้าวออกจากวิหารในรุ่งเช้า</p>
+        <p>ครั้งนี้เขาไม่ได้เดินออกไปคนเดียว เพื่อนร่วมทางเดินข้างๆ ไม่พูดอะไร แต่อยู่ที่นั่น ตรงนั้น อย่างที่พวกเขาเป็นมาตลอด</p>
+        <p>เคลมองมือตัวเอง เกร็ดเล็กๆ บนโหนกแก้มส่องแสงในแดดเช้า เขาไม่ได้พยายามซ่อนมันแล้ว</p>
+        <div class="grm-quote">"เจ็บไหม?" (เพื่อนถาม หมายถึงบาดแผล) — "นิดหน่อย" เคลตอบ แล้วหลังจากนิ่งอยู่สักครู่ — "แต่ผมโอเคจริงๆ ครั้งนี้"</div>
+        <p>เพื่อนมอง รู้ว่านั่นคือความแตกต่าง มันไม่ใช่คำตอบเดิมที่เขาพูดมาตลอดหกปี มันสั้นกว่า เรียบกว่า และจริงกว่า</p>
+        <p>ถนนข้างหน้ายาว พ่อมังกรยังมีชีวิต ลัทธิยังไม่แตกสลาย และเสียงในหัวก็ยังคงอยู่ เพียงแต่เบาลงเล็กน้อย</p>
+        <p>แต่ครั้งแรกในรอบหกปี Kael Veranth เดินทางโดยไม่มีขวดเถ้าถ่านรอบคอ</p>
+      </div>
+      <div class="grm-prose grm-en">
+        <p class="drop">The battle ended. I won't say how — because that isn't the point. The point is the moment Kael Veranth stepped out of the temple at dawn.</p>
+        <p>This time, he didn't walk out alone. His companions walked beside him. Without speaking — but present. There. The way they had always been.</p>
+        <p>Kael looked at his own hands. The small scales on his cheeks caught the morning light. He no longer tried to hide them.</p>
+        <div class="grm-quote">"Does it hurt?" — "A little," Kael answered. Then, after a quiet moment: "But I'm really okay this time."</div>
+        <p>His companion understood. That was different from the old answer. Shorter. Simpler. Truer.</p>
+        <p>The road ahead was long. His father still lived. The cult still stood. The voice in his head was still there — only quieter now.</p>
+        <p>But for the first time in six years, <em>Kael Veranth walked without the ash bottle around his neck.</em></p>
+      </div>
+    </div>
+
+    <!-- FOOTER CLOSE -->
+    <div class="grm-footer">
+      <div class="grm-foot-lbl grm-th">ปิดคัมภีร์</div>
+      <div class="grm-foot-lbl grm-en">Close the Grimoire</div>
+      <button class="grm-close-btn" id="grmClose2" aria-label="Close grimoire" style="margin:0 auto;display:flex">
+        <span class="ccl cv brk-a"></span>
+        <span class="ccl ch"></span>
+        <span class="ccl cv"></span>
+        <span class="ccl ch"></span>
+        <span class="ccl cv brk-b"></span>
+      </button>
+    </div>
+
+  </div><!-- /grm-box -->
+</div><!-- /grm-outer -->
+
+<script>
+  // ===== GRIMOIRE POPUP =====
+  (function(){
+    const trigger  = document.getElementById('grmTrigger');
+    const fireOv   = document.getElementById('grmFireOv');
+    const bgOv     = document.getElementById('grmBgOv');
+    const outer    = document.getElementById('grmOuter');
+    const box      = document.getElementById('grmBox');
+    const close1   = document.getElementById('grmClose');
+    const close2   = document.getElementById('grmClose2');
+    const chainsEl = document.getElementById('grmChains');
+    if(!trigger) return;
+
+    // Build hanging chains
+    function buildChain(side, count) {
+      const d = document.createElement('div');
+      d.className = 'grm-chain ' + side;
+      for(let i = 0; i < count; i++) {
+        const lk = document.createElement('span');
+        lk.className = 'cl ' + (i % 2 === 0 ? 'cv' : 'ch');
+        d.appendChild(lk);
+      }
+      chainsEl.appendChild(d);
+    }
+    buildChain('tl', 14);
+    buildChain('tr', 14);
+
+    // Fire particle burst
+    function burst(cx, cy) {
+      const N = 44;
+      for(let i = 0; i < N; i++) {
+        const p = document.createElement('div');
+        p.className = 'gfp';
+        const angle = Math.random() * Math.PI * 2;
+        const dist  = 40 + Math.random() * 180;
+        const dx    = Math.cos(angle) * dist;
+        const dy    = Math.sin(angle) * dist - 50;
+        const sz    = 5 + Math.random() * 9;
+        const dur   = 0.35 + Math.random() * 0.55;
+        p.style.cssText =
+          'left:' + cx + 'px;top:' + cy + 'px;' +
+          'width:' + sz + 'px;height:' + sz + 'px;' +
+          'margin-left:' + (-sz/2) + 'px;margin-top:' + (-sz/2) + 'px;' +
+          '--dx:' + dx + 'px;--dy:' + dy + 'px;--dur:' + dur + 's;' +
+          'animation-delay:' + (Math.random() * 0.18) + 's;';
+        document.body.appendChild(p);
+        setTimeout(function(){ p.remove(); }, (dur + 0.3) * 1000);
+      }
+    }
+
+    // Open sequence
+    trigger.addEventListener('click', function() {
+      const r  = trigger.getBoundingClientRect();
+      const cx = r.left + r.width  / 2;
+      const cy = r.top  + r.height / 2;
+      // Fire flash
+      fireOv.style.setProperty('--ox', cx + 'px');
+      fireOv.style.setProperty('--oy', cy + 'px');
+      burst(cx, cy);
+      fireOv.classList.add('flare');
+      setTimeout(function() {
+        fireOv.classList.remove('flare');
+        bgOv.classList.add('on');
+        bgOv.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+        setTimeout(function() {
+          outer.classList.add('on');
+          outer.setAttribute('aria-hidden', 'false');
+        }, 180);
+      }, 320);
+    });
+
+    // Close
+    function closeGrimoire() {
+      outer.classList.remove('on');
+      outer.setAttribute('aria-hidden', 'true');
+      setTimeout(function() {
+        bgOv.classList.remove('on');
+        bgOv.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+        if(box) box.scrollTop = 0;
+      }, 500);
+    }
+    close1.addEventListener('click', closeGrimoire);
+    close2.addEventListener('click', closeGrimoire);
+    bgOv.addEventListener('click', function(e) {
+      if(e.target === bgOv) closeGrimoire();
+    });
+    document.addEventListener('keydown', function(e) {
+      if(e.key === 'Escape' && outer.classList.contains('on')) closeGrimoire();
+    });
+
+    // Language toggle
+    box.querySelectorAll('.grm-lang button').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        const lang = btn.getAttribute('data-toggle');
+        box.classList.toggle('lang-th', lang === 'th');
+        box.querySelectorAll('.grm-lang button').forEach(function(b) {
+          b.classList.toggle('active', b.getAttribute('data-toggle') === lang);
+        });
+        // sync trigger button language (use explicit inline to override CSS .grm-en{display:none})
+        document.querySelectorAll('.grm-trigger .grm-th, .grm-trigger .grm-en').forEach(function(el) {
+          el.style.display = el.classList.contains('grm-' + lang) ? 'inline' : 'none';
+        });
+      });
+    });
+  })();
+</script>
 
 <script>
   // Generate ember particles

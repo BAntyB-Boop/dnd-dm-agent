@@ -858,27 +858,25 @@ body.th-active .roster-list-th{display:flex !important}
 
 /* --- LAYER 3: CONTINENT MAP --- */
 .ci-continent{
-  width:min(680px,80vw);aspect-ratio:1;
-  background:radial-gradient(ellipse at 50% 55%, rgba(40,30,20,0.55), transparent 60%);
-  border-radius:50%;
+  width:min(820px,88vw);aspect-ratio:16/11;
 }
-.ci-continent svg{width:100%;height:100%;color:var(--gold-dim)}
-.ci-continent .coast{stroke:currentColor;fill:rgba(60,45,30,0.4);stroke-width:0.8}
-.ci-continent .mark{fill:var(--blood);filter:drop-shadow(0 0 6px var(--blood))}
-.ci-continent .pulse{animation:map-pulse 2s ease-in-out infinite}
-@keyframes map-pulse{0%,100%{r:5}50%{r:9}}
+.ci-continent img{
+  width:100%;height:100%;object-fit:cover;
+  border-radius:4px;
+  filter:brightness(.9) contrast(1.05);
+  box-shadow:0 0 80px rgba(0,0,0,.8),0 0 30px rgba(180,120,40,.12);
+}
 
 /* --- LAYER 4: CITY SILHOUETTE --- */
 .ci-city{
-  width:100vmax;height:60vmax;
-  background:linear-gradient(180deg, transparent 0%, rgba(40,28,18,0.6) 100%);
-  bottom:0;top:auto;
-  transform:translate(-50%, 0);
+  width:min(820px,88vw);aspect-ratio:1;
 }
-.ci-city svg{width:100%;height:100%;display:block}
-.ci-city .sky{fill:url(#sky-grad)}
-.ci-city .building{fill:#0c0a08}
-.ci-city .window{fill:#d6a360;opacity:0.7}
+.ci-city img{
+  width:100%;height:100%;object-fit:cover;
+  border-radius:4px;
+  filter:brightness(.88) contrast(1.08);
+  box-shadow:0 0 80px rgba(0,0,0,.85),0 0 30px rgba(180,60,20,.1);
+}
 
 /* --- LAYER 5: TAVERN WINDOW --- */
 .ci-tavern{
@@ -1090,75 +1088,14 @@ body.th-active .roster-list-th{display:flex !important}
         <!-- Layer 3: Continent map of Borderland -->
         <div class="ci-layer continent" data-key="continent" aria-hidden="true">
           <div class="ci-continent">
-            <svg viewBox="0 0 400 400">
-              <defs>
-                <radialGradient id="land-grad" cx="50%" cy="55%" r="50%">
-                  <stop offset="0%" stop-color="#3a2a1c"/>
-                  <stop offset="100%" stop-color="#1a120a" stop-opacity="0"/>
-                </radialGradient>
-              </defs>
-              <!-- continent shape -->
-              <path class="coast" fill="url(#land-grad)" d="M120 90 Q160 70 220 80 Q290 90 330 130 Q360 180 340 240 Q310 300 250 320 Q190 330 140 300 Q90 270 80 220 Q70 160 90 130 Q105 100 120 90 Z"/>
-              <!-- coast detail lines -->
-              <path d="M150 110 Q200 130 250 120 M120 200 Q160 220 200 210 M180 280 Q230 290 270 270" stroke="currentColor" stroke-width="0.6" fill="none" opacity="0.5"/>
-              <!-- mountains -->
-              <path d="M180 170 L195 155 L208 175 L222 150 L240 175 M260 220 L275 205 L290 225" stroke="currentColor" fill="none" stroke-width="0.7" opacity="0.6"/>
-              <!-- city marker -->
-              <g class="pulse">
-                <circle class="mark" cx="210" cy="190" r="5"/>
-                <circle cx="210" cy="190" r="10" stroke="#b01a1a" fill="none" opacity="0.5"/>
-              </g>
-              <!-- compass rose top-right -->
-              <g transform="translate(340 60)" stroke="currentColor" fill="none" stroke-width="0.6" opacity="0.5">
-                <circle cx="0" cy="0" r="18"/>
-                <path d="M0 -16 L4 0 L0 16 L-4 0 Z" fill="currentColor" opacity="0.5"/>
-                <text x="0" y="-22" text-anchor="middle" font-size="7" font-family="Cinzel,serif" fill="currentColor">N</text>
-              </g>
-            </svg>
+            <img src="assets/map-borderland.png" alt="Map of Borderland" draggable="false">
           </div>
         </div>
 
         <!-- Layer 4: City silhouette at night -->
         <div class="ci-layer city" data-key="city" aria-hidden="true">
           <div class="ci-city">
-            <svg viewBox="0 0 1600 600" preserveAspectRatio="xMidYMax slice">
-              <defs>
-                <linearGradient id="sky-grad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%"  stop-color="#0e1224"/>
-                  <stop offset="60%" stop-color="#221814"/>
-                  <stop offset="100%" stop-color="#000"/>
-                </linearGradient>
-              </defs>
-              <rect class="sky" x="0" y="0" width="1600" height="600"/>
-              <!-- distant haze -->
-              <ellipse cx="800" cy="500" rx="800" ry="60" fill="#c9a45c" opacity="0.06"/>
-              <!-- city skyline silhouette — medieval rooftops + spires -->
-              <path class="building" d="M0 600 L0 480 L60 480 L60 440 L100 440 L100 470 L140 470 L160 430 L180 470 L240 470 L240 420 L280 420 L280 380 L320 380 L320 360 L340 320 L360 360 L360 420 L420 420 L420 460 L480 460 L500 410 L520 460 L580 460 L580 430 L620 430 L620 470 L680 470 L680 440 L720 440 L740 400 L760 440 L820 440 L820 470 L860 470 L880 430 L900 470 L960 470 L960 430 L1000 430 L1020 380 L1040 430 L1080 430 L1080 470 L1140 470 L1140 440 L1180 440 L1200 400 L1220 440 L1280 440 L1280 470 L1340 470 L1340 430 L1380 430 L1400 380 L1420 430 L1460 430 L1460 470 L1520 470 L1520 440 L1600 440 L1600 600 Z"/>
-              <!-- windows -->
-              <g class="window">
-                <rect x="80"  y="500" width="6" height="6"/>
-                <rect x="110" y="480" width="6" height="6"/>
-                <rect x="250" y="440" width="6" height="6"/>
-                <rect x="290" y="400" width="6" height="6"/>
-                <rect x="425" y="480" width="6" height="6"/>
-                <rect x="500" y="500" width="6" height="6"/>
-                <rect x="605" y="460" width="6" height="6"/>
-                <rect x="700" y="460" width="6" height="6"/>
-                <rect x="830" y="500" width="6" height="6"/>
-                <rect x="905" y="460" width="6" height="6"/>
-                <rect x="1015" y="440" width="6" height="6"/>
-                <rect x="1105" y="500" width="6" height="6"/>
-                <rect x="1195" y="430" width="6" height="6"/>
-                <rect x="1290" y="500" width="6" height="6"/>
-                <rect x="1395" y="430" width="6" height="6"/>
-                <rect x="1500" y="500" width="6" height="6"/>
-              </g>
-              <!-- moon -->
-              <circle cx="1200" cy="140" r="32" fill="#f0e4c8" opacity="0.7"/>
-              <circle cx="1200" cy="140" r="42" fill="#f0e4c8" opacity="0.15"/>
-            </svg>
-            <!-- one tavern window glowing bright — the focal point -->
-            <div style="position:absolute;left:48%;top:62%;width:14px;height:18px;background:radial-gradient(ellipse at center, #ffd685, #ff9c30 60%, transparent);box-shadow:0 0 30px #ff9c30, 0 0 60px #ff9c30;animation:candle-flicker 1.4s ease-in-out infinite alternate"></div>
+            <img src="assets/city-borderland.png" alt="A city of stone and candle-light" draggable="false">
           </div>
         </div>
 

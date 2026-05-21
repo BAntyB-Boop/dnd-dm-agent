@@ -6,6 +6,7 @@
 <title>Anuchit Thepsuang — Way of the Open Hand</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="stylesheet" href="shared.css">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@400;500&display=swap" rel="stylesheet"/>
 <style>
 :root{
   --bg-deep:#080705;
@@ -561,6 +562,147 @@ body::after{
 .colophon{margin-top:30px;text-align:center;font-family:"Cinzel",serif;letter-spacing:0.3em;text-transform:uppercase;font-size:0.58rem;color:var(--ink-faint)}
 
 /* REDUCE MOTION */
+/* ============================================================
+   MEMORY POPUP — "The Night Everything Ended"
+============================================================ */
+.memory-btn{
+  display:block;margin:44px auto 0;padding:14px 48px;
+  background:transparent;border:1px solid rgba(160,45,15,.55);
+  color:var(--ink-mute);font-family:"Cinzel",serif;
+  letter-spacing:.32em;text-transform:uppercase;font-size:.68rem;
+  cursor:pointer;position:relative;
+  transition:color .4s,border-color .4s,box-shadow .4s;
+}
+.memory-btn::after{
+  content:"";position:absolute;inset:-5px;
+  border:1px solid rgba(160,45,15,.18);pointer-events:none;
+}
+.memory-btn:hover{
+  color:#e8c09a;border-color:rgba(210,65,20,.85);
+  box-shadow:0 0 32px rgba(160,45,15,.35),inset 0 0 20px rgba(160,45,15,.1);
+}
+.mem-overlay{
+  position:fixed;inset:0;background:#000;z-index:900;
+  opacity:0;pointer-events:none;transition:opacity .85s ease;
+}
+.mem-overlay.on{opacity:1;pointer-events:all}
+.mem-flash{
+  position:fixed;inset:0;z-index:901;pointer-events:none;
+  background:radial-gradient(ellipse at 50% 38%,rgba(255,214,133,.88),transparent 65%);
+  opacity:0;transition:opacity .22s ease;
+}
+.mem-flash.on{opacity:1}
+.mem-popup{
+  position:fixed;inset:0;z-index:950;padding:24px;
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity .55s ease .2s;
+}
+.mem-popup.on{opacity:1;pointer-events:all}
+.mem-inner{
+  background:#060403;border:1px solid rgba(140,32,10,.42);
+  width:min(800px,100%);max-height:88vh;
+  display:flex;flex-direction:column;
+  position:relative;overflow:hidden;
+  box-shadow:0 0 80px rgba(140,32,10,.22),0 0 200px rgba(0,0,0,.95);
+}
+.mem-sparks{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.mem-spark{
+  position:absolute;bottom:-4px;border-radius:50%;
+  background:radial-gradient(circle,#fff8d0,#ffc84a 45%,transparent 80%);
+  box-shadow:0 0 5px rgba(255,190,70,.7);
+  animation:mem-spark-rise linear infinite;opacity:0;
+}
+@keyframes mem-spark-rise{
+  0%  {transform:translate(0,0);opacity:0}
+  8%  {opacity:.75}
+  88% {opacity:.2}
+  100%{transform:translate(var(--sx,0px),-96vh);opacity:0}
+}
+.mem-hdr{
+  position:relative;z-index:2;flex-shrink:0;
+  padding:22px 28px 16px;
+  border-bottom:1px solid rgba(140,32,10,.28);
+  display:flex;justify-content:space-between;align-items:flex-start;
+  background:linear-gradient(180deg,rgba(6,4,3,.97),transparent);
+}
+.mem-eyebrow{
+  font-family:"Cinzel",serif;letter-spacing:.3em;text-transform:uppercase;
+  font-size:.55rem;color:var(--robe);margin-bottom:5px;
+}
+.mem-ttl{
+  font-family:"Cinzel",serif;font-size:clamp(.85rem,2.2vw,1.05rem);
+  letter-spacing:.07em;color:var(--ink);line-height:1.3;
+}
+.mem-hdr-r{display:flex;align-items:center;gap:12px;flex-shrink:0;margin-left:18px}
+.mem-langs{display:flex;gap:3px}
+.mem-lang{
+  padding:4px 12px;background:transparent;
+  border:1px solid var(--line);color:var(--ink-mute);
+  font-family:"Cinzel",serif;font-size:.6rem;letter-spacing:.2em;
+  cursor:pointer;transition:all .3s;
+}
+.mem-lang.on{border-color:var(--gold-dim);color:var(--gold)}
+.mem-x{
+  width:30px;height:30px;background:transparent;
+  border:1px solid rgba(140,32,10,.45);color:var(--ink-mute);
+  font-size:.85rem;cursor:pointer;transition:all .3s;
+  display:grid;place-items:center;
+}
+.mem-x:hover{border-color:var(--robe);color:var(--ink)}
+.mem-body{
+  flex:1;overflow-y:auto;padding:32px 40px;
+  position:relative;z-index:2;
+  scrollbar-width:thin;scrollbar-color:rgba(140,32,10,.4) transparent;
+}
+.mem-body::-webkit-scrollbar{width:4px}
+.mem-body::-webkit-scrollbar-thumb{background:rgba(140,32,10,.4);border-radius:2px}
+.mem-th{display:block}.mem-en{display:none}
+.mem-popup.lang-en .mem-th{display:none}
+.mem-popup.lang-en .mem-en{display:block}
+.mem-prose{
+  font-family:"Cormorant Garamond",Georgia,serif;
+  color:var(--ink-soft);font-size:1.06rem;line-height:1.78;
+}
+.mem-prose.th-prose{font-family:"Noto Serif Thai","Cormorant Garamond",serif;font-size:.98rem;line-height:1.92}
+.mem-prose p{margin:0 0 14px}
+.mem-prose em{color:var(--ink);font-style:italic}
+.mem-prose strong{color:var(--halo);font-style:normal;font-weight:normal}
+.mem-scene{
+  display:flex;align-items:center;gap:14px;margin:26px 0 20px;
+  font-family:"Cinzel",serif;letter-spacing:.26em;text-transform:uppercase;
+  font-size:.56rem;color:rgba(200,60,20,.7);
+}
+.mem-scene::before,.mem-scene::after{
+  content:"";flex:1;height:1px;
+  background:linear-gradient(to right,transparent,rgba(140,32,10,.5),transparent);
+}
+.mem-climax{margin:24px -40px;position:relative}
+.mem-climax img{
+  width:100%;height:auto;display:block;
+  filter:contrast(1.06) brightness(.84) saturate(.88);
+}
+.mem-climax::before,.mem-climax::after{
+  content:"";position:absolute;left:0;right:0;height:55px;z-index:1;pointer-events:none;
+}
+.mem-climax::before{top:0;background:linear-gradient(180deg,#060403,transparent)}
+.mem-climax::after{bottom:0;background:linear-gradient(0deg,#060403,transparent)}
+.mem-ftr{
+  position:relative;z-index:2;flex-shrink:0;padding:16px 40px 22px;
+  border-top:1px solid rgba(140,32,10,.22);text-align:center;
+  background:linear-gradient(0deg,rgba(6,4,3,.97),transparent);
+}
+.mem-q{
+  font-family:"Cinzel",serif;font-size:.88rem;letter-spacing:.06em;
+  color:var(--ink-mute);font-style:italic;line-height:1.55;
+}
+@media(max-width:560px){
+  .mem-body{padding:22px 20px}
+  .mem-climax{margin:20px -20px}
+  .mem-hdr{padding:16px 18px 14px}
+  .mem-ftr{padding:14px 20px 18px}
+  .memory-btn{padding:12px 28px;letter-spacing:.22em}
+}
+
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:0.001ms !important;animation-iteration-count:1 !important;transition-duration:0.001ms !important}
   .mote,.petal,.mandala-svg,.mandala-svg-inner,.halo-ring,.ray-set,.ki-wave{display:none}
@@ -1034,6 +1176,10 @@ body::after{
 
       </div>
     </div>
+
+    <div style="text-align:center;margin-top:40px">
+      <button class="memory-btn" id="memoryBtn">— Recall the Night · Year 20 —</button>
+    </div>
   </section>
 
   <!-- ============ END QUOTE ============ -->
@@ -1129,6 +1275,213 @@ body::after{
     }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
     targets.forEach(t => io.observe(t));
   })();
+</script>
+
+<!-- ====== MEMORY OVERLAY ====== -->
+<div class="mem-overlay" id="memOverlay"></div>
+<div class="mem-flash"   id="memFlash"></div>
+
+<!-- ====== MEMORY POPUP ====== -->
+<div class="mem-popup" id="memPopup" role="dialog" aria-modal="true">
+  <div class="mem-inner">
+    <div class="mem-sparks" id="memSparks" aria-hidden="true"></div>
+
+    <div class="mem-hdr">
+      <div>
+        <div class="mem-eyebrow">Year 20 · Personal Memory · Anuchit Thepsuang</div>
+        <div class="mem-ttl mem-th">คืนที่ทุกอย่างจบลง และมันได้ตื่นขึ้น</div>
+        <div class="mem-ttl mem-en">The Night Everything Ended, and It Awakened</div>
+      </div>
+      <div class="mem-hdr-r">
+        <div class="mem-langs">
+          <button class="mem-lang on" data-lang="th">TH</button>
+          <button class="mem-lang"    data-lang="en">EN</button>
+        </div>
+        <button class="mem-x" id="memClose" aria-label="Close">✕</button>
+      </div>
+    </div>
+
+    <div class="mem-body" id="memBody">
+
+      <!-- === THAI === -->
+      <div class="mem-th">
+        <div class="mem-prose th-prose">
+          <div class="mem-scene">ก่อนทุกอย่างจะเริ่ม</div>
+          <p>คืนนั้นเป็นคืนเดือนมืด ลมพัดเบาๆ เหมือนคืนปกติทุกคืน</p>
+          <p>อนุชิตอายุยี่สิบปี ตื่นก่อนฟ้าสางอย่างเคย เดินไปนั่งสมาธิใต้ต้นโพธิ์เก่าหน้าวัด หลวงตาตื่นแล้วเสมอเมื่อเขามาถึง พระรูปอื่นๆ ในวัดก็เริ่มสวดมนต์เช้ากันแล้ว เสียงสวดแว่วมาจากศาลา</p>
+          <p>วันนั้นไม่มีอะไรผิดปกติเลย — ยกเว้นว่า สุนัขของหมู่บ้านข้างๆ เห่ามาตั้งแต่ตีสอง และไม่หยุดเลย</p>
+          <p>อนุชิตจำได้ดีว่าหลวงตาเงยหน้าขึ้นมองท้องฟ้าครู่หนึ่ง สีหน้าครุ่นคิด แล้วพูดเบาๆ ว่า <em>"คืนนี้... ป่ามันเงียบเกินไป"</em></p>
+
+          <div class="mem-scene">เงาที่มีตา</div>
+          <p>ตีสามครึ่ง เสียงกรีดร้องจากศาลาดังขึ้น</p>
+          <p>อนุชิตวิ่งจากห้องของเขาไปยังเสียงนั้น เห็นพระรูปหนึ่งล้มอยู่บนพื้น ตาเบิกกว้าง ลมหายใจขาดห้วง มีรอยกรีดยาวพาดผ่านลำคอ — แต่ไม่มีใครอยู่ในห้อง</p>
+          <p><em>"...ออกไป"</em> หลวงตาพูดเสียงต่ำๆ ที่อนุชิตไม่เคยได้ยินมาก่อน <em>"เด็กชาย ออกไปจากวัดเดี๋ยวนี้"</em></p>
+          <p>อนุชิตไม่ออก เขายืนค้างอยู่ตรงนั้น เพราะเขาเห็นเงาเคลื่อนไหวที่มุมห้อง — เงาที่ไม่ใช่ของใคร เงาที่มีตา</p>
+          <p>มันออกมาจากความมืด ไม่ใช่หนึ่งตัว แต่หลายตัว ตัวสูงราวๆ คนผู้ใหญ่ ผิวสีเทาดำเหมือนถ่าน ตาแดงเรืองแสง กรงเล็บยาวสีเทาเหล็ก ไม่พูด ไม่ส่งเสียง เคลื่อนที่เงียบเหมือนหมอก</p>
+          <p>พระในวัดสู้กลับ — บางรูปเป็นอดีตทหาร บางรูปฝึกวิชาเหมือนอนุชิต พวกเขาตอบโต้ด้วยไม้เท้า ด้วยมือเปล่า ด้วยบทสวด <strong>ไม่ได้ผล</strong></p>
+          <p>อนุชิตเห็นพี่ใหญ่ที่เขาเรียกว่า "พี่ชาญ" — คนที่สอนเขาท่าต่อยแรกในชีวิต — ถูกฉีกร่างเป็นสองท่อนกลางลานวัด เขาวิ่งไปช่วย แต่หลวงตาคว้าแขนเขาไว้ <em>"อย่า. เขาไปแล้ว"</em></p>
+          <p>ศาลาเริ่มไหม้</p>
+
+          <div class="mem-scene">บทเรียนสุดท้าย</div>
+          <p>ปีศาจตัวใหญ่ที่สุดเดินช้าๆ เข้ามาในศาลา มันสูงกว่าพระทุกรูป ไม่มีใบหน้าชัดเจน มีแต่ปากที่กว้างเกินกว่าหัว และตาแดงสามดวง มันเดินตรงมาที่หลวงตา</p>
+          <p>หลวงตายืนขึ้น มือถือไม้เท้าเก่าๆ ที่ใช้พยุงตัวเดิน ไม่ใช่อาวุธ แค่ไม้เท้าคนแก่ ท่านมองอนุชิตครั้งหนึ่ง รอยยิ้มจางๆ บนใบหน้า</p>
+          <p><em>"เด็กชาย — เจ้าจำคืนนี้ไว้ให้ดี อย่าให้ความโกรธกินใจ"</em></p>
+          <p>แล้วท่านก็เดินเข้าหามัน อนุชิตวิ่งตามไป แต่ขาเขาเหมือนไม่ใช่ของตัวเอง ทุกอย่างช้าลง หลวงตาตีไม้เท้าครั้งเดียว บอกคาถาเก่าๆ ที่อนุชิตไม่รู้จัก แล้วปีศาจก็จับท่านได้ มันยกท่านขึ้นด้วยมือเดียว เหมือนยกผ้า</p>
+          <p>อนุชิตวิ่งไปถึงตอนที่กรงเล็บมันแทงทะลุท้องของหลวงตา ท่านไม่กรีดร้อง ท่านแค่มองอนุชิต ตาท่านยังสงบเหมือนเดิม แล้วท่านขยับปากพูดอะไรบางอย่าง ไม่มีเสียง — แต่อนุชิตอ่านปากได้ <em>"...วิ่งหนีไป..."</em></p>
+          <p>ปีศาจเหวี่ยงท่านลงพื้น ร่างหลวงตากระแทกพื้นไม้ที่กำลังลุกไหม้ ท่านเอื้อมมือมาทางอนุชิตหนึ่งครั้ง</p>
+          <p><strong>แล้วก็ไม่ขยับอีกเลย</strong></p>
+        </div>
+
+        <div class="mem-climax">
+          <img src="assets/anuchit-temple-burning.jpg" alt="หลวงตาเอื้อมมือมาหาอนุชิต — วัดที่กำลังไหม้ ปีศาจเฝ้ามองอยู่เบื้องหลัง" loading="lazy">
+        </div>
+
+        <div class="mem-prose th-prose">
+          <div class="mem-scene">สิ่งที่ตื่นขึ้น</div>
+          <p>อนุชิตจำได้แค่ว่ามีบางอย่างในตัวเขา <em>แตกออก</em></p>
+          <p>ไม่ใช่เสียง ไม่ใช่ความเจ็บปวด เหมือนมีไฟใหญ่มากๆ ที่ถูกขังไว้ในกระดูกตลอดเวลา สุดท้ายก็ปล่อยออกมา</p>
+          <p>หน้าผากเขาร้อนผ่าว เขาได้ยินเสียงตัวเองกรีดร้อง แต่เสียงนั้นไม่เหมือนเสียงเขา</p>
+          <p><strong>แสงทอง — สว่างเหมือนดวงอาทิตย์ — พุ่งออกจากตัวเขาทุกทิศทาง</strong> ทำลายความมืดในศาลาออกไปหมด ปีศาจตัวใหญ่ที่ฆ่าหลวงตาถอยไปหนึ่งก้าว มันส่งเสียงแหบสุดท้าย — เสียงแรกที่อนุชิตได้ยินมันส่ง — เสียงคล้ายเสียงสัตว์ที่กลัว</p>
+          <p>ปีศาจตัวเล็กๆ ระเหยหายไปในแสงนั้น ตัวใหญ่หนีเข้าไปในป่า</p>
+          <p>อนุชิตยืนกลางศาลาที่ลุกไหม้ ทั้งร่างเรืองแสงสีทอง ไม่รู้ว่าตัวเองทำอะไรลงไป ไม่รู้ว่าพลังนี้มาจากไหน</p>
+          <p>แล้วแสงก็ดับลง</p>
+
+          <div class="mem-scene">รุ่งอรุณ</div>
+          <p>ฟ้าสางขึ้นช้าๆ</p>
+          <p>อนุชิตนั่งอยู่ข้างร่างหลวงตาตลอดคืน เขาไม่ร้องไห้ ไม่พูด ไม่ขยับ แค่นั่งดูพระอาทิตย์ขึ้นเหนือซากวัดที่ไหม้เป็นเถ้า ในมือเขายังถือไม้เท้าของหลวงตาอยู่ — ไม้เท้าที่ท่านใช้ตีปีศาจครั้งสุดท้าย ตอนนี้กลายเป็นของเขา</p>
+          <p>เขาฝังหลวงตาในสวนที่ท่านชอบรดน้ำ ฝังพระรูปอื่นๆ ด้วยมือเปล่า สวดบทที่ยังจำได้</p>
+          <p>แล้วเขาก็เดินเข้าป่า ไม่ได้บอกใคร ไม่ได้หันหลังกลับ หน้าผากเขายังร้อนๆ อยู่จากแสงเมื่อคืน</p>
+          <p><em>เขาไม่เคยกลับไปดูซากวัดอีก</em></p>
+          <p>และสามปีต่อมา เขายังไม่รู้คำตอบ</p>
+        </div>
+      </div>
+
+      <!-- === ENGLISH === -->
+      <div class="mem-en">
+        <div class="mem-prose">
+          <div class="mem-scene">Before Everything Began</div>
+          <p>That night was a moonless night. The wind blew softly, like any other night.</p>
+          <p>Anuchit was twenty years old. He woke before dawn as always, walked to sit in meditation beneath the old bodhi tree at the temple's entrance. The abbot was always awake when he arrived. The other monks had already begun their morning chants — the sound drifted from the hall.</p>
+          <p>Nothing was wrong that day — except that the dogs from the neighboring village had been barking since two in the morning, and had not stopped.</p>
+          <p>He remembered clearly how the abbot looked up at the sky for a moment, expression thoughtful, then spoke softly: <em>"Tonight... the forest is too quiet."</em></p>
+
+          <div class="mem-scene">Shadows with Eyes</div>
+          <p>At half past three, screaming erupted from the hall.</p>
+          <p>Anuchit ran toward the sound. He found one monk fallen on the floor — eyes wide, breath already gone, a long gash across his throat. No one else in the room.</p>
+          <p><em>"...Leave."</em> The abbot spoke in a voice Anuchit had never heard from him before. <em>"Boy. Leave the temple. Now."</em></p>
+          <p>He did not leave. He stood frozen — because he saw shadows moving in the corner. Shadows that belonged to no one. Shadows that had eyes.</p>
+          <p>They came out of the darkness. Not one — many. Each as tall as a grown man. Skin the grey-black of charcoal. Eyes glowing red. Claws long and iron-grey. They did not speak. They made no sound. They moved in silence, like fog.</p>
+          <p>The monks fought back — some former soldiers, some trained as Anuchit had trained. They answered with staves, bare hands, chanted prayer. <strong>None of it worked.</strong></p>
+          <p>He watched Phii Chan — the man who had taught him his first strike in life — get torn in two in the temple courtyard. He ran to help. The abbot seized his arm. <em>"Don't. He is gone."</em></p>
+          <p>The hall began to burn.</p>
+
+          <div class="mem-scene">The Last Lesson</div>
+          <p>The largest demon walked slowly into the hall. It stood taller than any of the monks. No clear face — only a mouth too wide for its head, and three red eyes. It walked straight toward the abbot.</p>
+          <p>The abbot rose. He held his old walking staff — not a weapon, just an old man's stick. He looked at Anuchit once. A faint smile.</p>
+          <p><em>"Boy — remember this night well. Do not let anger consume you."</em></p>
+          <p>Then he walked toward it. Anuchit ran after him, but his legs felt like they were not his own. Everything slowed. The abbot struck once — only once — recited an old incantation Anuchit did not know, and then the demon seized him. It lifted him with one hand, like lifting cloth.</p>
+          <p>Anuchit reached him just as the claws drove through the abbot's abdomen. The abbot did not scream. He only looked at Anuchit. His eyes were still calm. He moved his lips — no sound — but Anuchit could read them. <em>"...Run..."</em></p>
+          <p>The demon hurled him to the floor. The abbot's body struck the burning wood. He reached one hand toward Anuchit one last time.</p>
+          <p><strong>And then he was still.</strong></p>
+        </div>
+
+        <div class="mem-climax">
+          <img src="assets/anuchit-temple-burning.jpg" alt="The abbot reaches toward Anuchit — the burning temple, the demon looming behind" loading="lazy">
+        </div>
+
+        <div class="mem-prose">
+          <div class="mem-scene">What Awakened</div>
+          <p>Anuchit only remembered that something inside him <em>broke.</em></p>
+          <p>Not a sound. Not pain. Like a great fire that had been locked in his bones his entire life — finally let out.</p>
+          <p>His forehead burned. He heard his own voice screaming, but that voice did not sound like his.</p>
+          <p><strong>Golden light — bright as the sun — burst from him in every direction,</strong> destroying the darkness in the hall. The great demon stepped back once. It made a final, hoarse sound — the first sound Anuchit had ever heard it make — something like a frightened animal.</p>
+          <p>The smaller demons evaporated in the light. The large one fled into the forest.</p>
+          <p>Anuchit stood in the burning hall, his body glowing gold, not knowing what he had done, not knowing where the power came from.</p>
+          <p>Then the light went out.</p>
+
+          <div class="mem-scene">Dawn</div>
+          <p>The sky brightened slowly.</p>
+          <p>He sat beside the abbot's body through the night. He did not cry. Did not speak. Did not move. He only watched the sun rise over the ash and ruin of what had been the temple. In his hand he still held the abbot's walking staff — the one the old man had struck the demon with, one final time. Now it was his.</p>
+          <p>He buried the abbot in the garden the old man had loved to tend. He buried the other monks with his bare hands. He chanted the prayers he still remembered.</p>
+          <p>Then he walked into the forest. He told no one. He did not look back. His forehead was still warm from the light of the night before.</p>
+          <p><em>He never returned to look at the ruins of the temple.</em></p>
+          <p>And three years later, he still did not know the answers.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="mem-ftr">
+      <div class="mem-q mem-th">"นั่นคืออะไร?" &nbsp;·&nbsp; "ใครส่งพวกมันมา?"</div>
+      <div class="mem-q mem-en">"What were those things?" &nbsp;·&nbsp; "Who sent them?"</div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ====== MEMORY POPUP ======
+(function(){
+  const btn     = document.getElementById('memoryBtn');
+  const overlay = document.getElementById('memOverlay');
+  const flash   = document.getElementById('memFlash');
+  const popup   = document.getElementById('memPopup');
+  const closeBtn= document.getElementById('memClose');
+  const sparks  = document.getElementById('memSparks');
+  const body    = document.getElementById('memBody');
+  const langs   = document.querySelectorAll('.mem-lang');
+  if (!btn) return;
+
+  // Generate floating sparks
+  for (let i = 0; i < 22; i++) {
+    const s = document.createElement('div');
+    s.className = 'mem-spark';
+    s.style.left = (Math.random() * 100) + '%';
+    const dur = 9 + Math.random() * 14;
+    s.style.animationDuration = dur + 's';
+    s.style.animationDelay = '-' + (Math.random() * dur) + 's';
+    s.style.setProperty('--sx', ((Math.random() * 80) - 40) + 'px');
+    const sz = 1.5 + Math.random() * 2;
+    s.style.width = sz + 'px';
+    s.style.height = sz + 'px';
+    sparks.appendChild(s);
+  }
+
+  function open() {
+    overlay.classList.add('on');
+    setTimeout(() => {
+      flash.classList.add('on');
+      setTimeout(() => {
+        flash.classList.remove('on');
+        popup.classList.add('on');
+        document.body.style.overflow = 'hidden';
+      }, 260);
+    }, 680);
+  }
+
+  function close() {
+    popup.classList.remove('on');
+    setTimeout(() => {
+      overlay.classList.remove('on');
+      document.body.style.overflow = '';
+      if (body) body.scrollTop = 0;
+    }, 500);
+  }
+
+  btn.addEventListener('click', open);
+  closeBtn.addEventListener('click', close);
+  popup.addEventListener('click', e => { if (e.target === popup) close(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && popup.classList.contains('on')) close(); });
+
+  langs.forEach(lb => {
+    lb.addEventListener('click', () => {
+      langs.forEach(b => b.classList.remove('on'));
+      lb.classList.add('on');
+      popup.classList.toggle('lang-en', lb.dataset.lang === 'en');
+      if (body) body.scrollTop = 0;
+    });
+  });
+})();
 </script>
 
 </body>

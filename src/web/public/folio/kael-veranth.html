@@ -597,6 +597,61 @@ em,i{font-style:italic;color:var(--ink-soft)}
 .grm-section.s-climax{border-top:1px solid rgba(255,80,0,.2);margin-top:10px;padding-top:28px}
 .grm-section.s-climax .grm-sec-num{-webkit-text-stroke:1px rgba(255,90,0,.65)}
 .grm-section.s-epilogue .grm-sec-num{font-size:1.5rem;opacity:.55}
+
+/* ===== BINDING CLOSE EFFECT ===== */
+.grm-bind-ov{position:absolute;inset:0;pointer-events:none;z-index:20;overflow:hidden}
+.grm-strap{position:absolute;left:0;right:0;height:21px;display:flex;align-items:center}
+.grm-strap-half{display:flex;flex-direction:row;align-items:center;position:absolute}
+.grm-strap-half.from-left{right:50%;justify-content:flex-end;transform:translateX(calc(-100% - 30px))}
+.grm-strap-half.from-right{left:50%;transform:translateX(calc(100% + 30px))}
+.grm-strap-half.run-l{animation:strap-run-l var(--dur,.4s) var(--del,0s) ease-in forwards}
+.grm-strap-half.run-r{animation:strap-run-r var(--dur,.4s) var(--del,0s) ease-in forwards}
+@keyframes strap-run-l{to{transform:translateX(0)}}
+@keyframes strap-run-r{to{transform:translateX(0)}}
+.bcl{display:block;flex-shrink:0;border:2px solid #4a3218;border-radius:50%;
+  background:linear-gradient(135deg,#5a3e1c 0%,#261508 60%,#3a2510 100%);
+  box-shadow:0 0 3px rgba(180,80,0,.12)}
+.bcl.cv{width:11px;height:19px;margin:0 -3px}
+.bcl.ch{width:19px;height:11px;margin:0 -3px}
+.grm-strap.bound .bcl{
+  border-color:#7a5228;
+  box-shadow:0 0 8px rgba(255,100,0,.5),inset 0 1px 0 rgba(255,180,60,.12);
+  transition:border-color .22s,box-shadow .22s}
+.grm-clasp{
+  position:absolute;left:50%;top:50%;
+  transform:translate(-50%,-50%) scale(0);
+  width:18px;height:18px;
+  border:2px solid rgba(255,140,50,.9);border-radius:50%;
+  background:radial-gradient(circle,rgba(255,220,80,.85),rgba(200,80,0,.55));
+  box-shadow:0 0 20px rgba(255,100,0,.95),0 0 40px rgba(200,50,0,.55);
+  opacity:0}
+.grm-clasp.spark{animation:clasp-spark .5s ease-out forwards}
+@keyframes clasp-spark{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(0)}
+  40%{opacity:1;transform:translate(-50%,-50%) scale(2.6)}
+  70%{opacity:1;transform:translate(-50%,-50%) scale(1.2)}
+  100%{opacity:.95;transform:translate(-50%,-50%) scale(1)}}
+.grm-seal-wrap{
+  position:fixed;left:50%;top:50%;
+  transform:translate(-50%,-50%) scale(0) rotate(-45deg);
+  opacity:0;z-index:1510;pointer-events:none}
+.grm-seal-wrap.emerge{animation:seal-emerge .65s cubic-bezier(.18,.89,.32,1.22) forwards}
+.grm-seal-wrap.dim{animation:seal-dim .5s .08s ease-in forwards}
+@keyframes seal-emerge{
+  0%{transform:translate(-50%,-50%) scale(0) rotate(-45deg);opacity:0}
+  55%{transform:translate(-50%,-50%) scale(1.12) rotate(6deg);opacity:1}
+  100%{transform:translate(-50%,-50%) scale(1) rotate(0deg);opacity:1}}
+@keyframes seal-dim{
+  to{transform:translate(-50%,-50%) scale(.65) rotate(18deg);opacity:0}}
+/* burn-close: grimoire dissolves into fire */
+.grm-outer.burn-close{pointer-events:none;animation:grm-burn-close 1.1s ease-in forwards}
+@keyframes grm-burn-close{
+  0%  {opacity:1;filter:none}
+  20% {opacity:1;filter:brightness(1.5) sepia(.8) saturate(4) hue-rotate(-10deg)}
+  45% {opacity:.75;filter:brightness(2.2) sepia(1) saturate(6) hue-rotate(-22deg)}
+  72% {opacity:.25;filter:brightness(2.8) sepia(1) saturate(5) hue-rotate(-30deg)}
+  100%{opacity:0;filter:brightness(1.2) sepia(1) saturate(2)}
+}
 </style>
 </head>
 <body>
@@ -1349,7 +1404,6 @@ em,i{font-style:italic;color:var(--ink-soft)}
       const r  = trigger.getBoundingClientRect();
       const cx = r.left + r.width  / 2;
       const cy = r.top  + r.height / 2;
-      // Fire flash
       fireOv.style.setProperty('--ox', cx + 'px');
       fireOv.style.setProperty('--oy', cy + 'px');
       burst(cx, cy);
@@ -1366,17 +1420,115 @@ em,i{font-style:italic;color:var(--ink-soft)}
       }, 320);
     });
 
-    // Close
+    // Close with binding + seal sequence
+    let closing = false;
+
     function closeGrimoire() {
-      outer.classList.remove('on');
-      outer.setAttribute('aria-hidden', 'true');
+      if(closing) return;
+      closing = true;
+      if(box) box.scrollTop = 0;
+
+      // --- Build binding overlay on outer ---
+      const bindOv = document.createElement('div');
+      bindOv.className = 'grm-bind-ov';
+      outer.appendChild(bindOv);
+
+      const STRAP_DUR     = 0.38;
+      const STRAP_STAGGER = 0.065;
+      const topPositions  = [28, 50, 72]; // % down the grimoire
+
+      topPositions.forEach(function(topPct, idx) {
+        const strap = document.createElement('div');
+        strap.className = 'grm-strap';
+        strap.style.top = topPct + '%';
+
+        const lh = document.createElement('div');
+        lh.className = 'grm-strap-half from-left run-l';
+        lh.style.setProperty('--dur', STRAP_DUR + 's');
+        lh.style.setProperty('--del', (idx * STRAP_STAGGER) + 's');
+
+        const rh = document.createElement('div');
+        rh.className = 'grm-strap-half from-right run-r';
+        rh.style.setProperty('--dur', STRAP_DUR + 's');
+        rh.style.setProperty('--del', (idx * STRAP_STAGGER) + 's');
+
+        for(var i = 0; i < 40; i++) {
+          var t = i % 2 === 0 ? 'cv' : 'ch';
+          var la = document.createElement('span'); la.className = 'bcl ' + t; lh.appendChild(la);
+          var ra = document.createElement('span'); ra.className = 'bcl ' + t; rh.appendChild(ra);
+        }
+
+        var clasp = document.createElement('div');
+        clasp.className = 'grm-clasp';
+        strap.appendChild(lh);
+        strap.appendChild(rh);
+        strap.appendChild(clasp);
+        bindOv.appendChild(strap);
+
+        // Clasp sparks when this strap finishes sliding
+        setTimeout((function(s, c) {
+          return function() { s.classList.add('bound'); c.classList.add('spark'); };
+        })(strap, clasp), (STRAP_DUR + idx * STRAP_STAGGER) * 1000);
+      });
+
+      // --- Draconic seal appears after all straps bound ---
+      var lastStrapDone = (STRAP_DUR + STRAP_STAGGER * (topPositions.length - 1)) * 1000;
+      var sealAt = lastStrapDone + 110;
+
+      var seal = document.createElement('div');
+      seal.className = 'grm-seal-wrap';
+      seal.innerHTML =
+        '<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg"'
+        + ' style="width:90px;height:90px;filter:drop-shadow(0 0 18px rgba(255,100,0,.75))">'
+        + '<circle cx="40" cy="40" r="36" stroke="rgba(200,100,0,.75)" stroke-width="1.5" fill="rgba(12,6,3,.96)"/>'
+        + '<circle cx="40" cy="40" r="28" stroke="rgba(200,100,0,.28)" stroke-width="1" fill="none" stroke-dasharray="3 5"/>'
+        + '<path d="M40 16 C35 24 32 29 32 35 a8 8 0 0 0 16 0 c0-6-3-11-8-19z" fill="rgba(255,110,30,.92)"/>'
+        + '<path d="M40 26 C38 29 37 32 37 34 a3 3 0 0 0 6 0 c0-2-1-5-3-8z" fill="rgba(255,230,80,.78)"/>'
+        + '<path d="M12 12 L19 19 M61 12 L68 19 M12 68 L19 61 M61 68 L68 61"'
+        + ' stroke="rgba(200,100,0,.52)" stroke-width="1.5" stroke-linecap="round"/>'
+        + '<path d="M9 40 L15 40 M65 40 L71 40 M40 9 L40 15 M40 65 L40 71"'
+        + ' stroke="rgba(200,100,0,.38)" stroke-width="1" stroke-linecap="round"/>'
+        + '<circle cx="40" cy="4" r="2" fill="rgba(200,100,0,.72)"/>'
+        + '<circle cx="40" cy="76" r="2" fill="rgba(200,100,0,.72)"/>'
+        + '<circle cx="4" cy="40" r="2" fill="rgba(200,100,0,.72)"/>'
+        + '<circle cx="76" cy="40" r="2" fill="rgba(200,100,0,.72)"/>'
+        + '</svg>';
+      document.body.appendChild(seal);
+      setTimeout(function() { seal.classList.add('emerge'); }, sealAt);
+
+      // --- Begin closing: fire burn ---
+      var closeAt = sealAt + 680;
       setTimeout(function() {
-        bgOv.classList.remove('on');
-        bgOv.setAttribute('aria-hidden', 'true');
-        document.body.style.overflow = '';
-        if(box) box.scrollTop = 0;
-      }, 500);
+        seal.classList.add('dim');
+
+        // Fire bursts from the grimoire's screen position
+        var rect = outer.getBoundingClientRect();
+        var cx = rect.left + rect.width  / 2;
+        var cy = rect.top  + rect.height / 2;
+        burst(cx, cy);
+        setTimeout(function() { burst(cx, cy); }, 340);
+
+        // Keep .on so layout stays — burn-close handles the fire dissolve
+        outer.setAttribute('aria-hidden', 'true');
+        outer.classList.add('burn-close');
+
+        // BG fades while grimoire is mid-burn
+        setTimeout(function() {
+          bgOv.classList.remove('on');
+          bgOv.setAttribute('aria-hidden', 'true');
+          document.body.style.overflow = '';
+        }, 780);
+
+        // Cleanup after burn finishes
+        setTimeout(function() {
+          outer.classList.remove('on', 'burn-close');
+          bindOv.remove();
+          seal.remove();
+          closing = false;
+        }, 1180);
+      }, closeAt);
     }
+
     close1.addEventListener('click', closeGrimoire);
     close2.addEventListener('click', closeGrimoire);
     bgOv.addEventListener('click', function(e) {
@@ -1394,7 +1546,6 @@ em,i{font-style:italic;color:var(--ink-soft)}
         box.querySelectorAll('.grm-lang button').forEach(function(b) {
           b.classList.toggle('active', b.getAttribute('data-toggle') === lang);
         });
-        // sync trigger button language (use explicit inline to override CSS .grm-en{display:none})
         document.querySelectorAll('.grm-trigger .grm-th, .grm-trigger .grm-en').forEach(function(el) {
           el.style.display = el.classList.contains('grm-' + lang) ? 'inline' : 'none';
         });

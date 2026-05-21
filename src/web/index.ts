@@ -267,12 +267,12 @@ export async function startWebServer(): Promise<void> {
   app.get("/story", (_req, reply) => reply.sendFile("story.html"));
   app.get("/game",  (_req, reply) => reply.sendFile("game.html"));
   const folioMap: Record<string, string> = {
-    "aurora":       "Aurora Elaris.html",
-    "aython":       "Aython Ashvail Aurelius.html",
-    "kael-veranth": "Kael Veranth.html",
-    "anuchit":      "Anuchit Thepsuang.html",
-    "kael-vorn":    "Kael Vorn.html",
-    "jen":          "Jen Corner.html",
+    "aurora":       "folio/aurora.html",
+    "aython":       "folio/aython.html",
+    "kael-veranth": "folio/kael-veranth.html",
+    "anuchit":      "folio/anuchit.html",
+    "kael-vorn":    "folio/kael-vorn.html",
+    "jen":          "folio/jen.html",
   };
   for (const [slug, file] of Object.entries(folioMap)) {
     app.get(`/folio/${slug}`, (_req, reply) => reply.sendFile(file));

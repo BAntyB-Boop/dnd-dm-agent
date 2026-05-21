@@ -1444,29 +1444,44 @@ em,i{font-style:italic;color:var(--ink-soft)}
       canvas.width  = window.innerWidth;
       canvas.height = window.innerHeight;
 
-      var particles = [];
-      var N = 200;
-      for (var i = 0; i < N; i++) {
-        var angle = Math.random() * Math.PI * 2;
-        var spd   = 1.5 + Math.random() * 10;
-        particles.push({
-          x:     cx + (Math.random() - 0.5) * 80,
-          y:     cy + (Math.random() - 0.5) * 40,
-          vx:    Math.cos(angle) * spd * 0.55,
-          vy:   -Math.abs(Math.sin(angle) * spd) - (2 + Math.random() * 5),
-          sz:    5 + Math.random() * 16,
-          life:  1,
-          decay: 0.010 + Math.random() * 0.016,
-          hue:   12 + Math.floor(Math.random() * 48)
-        });
+      var particles  = [];
+      var START      = performance.now();
+      var TOTAL      = 2400;   // total ms
+      var FADE_START = 0.62;   // fraction when canvas begins fading (~1490ms)
+      var lastSpawn  = -1;
+      var SPAWN_MS   = 55;     // spawn new wave every 55ms
+      var SPAWN_N    = 14;     // particles per wave
+
+      function spawnWave(elapsed) {
+        var spread = 70 + (elapsed / TOTAL) * 160; // fire spreads wider over time
+        for (var i = 0; i < SPAWN_N; i++) {
+          var angle = Math.random() * Math.PI * 2;
+          var spd   = 1.2 + Math.random() * 8;
+          particles.push({
+            x:     cx + (Math.random() - 0.5) * spread,
+            y:     cy + (Math.random() - 0.5) * (spread * 0.35),
+            vx:    Math.cos(angle) * spd * 0.5,
+            vy:   -Math.abs(Math.sin(angle) * spd) - (1.5 + Math.random() * 4.5),
+            sz:    5 + Math.random() * 18,
+            life:  1,
+            decay: 0.006 + Math.random() * 0.010,
+            hue:   10 + Math.floor(Math.random() * 50)
+          });
+        }
       }
 
-      var START      = performance.now();
-      var TOTAL      = 820;
-      var FADE_START = 0.52;
+      spawnWave(0); // immediate first wave
 
       function frame(now) {
-        var t = Math.min((now - START) / TOTAL, 1);
+        var elapsed = now - START;
+        var t = Math.min(elapsed / TOTAL, 1);
+
+        // Keep spawning during the burn phase
+        if (t < FADE_START && elapsed - lastSpawn >= SPAWN_MS) {
+          spawnWave(elapsed);
+          lastSpawn = elapsed;
+        }
+
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         for (var i = 0; i < particles.length; i++) {
@@ -1474,17 +1489,17 @@ em,i{font-style:italic;color:var(--ink-soft)}
           if (p.life <= 0) continue;
           p.x   += p.vx;
           p.y   += p.vy;
-          p.vy  -= 0.20;
-          p.vx  *= 0.97;
+          p.vy  -= 0.16;   // buoyancy — fire rises
+          p.vx  *= 0.975;
           p.life -= p.decay;
           var a = Math.max(0, p.life);
           var r = p.sz * a;
           if (r < 0.5) continue;
           var g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, r);
-          g.addColorStop(0,   'hsla(' + (p.hue + 45) + ',100%,96%,' + a       + ')');
-          g.addColorStop(0.25,'hsla(' + (p.hue + 25) + ',100%,78%,' + (a*.92) + ')');
-          g.addColorStop(0.6, 'hsla(' + p.hue        + ',100%,52%,' + (a*.65) + ')');
-          g.addColorStop(1,   'hsla(' + (p.hue - 12) + ',100%,28%,0)');
+          g.addColorStop(0,    'hsla(' + (p.hue + 45) + ',100%,96%,' + a         + ')');
+          g.addColorStop(0.25, 'hsla(' + (p.hue + 22) + ',100%,76%,' + (a * .92) + ')');
+          g.addColorStop(0.60, 'hsla(' + p.hue        + ',100%,50%,' + (a * .62) + ')');
+          g.addColorStop(1,    'hsla(' + (p.hue - 12) + ',100%,26%,0)');
           ctx.beginPath();
           ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
           ctx.fillStyle = g;

@@ -598,6 +598,12 @@ em,i{font-style:italic;color:var(--ink-soft)}
 .grm-section.s-climax .grm-sec-num{-webkit-text-stroke:1px rgba(255,90,0,.65)}
 .grm-section.s-epilogue .grm-sec-num{font-size:1.5rem;opacity:.55}
 
+/* ===== CANVAS FIRE OPEN ===== */
+#grmFireCanvas{
+  position:fixed;inset:0;z-index:1501;
+  pointer-events:none;opacity:0;
+}
+
 /* ===== BINDING CLOSE EFFECT ===== */
 .grm-bind-ov{position:absolute;inset:0;pointer-events:none;z-index:20;overflow:hidden}
 .grm-strap{position:absolute;left:0;right:0;height:21px;display:flex;align-items:center}
@@ -1027,6 +1033,7 @@ em,i{font-style:italic;color:var(--ink-soft)}
 
 <!-- ===== FIRE FLASH ===== -->
 <div class="grm-fire-ov" id="grmFireOv" aria-hidden="true"></div>
+<canvas id="grmFireCanvas" aria-hidden="true"></canvas>
 
 <!-- ===== GRIMOIRE BG OVERLAY ===== -->
 <div class="grm-bg-ov" id="grmBgOv" aria-hidden="true"></div>
@@ -1430,6 +1437,77 @@ em,i{font-style:italic;color:var(--ink-soft)}
     buildChain('tl', 14);
     buildChain('tr', 14);
 
+    // Canvas fire curtain — plays on open, calls onDone when finished
+    function canvasFireOpen(cx, cy, onDone) {
+      var canvas = document.getElementById('grmFireCanvas');
+      var ctx    = canvas.getContext('2d');
+      canvas.width  = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      var particles = [];
+      var N = 200;
+      for (var i = 0; i < N; i++) {
+        var angle = Math.random() * Math.PI * 2;
+        var spd   = 1.5 + Math.random() * 10;
+        particles.push({
+          x:     cx + (Math.random() - 0.5) * 80,
+          y:     cy + (Math.random() - 0.5) * 40,
+          vx:    Math.cos(angle) * spd * 0.55,
+          vy:   -Math.abs(Math.sin(angle) * spd) - (2 + Math.random() * 5),
+          sz:    5 + Math.random() * 16,
+          life:  1,
+          decay: 0.010 + Math.random() * 0.016,
+          hue:   12 + Math.floor(Math.random() * 48)
+        });
+      }
+
+      var START      = performance.now();
+      var TOTAL      = 820;
+      var FADE_START = 0.52;
+
+      function frame(now) {
+        var t = Math.min((now - START) / TOTAL, 1);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        for (var i = 0; i < particles.length; i++) {
+          var p = particles[i];
+          if (p.life <= 0) continue;
+          p.x   += p.vx;
+          p.y   += p.vy;
+          p.vy  -= 0.20;
+          p.vx  *= 0.97;
+          p.life -= p.decay;
+          var a = Math.max(0, p.life);
+          var r = p.sz * a;
+          if (r < 0.5) continue;
+          var g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, r);
+          g.addColorStop(0,   'hsla(' + (p.hue + 45) + ',100%,96%,' + a       + ')');
+          g.addColorStop(0.25,'hsla(' + (p.hue + 25) + ',100%,78%,' + (a*.92) + ')');
+          g.addColorStop(0.6, 'hsla(' + p.hue        + ',100%,52%,' + (a*.65) + ')');
+          g.addColorStop(1,   'hsla(' + (p.hue - 12) + ',100%,28%,0)');
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
+          ctx.fillStyle = g;
+          ctx.fill();
+        }
+
+        if (t >= FADE_START) {
+          canvas.style.opacity = String(1 - (t - FADE_START) / (1 - FADE_START));
+        }
+
+        if (t < 1) {
+          requestAnimationFrame(frame);
+        } else {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          canvas.style.opacity = '0';
+          if (onDone) onDone();
+        }
+      }
+
+      canvas.style.opacity = '1';
+      requestAnimationFrame(frame);
+    }
+
     // Fire particle burst
     function burst(cx, cy) {
       const N = 44;
@@ -1455,15 +1533,18 @@ em,i{font-style:italic;color:var(--ink-soft)}
 
     // Open sequence
     trigger.addEventListener('click', function() {
-      const r  = trigger.getBoundingClientRect();
-      const cx = r.left + r.width  / 2;
-      const cy = r.top  + r.height / 2;
+      var r  = trigger.getBoundingClientRect();
+      var cx = r.left + r.width  / 2;
+      var cy = r.top  + r.height / 2;
+
+      // Immediate flash feedback
       fireOv.style.setProperty('--ox', cx + 'px');
       fireOv.style.setProperty('--oy', cy + 'px');
-      burst(cx, cy);
       fireOv.classList.add('flare');
-      setTimeout(function() {
-        fireOv.classList.remove('flare');
+      setTimeout(function() { fireOv.classList.remove('flare'); }, 200);
+
+      // Canvas fire curtain — opens grimoire after it fades
+      canvasFireOpen(cx, cy, function() {
         bgOv.classList.add('on');
         bgOv.setAttribute('aria-hidden', 'false');
         document.body.style.overflow = 'hidden';
@@ -1471,7 +1552,7 @@ em,i{font-style:italic;color:var(--ink-soft)}
           outer.classList.add('on');
           outer.setAttribute('aria-hidden', 'false');
         }, 180);
-      }, 320);
+      });
     });
 
     // Close with binding + seal sequence

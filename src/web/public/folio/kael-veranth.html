@@ -652,6 +652,44 @@ em,i{font-style:italic;color:var(--ink-soft)}
   72% {opacity:.25;filter:brightness(2.8) sepia(1) saturate(5) hue-rotate(-30deg)}
   100%{opacity:0;filter:brightness(1.2) sepia(1) saturate(2)}
 }
+
+/* ===== GRIMOIRE ILLUSTRATION ===== */
+.grm-illus{
+  margin:20px 0;position:relative;overflow:hidden;
+  border:1px solid rgba(200,80,0,.18);
+  opacity:0;transform:scale(.97);
+}
+.grm-illus img{
+  width:100%;max-height:260px;object-fit:cover;display:block;
+}
+.grm-illus-cap{
+  text-align:center;font-family:"Cinzel",serif;font-size:.6rem;
+  letter-spacing:.26em;text-transform:uppercase;
+  color:var(--ember-deep);padding:7px 0 4px;opacity:.75;
+}
+.grm-illus-particle{
+  position:fixed;border-radius:50%;pointer-events:none;z-index:1600;
+  background:radial-gradient(circle,rgba(255,230,100,.9) 0%,rgba(255,100,0,.7) 40%,transparent 80%);
+  animation:illus-ptcl var(--dur,.7s) ease-out forwards;
+}
+@keyframes illus-ptcl{
+  0%  {opacity:1;transform:translate(0,0) scale(1)}
+  100%{opacity:0;transform:translate(var(--dx,0px),var(--dy,-60px)) scale(.1)}
+}
+.grm-illus.illus-reveal{animation:illus-fire-reveal .9s cubic-bezier(.2,.6,.3,1) forwards}
+@keyframes illus-fire-reveal{
+  0%  {opacity:0;filter:brightness(2.8) sepia(1) saturate(7) hue-rotate(-15deg);transform:scale(.97)}
+  35% {opacity:.7;filter:brightness(1.9) sepia(.7) saturate(3.5) hue-rotate(-8deg);transform:scale(.99)}
+  70% {opacity:.95;filter:brightness(1.2) sepia(.2) saturate(1.3);transform:scale(1)}
+  100%{opacity:1;filter:none;transform:scale(1)}
+}
+.grm-illus.illus-hide{animation:illus-fire-hide .7s ease-in forwards}
+@keyframes illus-fire-hide{
+  0%  {opacity:1;filter:none;transform:scale(1)}
+  30% {opacity:.8;filter:brightness(1.5) sepia(.7) saturate(3) hue-rotate(-10deg)}
+  72% {opacity:.25;filter:brightness(2.6) sepia(1) saturate(5.5) hue-rotate(-22deg);transform:scale(.98)}
+  100%{opacity:0;filter:brightness(2) sepia(1);transform:scale(.97)}
+}
 </style>
 </head>
 <body>
@@ -962,6 +1000,24 @@ em,i{font-style:italic;color:var(--ink-soft)}
     </div>
   </section>
 
+  <!-- ========== VIEW STRIP 3 — EMBER CREEK ========== -->
+  <div class="viewstrip">
+    <img src="assets/kael-veranth-ember-creek.png" alt="Kael standing in the burning village of Ember Creek"/>
+    <div class="caption">
+      <div class="lbl">Plate · 03 — The Night Ember Creek Burned</div>
+      <div class="txt">He did not run. He stood in the ring of fire he had made, and could not move. The heat did not touch him. That, perhaps, was the worst part.</div>
+    </div>
+  </div>
+
+  <!-- ========== VIEW STRIP 4 — ALDRIC ========== -->
+  <div class="viewstrip">
+    <img src="assets/kael-veranth-aldric.png" alt="Kael and the hermit Aldric in the forest hut"/>
+    <div class="caption">
+      <div class="lbl">Plate · 04 — The Hermit &amp; The Ash</div>
+      <div class="txt">"Drink this. Then sleep. Tell me tomorrow." — Aldric never asked what he had done. He only taught him what to do next.</div>
+    </div>
+  </div>
+
   <!-- ========== GRIMOIRE TRIGGER ========== -->
   <div class="grm-trigger-wrap">
     <button class="grm-trigger" id="grmTrigger" aria-haspopup="dialog">
@@ -1079,6 +1135,10 @@ em,i{font-style:italic;color:var(--ink-soft)}
         <p class="drop">มันเริ่มจากเรื่องเล็กน้อย เพื่อนในหมู่บ้านพูดอะไรบางอย่างเกี่ยวกับแม่ของเขา เคลจำไม่ได้แล้วว่าพูดว่าอะไร สมองของเขาลบส่วนนั้นออกไปนานแล้ว เขาจำได้แค่ว่า... โกรธ โกรธแบบที่ไม่เคยรู้สึกมาก่อน</p>
         <p>ความร้อนใต้ผิวหนังลุกขึ้นมาพร้อมกัน เขาพยายามกดมันไว้ แต่มันเหมือนพยายามกั้นแม่น้ำด้วยมือเปล่า</p>
         <p>แล้วมันก็ออกมา ไม่ใช่แสงวูบเล็กๆ ไม่ใช่ประกายไฟจิ๋ว — แต่เป็นคลื่นเพลิงที่ระเบิดออกจากร่างเขาทุกทิศทาง บ้านหลังแรกติดไฟภายในวินาที ลมฤดูร้อนพัดไฟลามไปทั่วหมู่บ้านอย่างรวดเร็วราวกับมันหิวโหยมาตลอดชีวิต เคลยืนอยู่กลางวงล้อมของไฟ มือสั่น ไม่สามารถขยับได้</p>
+        <div class="grm-illus">
+          <img src="assets/kael-veranth-ember-creek.png" alt="Kael ยืนกลางหมู่บ้านไฟไหม้"/>
+          <div class="grm-illus-cap">Ember Creek · อายุสิบห้า · คืนที่โลกเปลี่ยนไป</div>
+        </div>
         <p>เขาได้ยินเสียงกรีดร้อง เสียงหนึ่งในนั้นเป็นเสียงแม่</p>
         <p>เขาวิ่งเข้าไปในไฟ ไม่รู้สึกร้อน ร่างกายของเขาไม่รู้สึกอะไรเลย แต่ก็สายเกินไปแล้ว ทุกอย่างสายเกินไป</p>
         <p>รุ่งเช้าตอนที่แสงแดดแรกสาดลงบน Ember Creek ที่กลายเป็นเถ้าถ่าน เคลคุกเข่าอยู่กลางซากปรักหักพัง มือกำเถ้าถ่านส่วนหนึ่งไว้แน่น แล้วค่อยๆ เทมันลงในขวดแก้วเล็กๆ ที่เขาพบข้างๆ ศพของแม่ เขาแขวนมันไว้รอบคอ แล้วเดินออกไปโดยไม่หันหลังกลับ</p>
@@ -1087,6 +1147,10 @@ em,i{font-style:italic;color:var(--ink-soft)}
         <p class="drop">It started from something small. A village friend said something about his mother. Kael no longer remembers what — his mind erased that part long ago. He only remembers that he was angry. Angry in a way he had never felt before.</p>
         <p>The heat beneath his skin rose with him. He tried to hold it down — but it was like trying to dam a river with bare hands.</p>
         <p>And then it came out. Not a small flash, not a tiny spark — but a wave of fire that exploded from his body in every direction. The first house caught in seconds. The summer wind spread the flames across the village as if they had been hungry all their life. He stood in the ring of fire, hands trembling, unable to move.</p>
+        <div class="grm-illus">
+          <img src="assets/kael-veranth-ember-creek.png" alt="Kael standing in the burning village of Ember Creek"/>
+          <div class="grm-illus-cap">Ember Creek · Age fifteen · The night the world changed</div>
+        </div>
         <p>He heard screams. One of them was his mother's.</p>
         <p>He ran into the fire. He felt no heat. His body felt nothing at all. But it was already too late. Everything was too late.</p>
         <p>When the first light of dawn fell on Ember Creek — now ash — Kael knelt in the ruins, one hand gripping a fistful of cinders. He slowly poured them into a small glass bottle. He hung it around his neck. And walked away without looking back.</p>
@@ -1108,6 +1172,10 @@ em,i{font-style:italic;color:var(--ink-soft)}
       <div class="grm-prose grm-th">
         <p class="drop">เขาเดินทางนานเท่าไหร่ ไม่รู้ จนกระทั่งล้มลงที่หน้ากระท่อมเล็กๆ กลางป่า ชายชราที่อาศัยอยู่ที่นั่นชื่อ Aldric ไม่ถามว่าเด็กหนุ่มมาจากที่ไหน ไม่ถามว่าทำไมดวงตาถึงบวมแดง เขาแค่อุ้มเคลเข้าไปในกระท่อม ชงชาสมุนไพร และวางถ้วยลงข้างๆ</p>
         <div class="grm-quote">"ดื่มซะ แล้วนอน พรุ่งนี้ค่อยเล่า"</div>
+        <div class="grm-illus">
+          <img src="assets/kael-veranth-aldric.png" alt="Kael และ Aldric นั่งคุยกันในกระท่อม"/>
+          <div class="grm-illus-cap">กระท่อมของ Aldric · อายุสิบห้า · คืนแรกที่มีใครอยู่เคียงข้าง</div>
+        </div>
         <p>เคลอยู่กับ Aldric สี่ปี ชายชราสอนเขาเรื่องสมุนไพร การรักษา การควบคุมลมหายใจ และที่สำคัญที่สุด — วิธีรักษาคนอื่น ราวกับรู้ว่านั่นคือสิ่งเดียวที่จะดึงเด็กหนุ่มกลับมาจากขอบเหว</p>
         <p>แต่สิ่งที่เขาเรียนรู้เองโดยที่ Aldric ไม่ได้สอน คือ หน้ากาก รอยยิ้มที่ดูอบอุ่น คำพูดที่ฟังดูใจดี การมองตาที่ทำให้คนรู้สึกว่าเขาสนใจจริงๆ — มันเป็นเกราะ บางกว่าเหล็กกล้า แต่แข็งแกร่งกว่าอะไรก็ตามที่เขารู้จัก</p>
         <div class="grm-quote">"ถ้าฉันดีพอ ถ้าฉันช่วยคนได้มากพอ ความตายของพวกเขาก็จะมีความหมาย"</div>
@@ -1117,6 +1185,10 @@ em,i{font-style:italic;color:var(--ink-soft)}
       <div class="grm-prose grm-en">
         <p class="drop">He walked for who knows how long — until he collapsed outside a small forest hut. The old man inside was called Aldric. He didn't ask where the young man came from. Didn't ask why his eyes were swollen red. He simply carried Kael inside, brewed herbal tea, and set the cup down beside him.</p>
         <div class="grm-quote">"Drink this. Then sleep. Tell me tomorrow."</div>
+        <div class="grm-illus">
+          <img src="assets/kael-veranth-aldric.png" alt="Kael and Aldric sitting by candlelight in the forest hut"/>
+          <div class="grm-illus-cap">Aldric's Hut · Age fifteen · The first night someone stayed</div>
+        </div>
         <p>Kael stayed with Aldric for four years. The old man taught him herbs, healing, breath control — and most importantly, how to care for others. As if he somehow knew that was the only thing that could pull the young man back from the edge.</p>
         <p>But the thing Kael learned on his own — which Aldric never taught — was the mask. The warm smile, the kind words, the attentive gaze that made people feel truly seen. It was armor. Thinner than steel, but stronger than anything else he knew.</p>
         <div class="grm-quote">"If I'm good enough. If I help enough people — their deaths will have meaning."</div>
@@ -1550,6 +1622,60 @@ em,i{font-style:italic;color:var(--ink-soft)}
           el.style.display = el.classList.contains('grm-' + lang) ? 'inline' : 'none';
         });
       });
+    });
+
+    // Grimoire illustration fire reveal/hide on scroll
+    var illusState = new WeakMap();
+
+    function fireIllusParticles(el) {
+      var r = el.getBoundingClientRect();
+      var N = 16;
+      for (var i = 0; i < N; i++) {
+        var p = document.createElement('div');
+        p.className = 'grm-illus-particle';
+        var angle = Math.random() * Math.PI * 2;
+        var dist  = 20 + Math.random() * 80;
+        var dx    = Math.cos(angle) * dist;
+        var dy    = Math.sin(angle) * dist - 30;
+        var sz    = 4 + Math.random() * 7;
+        var dur   = 0.4 + Math.random() * 0.4;
+        p.style.cssText =
+          'left:'   + (r.left + r.width  / 2) + 'px;' +
+          'top:'    + (r.top  + r.height / 2) + 'px;' +
+          'width:'  + sz + 'px;height:' + sz + 'px;' +
+          'margin-left:' + (-sz / 2) + 'px;margin-top:' + (-sz / 2) + 'px;' +
+          '--dx:' + dx + 'px;--dy:' + dy + 'px;--dur:' + dur + 's;' +
+          'animation-delay:' + (Math.random() * 0.12) + 's;';
+        document.body.appendChild(p);
+        (function(node, d) {
+          setTimeout(function() { node.remove(); }, (d + 0.3) * 1000);
+        })(p, dur);
+      }
+    }
+
+    var illusObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        var el    = entry.target;
+        var state = illusState.get(el) || 'init';
+        if (entry.isIntersecting && state !== 'revealed') {
+          el.classList.remove('illus-reveal', 'illus-hide');
+          void el.offsetWidth;
+          el.classList.add('illus-reveal');
+          illusState.set(el, 'revealed');
+          fireIllusParticles(el);
+        } else if (!entry.isIntersecting && state === 'revealed') {
+          el.classList.remove('illus-reveal', 'illus-hide');
+          void el.offsetWidth;
+          el.classList.add('illus-hide');
+          illusState.set(el, 'hidden');
+          fireIllusParticles(el);
+        }
+      });
+    }, { root: box, threshold: 0.3 });
+
+    box.querySelectorAll('.grm-illus').forEach(function(el) {
+      illusState.set(el, 'init');
+      illusObserver.observe(el);
     });
   })();
 </script>

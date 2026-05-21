@@ -703,6 +703,147 @@ body::after{
   .memory-btn{padding:12px 28px;letter-spacing:.22em}
 }
 
+/* ============================================================
+   DEMON EYE — "The Watcher in the Dark"
+============================================================ */
+.dw-wrap{
+  position:fixed;inset:0;z-index:905;
+  display:flex;align-items:center;justify-content:center;
+  pointer-events:none;
+  opacity:0;transition:opacity .7s ease;
+}
+.dw-wrap.on{opacity:1}
+/* outer aura glow — behind eye */
+.dw-wrap::before{
+  content:"";position:absolute;
+  width:min(920px,128vw);height:min(440px,62vw);
+  left:50%;top:50%;transform:translate(-50%,-50%);
+  background:radial-gradient(ellipse at center,
+    rgba(220,50,0,.28) 0%,
+    rgba(190,28,0,.13) 40%,
+    transparent 65%
+  );
+  border-radius:50%;
+  animation:dw-aura 4.2s ease-in-out infinite;
+}
+.dw-eye{
+  position:relative;
+  width:min(600px,84vw);
+  height:min(220px,30vw);
+  overflow:hidden;
+  border-radius:50%;
+}
+/* sclera */
+.dw-sclera{
+  position:absolute;inset:0;
+  background:radial-gradient(ellipse at 50% 50%,
+    #2a0800 0%,#5c1400 26%,#7f1e00 42%,#4b0e00 60%,#1d0400 80%
+  );
+  box-shadow:inset 0 0 55px rgba(100,8,0,.92),inset 0 0 24px rgba(0,0,0,.75);
+}
+/* bloodshot veins */
+.dw-sclera::before{
+  content:"";position:absolute;inset:0;border-radius:50%;
+  background:
+    radial-gradient(1px 58px at 31% 50%,rgba(215,38,0,.52) 0%,transparent 100%),
+    radial-gradient(1px 48px at 69% 50%,rgba(215,38,0,.46) 0%,transparent 100%),
+    radial-gradient(44px 1px at 50% 31%,rgba(195,24,0,.42) 0%,transparent 100%),
+    radial-gradient(38px 1px at 50% 69%,rgba(195,24,0,.38) 0%,transparent 100%),
+    radial-gradient(1px 32px at 19% 42%,rgba(178,18,0,.32) 0%,transparent 100%),
+    radial-gradient(1px 26px at 81% 58%,rgba(178,18,0,.28) 0%,transparent 100%),
+    radial-gradient(1px 22px at 42% 34%,rgba(160,14,0,.22) 0%,transparent 100%),
+    radial-gradient(1px 20px at 60% 66%,rgba(160,14,0,.2) 0%,transparent 100%);
+  mix-blend-mode:screen;
+}
+/* iris wrapper — controls lateral gaze scan */
+.dw-iris-wrap{
+  position:absolute;
+  left:50%;top:50%;
+  width:44%;aspect-ratio:1;
+  transform:translate(-50%,-50%);
+  animation:dw-gaze 18s ease-in-out infinite;
+}
+/* iris */
+.dw-iris{
+  width:100%;height:100%;border-radius:50%;
+  background:conic-gradient(
+    from 0deg,
+    #b54300,#e87e0e,#ce5c00,#8b2a00,#e07200,#b84800,
+    #7c2100,#e27a0c,#c05000,#8b2a00,#de6c00,#b54300
+  );
+  box-shadow:
+    0 0 24px rgba(242,112,0,.78),
+    0 0 58px rgba(212,72,0,.58),
+    0 0 115px rgba(188,46,0,.38),
+    inset 0 0 20px rgba(0,0,0,.68);
+  animation:dw-iris-pulse 4s ease-in-out infinite;
+}
+/* vertical-slit pupil */
+.dw-pupil{
+  position:absolute;left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  width:20%;height:90%;
+  background:#010000;border-radius:50%;
+  box-shadow:0 0 14px rgba(0,0,0,1);
+}
+/* eyelids */
+.dw-lid-t,.dw-lid-b{
+  position:absolute;left:0;right:0;z-index:4;
+  background:#060101;
+}
+.dw-lid-t{
+  top:0;height:56%;
+  transform-origin:top center;transform:scaleY(0.025);
+  border-radius:0 0 50% 50%;
+  box-shadow:0 5px 16px rgba(192,48,0,.2);
+  animation:dw-blink-t 10s ease-in-out infinite;
+}
+.dw-lid-b{
+  bottom:0;height:48%;
+  transform-origin:bottom center;transform:scaleY(0.025);
+  border-radius:50% 50% 0 0;
+  animation:dw-blink-b 10s ease-in-out infinite;
+}
+@keyframes dw-gaze{
+  0%,100%{ transform:translate(-50%,-50%) translateX(0px)   }
+  20%    { transform:translate(-50%,-50%) translateX(-14px)  }
+  42%    { transform:translate(-50%,-50%) translateX(-6px)   }
+  64%    { transform:translate(-50%,-50%) translateX(12px)   }
+  82%    { transform:translate(-50%,-50%) translateX(4px)    }
+}
+@keyframes dw-iris-pulse{
+  0%,100%{
+    box-shadow:0 0 24px rgba(242,112,0,.78),0 0 58px rgba(212,72,0,.58),0 0 115px rgba(188,46,0,.38),inset 0 0 20px rgba(0,0,0,.68);
+    transform:scale(1);
+  }
+  50%{
+    box-shadow:0 0 40px rgba(255,142,10,.95),0 0 85px rgba(238,92,0,.75),0 0 185px rgba(208,56,0,.52),inset 0 0 24px rgba(0,0,0,.55);
+    transform:scale(1.07);
+  }
+}
+@keyframes dw-blink-t{
+  0%,100%     { transform:scaleY(0.025); }
+  16.5%       { transform:scaleY(0.025); animation-timing-function:cubic-bezier(.85,0,.15,1); }
+  18.5%       { transform:scaleY(1);     animation-timing-function:cubic-bezier(.15,0,.25,1); }
+  20%         { transform:scaleY(0.025); }
+  56%         { transform:scaleY(0.025); animation-timing-function:cubic-bezier(.85,0,.15,1); }
+  58%         { transform:scaleY(1);     animation-timing-function:cubic-bezier(.15,0,.25,1); }
+  60%         { transform:scaleY(0.025); }
+}
+@keyframes dw-blink-b{
+  0%,100%     { transform:scaleY(0.025); }
+  16.5%       { transform:scaleY(0.025); animation-timing-function:cubic-bezier(.85,0,.15,1); }
+  18.5%       { transform:scaleY(0.78);  animation-timing-function:cubic-bezier(.15,0,.25,1); }
+  20%         { transform:scaleY(0.025); }
+  56%         { transform:scaleY(0.025); animation-timing-function:cubic-bezier(.85,0,.15,1); }
+  58%         { transform:scaleY(0.78);  animation-timing-function:cubic-bezier(.15,0,.25,1); }
+  60%         { transform:scaleY(0.025); }
+}
+@keyframes dw-aura{
+  0%,100%{ opacity:.72;transform:translate(-50%,-50%) scale(1)    }
+  50%    { opacity:1;  transform:translate(-50%,-50%) scale(1.07) }
+}
+
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:0.001ms !important;animation-iteration-count:1 !important;transition-duration:0.001ms !important}
   .mote,.petal,.mandala-svg,.mandala-svg-inner,.halo-ring,.ray-set,.ki-wave{display:none}
@@ -1281,6 +1422,21 @@ body::after{
 <div class="mem-overlay" id="memOverlay"></div>
 <div class="mem-flash"   id="memFlash"></div>
 
+<!-- ====== DEMON EYE ====== -->
+<div class="dw-wrap" id="demonEye" aria-hidden="true">
+  <div class="dw-eye">
+    <div class="dw-sclera">
+      <div class="dw-iris-wrap">
+        <div class="dw-iris">
+          <div class="dw-pupil"></div>
+        </div>
+      </div>
+    </div>
+    <div class="dw-lid-t"></div>
+    <div class="dw-lid-b"></div>
+  </div>
+</div>
+
 <!-- ====== MEMORY POPUP ====== -->
 <div class="mem-popup" id="memPopup" role="dialog" aria-modal="true">
   <div class="mem-inner">
@@ -1425,6 +1581,7 @@ body::after{
   const btn     = document.getElementById('memoryBtn');
   const overlay = document.getElementById('memOverlay');
   const flash   = document.getElementById('memFlash');
+  const eye     = document.getElementById('demonEye');
   const popup   = document.getElementById('memPopup');
   const closeBtn= document.getElementById('memClose');
   const sparks  = document.getElementById('memSparks');
@@ -1449,6 +1606,7 @@ body::after{
 
   function open() {
     overlay.classList.add('on');
+    eye.classList.add('on');
     setTimeout(() => {
       flash.classList.add('on');
       setTimeout(() => {
@@ -1463,6 +1621,7 @@ body::after{
     popup.classList.remove('on');
     setTimeout(() => {
       overlay.classList.remove('on');
+      eye.classList.remove('on');
       document.body.style.overflow = '';
       if (body) body.scrollTop = 0;
     }, 500);

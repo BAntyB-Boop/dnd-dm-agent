@@ -606,6 +606,10 @@ em,i{font-style:italic;color:var(--ink-soft)}
   text-align:center;
 }
 .grm-foot-lbl{font-family:"Cinzel",serif;font-size:.62rem;letter-spacing:.28em;text-transform:uppercase;color:var(--ink-mute);margin-bottom:12px}
+/* Grimoire image */
+.grm-img{margin:20px auto;position:relative;z-index:1;max-width:300px;text-align:center}
+.grm-img img{width:100%;display:block;object-fit:contain;border:1px solid rgba(200,80,0,.18);filter:contrast(1.06) saturate(0.9)}
+.grm-img::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,8,3,.25) 0%,transparent 20%,transparent 80%,rgba(20,8,3,.25) 100%);pointer-events:none}
 /* Prologue / Climax / Epilogue variants */
 .grm-section.s-prologue .grm-sec-num{font-size:1.6rem;-webkit-text-stroke:1px rgba(200,80,0,.28);line-height:1.2}
 .grm-section.s-climax{border-top:1px solid rgba(255,80,0,.2);margin-top:10px;padding-top:28px}
@@ -1357,6 +1361,9 @@ em,i{font-style:italic;color:var(--ink-soft)}
         <div class="grm-quote">"ผมจะไม่ลืมสิ่งที่ผมทำ แต่ผมไม่ต้องการมันเพื่อจำว่าตัวเองเป็นใครอีกต่อไป พ่อพูดถูกว่าสายเลือดนี้เป็นส่วนหนึ่งของผม แต่มันไม่ใช่ทั้งหมดของผม ผมคือคนที่ Aldric สอนให้รักษาคน ผมคือคนที่ล้มเหลวในการผลักเพื่อนออกไป"</div>
         <p>รอยยิ้มเล็กๆ ปรากฏขึ้น รอยยิ้มที่ครั้งนี้... ถึงดวงตา "และสำหรับครั้งแรกในชีวิต ผมคิดว่านั่นก็เพียงพอแล้ว"</p>
       </div>
+      <div class="grm-img">
+        <img src="assets/kael-climax-bottle.png" alt="Kael Veranth stands in the black stone temple — the shattered ash bottle on the floor, his dragon-father looming behind, amber eyes alight for the first time with something other than grief." />
+      </div>
       <div class="grm-prose grm-en">
         <p class="drop">The temple was built of black stone, deep beneath a mountain everyone thought had gone cold. It hadn't. It was only waiting. As Kael descended the narrow stairs, the light from the scales on his face lit the darkness — until a companion spoke: <em>"Kael... your face is glowing."</em></p>
         <p>At the center of the great hall, a companion taken earlier was bound to a stone pillar. On the throne at the far end, in a human shape that didn't quite fit a human form, sat the thing Kael had dreamed of for sixteen years. Golden eyes looked at him.</p>
@@ -1589,11 +1596,6 @@ em,i{font-style:italic;color:var(--ink-soft)}
       if(closing) return;
       closing = true;
       if(box) box.scrollTop = 0;
-
-      // Canvas fire rises in front of codex during close
-      var fireCanvas = document.getElementById('grmFireCanvas');
-      fireCanvas.style.zIndex = '1510';
-      canvasFireOpen(0, 0, function() { fireCanvas.style.zIndex = ''; });
 
       // --- Build binding overlay on outer ---
       const bindOv = document.createElement('div');

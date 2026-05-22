@@ -548,6 +548,230 @@ em,i{font-style:italic;color:var(--ink-soft)}
   .ribbon{right:30px;width:24px;height:90px}
   .binding{padding:24px 8px}
 }
+
+/* ============ CROW SEAL BUTTON ============ */
+.crow-seal-wrap{
+  text-align:center;margin:36px 0 8px;
+  display:flex;flex-direction:column;align-items:center;gap:14px;
+}
+.crow-seal-btn{
+  position:relative;
+  width:156px;height:156px;
+  cursor:pointer;border-radius:50%;
+  border:none;background:none;padding:0;outline:none;
+  transition:transform .5s cubic-bezier(.2,.7,.2,1);
+  -webkit-tap-highlight-color:transparent;
+}
+.crow-seal-btn:hover{transform:scale(1.055)}
+.crow-seal-btn:active{transform:scale(.97)}
+.crow-seal-img{
+  width:100%;height:100%;
+  border-radius:50%;object-fit:cover;display:block;
+  box-shadow:
+    0 0 0 1.5px rgba(95,164,148,.25),
+    0 8px 32px rgba(0,0,0,.9);
+  transition:box-shadow .5s, filter .4s;
+}
+.crow-seal-btn:hover .crow-seal-img{
+  filter:brightness(1.12) saturate(1.1);
+  box-shadow:
+    0 0 0 1.5px rgba(95,164,148,.55),
+    0 8px 40px rgba(0,0,0,.7),
+    0 0 48px rgba(74,222,128,.18);
+}
+.crow-seal-ring{
+  position:absolute;inset:-9px;border-radius:50%;pointer-events:none;
+  border:1.5px solid rgba(189,163,106,.22);
+  animation:cseal-ring 28s linear infinite;
+}
+.crow-seal-ring::before{
+  content:"";position:absolute;inset:6px;border-radius:50%;
+  border:1px solid rgba(95,164,148,.14);
+  animation:cseal-ring 18s linear infinite reverse;
+}
+@keyframes cseal-ring{
+  from{transform:rotate(0deg)}to{transform:rotate(360deg)}
+}
+.crow-seal-glow{
+  position:absolute;top:29%;left:44%;
+  width:16px;height:16px;border-radius:50%;
+  background:radial-gradient(circle, rgba(74,222,128,.95), rgba(34,197,94,.45) 50%, transparent 70%);
+  filter:blur(4px);pointer-events:none;mix-blend-mode:screen;
+  animation:cseal-eye 3.2s ease-in-out infinite;
+}
+.crow-seal-btn:hover .crow-seal-glow{
+  filter:blur(3px);
+  animation:cseal-eye-h .85s ease-in-out infinite alternate;
+}
+@keyframes cseal-eye{
+  0%,100%{opacity:.55;transform:scale(1)}
+  50%{opacity:.95;transform:scale(1.5)}
+}
+@keyframes cseal-eye-h{
+  0%{opacity:.85;transform:scale(1.4)}
+  100%{opacity:1;transform:scale(1.9)}
+}
+.crow-seal-ripple{
+  position:absolute;inset:-2px;border-radius:50%;
+  border:1px solid rgba(74,222,128,.3);
+  opacity:0;pointer-events:none;
+  animation:cseal-ripple 3.6s ease-out infinite;
+}
+.crow-seal-ripple.r2{animation-delay:.9s}
+.crow-seal-ripple.r3{animation-delay:1.8s}
+@keyframes cseal-ripple{
+  0%{transform:scale(.94);opacity:.55}
+  100%{transform:scale(1.55);opacity:0}
+}
+.crow-seal-label{
+  font-family:"Cinzel",serif;letter-spacing:.3em;text-transform:uppercase;
+  font-size:.6rem;color:var(--celtic);opacity:.75;
+}
+
+/* ============ CROW SCROLL POPUP ============ */
+.crow-scroll-bg{
+  position:fixed;inset:0;z-index:300;
+  background:rgba(2,8,8,.88);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  opacity:0;pointer-events:none;
+  transition:opacity .55s;
+}
+.crow-scroll-bg.on{opacity:1;pointer-events:all}
+.crow-scroll-outer{
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-46%) scale(.96);
+  transition:transform .65s cubic-bezier(.2,.7,.2,1), opacity .55s;
+  opacity:0;
+  width:min(680px,94vw);max-height:88vh;
+  background:
+    radial-gradient(700px 400px at 50% 0%, rgba(74,222,128,.04), transparent 50%),
+    linear-gradient(180deg, #060e0f 0%, #091212 55%, #040c0d 100%);
+  border:1px solid rgba(95,164,148,.2);
+  box-shadow:
+    0 0 0 1px rgba(0,0,0,.9),
+    0 60px 120px -40px rgba(0,0,0,.95),
+    inset 0 1px 0 rgba(95,164,148,.1);
+  overflow:hidden;
+}
+.crow-scroll-bg.on .crow-scroll-outer{
+  transform:translate(-50%,-50%) scale(1);
+  opacity:1;
+}
+.crow-scroll-top-line{
+  position:absolute;top:0;left:0;right:0;height:2px;z-index:5;pointer-events:none;
+  background:linear-gradient(to right, transparent, rgba(95,164,148,.45), rgba(74,222,128,.3), rgba(95,164,148,.45), transparent);
+}
+.crow-scroll-ctrl{
+  position:absolute;top:0;left:0;right:0;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:14px 18px;z-index:10;pointer-events:none;
+}
+.crow-scroll-ctrl > *{pointer-events:all}
+.crs-lang{display:flex;gap:0}
+.crs-lang-btn{
+  font-family:"Cinzel",serif;letter-spacing:.18em;font-size:.58rem;text-transform:uppercase;
+  background:none;border:1px solid rgba(95,164,148,.2);
+  color:var(--ink-mute);padding:4px 10px;cursor:pointer;
+  transition:all .25s;
+}
+.crs-lang-btn:first-child{border-right:none}
+.crs-lang-btn.active{background:rgba(95,164,148,.12);color:var(--teal);border-color:rgba(95,164,148,.35)}
+.crs-lang-btn:hover:not(.active){color:var(--ink)}
+.crow-close-btn{
+  background:none;border:none;cursor:pointer;
+  color:var(--ink-faint);padding:6px;line-height:0;
+  transition:color .3s, transform .3s;
+}
+.crow-close-btn:hover{color:var(--teal);transform:rotate(90deg)}
+.crow-close-btn svg{width:20px;height:20px;display:block}
+.crow-scroll-box{
+  overflow-y:auto;
+  max-height:88vh;
+  padding:58px 52px 56px;
+  scrollbar-width:thin;
+  scrollbar-color:rgba(95,164,148,.2) transparent;
+}
+.crow-scroll-box::-webkit-scrollbar{width:3px}
+.crow-scroll-box::-webkit-scrollbar-thumb{background:rgba(95,164,148,.2);border-radius:2px}
+/* lang visibility */
+.crow-scroll-bg .lang-en{display:none}
+.crow-scroll-bg.lang-en .lang-en{display:block}
+.crow-scroll-bg.lang-en .lang-th{display:none}
+.crow-scroll-bg.lang-en .crs-ch-title.lang-en{display:flex}
+/* popup content */
+.crs-eyebrow{
+  font-family:"Cinzel",serif;letter-spacing:.4em;text-transform:uppercase;
+  font-size:.6rem;color:var(--celtic);text-align:center;
+  margin-bottom:18px;opacity:.8;
+}
+.crs-title{
+  font-family:"UnifrakturCook","Cinzel",serif;font-weight:700;
+  font-size:clamp(26px,4.5vw,40px);
+  color:var(--vellum);text-align:center;line-height:1.1;
+  margin-bottom:10px;
+  text-shadow:0 0 28px rgba(74,222,128,.1);
+}
+.crs-sub{
+  font-family:"Cormorant Garamond",serif;font-style:italic;
+  color:var(--ink-mute);font-size:.97rem;
+  text-align:center;line-height:1.55;margin-bottom:36px;
+}
+.crs-sub.lang-th{font-family:"Noto Serif Thai",serif;font-style:normal;font-size:.9rem}
+.crs-div{
+  display:flex;align-items:center;gap:12px;
+  margin:28px 0 24px;color:rgba(95,164,148,.4);
+}
+.crs-div::before,.crs-div::after{
+  content:"";flex:1;height:1px;
+  background:linear-gradient(to right,transparent,rgba(95,164,148,.2),transparent)
+}
+.crs-div svg{width:22px;height:22px;flex-shrink:0;opacity:.65}
+.crs-chapter{margin-bottom:32px}
+.crs-ch-title{
+  font-family:"Cinzel",serif;letter-spacing:.2em;text-transform:uppercase;
+  font-size:.65rem;color:var(--teal);
+  margin-bottom:14px;
+  display:flex;align-items:center;gap:10px;
+}
+.crs-ch-title::before{
+  content:"";width:6px;height:6px;border-radius:50%;
+  background:var(--teal);flex-shrink:0;
+  box-shadow:0 0 8px rgba(95,164,148,.6);
+}
+.crs-body{
+  font-family:"Cormorant Garamond",serif;
+  color:var(--ink-soft);font-size:1.02rem;line-height:1.72;
+}
+.crs-body.lang-th{font-family:"Noto Serif Thai",serif;font-size:.96rem;line-height:1.82}
+.crs-body p{margin:0 0 13px}
+.crs-body em{color:var(--vellum);font-style:italic}
+.crs-body strong{color:var(--ink)}
+.crs-body .drop::first-letter{
+  font-family:"UnifrakturCook",serif;font-weight:700;
+  font-size:3.6em;float:left;line-height:.8;
+  padding:6px 10px 0 0;color:var(--teal);
+}
+.crs-closing{
+  border-top:1px solid rgba(95,164,148,.12);
+  padding-top:28px;margin-top:36px;text-align:center;
+}
+.crs-closing .q{
+  font-family:"Cormorant Garamond",serif;font-style:italic;
+  color:var(--ink-mute);font-size:.98rem;line-height:1.6;
+}
+.crs-closing .q.th{
+  font-family:"Noto Serif Thai",serif;font-style:normal;
+  display:block;margin-top:8px;font-size:.88rem;
+}
+.crs-closing .crow-glyph{
+  width:44px;height:44px;margin:20px auto 0;
+  opacity:.2;display:block;color:var(--teal);
+}
+@media(max-width:600px){
+  .crow-scroll-box{padding:52px 24px 44px}
+  .crs-title{font-size:22px}
+}
 </style>
 </head>
 <body>
@@ -802,6 +1026,19 @@ em,i{font-style:italic;color:var(--ink-soft)}
         <p>Now hunted by the <em>"Silver Chain."</em> The past has caught up — and he must choose what he becomes next.</p>
       </div>
 
+      <!-- Crow Seal — Chronicle trigger -->
+      <div class="crow-seal-wrap fade-up">
+        <button class="crow-seal-btn" id="crowSealBtn" onclick="openCrowScroll()" aria-label="Open the Keeper's Chronicle">
+          <img class="crow-seal-img" src="assets/jen-corner-crow-seal.png" alt="">
+          <div class="crow-seal-ring"></div>
+          <div class="crow-seal-glow"></div>
+          <div class="crow-seal-ripple"></div>
+          <div class="crow-seal-ripple r2"></div>
+          <div class="crow-seal-ripple r3"></div>
+        </button>
+        <div class="crow-seal-label">— The Keeper's Chronicle —</div>
+      </div>
+
       <!-- Oaths -->
       <div class="oaths fade-up">
         <h4>— Of His Oaths —</h4>
@@ -965,7 +1202,212 @@ em,i{font-style:italic;color:var(--ink-soft)}
     // Final safety net — never let the page stick at opacity 0.
     setTimeout(() => { els.forEach(el => el.classList.add('in')); }, 1500);
   })();
+
+  /* ============ CROW SCROLL POPUP ============ */
+  /* Using global functions so they resolve getElementById at call-time,
+     not at script-parse time — the popup HTML is after this script tag. */
+  window._crowOpen = false;
+
+  window.openCrowScroll = function() {
+    var bg = document.getElementById('crowScrollBg');
+    if (!bg) return;
+    bg.classList.add('on');
+    window._crowOpen = true;
+    document.body.style.overflow = 'hidden';
+    _spawnFeatherBurst();
+  };
+
+  window.closeCrowScroll = function() {
+    var bg = document.getElementById('crowScrollBg');
+    if (!bg) return;
+    bg.classList.remove('on');
+    window._crowOpen = false;
+    document.body.style.overflow = '';
+  };
+
+  window.setCrowLang = function(lang) {
+    var bg = document.getElementById('crowScrollBg');
+    if (!bg) return;
+    var btns = document.querySelectorAll('.crs-lang-btn');
+    btns.forEach(function(b){ b.classList.toggle('active', b.dataset.lang === lang); });
+    if (lang === 'en') bg.classList.add('lang-en');
+    else bg.classList.remove('lang-en');
+  };
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && window._crowOpen) window.closeCrowScroll();
+  });
+
+  function _spawnFeatherBurst() {
+    var btn = document.getElementById('crowSealBtn');
+    if (!btn) return;
+    var r = btn.getBoundingClientRect();
+    var cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+    for (var i = 0; i < 10; i++) {
+      (function(idx){
+        var f = document.createElement('div');
+        var sz = 5 + Math.random() * 7;
+        f.style.cssText = 'position:fixed;left:' + cx + 'px;top:' + cy + 'px;width:' + sz + 'px;height:' + (sz * 2.6) + 'px;background:#0a0a0a;border-radius:0 60% 50% 60%/0 60% 50% 60%;pointer-events:none;z-index:350;';
+        document.body.appendChild(f);
+        var angle = (idx / 10) * Math.PI * 2 - Math.PI / 2;
+        var dist  = 55 + Math.random() * 85;
+        var tx    = Math.cos(angle) * dist;
+        var ty    = Math.sin(angle) * dist;
+        var rot   = Math.random() * 540 - 270;
+        var anim  = f.animate([
+          { transform: 'translate(-50%,-50%) rotate(0deg)', opacity: 0.85 },
+          { transform: 'translate(calc(-50% + ' + tx + 'px),calc(-50% + ' + ty + 'px)) rotate(' + rot + 'deg)', opacity: 0 }
+        ], { duration: 650 + Math.random() * 400, easing: 'cubic-bezier(.2,.7,.2,1)', fill: 'forwards' });
+        anim.onfinish = function(){ f.remove(); };
+      })(i);
+    }
+  }
 </script>
+
+<!-- ============ CROW SCROLL POPUP — The Keeper's Chronicle ============ -->
+<div class="crow-scroll-bg lang-en" id="crowScrollBg" onclick="if(event.target===this)closeCrowScroll()" role="dialog" aria-modal="true" aria-label="The Keeper's Chronicle">
+  <div class="crow-scroll-outer" id="crowScrollOuter">
+    <div class="crow-scroll-top-line"></div>
+
+    <div class="crow-scroll-ctrl">
+      <div class="crs-lang" id="crsLang">
+        <button class="crs-lang-btn" data-lang="th" onclick="setCrowLang('th')">TH</button>
+        <button class="crs-lang-btn active" data-lang="en" onclick="setCrowLang('en')">EN</button>
+      </div>
+      <button class="crow-close-btn" id="crowCloseBtn" onclick="closeCrowScroll()" aria-label="Close">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M4 4 L16 16 M16 4 L4 16"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="crow-scroll-box" id="crowScrollBox">
+
+      <div class="crs-eyebrow">Codex of the Crow &middot; The Keeper's Chronicle</div>
+
+      <div class="crs-title lang-th">เรื่องเล่าของผู้รักษา</div>
+      <div class="crs-title lang-en">Chronicle of the Keeper</div>
+
+      <div class="crs-sub lang-th">เรื่องราวที่เริ่มต้นก่อนที่ Jen จะรู้จักชื่อของตัวเอง</div>
+      <div class="crs-sub lang-en">A story that began before Jen knew his own name.</div>
+
+      <!-- I -->
+      <div class="crs-chapter">
+        <div class="crs-ch-title lang-th">I &mdash; ก่อนทุกอย่างจะสลาย</div>
+        <div class="crs-ch-title lang-en">I &mdash; Before Everything Fell</div>
+        <div class="crs-body lang-th">
+          <p class="drop">ในหุบเขาห่างไกลสายตาผู้คน มีหมู่บ้านเล็กๆ แห่งหนึ่งที่ไม่มีชื่อบนแผนที่ใด ผู้คนที่นั่นเรียกตัวเองว่า <em>ผู้รักษา</em> — ไม่ใช่ในฐานะนักรบหรือนักบวช แต่ในฐานะผู้ที่ถูกเลือกโดย Old Spirits ให้เฝ้าดูแลพลังโบราณที่ลึกกว่าศาสนาใดๆ ที่มนุษย์สร้างขึ้น</p>
+          <p>เด็กชายที่ต่อมาจะรู้จักในชื่อ Jen Corner เติบโตขึ้นมาท่ามกลางเสียงเพลงรอบกองไฟและนิทานของคนเฒ่าที่กล่าวถึงวันที่ Old Spirits ยังคงเดินอยู่บนดิน วัยเด็กของเขาเต็มไปด้วยความสงบ ความอบอุ่น และความรู้สึกว่าทุกอย่างดำเนินไปตามที่ควรจะเป็น — ความรู้สึกชนิดที่ทิ้งรอยแผลลึกที่สุดเมื่อมันสิ้นสุดลง</p>
+        </div>
+        <div class="crs-body lang-en">
+          <p class="drop">In a valley unnamed on any map, there was a small village whose people called themselves the Keepers — not warriors, not priests, but those chosen by the Old Spirits to watch over something older than any faith humans had built.</p>
+          <p>The boy who would come to be called Jen Corner grew up amid firelight songs and elders' tales of days when Old Spirits still walked the earth. His childhood was quiet, warm, and certain — the kind that leaves a permanent wound when it ends.</p>
+        </div>
+      </div>
+
+      <div class="crs-div" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 14 Q7 9 11 11 L12 8 Q13 6 15 9 L21 11 Q23 13 21 15 L17 14 L15 16 L12 17 L9 15 Z"/><ellipse cx="16" cy="10" rx="1.2" ry="1"/></svg>
+      </div>
+
+      <!-- II -->
+      <div class="crs-chapter">
+        <div class="crs-ch-title lang-th">II &mdash; สัญลักษณ์สีเงิน</div>
+        <div class="crs-ch-title lang-en">II &mdash; The Silver Mark</div>
+        <div class="crs-body lang-th">
+          <p class="drop">ความแน่นอนนั้นสิ้นสุดลงในคืนหนึ่งที่ Jen อายุได้เพียงห้าขวบ ท้องฟ้าเหนือหมู่บ้านพลันสว่างเป็นสีแดง <em>Silver Chain</em> ปรากฏตัวออกมาจากเงามืดราวกับพวกเขาถูกทอขึ้นจากความมืดนั้นเอง ภายในคืนเดียว หมู่บ้านทั้งหมดก็ถูกเผา ผู้รักษาทุกคนถูกล่า</p>
+          <p>สิ่งเดียวที่หลงเหลืออยู่คือเถ้าถ่าน ความเงียบ และเด็กชายคนหนึ่งที่ซ่อนตัวอยู่ใต้กองฟืน สัญลักษณ์บนเสื้อคลุมของพวกเขา — โซ่เงินที่ม้วนตัวเป็นวงกลม — เด็กชายคนนั้นจำมันไว้ได้จนขึ้นใจ และจะได้พบมันอีกหลายครั้งในปีต่อๆ มา</p>
+        </div>
+        <div class="crs-body lang-en">
+          <p class="drop">That certainty ended when Jen was five. The sky above the village turned red in the night, and Silver Chain emerged from the dark as if woven from it. By morning, the village was ash. Every Keeper was hunted down.</p>
+          <p>Only one thing survived — a boy hiding beneath a woodpile. The silver chain coiled into a circle, branded onto their cloaks, burned itself into his memory. He would see it again. Many times.</p>
+        </div>
+      </div>
+
+      <div class="crs-div" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 14 Q7 9 11 11 L12 8 Q13 6 15 9 L21 11 Q23 13 21 15 L17 14 L15 16 L12 17 L9 15 Z"/><ellipse cx="16" cy="10" rx="1.2" ry="1"/></svg>
+      </div>
+
+      <!-- III -->
+      <div class="crs-chapter">
+        <div class="crs-ch-title lang-th">III &mdash; บิดาที่ไม่ใช่โดยสายเลือด</div>
+        <div class="crs-ch-title lang-en">III &mdash; A Father Not of Blood</div>
+        <div class="crs-body lang-th">
+          <p class="drop"><em>Dorian Ash</em> หัวหน้าแก๊ง Ashen Hand เป็นคนสุดท้ายที่ใครจะคาดว่าจะเป็นผู้ช่วยชีวิต เขาพบเด็กชายผู้เดียวท่ามกลางซากปรักหักพัง ไม่มีใครรู้ว่าอะไรดลบันดาลใจ แต่เขาก็พาเด็กคนนั้นออกมา เลี้ยงดูเขาในโลกที่เขารู้จักดีที่สุด — โลกใต้ดินของนักต้มตุ๋นและนักล้วงกระเป๋า ของคนที่หากินด้วยการโกหกและหายตัวได้เหมือนเงา</p>
+          <p>Dorian สอน Jen ทุกอย่าง — วิธีแก้สถานการณ์ด้วยคำพูด วิธีเดินผ่านห้องที่เต็มไปด้วยศัตรูโดยไม่มีใครสังเกต และที่สำคัญที่สุด — <em>"อย่าเชื่อใครก่อนที่เขาจะพิสูจน์ตัวเองให้ได้"</em> แต่ Dorian เองก็พิสูจน์ให้เห็นว่าความไว้ใจนั้นมีอยู่จริง วันแล้ววันเล่า จนกระทั่งเขาไม่อยู่แล้ว</p>
+        </div>
+        <div class="crs-body lang-en">
+          <p class="drop"><em>Dorian Ash</em>, leader of the Ashen Hand, was the last man anyone would expect to play father. He found the boy alone in the ruin and took him without explanation. Raised him in the world he knew best: the underworld of con men and cutpurses, of people who live by the lie and vanish like shadows.</p>
+          <p>Dorian taught Jen everything. How to read a room, how to move through it unseen, and most importantly: <em>"Don't trust until proven."</em> Dorian proved it. Every day. Until he didn't.</p>
+        </div>
+      </div>
+
+      <div class="crs-div" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 14 Q7 9 11 11 L12 8 Q13 6 15 9 L21 11 Q23 13 21 15 L17 14 L15 16 L12 17 L9 15 Z"/><ellipse cx="16" cy="10" rx="1.2" ry="1"/></svg>
+      </div>
+
+      <!-- IV -->
+      <div class="crs-chapter">
+        <div class="crs-ch-title lang-th">IV &mdash; ความเงียบสีเงิน</div>
+        <div class="crs-ch-title lang-en">IV &mdash; The Silver Silence</div>
+        <div class="crs-body lang-th">
+          <p class="drop">วันหนึ่ง Dorian ก็ไม่อยู่แล้ว ไม่มีจดหมาย ไม่มีคำเตือน ไม่มีร่างกาย มีเพียงสัญลักษณ์สีเงินประทับอยู่บนฝาผนังของห้องว่างเปล่า — โซ่เงินที่ม้วนตัวเป็นวงกลม สัญลักษณ์เดียวกับที่ Jen เคยเห็นในคืนที่หมู่บ้านถูกเผา</p>
+          <p>Jen ออกตามหา แต่ถูกจับก่อนที่จะได้ข้อมูลใดๆ ถูกตั้งข้อหาหลายอย่างที่เขาทำและไม่ได้ทำ และถูกตัดสินให้แขวนคอ รอยแผลที่คอของเขาคือสิ่งที่หลงเหลืออยู่จากเชือกที่รัดไว้ — ก่อนที่ใครบางคนจะตัดสายนั้น</p>
+        </div>
+        <div class="crs-body lang-en">
+          <p class="drop">One morning, Dorian was simply gone. No letter. No warning. No body. Only a silver mark on the wall of an empty room — the coiled chain, the same symbol from the night the village burned.</p>
+          <p>Jen went looking. He was caught before he found anything, charged with crimes both committed and invented, and sentenced to hang. The scar across his throat is what remains of the rope — before someone cut it.</p>
+        </div>
+      </div>
+
+      <div class="crs-div" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 14 Q7 9 11 11 L12 8 Q13 6 15 9 L21 11 Q23 13 21 15 L17 14 L15 16 L12 17 L9 15 Z"/><ellipse cx="16" cy="10" rx="1.2" ry="1"/></svg>
+      </div>
+
+      <!-- V -->
+      <div class="crs-chapter">
+        <div class="crs-ch-title lang-th">V &mdash; Iron Druids และ Torc แห่งสายเลือด</div>
+        <div class="crs-ch-title lang-en">V &mdash; The Iron Druids and the Torc</div>
+        <div class="crs-body lang-th">
+          <p class="drop"><em>Iron Druids</em> ตัดเชือกนั้น พวกเขาเป็นกลุ่มที่ปฏิบัติงานในเงามืด ผู้รักษาความลับโบราณที่เชื่อมโยงกับ Dorian มากกว่าที่ Jen เคยรู้ พวกเขาบอกว่า Dorian รู้จัก Jen มาตั้งแต่วันแรก รู้ว่าเขาเป็นใคร รู้เรื่องหมู่บ้าน รู้เรื่องสายเลือด การที่ Dorian เลือกเด็กชายคนนั้นออกมาจากซากปรักหักพังไม่ใช่ความบังเอิญ</p>
+          <p><em>Torc</em> ที่ Jen สวมอยู่ที่คอ ที่เคยคิดว่าเป็นแค่ของที่ได้รับมา ที่จริงแล้วคือสัญลักษณ์ของสายเลือด <em>Keeper</em> — ของเก่าแก่ที่ถูกส่งต่อมาในสายเลือดของผู้รักษาตั้งแต่ก่อนยุคของกษัตริย์ที่ใครๆ จำได้ Iron Druids บอกว่าพลังที่ Jen ใช้ในการรักษาและการปกป้อง ไม่ได้มาจากการบูชาเทพใด — มันมาจากสิ่งที่ไหลอยู่ในสายเลือดของเขาเอง</p>
+        </div>
+        <div class="crs-body lang-en">
+          <p class="drop"><em>The Iron Druids</em> cut the rope. They operated in shadow — keepers of old secrets, connected to Dorian in ways Jen had never known. They told him the truth: Dorian had known from the first day. Known who Jen was, known about the village, known about the bloodline. Taking that boy from the ruins had not been impulse.</p>
+          <p>The <em>torc</em> Jen wore at his collar, the one he'd always thought a simple gift — it was the mark of the Keeper lineage, passed down through blood since before any living king could name. The power he wielded, the healing, the protection — it came not from any god's favor. It was already in him.</p>
+        </div>
+      </div>
+
+      <div class="crs-div" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 14 Q7 9 11 11 L12 8 Q13 6 15 9 L21 11 Q23 13 21 15 L17 14 L15 16 L12 17 L9 15 Z"/><ellipse cx="16" cy="10" rx="1.2" ry="1"/></svg>
+      </div>
+
+      <!-- VI -->
+      <div class="crs-chapter">
+        <div class="crs-ch-title lang-th">VI &mdash; อีกาและผู้เฝ้า</div>
+        <div class="crs-ch-title lang-en">VI &mdash; The Crow and the Keeper</div>
+        <div class="crs-body lang-th">
+          <p class="drop">วันหนึ่งที่ Jen ตื่นขึ้น มีอีกาดำนั่งอยู่บนหัวเตียง มันไม่ใช่นกธรรมดา Iron Druids บอกว่า Old Spirits ส่ง <em>The Crow</em> มาเป็น "พยาน" — ไม่ใช่เพื่อนำทาง ไม่ใช่เพื่อปกป้อง แต่เพื่อจดจำทุกสิ่งที่ Jen เลือก ดวงตาของมันมองเขาด้วยความเข้าใจที่ลึกกว่าสัตว์ใดๆ ควรจะมี</p>
+          <p><em>Silver Chain</em> ยังคงล่า Keeper อยู่ตลอด พวกเขาเผาหมู่บ้านหลังหมู่บ้านมาหลายศตวรรษ ไม่ใช่เพราะความเกลียดชัง แต่เพราะพวกเขาต้องการสิ่งที่ Keeper เฝ้าดูแล ซึ่งเป็นสิ่งที่ Jen เองก็ยังไม่รู้ว่าคืออะไร Iron Druids ก็ไม่รู้ Dorian ก็ไม่เคยบอก บางทีนั่นอาจเป็นสิ่งที่ The Crow รู้ แต่อีกา<strong>ไม่พูด</strong> มันแค่เฝ้ามอง</p>
+        </div>
+        <div class="crs-body lang-en">
+          <p class="drop">One morning, Jen woke to find a black crow sitting at his bedpost. Not an ordinary bird. The Iron Druids named it a Witness sent by the Old Spirits — not to guide, not to protect, but to remember every choice Jen made. Its eyes held understanding far beyond what any creature should carry.</p>
+          <p><em>Silver Chain</em> still hunts every Keeper. They have burned village after village across centuries — not from hatred, but because they want what the Keepers guard. What that is, Jen does not know. The Iron Druids don't know either. Dorian never said. Perhaps The Crow knows. But The Crow does not speak. It only watches.</p>
+        </div>
+      </div>
+
+      <div class="crs-closing">
+        <svg class="crow-glyph" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.2">
+          <path d="M6 28 Q12 18 22 22 L24 16 Q26 12 30 18 L42 22 Q46 26 42 30 L34 28 L30 32 L24 34 L18 30 Z"/>
+          <circle cx="32" cy="19" r="2.5"/>
+          <path d="M18 30 L8 40 M30 32 L40 42"/>
+        </svg>
+        <p class="q lang-en">"The Crow watches still. The blood still flows.<br>Whatever Jen chooses next — that much will not change."</p>
+        <p class="q th lang-th">"อีกายังคงเฝ้ามองอยู่เสมอ สายเลือดยังคงไหล<br>ไม่ว่า Jen จะเลือกอะไรก็ตาม — สิ่งนั้นจะไม่เคยเปลี่ยนแปลง"</p>
+      </div>
+
+    </div><!-- /crow-scroll-box -->
+  </div><!-- /crow-scroll-outer -->
+</div><!-- /crow-scroll-bg -->
 
 </body>
 </html>

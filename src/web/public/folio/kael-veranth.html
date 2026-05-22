@@ -1595,7 +1595,6 @@ em,i{font-style:italic;color:var(--ink-soft)}
     function closeGrimoire() {
       if(closing) return;
       closing = true;
-      if(box) box.scrollTop = 0;
 
       // --- Build binding overlay on outer ---
       const bindOv = document.createElement('div');

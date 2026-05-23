@@ -772,11 +772,67 @@ em,i{font-style:italic;color:var(--ink-soft)}
   .crow-scroll-box{padding:52px 24px 44px}
   .crs-title{font-size:22px}
 }
+/* ── MUSIC CONTROL ── */
+.music-ctrl{
+  position:fixed;top:22px;right:28px;z-index:400;
+  display:inline-flex;align-items:center;gap:10px;
+  border:1px solid var(--vellum-dim);background:rgba(5,10,10,.92);backdrop-filter:blur(6px);
+  padding:7px 12px;transition:border-color .2s;
+}
+.music-ctrl:hover{border-color:var(--celtic)}
+.music-btn{
+  background:none;border:none;cursor:pointer;
+  color:var(--celtic);padding:0;display:flex;align-items:center;
+  transition:color .2s,transform .15s;
+}
+.music-btn:hover{color:var(--teal);transform:scale(1.12)}
+.music-btn svg{width:15px;height:15px}
+.music-vol{
+  -webkit-appearance:none;appearance:none;
+  width:72px;height:2px;
+  background:linear-gradient(to right,var(--celtic) var(--fill,30%),rgba(125,108,74,.4) var(--fill,30%));
+  outline:none;cursor:pointer;border-radius:2px;
+}
+.music-vol::-webkit-slider-thumb{
+  -webkit-appearance:none;width:11px;height:11px;border-radius:50%;
+  background:var(--celtic);cursor:pointer;box-shadow:0 0 6px rgba(95,164,148,.5);
+}
+.music-vol::-moz-range-thumb{
+  width:11px;height:11px;border-radius:50%;
+  background:var(--celtic);cursor:pointer;border:none;
+}
+.music-ctrl.pending .music-btn{animation:music-pulse 1.8s ease-in-out infinite}
+@keyframes music-pulse{
+  0%,100%{color:var(--celtic)}
+  50%{color:var(--teal);filter:drop-shadow(0 0 6px rgba(95,164,148,.8))}
+}
+@media(max-width:600px){
+  .music-ctrl{top:auto;bottom:14px;right:14px;padding:5px 10px}
+  .music-vol{width:55px}
+}
 </style>
 </head>
 <body>
 
+<audio id="bg-audio" src="/assets/fallow-crown.mp3" loop preload="auto"></audio>
+
 <a class="back-link" href="/"><span class="arr"></span>Back to Codex</a>
+
+<!-- Music control -->
+<div class="music-ctrl" id="music-ctrl">
+  <button class="music-btn" id="music-btn" aria-label="Toggle music">
+    <svg id="icon-sound" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+      <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+      <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+    </svg>
+    <svg id="icon-mute" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+      <line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/>
+    </svg>
+  </button>
+  <input type="range" class="music-vol" id="music-vol" min="0" max="1" step="0.05" value="0.3" aria-label="Volume">
+</div>
 
 <!-- ATMOSPHERIC FOG -->
 <div class="fog" aria-hidden="true"></div>
@@ -1262,6 +1318,75 @@ em,i{font-style:italic;color:var(--ink-soft)}
       })(i);
     }
   }
+
+  // ── Music player ──────────────────────────────────────────────────
+  (function(){
+    const audio     = document.getElementById('bg-audio');
+    const btn       = document.getElementById('music-btn');
+    const ctrl      = document.getElementById('music-ctrl');
+    const iconSound = document.getElementById('icon-sound');
+    const iconMute  = document.getElementById('icon-mute');
+    const volSlider = document.getElementById('music-vol');
+    if (!audio || !btn) return;
+
+    function updateSlider(){
+      const pct = Math.round(parseFloat(volSlider.value) * 100) + '%';
+      volSlider.style.setProperty('--fill', pct);
+    }
+
+    try {
+      const sv = localStorage.getItem('jen-music-vol');
+      const sm = localStorage.getItem('jen-music-mute');
+      if (sv !== null){ audio.volume = parseFloat(sv); volSlider.value = sv; }
+      else audio.volume = 0.3;
+      if (sm === 'true'){ audio.muted = true; iconSound.style.display = 'none'; iconMute.style.display = ''; }
+    } catch(e){ audio.volume = 0.3; }
+    updateSlider();
+
+    let started = false;
+    const triggerEvents = ['click','scroll','touchstart','keydown','mousedown','pointermove'];
+
+    function onPlaying(){
+      if (started) return;
+      started = true;
+      ctrl.classList.remove('pending');
+      triggerEvents.forEach(ev => document.removeEventListener(ev, tryStart));
+    }
+    audio.addEventListener('playing', onPlaying);
+
+    function tryStart(){ if (!started) audio.play().catch(()=>{}); }
+
+    audio.play().then(onPlaying).catch(() => {
+      ctrl.classList.add('pending');
+      triggerEvents.forEach(ev => document.addEventListener(ev, tryStart, { passive:true }));
+    });
+
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden && !started) tryStart();
+    });
+
+    btn.addEventListener('click', function(){
+      if (!started){ tryStart(); return; }
+      audio.muted = !audio.muted;
+      iconSound.style.display = audio.muted ? 'none' : '';
+      iconMute.style.display  = audio.muted ? ''     : 'none';
+      try { localStorage.setItem('jen-music-mute', audio.muted); } catch(e){}
+    });
+
+    volSlider.addEventListener('input', function(){
+      audio.volume = parseFloat(this.value);
+      updateSlider();
+      if (!started) tryStart();
+      if (audio.muted && audio.volume > 0){
+        audio.muted = false;
+        iconSound.style.display = ''; iconMute.style.display = 'none';
+        try { localStorage.setItem('jen-music-mute', false); } catch(e){}
+      }
+    });
+    volSlider.addEventListener('change', function(){
+      try { localStorage.setItem('jen-music-vol', audio.volume); } catch(e){}
+    });
+  })();
 </script>
 
 <!-- ============ CROW SCROLL POPUP — The Keeper's Chronicle ============ -->

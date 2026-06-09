@@ -1475,6 +1475,8 @@ function openDistrict(id){
   panel.innerHTML = buildPanel(d);
   panel.classList.add("open");
   panel.setAttribute("aria-hidden", "false");
+  // sync URL hash (no new history entry)
+  history.replaceState(null, "", "#" + id);
   // mark active states
   svg.querySelectorAll(".district").forEach(p => { p.classList.remove("highlighted"); p.classList.toggle("active", p.dataset.id === id); });
   svg.querySelectorAll(".district-label").forEach(l => l.classList.toggle("bright", l.dataset.id === id));
@@ -1490,6 +1492,7 @@ function closePanel(){
   panel.classList.remove("open");
   panel.setAttribute("aria-hidden", "true");
   activeId = null;
+  history.replaceState(null, "", location.pathname);
   svg.querySelectorAll(".district").forEach(p => p.classList.remove("active"));
   svg.querySelectorAll(".district-label").forEach(l => l.classList.remove("bright"));
   legBody.querySelectorAll(".leg-item").forEach(p => p.classList.remove("active"));

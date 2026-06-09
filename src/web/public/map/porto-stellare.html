@@ -1098,7 +1098,7 @@
     <span class="btn-text">The Veiled Codex</span>
   </a>
 
-  <div id="hint">Tap a district to explore its lore</div>
+  <div id="hint">Click or tap a district to explore its lore</div>
   <div id="tip" role="tooltip"></div>
 
   <!-- Info panel -->
@@ -1501,35 +1501,6 @@ function closePanel(){
 // ---- Modal ----
 const modal = document.getElementById('modal');
 const modalCard = document.getElementById('modal-card');
-function openModal(d){
-  if(d.detail){
-    modalCard.className = 'modal-card';
-    modalCard.innerHTML = `
-      <button class="m-close" aria-label="Close">✕</button>
-      <div class="frame">
-        <span class="corner tl"></span><span class="corner tr"></span>
-        <span class="corner bl"></span><span class="corner br"></span>
-        <img src="${d.detail.img}" alt="Detailed map of ${d.detail.title}" />
-      </div>
-      <div class="modal-cap"><div class="t">${d.detail.title}</div><div class="s">${d.detail.sub}</div></div>`;
-  } else {
-    modalCard.className = 'modal-card quote-card';
-    modalCard.innerHTML = `
-      <button class="m-close" aria-label="Close">✕</button>
-      <div class="qc-frame">
-        <span class="qc-corner tl"></span><span class="qc-corner tr"></span>
-        <span class="qc-corner bl"></span><span class="qc-corner br"></span>
-        <div class="qc-rose"></div>
-        <div class="qc-eyebrow">${d.name}<span class="qc-type">${d.type}</span></div>
-        <div class="qc-quote">“${d.quote}”</div>
-        <div class="qc-rule"></div>
-        <div class="qc-sub">${d.aliases}</div>
-      </div>`;
-  }
-  modalCard.querySelector('.m-close').addEventListener('click', closeModal);
-  modal.classList.add("open");
-  modal.setAttribute("aria-hidden", "false");
-}
 function closeModal(){
   modal.classList.remove("open");
   modal.setAttribute("aria-hidden", "true");
@@ -1684,10 +1655,16 @@ document.addEventListener("keydown", e => {
 
 window.addEventListener("load", () => {
   setTimeout(() => stage.classList.add("in"), 300);
+  // Auto-expand legend on desktop
+  if(window.innerWidth > 820){
+    legend.classList.remove("collapsed");
+    legHead.setAttribute("aria-expanded", "true");
+  }
   const deepLinkId = window.location.hash.slice(1);
   if(deepLinkId && DISTRICTS.find(x => x.id === deepLinkId)){
-    // deep-link: skip intro after brief title flash
-    setTimeout(() => enterCity(), 900);
+    // deep-link: skip veil entirely, open district after stage fades in
+    veil.classList.add("gone");
+    setTimeout(() => openDistrict(deepLinkId), 700);
   } else {
     // After title anim (~2.2s): fade title → show atlas
     setTimeout(() => {

@@ -63,6 +63,21 @@
   #topbar .breadcrumb a:hover { color: var(--gold-bright); }
   #topbar .breadcrumb .sep { color: rgba(212,160,23,0.4); }
   #topbar .breadcrumb .current { color: rgba(244,228,193,0.82); }
+  #topbar-district {
+    display: flex; align-items: center; gap: 7px;
+    font-family: var(--display);
+    font-size: 10.5px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: rgba(244,228,193,0.55);
+    opacity: 0;
+    transform: translateY(-4px);
+    transition: opacity .3s ease, transform .3s ease;
+    pointer-events: none;
+  }
+  #topbar-district.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+  #topbar-district .td-dot { width: 7px; height: 7px; border-radius: 50%; flex: none; }
+  @media (max-width: 640px) { #topbar-district { display: none; } }
   .topbar-nav { display: flex; gap: 14px; align-items: center; }
   .topbar-link {
     font-family: var(--display);
@@ -79,6 +94,19 @@
   .topbar-link:hover {
     color: var(--gold-bright);
     border-color: rgba(212,160,23,0.35);
+  }
+
+  /* ─── Reading progress bar ─── */
+  #read-progress {
+    position: fixed;
+    top: 56px; left: 0;
+    width: 0%;
+    height: 2px;
+    background: linear-gradient(90deg, var(--gold), var(--gold-bright));
+    z-index: 81;
+    transition: width .1s linear;
+    pointer-events: none;
+    box-shadow: 0 0 6px rgba(212,160,23,0.5);
   }
 
   /* ─── Layout ─── */
@@ -474,6 +502,59 @@
     position: absolute; left: 8px; top: 2px;
     font-size: 32px; color: rgba(212,160,23,0.5);
   }
+
+  /* DM Session Notes */
+  .dm-session-notes {
+    margin-top: 20px;
+    position: relative;
+  }
+  .dm-session-notes-label {
+    font-family: var(--display);
+    font-size: 8.5px;
+    letter-spacing: .26em;
+    text-transform: uppercase;
+    color: rgba(244,228,193,0.18);
+    margin-bottom: 5px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .dm-session-notes-label::after {
+    content: "";
+    flex: 1; height: 1px;
+    background: rgba(92,58,30,0.2);
+  }
+  .dm-session-textarea {
+    width: 100%;
+    min-height: 64px;
+    resize: vertical;
+    background: rgba(8,4,0,0.35);
+    border: 1px solid rgba(92,58,30,0.22);
+    border-radius: 2px;
+    padding: 10px 12px;
+    font-family: var(--thai);
+    font-size: 14px;
+    line-height: 1.6;
+    color: rgba(244,228,193,0.52);
+    outline: none;
+    transition: border-color .2s, color .2s, background .2s;
+  }
+  .dm-session-textarea::placeholder { color: rgba(244,228,193,0.15); font-style: italic; }
+  .dm-session-textarea:focus {
+    border-color: rgba(212,160,23,0.3);
+    color: rgba(244,228,193,0.75);
+    background: rgba(8,4,0,0.5);
+  }
+  .dm-session-saved {
+    position: absolute; right: 0; top: 0;
+    font-family: var(--display);
+    font-size: 8px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: rgba(100,180,100,0.4);
+    opacity: 0;
+    transition: opacity .4s ease;
+  }
+  .dm-session-saved.show { opacity: 1; }
+  @media print { .dm-session-notes { display: none; } }
 
   /* DM Notes */
   .dm-notes-toggle {
@@ -1041,9 +1122,38 @@
     line-height: 1.65;
     color: rgba(244,200,190,0.55);
   }
+
+  /* ─── Print ─── */
+  @media print {
+    body { background: #fff; color: #1a0f07; }
+    #topbar, #sidebar, #read-progress, #scroll-top,
+    #mob-jump-btn, #mob-jump-drawer, .view-on-map { display: none !important; }
+    .layout { display: block; padding-top: 0; }
+    #main { padding: 12px; }
+    .city-header { border-bottom: 2px solid #5c3a1e; padding-bottom: 12px; margin-bottom: 24px; }
+    .city-header h1, .district-name, .hollow-name { color: #1a0f07; text-shadow: none; }
+    .city-header .subtitle { color: #5c3a1e; }
+    .district-section { page-break-inside: avoid; }
+    hr.district-rule { border-color: #5c3a1e; }
+    .overview-card { background: #f5f0e8; border-color: #8b5e3c; }
+    .npc-card { background: #f5f0e8; border-top-color: #5c3a1e; }
+    .tension-block { background: #fff3f0; border-left-color: #8b2a14; }
+    .hook-block { background: #f0f0ff; border-left-color: #4a3080; }
+    .dm-notes-toggle { display: none; }
+    .dm-notes-body { display: block !important; max-height: none !important; padding: 12px 0; border-left: 2px solid #aaa; padding-left: 14px; }
+    .dm-notes-body p { color: #3a2a14; }
+    .district-quote, .hollow-quote { color: #3a2a14; border-left-color: #8b5e3c; background: #f5f0e8; }
+    .qref-grid { display: none; }
+    .atlas-badge, .district-type-tag { border-color: #8b5e3c; color: #5c3a1e; background: none; }
+    a { color: #5c3a1e; text-decoration: underline; }
+    .hollow-warning { background: #fff5f0; border-color: #8b2a14; }
+    .hollow-warning .hw-label { color: #8b2a14; }
+  }
 </style>
 </head>
 <body>
+
+<div id="read-progress" aria-hidden="true"></div>
 
 <!-- Top navigation bar -->
 <nav id="topbar">
@@ -1053,6 +1163,10 @@
     <a href="/map/porto-stellare">Porto Stellare Map</a>
     <span class="sep">/</span>
     <span class="current">District Lore</span>
+  </div>
+  <div id="topbar-district" aria-live="polite">
+    <span class="td-dot" id="topbar-district-dot"></span>
+    <span id="topbar-district-name"></span>
   </div>
   <div class="topbar-nav">
     <a class="topbar-link" id="topbar-map-link" href="/map/porto-stellare">&#8592; Back to Map</a>
@@ -2036,10 +2150,29 @@
 </div>
 
 <script>
+const DM_NOTES_KEY = 'porto-stellare:dm-notes-open';
+function saveDmNotesState(){
+  try {
+    const open = [...document.querySelectorAll('.dm-notes-toggle.open')]
+      .map((b,i) => [...document.querySelectorAll('.dm-notes-toggle')].indexOf(b));
+    localStorage.setItem(DM_NOTES_KEY, JSON.stringify(open));
+  } catch(e){}
+}
+function restoreDmNotesState(){
+  try {
+    const saved = JSON.parse(localStorage.getItem(DM_NOTES_KEY) || '[]');
+    const allBtns = [...document.querySelectorAll('.dm-notes-toggle')];
+    saved.forEach(idx => {
+      const btn = allBtns[idx];
+      if(btn){ btn.classList.add('open'); btn.nextElementSibling?.classList.add('open'); }
+    });
+  } catch(e){}
+}
+
 function toggleDmNotes(btn){
   btn.classList.toggle('open');
-  const body = btn.nextElementSibling;
-  body.classList.toggle('open');
+  btn.nextElementSibling?.classList.toggle('open');
+  saveDmNotesState();
 }
 
 function toggleAllDmNotes(btn){
@@ -2048,11 +2181,52 @@ function toggleAllDmNotes(btn){
   allBtns.forEach(b => {
     const shouldOpen = !anyOpen;
     b.classList.toggle('open', shouldOpen);
-    const body = b.nextElementSibling;
-    if(body) body.classList.toggle('open', shouldOpen);
+    b.nextElementSibling?.classList.toggle('open', shouldOpen);
   });
   btn.textContent = anyOpen ? 'Expand All Notes' : 'Collapse All Notes';
+  saveDmNotesState();
 }
+
+restoreDmNotesState();
+
+// ─── DM Session Notes ───
+(function(){
+  const NOTE_PREFIX = 'porto-stellare:session-note:';
+  document.querySelectorAll('.district-section[id], .hollow-section[id]').forEach(section => {
+    const id = section.id;
+    const saved = (() => { try { return localStorage.getItem(NOTE_PREFIX + id) || ''; } catch(e){ return ''; } })();
+    const wrap = document.createElement('div');
+    wrap.className = 'dm-session-notes';
+    wrap.innerHTML = `
+      <div class="dm-session-notes-label">Session Notes</div>
+      <textarea class="dm-session-textarea" placeholder="Type your session notes here — saved automatically…" rows="3"></textarea>
+      <span class="dm-session-saved">Saved</span>`;
+    const viewMapLink = section.querySelector('.view-on-map');
+    if(viewMapLink) viewMapLink.before(wrap);
+    else section.appendChild(wrap);
+    const ta = wrap.querySelector('.dm-session-textarea');
+    ta.value = saved;
+    const savedLabel = wrap.querySelector('.dm-session-saved');
+    let saveTimer;
+    ta.addEventListener('input', () => {
+      clearTimeout(saveTimer);
+      saveTimer = setTimeout(() => {
+        try { localStorage.setItem(NOTE_PREFIX + id, ta.value); } catch(e){}
+        savedLabel.classList.add('show');
+        setTimeout(() => savedLabel.classList.remove('show'), 1800);
+      }, 600);
+    });
+  });
+})();
+
+// Sync "Expand All Notes" button label to restored state
+(function(){
+  const allBtns = document.querySelectorAll('.dm-notes-toggle');
+  const expandAllBtn = document.getElementById('expand-all-notes');
+  if(expandAllBtn && [...allBtns].every(b => b.classList.contains('open'))){
+    expandAllBtn.textContent = 'Collapse All Notes';
+  }
+})();
 
 // Sidebar collapse toggle (tablet/mobile)
 const sbBody = document.getElementById('sb-body');
@@ -2075,10 +2249,13 @@ function openMobJump(){ mobDrawer.classList.add('open'); }
 function closeMobJump(){ mobDrawer.classList.remove('open'); }
 mobDrawer.addEventListener('click', e => { if(e.target === mobDrawer) closeMobJump(); });
 
-// Scroll-to-top visibility
+// Scroll-to-top visibility + reading progress bar
 const scrollTopBtn = document.getElementById('scroll-top');
+const readProgress = document.getElementById('read-progress');
 window.addEventListener('scroll', () => {
   scrollTopBtn.classList.toggle('show', window.scrollY > 400);
+  const docH = document.documentElement.scrollHeight - window.innerHeight;
+  readProgress.style.width = (docH > 0 ? (window.scrollY / docH * 100) : 0) + '%';
 }, { passive: true });
 
 // Sidebar active link on scroll (with sidebar auto-scroll + map link sync)
@@ -2088,13 +2265,38 @@ window.addEventListener('scroll', () => {
   const sections = [...links].map(l => document.querySelector(l.getAttribute('href'))).filter(Boolean);
   const backToMap   = document.getElementById('back-to-map');
   const topbarMap   = document.getElementById('topbar-map-link');
-  const DISTRICT_IDS = ['verdant','silver','golden','whitecliff','aurora','iron','oldcrown','stellamar'];
+  const tbDistrict  = document.getElementById('topbar-district');
+  const tbDot       = document.getElementById('topbar-district-dot');
+  const tbName      = document.getElementById('topbar-district-name');
+  const DISTRICT_META = {
+    verdant:    { name: 'Verdant Terraces',  color: '#4a7c4e' },
+    silver:     { name: 'Silver Steps',      color: '#8c97a3' },
+    golden:     { name: 'Golden Crescent',   color: '#d4a017' },
+    whitecliff: { name: 'White Cliff Ward',  color: '#7fa0b5' },
+    aurora:     { name: 'Aurora Promenade',  color: '#c98a6d' },
+    iron:       { name: 'Iron Quarters',     color: '#7b6a59' },
+    oldcrown:   { name: 'Old Crown',         color: '#8a4a63' },
+    stellamar:  { name: 'Stellamar Port',    color: '#2f7088' },
+    hollow:     { name: 'The Hollow Below',  color: '#5a3a7a' },
+  };
+  const DISTRICT_IDS = Object.keys(DISTRICT_META).filter(id => id !== 'hollow');
   let activeIdx = null;
 
   function setMapLinks(districtId){
     const href = districtId ? '/map/porto-stellare#' + districtId : '/map/porto-stellare';
     if(backToMap) backToMap.href = href;
     if(topbarMap) topbarMap.href = href;
+  }
+
+  function setTopbarDistrict(sectionId){
+    const meta = DISTRICT_META[sectionId];
+    if(meta){
+      tbDot.style.background = meta.color;
+      tbName.textContent = meta.name;
+      tbDistrict.classList.add('visible');
+    } else {
+      tbDistrict.classList.remove('visible');
+    }
   }
 
   function onScroll(){
@@ -2104,9 +2306,10 @@ window.addEventListener('scroll', () => {
     if(next === activeIdx) return;
     activeIdx = next;
     links.forEach((l, i) => l.classList.toggle('active', i === next));
-    // Update map back-links to reflect current district
+    // Update map back-links and topbar district to reflect current section
     const sectionId = next !== null ? sections[next]?.id : null;
     setMapLinks(DISTRICT_IDS.includes(sectionId) ? sectionId : null);
+    setTopbarDistrict(sectionId);
     if(next !== null && sidebar && window.innerWidth > 820){
       const activeLink = links[next];
       const sbRect  = sidebar.getBoundingClientRect();

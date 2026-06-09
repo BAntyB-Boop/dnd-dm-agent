@@ -1064,10 +1064,33 @@ body.th-active .roster-list-th{display:flex !important}
 .ci-dots .dot{width:6px;height:6px;border-radius:50%;background:rgba(201,164,92,0.3);transition:all 0.3s}
 .ci-dots .dot.active{background:var(--gold);box-shadow:0 0 12px var(--gold);transform:scale(1.6)}
 
+/* skip-intro button */
+#ci-skip-btn {
+  position: absolute;
+  top: 22px; right: 32px;
+  z-index: 20;
+  font-family: "Cinzel", serif;
+  font-size: 0.58rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  background: rgba(7,7,10,0.7);
+  border: 1px solid rgba(201,164,92,0.25);
+  color: var(--gold-dim);
+  padding: 8px 16px;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .5s ease, color .25s, border-color .25s;
+}
+#ci-skip-btn.show { opacity: 1; pointer-events: auto; }
+#ci-skip-btn:hover { color: var(--gold); border-color: rgba(201,164,92,0.55); }
+
 @media (max-width:768px){
   .cosmic-intro{height:600vh;margin-left:0;margin-right:0}
   .ci-dots{right:14px}
   .ci-caption{bottom:18vh}
+  #ci-skip-btn{top:14px;right:14px;font-size:0.52rem;padding:6px 12px}
 }
 @media (prefers-reduced-motion:reduce){
   .cosmic-intro{height:auto}
@@ -1262,6 +1285,9 @@ body.th-active .roster-list-th{display:flex !important}
 
       <!-- scroll hint -->
       <div class="ci-progress" id="ci-progress"><span>Scroll to descend</span></div>
+
+      <!-- skip intro -->
+      <button id="ci-skip-btn" aria-label="Skip intro">Skip ↓</button>
     </div>
   </section>
 
@@ -2114,6 +2140,20 @@ body.th-active .roster-list-th{display:flex !important}
       const dh = document.documentElement.scrollHeight - window.innerHeight;
       bar.style.width = (dh > 0 ? (window.scrollY / dh * 100) : 0) + '%';
     }, { passive: true });
+  })();
+
+  // ── Skip Intro button ─────────────────────────────────────────
+  (function(){
+    const btn = document.getElementById('ci-skip-btn');
+    if(!btn) return;
+    // Show after user scrolls a bit into the intro
+    window.addEventListener('scroll', function(){
+      btn.classList.toggle('show', window.scrollY > 120);
+    }, { passive: true });
+    btn.addEventListener('click', function(){
+      const target = document.getElementById('prologue') || document.querySelector('.story-head');
+      if(target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
   })();
 </script>
 

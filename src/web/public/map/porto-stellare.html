@@ -264,7 +264,9 @@
     padding: 30px 30px 40px;
     scrollbar-width: thin;
     scrollbar-color: var(--ink-soft) transparent;
+    transition: opacity .18s ease;
   }
+  .panel-scroll.switching { opacity: 0; }
   .panel-scroll::-webkit-scrollbar { width: 8px; }
   .panel-scroll::-webkit-scrollbar-thumb { background: rgba(139,94,60,0.5); border-radius: 8px; }
 
@@ -1447,6 +1449,7 @@ legHead.addEventListener("keydown", e => { if(e.key==="Enter"||e.key===" "){ e.p
 const panel = document.getElementById('panel');
 let activeId = null;
 let _panelOpener = null; // element that triggered openDistrict (for focus restore)
+let _switchTimer = null;
 
 function pips(n, cls){ return Array.from({length:5}, (_,i) => `<div class="p-pip${i<n?' '+cls:''}"></div>`).join(""); }
 function buildPanel(d){
@@ -1505,25 +1508,33 @@ function buildPanel(d){
 function openDistrict(id){
   const d = DISTRICTS.find(x => x.id === id);
   if(!d) return;
-  activeId = id;
   _panelOpener = document.activeElement;
-  panel.innerHTML = buildPanel(d);
-  panel.classList.add("open");
-  panel.setAttribute("aria-hidden", "false");
-  // sync URL hash (no new history entry)
-  history.replaceState(null, "", "#" + id);
-  // mark active states
-  svg.querySelectorAll(".district").forEach(p => { p.classList.remove("highlighted"); p.classList.toggle("active", p.dataset.id === id); });
-  svg.querySelectorAll(".district-label").forEach(l => l.classList.toggle("bright", l.dataset.id === id));
-  legBody.querySelectorAll(".leg-item").forEach(p => p.classList.toggle("active", p.dataset.id === id));
-  // wire panel buttons
-  const closeBtn = panel.querySelector(".p-close");
-  closeBtn.addEventListener("click", closePanel);
-  const va = panel.querySelector("#view-atlas-page");
-  if(va) va.addEventListener("click", () => openAtlasModal(d.atlasPage));
-  // move focus to close button after transition
-  setTimeout(() => closeBtn.focus(), 560);
-  fadeHint();
+  const wasOpen = panel.classList.contains("open");
+  function _populatePanel(){
+    activeId = id;
+    panel.innerHTML = buildPanel(d);
+    panel.classList.add("open");
+    panel.setAttribute("aria-hidden", "false");
+    history.replaceState(null, "", "#" + id);
+    svg.querySelectorAll(".district").forEach(p => { p.classList.remove("highlighted"); p.classList.toggle("active", p.dataset.id === id); });
+    svg.querySelectorAll(".district-label").forEach(l => l.classList.toggle("bright", l.dataset.id === id));
+    legBody.querySelectorAll(".leg-item").forEach(p => p.classList.toggle("active", p.dataset.id === id));
+    const closeBtn = panel.querySelector(".p-close");
+    closeBtn.addEventListener("click", closePanel);
+    const va = panel.querySelector("#view-atlas-page");
+    if(va) va.addEventListener("click", () => openAtlasModal(d.atlasPage));
+    if(!wasOpen) setTimeout(() => closeBtn.focus(), 560);
+    else setTimeout(() => closeBtn.focus(), 0);
+    fadeHint();
+  }
+  if(wasOpen){
+    const existing = panel.querySelector(".panel-scroll");
+    if(existing) existing.classList.add("switching");
+    clearTimeout(_switchTimer);
+    _switchTimer = setTimeout(_populatePanel, 180);
+  } else {
+    _populatePanel();
+  }
 }
 
 function closePanel(){

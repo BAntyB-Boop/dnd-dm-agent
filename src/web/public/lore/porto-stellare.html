@@ -1055,7 +1055,7 @@
     <span class="current">District Lore</span>
   </div>
   <div class="topbar-nav">
-    <a class="topbar-link" href="/map/porto-stellare">&#8592; Back to Map</a>
+    <a class="topbar-link" id="topbar-map-link" href="/map/porto-stellare">&#8592; Back to Map</a>
   </div>
 </nav>
 
@@ -1980,7 +1980,7 @@
     </section>
 
     <!-- Back link -->
-    <a class="back-to-map" href="/map/porto-stellare">
+    <a class="back-to-map" id="back-to-map" href="/map/porto-stellare">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="12" height="12"><path d="M9 4 3 6.5v13L9 17l6 2.5 6-2.5v-13L15 6.5 9 4Z"/><path d="M9 4v13M15 6.5v13"/></svg>
       Return to Interactive Map
     </a>
@@ -2081,12 +2081,21 @@ window.addEventListener('scroll', () => {
   scrollTopBtn.classList.toggle('show', window.scrollY > 400);
 }, { passive: true });
 
-// Sidebar active link on scroll (with sidebar auto-scroll)
+// Sidebar active link on scroll (with sidebar auto-scroll + map link sync)
 (function(){
   const sidebar = document.getElementById('sidebar');
   const links = document.querySelectorAll('#sidebar .sb-link[href^="#"]');
   const sections = [...links].map(l => document.querySelector(l.getAttribute('href'))).filter(Boolean);
+  const backToMap   = document.getElementById('back-to-map');
+  const topbarMap   = document.getElementById('topbar-map-link');
+  const DISTRICT_IDS = ['verdant','silver','golden','whitecliff','aurora','iron','oldcrown','stellamar'];
   let activeIdx = null;
+
+  function setMapLinks(districtId){
+    const href = districtId ? '/map/porto-stellare#' + districtId : '/map/porto-stellare';
+    if(backToMap) backToMap.href = href;
+    if(topbarMap) topbarMap.href = href;
+  }
 
   function onScroll(){
     const top = window.scrollY + 100;
@@ -2095,6 +2104,9 @@ window.addEventListener('scroll', () => {
     if(next === activeIdx) return;
     activeIdx = next;
     links.forEach((l, i) => l.classList.toggle('active', i === next));
+    // Update map back-links to reflect current district
+    const sectionId = next !== null ? sections[next]?.id : null;
+    setMapLinks(DISTRICT_IDS.includes(sectionId) ? sectionId : null);
     if(next !== null && sidebar && window.innerWidth > 820){
       const activeLink = links[next];
       const sbRect  = sidebar.getBoundingClientRect();

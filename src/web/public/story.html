@@ -1911,9 +1911,15 @@ body.th-active .roster-list-th{display:flex !important}
     setTimeout(spawn, 4500);
   })();
 
-  // ─── 6. Reading progress in nav (subtle progress underlay) ───
+  // ─── 6. Smooth scroll for side-nav links ───
   (function(){
-    // Could add a progress bar later — left as a hook
+    document.querySelectorAll('.side-nav a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        const target = document.querySelector(a.getAttribute('href'));
+        if(target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
   })();
 
   // ─── Music player (2-track playlist, alternating loop) ───

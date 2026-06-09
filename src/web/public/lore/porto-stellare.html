@@ -1,0 +1,2097 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Porto Stellare — District Lore</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Trirong:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --parchment: #f4e4c1;
+    --parchment-dim: #e8d5a3;
+    --ink: #5c3a1e;
+    --ink-soft: #8b5e3c;
+    --gold: #d4a017;
+    --gold-bright: #f0c040;
+    --teal: #2a4a5e;
+    --navy: #0d2137;
+    --wood: #1a0f07;
+    --display: 'Cinzel', serif;
+    --body: 'Crimson Text', 'Trirong', Georgia, serif;
+    --thai: 'Trirong', 'Crimson Text', serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    min-height: 100vh;
+    background:
+      radial-gradient(ellipse 140% 80% at 50% 0%, #2c1a0e 0%, #100802 55%, #080401 100%);
+    color: var(--ink);
+    font-family: var(--body);
+  }
+
+  /* ─── Top bar ─── */
+  #topbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 80;
+    height: 56px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 24px;
+    background: linear-gradient(180deg, rgba(16,8,2,0.96), rgba(16,8,2,0.85));
+    border-bottom: 1px solid rgba(212,160,23,0.22);
+    backdrop-filter: blur(8px);
+  }
+  #topbar .breadcrumb {
+    display: flex; align-items: center; gap: 10px;
+    font-family: var(--display);
+    font-size: 11px;
+    letter-spacing: .24em;
+    text-transform: uppercase;
+    color: rgba(244,228,193,0.5);
+  }
+  #topbar .breadcrumb a {
+    color: rgba(244,228,193,0.5);
+    text-decoration: none;
+    transition: color .2s;
+  }
+  #topbar .breadcrumb a:hover { color: var(--gold-bright); }
+  #topbar .breadcrumb .sep { color: rgba(212,160,23,0.4); }
+  #topbar .breadcrumb .current { color: rgba(244,228,193,0.82); }
+  .topbar-nav { display: flex; gap: 14px; align-items: center; }
+  .topbar-link {
+    font-family: var(--display);
+    font-size: 10.5px;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: rgba(244,228,193,0.45);
+    text-decoration: none;
+    padding: 6px 12px;
+    border: 1px solid transparent;
+    border-radius: 2px;
+    transition: color .2s, border-color .2s;
+  }
+  .topbar-link:hover {
+    color: var(--gold-bright);
+    border-color: rgba(212,160,23,0.35);
+  }
+
+  /* ─── Layout ─── */
+  .layout {
+    display: grid;
+    grid-template-columns: 248px 1fr;
+    min-height: 100vh;
+    padding-top: 56px;
+  }
+
+  /* ─── Sidebar ─── */
+  #sidebar {
+    position: sticky;
+    top: 56px;
+    height: calc(100vh - 56px);
+    overflow-y: auto;
+    padding: 28px 0 40px;
+    border-right: 1px solid rgba(92,58,30,0.28);
+    background: linear-gradient(180deg, rgba(20,10,3,0.6), rgba(12,6,1,0.4));
+    scrollbar-width: thin;
+    scrollbar-color: rgba(139,94,60,0.4) transparent;
+  }
+  #sidebar::-webkit-scrollbar { width: 6px; }
+  #sidebar::-webkit-scrollbar-thumb { background: rgba(139,94,60,0.4); border-radius: 6px; }
+
+  .sb-head {
+    padding: 0 20px 18px;
+    border-bottom: 1px solid rgba(212,160,23,0.18);
+    margin-bottom: 8px;
+  }
+  .sb-eyebrow {
+    font-family: var(--display);
+    font-size: 9.5px;
+    letter-spacing: .32em;
+    text-transform: uppercase;
+    color: rgba(244,228,193,0.38);
+    margin-bottom: 6px;
+  }
+  .sb-city {
+    font-family: var(--display);
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    color: var(--gold-bright);
+    text-shadow: 0 0 18px rgba(212,160,23,0.3);
+  }
+
+  .sb-section-label {
+    font-family: var(--display);
+    font-size: 9px;
+    letter-spacing: .3em;
+    text-transform: uppercase;
+    color: rgba(244,228,193,0.3);
+    padding: 12px 20px 5px;
+  }
+
+  .sb-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 20px;
+    font-family: var(--body);
+    font-size: 14.5px;
+    color: rgba(244,228,193,0.5);
+    text-decoration: none;
+    border-left: 3px solid transparent;
+    transition: color .2s, background .2s, border-color .2s;
+  }
+  .sb-link:hover {
+    color: rgba(244,228,193,0.85);
+    background: rgba(212,160,23,0.07);
+    border-left-color: rgba(212,160,23,0.35);
+  }
+  .sb-link.active {
+    color: var(--gold-bright);
+    background: rgba(212,160,23,0.1);
+    border-left-color: var(--gold);
+  }
+  .sb-dot {
+    width: 9px; height: 9px; border-radius: 50%; flex: none;
+    box-shadow: 0 0 5px currentColor;
+  }
+
+  .sb-divider {
+    margin: 12px 20px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(92,58,30,0.35), transparent);
+  }
+
+  .sb-util-link {
+    display: flex; align-items: center; gap: 9px;
+    padding: 8px 20px;
+    font-family: var(--display);
+    font-size: 10px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: rgba(244,228,193,0.32);
+    text-decoration: none;
+    transition: color .2s;
+  }
+  .sb-util-link:hover { color: rgba(244,228,193,0.65); }
+
+  /* ─── Main content ─── */
+  #main {
+    padding: 48px 56px 80px;
+    max-width: 860px;
+  }
+
+  /* City header */
+  .city-header {
+    margin-bottom: 52px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid rgba(92,58,30,0.3);
+  }
+  .city-header .label {
+    font-family: var(--display);
+    font-size: 10.5px;
+    letter-spacing: .34em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+  .city-header h1 {
+    font-family: var(--display);
+    font-size: clamp(38px, 6vw, 68px);
+    font-weight: 700;
+    line-height: 1;
+    color: var(--gold-bright);
+    text-shadow: 0 0 40px rgba(212,160,23,0.28);
+    letter-spacing: .04em;
+    margin-bottom: 10px;
+  }
+  .city-header .subtitle {
+    font-family: var(--display);
+    font-size: 14px;
+    letter-spacing: .24em;
+    text-transform: uppercase;
+    color: rgba(244,228,193,0.5);
+    margin-bottom: 22px;
+  }
+  .city-header p {
+    font-family: var(--thai);
+    font-size: 17px;
+    line-height: 1.78;
+    color: rgba(244,228,193,0.75);
+    max-width: 680px;
+  }
+
+  /* City stats row */
+  .city-stats {
+    display: flex; flex-wrap: wrap; gap: 16px;
+    margin-top: 28px;
+  }
+  .city-stat {
+    padding: 12px 18px;
+    background: rgba(92,58,30,0.12);
+    border: 1px solid rgba(92,58,30,0.32);
+    border-radius: 2px;
+  }
+  .city-stat .st-label {
+    font-family: var(--display);
+    font-size: 9px;
+    letter-spacing: .26em;
+    text-transform: uppercase;
+    color: rgba(244,228,193,0.35);
+    margin-bottom: 4px;
+  }
+  .city-stat .st-val {
+    font-family: var(--body);
+    font-size: 15.5px;
+    color: rgba(244,228,193,0.8);
+  }
+
+  /* ─── Governance Section ─── */
+  .gov-section {
+    margin-bottom: 60px;
+  }
+  .section-header {
+    display: flex; align-items: center; gap: 14px;
+    margin-bottom: 28px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid rgba(92,58,30,0.28);
+  }
+  .section-header h2 {
+    font-family: var(--display);
+    font-size: 20px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--gold-bright);
+    font-weight: 600;
+  }
+  .section-header .sh-rule {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(212,160,23,0.4), transparent);
+  }
+
+  .prose {
+    font-family: var(--thai);
+    font-size: 16.5px;
+    line-height: 1.82;
+    color: rgba(244,228,193,0.72);
+    margin-bottom: 18px;
+  }
+  .prose + .prose { margin-top: 0; }
+
+  /* ─── District sections ─── */
+  .district-section {
+    margin-bottom: 72px;
+    scroll-margin-top: 80px;
+  }
+
+  .district-title-row {
+    display: flex; align-items: flex-start; gap: 16px;
+    margin-bottom: 24px;
+  }
+  .district-dot {
+    width: 14px; height: 14px; border-radius: 50%;
+    flex: none; margin-top: 8px;
+    box-shadow: 0 0 10px var(--d-color);
+  }
+  .district-title-text {}
+  .district-type-tag {
+    display: inline-block;
+    font-family: var(--display);
+    font-size: 9.5px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: rgba(244,228,193,0.45);
+    border: 1px solid rgba(92,58,30,0.4);
+    padding: 3px 10px;
+    border-radius: 2px;
+    margin-bottom: 8px;
+    background: rgba(92,58,30,0.1);
+  }
+  .district-name {
+    font-family: var(--display);
+    font-size: clamp(24px, 3.5vw, 38px);
+    font-weight: 700;
+    color: var(--gold-bright);
+    line-height: 1.05;
+    margin-bottom: 4px;
+  }
+  .district-alias {
+    font-style: italic;
+    font-size: 14.5px;
+    color: rgba(244,228,193,0.4);
+  }
+
+  /* overview card */
+  .overview-card {
+    padding: 22px 26px;
+    background: rgba(92,58,30,0.1);
+    border-left: 3px solid var(--d-color);
+    border-radius: 2px;
+    margin-bottom: 28px;
+  }
+  .overview-card p {
+    font-family: var(--thai);
+    font-size: 16px;
+    line-height: 1.78;
+    color: rgba(244,228,193,0.72);
+  }
+
+  /* subsection heading */
+  .sub-h {
+    font-family: var(--display);
+    font-size: 11.5px;
+    letter-spacing: .26em;
+    text-transform: uppercase;
+    color: rgba(244,228,193,0.38);
+    margin: 26px 0 12px;
+  }
+
+  /* Locations list */
+  .loc-list { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; }
+  .loc-list li {
+    position: relative;
+    padding-left: 20px;
+    font-family: var(--body);
+    font-size: 15.5px;
+    line-height: 1.45;
+    color: rgba(244,228,193,0.65);
+  }
+  .loc-list li::before {
+    content: "❖";
+    position: absolute; left: 0; top: 2px;
+    color: var(--gold);
+    font-size: 10px;
+  }
+
+  /* NPC grid */
+  .npc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 24px; }
+  @media (max-width: 640px) { .npc-grid { grid-template-columns: 1fr; } }
+  .npc-card {
+    padding: 16px 18px;
+    background: rgba(20,12,4,0.5);
+    border: 1px solid rgba(92,58,30,0.38);
+    border-top: 2px solid var(--d-color);
+    border-radius: 2px;
+  }
+  .npc-name {
+    font-family: var(--display);
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--gold-bright);
+    letter-spacing: .04em;
+    margin-bottom: 7px;
+  }
+  .npc-role {
+    font-family: var(--thai);
+    font-size: 14.5px;
+    line-height: 1.55;
+    color: rgba(244,228,193,0.6);
+  }
+
+  /* Tension block */
+  .tension-block {
+    padding: 16px 20px;
+    background: rgba(140,30,10,0.1);
+    border-left: 3px solid rgba(200,60,20,0.55);
+    border-radius: 2px;
+    margin-bottom: 18px;
+  }
+  .tension-block .tb-label {
+    font-family: var(--display);
+    font-size: 9.5px;
+    letter-spacing: .28em;
+    text-transform: uppercase;
+    color: rgba(200,90,60,0.7);
+    margin-bottom: 8px;
+  }
+  .tension-block p {
+    font-family: var(--thai);
+    font-size: 15.5px;
+    line-height: 1.65;
+    color: rgba(244,228,193,0.65);
+  }
+
+  /* Hook block */
+  .hook-block {
+    padding: 16px 20px;
+    background: rgba(60,30,100,0.1);
+    border-left: 3px solid rgba(110,70,170,0.45);
+    border-radius: 2px;
+    margin-bottom: 18px;
+  }
+  .hook-block .hb-label {
+    font-family: var(--display);
+    font-size: 9.5px;
+    letter-spacing: .28em;
+    text-transform: uppercase;
+    color: rgba(150,110,200,0.65);
+    margin-bottom: 8px;
+  }
+  .hook-block p {
+    font-family: var(--thai);
+    font-style: italic;
+    font-size: 15.5px;
+    line-height: 1.65;
+    color: rgba(244,228,193,0.65);
+  }
+
+  /* Quote */
+  .district-quote {
+    position: relative;
+    padding: 18px 22px 18px 26px;
+    font-family: var(--thai);
+    font-style: italic;
+    font-size: 17px;
+    line-height: 1.65;
+    color: rgba(244,228,193,0.6);
+    border-left: 3px solid var(--gold);
+    background: linear-gradient(90deg, rgba(212,160,23,0.08), transparent);
+    margin: 28px 0;
+  }
+  .district-quote::before {
+    content: "\201C";
+    font-family: var(--display);
+    position: absolute; left: 8px; top: 2px;
+    font-size: 32px; color: rgba(212,160,23,0.5);
+  }
+
+  /* DM Notes */
+  .dm-notes-toggle {
+    display: flex; align-items: center; gap: 10px;
+    padding: 11px 16px;
+    font-family: var(--display);
+    font-size: 10.5px;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: rgba(244,228,193,0.38);
+    background: rgba(60,30,10,0.25);
+    border: 1px solid rgba(92,58,30,0.3);
+    border-radius: 2px;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+    margin: 8px 0 0;
+    transition: color .2s, background .2s;
+  }
+  .dm-notes-toggle:hover { color: rgba(244,228,193,0.65); background: rgba(92,58,30,0.2); }
+  .dm-notes-toggle .dn-icon { font-size: 13px; transition: transform .3s; }
+  .dm-notes-toggle.open .dn-icon { transform: rotate(90deg); }
+  .dm-notes-body {
+    display: none;
+    padding: 18px 20px;
+    background: rgba(10,6,1,0.45);
+    border: 1px solid rgba(92,58,30,0.25);
+    border-top: none;
+    border-radius: 0 0 2px 2px;
+  }
+  .dm-notes-body.open { display: block; }
+  .dm-notes-body p {
+    font-family: var(--thai);
+    font-size: 15px;
+    line-height: 1.7;
+    color: rgba(244,228,193,0.5);
+    margin-bottom: 10px;
+  }
+  .dm-notes-body p:last-child { margin-bottom: 0; }
+
+  /* district rule */
+  /* View-on-map button */
+  .view-on-map {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-family: var(--display);
+    font-size: 9.5px;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: rgba(244,228,193,0.35);
+    text-decoration: none;
+    padding: 6px 13px;
+    border: 1px solid rgba(92,58,30,0.3);
+    border-radius: 2px;
+    margin-top: 16px;
+    transition: color .2s, border-color .2s, background .2s;
+  }
+  .view-on-map:hover {
+    color: var(--gold-bright);
+    border-color: rgba(212,160,23,0.4);
+    background: rgba(212,160,23,0.05);
+  }
+  .view-on-map svg { flex: none; }
+
+  .district-rule {
+    height: 1px;
+    border: none;
+    background: linear-gradient(90deg, transparent, rgba(92,58,30,0.4) 20%, rgba(92,58,30,0.4) 80%, transparent);
+    margin: 60px 0;
+    position: relative;
+  }
+  .district-rule::after {
+    content: "✦";
+    position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
+    color: rgba(212,160,23,0.55);
+    font-size: 13px;
+    background: #080401;
+    padding: 0 10px;
+  }
+
+  /* Back-to-map pill */
+  .back-to-map {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--display);
+    font-size: 10.5px;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: rgba(244,228,193,0.4);
+    text-decoration: none;
+    padding: 7px 14px;
+    border: 1px solid rgba(92,58,30,0.35);
+    border-radius: 2px;
+    margin-top: 48px;
+    transition: color .2s, border-color .2s;
+  }
+  .back-to-map:hover { color: var(--gold-bright); border-color: rgba(212,160,23,0.45); }
+
+  /* Scroll-to-top */
+  #scroll-top {
+    position: fixed;
+    bottom: 76px; right: 18px;
+    z-index: 84;
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    border: 1px solid rgba(212,160,23,0.35);
+    background: rgba(16,8,2,0.85);
+    color: rgba(244,228,193,0.5);
+    font-size: 16px; line-height: 1;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none;
+    transition: opacity .35s ease;
+    backdrop-filter: blur(4px);
+  }
+  #scroll-top.show { opacity: 1; pointer-events: auto; }
+  #scroll-top:hover { color: var(--gold-bright); border-color: var(--gold); }
+
+  /* sb-body collapse */
+  #sb-body {
+    overflow: hidden;
+    max-height: 800px;
+    transition: max-height .4s ease, opacity .3s ease;
+    opacity: 1;
+  }
+  #sb-body.collapsed { max-height: 0; opacity: 0; }
+  #sb-toggle-icon.collapsed { transform: rotate(-90deg); }
+
+  /* ─── Tablet ─── */
+  @media (max-width: 820px) {
+    .layout { grid-template-columns: 1fr; }
+    #sidebar {
+      position: static;
+      height: auto;
+      border-right: none;
+      border-bottom: 1px solid rgba(92,58,30,0.28);
+      padding: 16px 0 0;
+    }
+    #sb-head-toggle { padding-bottom: 14px; }
+    #main { padding: 32px 28px 60px; }
+    .npc-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* ─── Mobile ─── */
+  @media (max-width: 600px) {
+    #topbar { padding: 0 14px; }
+    #topbar .breadcrumb { font-size: 9.5px; gap: 6px; }
+    #topbar .breadcrumb a:first-child { display: none; } /* hide "The Veiled Codex" on small screens */
+    .topbar-link { font-size: 9.5px; padding: 5px 10px; }
+
+    #main { padding: 24px 18px 56px; }
+    .city-header h1 { font-size: 34px; }
+    .city-header .subtitle { font-size: 10px; letter-spacing: .18em; }
+    .city-stats { gap: 10px; }
+    .city-stat { padding: 10px 14px; }
+    .city-stat .st-val { font-size: 14px; }
+
+    .npc-grid { grid-template-columns: 1fr; }
+
+    .district-name { font-size: 24px; }
+    .district-quote { font-size: 15px; padding: 14px 18px 14px 22px; }
+    .overview-card { padding: 16px 18px; }
+
+    .section-header h2 { font-size: 16px; }
+    .prose { font-size: 15.5px; }
+
+    .dm-notes-toggle { font-size: 9.5px; padding: 10px 14px; }
+
+    #sidebar { display: none; }
+    .layout { display: block; }
+
+    /* Floating district-jump drawer */
+    #mob-jump-btn {
+      display: flex;
+    }
+    #mob-jump-drawer {
+      display: block;
+    }
+  }
+
+  /* Hide mobile jump on tablet+ */
+  #mob-jump-btn { display: none; }
+  #mob-jump-drawer {
+    display: none;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    z-index: 90;
+    background: linear-gradient(#1c1006, #120a04);
+    border-top: 1px solid rgba(212,160,23,0.28);
+    padding: 18px 20px 30px;
+    transform: translateY(100%);
+    transition: transform .4s cubic-bezier(.3,.7,.2,1);
+  }
+  #mob-jump-drawer.open { transform: translateY(0); }
+  #mob-jump-btn {
+    position: fixed;
+    bottom: 20px; right: 18px;
+    z-index: 85;
+    font-family: var(--display);
+    font-size: 10px;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: rgba(244,228,193,0.6);
+    background: linear-gradient(#2c1a0e, #1c0f06);
+    border: 1px solid rgba(212,160,23,0.35);
+    border-radius: 20px;
+    padding: 10px 18px;
+    cursor: pointer;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.7);
+    align-items: center; gap: 8px;
+  }
+  .mob-jump-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 12px;
+  }
+  .mob-jump-link {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 12px;
+    font-family: var(--body);
+    font-size: 14px;
+    color: rgba(244,228,193,0.6);
+    text-decoration: none;
+    background: rgba(92,58,30,0.12);
+    border-radius: 3px;
+    border-left: 2px solid var(--d-color);
+    transition: background .2s, color .2s;
+  }
+  .mob-jump-link:hover { background: rgba(92,58,30,0.22); color: rgba(244,228,193,0.9); }
+  .mob-jump-dot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+  .mob-jump-head {
+    font-family: var(--display);
+    font-size: 10px;
+    letter-spacing: .28em;
+    text-transform: uppercase;
+    color: rgba(244,228,193,0.35);
+    border-bottom: 1px solid rgba(92,58,30,0.28);
+    padding-bottom: 12px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .mob-jump-close {
+    background: none; border: none;
+    color: rgba(244,228,193,0.4);
+    font-size: 18px; cursor: pointer;
+    line-height: 1;
+  }
+
+  /* ─── DM Quick Reference ─── */
+  .qref-section {
+    margin-bottom: 60px;
+    scroll-margin-top: 80px;
+  }
+  .qref-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 32px;
+  }
+  @media (max-width: 820px) { .qref-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 480px) { .qref-grid { grid-template-columns: 1fr; } }
+
+  .qref-card {
+    padding: 14px 15px;
+    background: rgba(20,12,4,0.55);
+    border: 1px solid rgba(92,58,30,0.28);
+    border-top: 2px solid var(--d-color);
+    border-radius: 2px;
+    display: flex; flex-direction: column; gap: 7px;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    transition: background .2s, border-color .2s, transform .18s;
+  }
+  .qref-card:hover {
+    background: rgba(30,18,6,0.8);
+    border-color: rgba(var(--d-color-raw, 92,58,30), 0.55);
+    transform: translateY(-2px);
+  }
+  .qref-name {
+    font-family: var(--display);
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: .06em;
+    color: rgba(244,228,193,0.82);
+    display: flex; align-items: center; gap: 7px;
+  }
+  .qref-dot {
+    width: 7px; height: 7px; border-radius: 50%; flex: none;
+    box-shadow: 0 0 5px var(--d-color);
+  }
+  .qref-row {
+    font-family: var(--thai);
+    font-size: 12.5px;
+    line-height: 1.45;
+    color: rgba(244,228,193,0.48);
+  }
+  .qref-row b {
+    font-family: var(--display);
+    font-size: 9px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: rgba(244,228,193,0.28);
+    display: block;
+    margin-bottom: 2px;
+  }
+  .qref-npcs {
+    display: flex; flex-wrap: wrap; gap: 4px;
+    margin-top: 2px;
+  }
+  .qref-npc {
+    font-family: var(--display);
+    font-size: 9.5px;
+    letter-spacing: .04em;
+    color: rgba(212,160,23,0.65);
+    background: rgba(212,160,23,0.07);
+    border: 1px solid rgba(212,160,23,0.18);
+    padding: 2px 7px;
+    border-radius: 2px;
+  }
+
+  /* qref stat bars */
+  .qref-stats {
+    display: flex;
+    gap: 8px;
+    margin-top: 4px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(92,58,30,0.22);
+  }
+  .qref-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    flex: 1;
+  }
+  .qref-stat-label {
+    font-family: var(--display);
+    font-size: 7.5px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: rgba(244,228,193,0.28);
+  }
+  .qref-stat-pips {
+    display: flex;
+    gap: 2px;
+  }
+  .qref-pip {
+    flex: 1;
+    height: 3px;
+    border-radius: 1px;
+    background: rgba(244,228,193,0.08);
+    transition: background .2s;
+  }
+  .qref-pip.on-w { background: rgba(212,160,23,0.75); }
+  .qref-pip.on-s { background: rgba(100,160,200,0.75); }
+  .qref-pip.on-d { background: rgba(200,70,40,0.75); }
+
+  /* NPC web */
+  .npc-web { display: flex; flex-direction: column; gap: 10px; margin-bottom: 32px; }
+  .npc-conn {
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: 14px;
+    align-items: start;
+    padding: 12px 16px;
+    background: rgba(20,12,4,0.4);
+    border-left: 2px solid rgba(212,160,23,0.25);
+    border-radius: 2px;
+  }
+  @media (max-width: 640px) { .npc-conn { grid-template-columns: 1fr; gap: 6px; } }
+  .npc-conn-who {
+    font-family: var(--display);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--gold-bright);
+    letter-spacing: .04em;
+  }
+  .npc-conn-detail {
+    font-family: var(--thai);
+    font-size: 14px;
+    line-height: 1.55;
+    color: rgba(244,228,193,0.52);
+  }
+
+  /* Threads */
+  .thread-list { display: flex; flex-direction: column; gap: 12px; }
+  .thread-item {
+    display: grid;
+    grid-template-columns: 26px 1fr;
+    gap: 14px;
+    align-items: start;
+    padding: 14px 16px 14px 0;
+    border-bottom: 1px solid rgba(92,58,30,0.18);
+  }
+  .thread-item:last-child { border-bottom: none; }
+  .thread-num {
+    font-family: var(--display);
+    font-size: 13px;
+    color: rgba(212,160,23,0.4);
+    font-weight: 700;
+    text-align: right;
+    padding-top: 2px;
+  }
+  .thread-body {}
+  .thread-title {
+    font-family: var(--display);
+    font-size: 13px;
+    letter-spacing: .06em;
+    color: rgba(244,228,193,0.75);
+    margin-bottom: 5px;
+  }
+  .thread-desc {
+    font-family: var(--thai);
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: rgba(244,228,193,0.48);
+  }
+  .thread-tags {
+    display: flex; flex-wrap: wrap; gap: 5px;
+    margin-top: 7px;
+  }
+  .thread-tag {
+    font-family: var(--display);
+    font-size: 9px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 2px;
+    border: 1px solid;
+  }
+
+  /* ─── The Hollow Below — special styling ─── */
+  .hollow-section {
+    margin-bottom: 72px;
+    scroll-margin-top: 80px;
+    position: relative;
+  }
+  .hollow-section::before {
+    content: "";
+    position: absolute;
+    inset: -24px -28px;
+    background: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(80,40,130,0.08), transparent 70%);
+    border-radius: 4px;
+    pointer-events: none;
+  }
+  .hollow-separator {
+    height: 1px;
+    border: none;
+    background: linear-gradient(90deg, transparent, rgba(90,58,122,0.6) 20%, rgba(90,58,122,0.6) 80%, transparent);
+    margin: 60px 0;
+    position: relative;
+  }
+  .hollow-separator::after {
+    content: "✦";
+    position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
+    color: rgba(160,100,220,0.55);
+    font-size: 13px;
+    background: #080401;
+    padding: 0 10px;
+  }
+  .hollow-tag {
+    display: inline-block;
+    font-family: var(--display);
+    font-size: 9.5px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: rgba(180,130,240,0.55);
+    border: 1px solid rgba(100,60,160,0.45);
+    padding: 3px 10px;
+    border-radius: 2px;
+    margin-bottom: 8px;
+    background: rgba(60,20,100,0.2);
+  }
+  .hollow-name {
+    font-family: var(--display);
+    font-size: clamp(24px, 3.5vw, 38px);
+    font-weight: 700;
+    color: rgba(200,160,255,0.9);
+    line-height: 1.05;
+    margin-bottom: 4px;
+    text-shadow: 0 0 30px rgba(140,80,200,0.3);
+  }
+  .hollow-alias {
+    font-style: italic;
+    font-size: 14.5px;
+    color: rgba(180,140,220,0.4);
+  }
+  .hollow-overview {
+    padding: 22px 26px;
+    background: rgba(60,20,100,0.12);
+    border-left: 3px solid rgba(120,70,180,0.6);
+    border-radius: 2px;
+    margin-bottom: 28px;
+  }
+  .hollow-overview p {
+    font-family: var(--thai);
+    font-size: 16px;
+    line-height: 1.78;
+    color: rgba(220,190,255,0.65);
+  }
+  .hollow-access {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  @media (max-width: 640px) { .hollow-access { grid-template-columns: 1fr; } }
+  .hollow-access-card {
+    padding: 14px 16px;
+    background: rgba(20,10,36,0.6);
+    border: 1px solid rgba(100,60,160,0.3);
+    border-top: 2px solid rgba(120,70,180,0.5);
+    border-radius: 2px;
+  }
+  .hollow-access-from {
+    font-family: var(--display);
+    font-size: 10px;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: rgba(160,100,220,0.55);
+    margin-bottom: 5px;
+  }
+  .hollow-access-how {
+    font-family: var(--body);
+    font-size: 14.5px;
+    color: rgba(220,190,255,0.55);
+    line-height: 1.45;
+  }
+  .hollow-quote {
+    position: relative;
+    padding: 18px 22px 18px 26px;
+    font-family: var(--thai);
+    font-style: italic;
+    font-size: 17px;
+    line-height: 1.65;
+    color: rgba(200,160,255,0.55);
+    border-left: 3px solid rgba(120,70,180,0.6);
+    background: linear-gradient(90deg, rgba(80,40,130,0.1), transparent);
+    margin: 28px 0;
+  }
+  .hollow-quote::before {
+    content: "\201C";
+    font-family: var(--display);
+    position: absolute; left: 8px; top: 2px;
+    font-size: 32px; color: rgba(120,70,180,0.45);
+  }
+  .hollow-warning {
+    padding: 18px 22px;
+    background: rgba(100,30,20,0.15);
+    border: 1px solid rgba(160,50,30,0.35);
+    border-radius: 3px;
+    margin-top: 28px;
+  }
+  .hollow-warning .hw-label {
+    font-family: var(--display);
+    font-size: 9.5px;
+    letter-spacing: .28em;
+    text-transform: uppercase;
+    color: rgba(220,100,80,0.65);
+    margin-bottom: 8px;
+  }
+  .hollow-warning p {
+    font-family: var(--thai);
+    font-size: 15px;
+    line-height: 1.65;
+    color: rgba(244,200,190,0.55);
+  }
+</style>
+</head>
+<body>
+
+<!-- Top navigation bar -->
+<nav id="topbar">
+  <div class="breadcrumb">
+    <a href="/">The Veiled Codex</a>
+    <span class="sep">/</span>
+    <a href="/map/porto-stellare">Porto Stellare Map</a>
+    <span class="sep">/</span>
+    <span class="current">District Lore</span>
+  </div>
+  <div class="topbar-nav">
+    <a class="topbar-link" href="/map/porto-stellare">&#8592; Back to Map</a>
+  </div>
+</nav>
+
+<div class="layout">
+
+  <!-- Sidebar district navigation -->
+  <aside id="sidebar">
+    <div class="sb-head" id="sb-head-toggle" role="button" tabindex="0" aria-expanded="true" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between">
+      <div>
+        <div class="sb-eyebrow">Lore Compendium</div>
+        <div class="sb-city">Porto Stellare</div>
+      </div>
+      <span id="sb-toggle-icon" style="color:rgba(244,228,193,0.35);font-size:14px;transition:transform .3s;margin-right:4px">▾</span>
+    </div>
+    <div id="sb-body">
+
+    <div class="sb-section-label">Overview</div>
+    <a class="sb-link" href="#city-overview">
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5ZM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      City Overview
+    </a>
+    <a class="sb-link" href="#governance">
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-4h6v4"/></svg>
+      Governance &amp; Power
+    </a>
+    <a class="sb-link" href="#quickref">
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+      DM Quick Reference
+    </a>
+
+    <div class="sb-section-label">Districts</div>
+    <a class="sb-link" href="#verdant" style="--d-color:#4a7c4e">
+      <span class="sb-dot" style="background:#4a7c4e; --d-color:#4a7c4e"></span>Verdant Terraces
+    </a>
+    <a class="sb-link" href="#silver" style="--d-color:#8c97a3">
+      <span class="sb-dot" style="background:#8c97a3; --d-color:#8c97a3"></span>Silver Steps
+    </a>
+    <a class="sb-link" href="#golden" style="--d-color:#d4a017">
+      <span class="sb-dot" style="background:#d4a017; --d-color:#d4a017"></span>Golden Crescent
+    </a>
+    <a class="sb-link" href="#whitecliff" style="--d-color:#7fa0b5">
+      <span class="sb-dot" style="background:#7fa0b5; --d-color:#7fa0b5"></span>White Cliff Ward
+    </a>
+    <a class="sb-link" href="#aurora" style="--d-color:#c98a6d">
+      <span class="sb-dot" style="background:#c98a6d; --d-color:#c98a6d"></span>Aurora Promenade
+    </a>
+    <a class="sb-link" href="#iron" style="--d-color:#7b6a59">
+      <span class="sb-dot" style="background:#7b6a59; --d-color:#7b6a59"></span>Iron Quarters
+    </a>
+    <a class="sb-link" href="#oldcrown" style="--d-color:#8a4a63">
+      <span class="sb-dot" style="background:#8a4a63; --d-color:#8a4a63"></span>Old Crown
+    </a>
+    <a class="sb-link" href="#stellamar" style="--d-color:#2f7088">
+      <span class="sb-dot" style="background:#2f7088; --d-color:#2f7088"></span>Stellamar Port
+    </a>
+
+    <div class="sb-divider"></div>
+    <div class="sb-section-label">Hidden</div>
+    <a class="sb-link" href="#hollow" style="--d-color:#5a3a7a;color:rgba(180,140,220,0.5)">
+      <span class="sb-dot" style="background:#5a3a7a; --d-color:#5a3a7a;box-shadow:0 0 6px #5a3a7a"></span>The Hollow Below
+    </a>
+
+    <div class="sb-divider"></div>
+    <a class="sb-util-link" href="/map/porto-stellare">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 4 3 6.5v13L9 17l6 2.5 6-2.5v-13L15 6.5 9 4Z"/><path d="M9 4v13M15 6.5v13"/></svg>
+      Interactive Map
+    </a>
+  </div><!-- /sb-body -->
+  </aside>
+
+  <!-- Main lore content -->
+  <main id="main">
+
+    <!-- City header -->
+    <section class="city-header" id="city-overview">
+      <div class="label">District Lore Compendium</div>
+      <h1>Porto Stellare</h1>
+      <div class="subtitle">The City of Reflections · Republic of Wealth</div>
+      <p>เมืองที่ทะเลสะท้อนแสงดาว Porto Stellare สร้างอยู่บนหน้าผาสูงชันเหนือ Moonlit Bay — เมืองที่ภูมิศาสตร์กำหนดชะตากรรม ระดับที่อยู่อาศัยของคุณบอกว่าคุณเป็นใคร ยิ่งสูงยิ่งมีอำนาจ ยิ่งต่ำยิ่งถูกลืม แต่ความจริงที่ลึกที่สุดของเมืองนี้อยู่ใต้พื้น ไม่ใช่บนยอดเขา</p>
+      <div class="city-stats">
+        <div class="city-stat">
+          <div class="st-label">Government</div>
+          <div class="st-val">Merchant Republic</div>
+        </div>
+        <div class="city-stat">
+          <div class="st-label">Districts</div>
+          <div class="st-val">8 + Old Crown Peninsula</div>
+        </div>
+        <div class="city-stat">
+          <div class="st-label">Tone</div>
+          <div class="st-val">Dark Fantasy · Inequality</div>
+        </div>
+        <div class="city-stat">
+          <div class="st-label">Waterfront</div>
+          <div class="st-val">Moonlit Bay</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Governance -->
+    <section class="gov-section" id="governance">
+      <div class="section-header">
+        <h2>Governance &amp; Power</h2>
+        <div class="sh-rule"></div>
+      </div>
+      <p class="prose">Porto Stellare ปกครองโดย City Council ที่ประกอบด้วยตัวแทนจาก Guild ใหญ่และตระกูลที่ร่ำรวยที่สุด ไม่มีกษัตริย์ มีเพียงสัญญา บัญชี และอำนาจที่ซื้อได้ ระบบนี้เปิดโอกาสให้ทุกคนมีอำนาจในทางทฤษฎี แต่ในทางปฏิบัติ เงินเท่านั้นที่พูดได้</p>
+      <p class="prose">City Watch ทำหน้าที่รักษาความสงบ แต่ในความเป็นจริง City Watch ปกป้องผลประโยชน์ของชนชั้นสูง การประท้วงในย่านแรงงานถูกปราบอย่างรุนแรง ขณะที่อาชญากรรมที่เกิดใน Aurora Promenade ถูกทำให้เงียบ Porto Stellare อยู่ภายใต้ยุคที่ไม่สงบ — ความเหลื่อมล้ำสูงขึ้นทุกปี และสิ่งที่ซ่อนอยู่ใต้เมืองเก่าเริ่มตื่นขึ้น</p>
+      <p class="prose">เศรษฐกิจของเมืองพึ่งพาการค้าทางทะเลผ่าน Stellamar Port, อุตสาหกรรมหนักใน Iron Quarters, และอุตสาหกรรมการท่องเที่ยวที่ Aurora Promenade เลี้ยงไว้ ทุกอย่างที่คนชนชั้นบนสูบ มาจากด้านล่าง — แต่คนด้านล่างไม่มีวันได้รับส่วนแบ่งที่ยุติธรรม</p>
+    </section>
+
+    <hr class="district-rule" />
+
+    <!-- ─── DM QUICK REFERENCE ─── -->
+    <section class="qref-section" id="quickref">
+      <div class="section-header">
+        <h2>DM Quick Reference</h2>
+        <div class="sh-rule"></div>
+        <button id="expand-all-notes" onclick="toggleAllDmNotes(this)" style="flex:none;font-family:var(--display);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:rgba(244,228,193,0.32);background:none;border:1px solid rgba(92,58,30,0.3);padding:5px 11px;border-radius:2px;cursor:pointer;transition:color .2s,border-color .2s;white-space:nowrap">Expand All Notes</button>
+      </div>
+
+      <!-- District cards -->
+      <div class="qref-grid">
+        <a class="qref-card" href="#verdant" style="--d-color:#4a7c4e">
+          <div class="qref-name"><span class="qref-dot" style="background:#4a7c4e"></span>Verdant Terraces</div>
+          <div class="qref-row"><b>Tension</b>ขุนนางขายทรัพย์สินเงียบๆ</div>
+          <div class="qref-row"><b>Hook</b>Starhill ปิดกะทันหัน นักดาราศาสตร์หาย</div>
+          <div class="qref-npcs">
+            <span class="qref-npc">Lady Corveth</span>
+            <span class="qref-npc">Dorian Veth</span>
+          </div>
+          <div class="qref-stats">
+            <div class="qref-stat"><div class="qref-stat-label">Wealth</div><div class="qref-stat-pips"><div class="qref-pip on-w"></div><div class="qref-pip on-w"></div><div class="qref-pip on-w"></div><div class="qref-pip on-w"></div><div class="qref-pip on-w"></div></div></div>
+            <div class="qref-stat"><div class="qref-stat-label">Safety</div><div class="qref-stat-pips"><div class="qref-pip on-s"></div><div class="qref-pip on-s"></div><div class="qref-pip on-s"></div><div class="qref-pip on-s"></div><div class="qref-pip on-s"></div></div></div>
+            <div class="qref-stat"><div class="qref-stat-label">Danger</div><div class="qref-stat-pips"><div class="qref-pip on-d"></div><div class="qref-pip"></div><div class="qref-pip"></div><div class="qref-pip"></div><div class="qref-pip"></div></div></div>
+          </div>
+        </a>
+        <a class="qref-card" href="#silver" style="--d-color:#8c97a3">
+          <div class="qref-name"><span class="qref-dot" style="background:#8c97a3"></span>Silver Steps</div>
+          <div class="qref-row"><b>Tension</b>City Watch ปราบประชุมคนงาน</div>
+          <div class="qref-row"><b>Hook</b>ศพในคลอง ครั้งที่ 3 ไม่มีบาดแผล</div>
+          <div class="qref-npcs">
+            <span class="qref-npc">Maren Sollis</span>
+            <span class="qref-npc">Ser Aldric</span>
+          </div>
+          <div class="qref-stats">
+            <div class="qref-stat"><div class="qref-stat-label">Wealth</div><div class="qref-stat-pips"><div class="qref-pip on-w"></div><div class="qref-pip on-w"></div><div class="qref-pip on-w"></div><div class="qref-pip"></div><div class="qref-pip"></div></div></div>
+            <div class="qref-stat"><div class="qref-stat-label">Safety</div><div class="qref-stat-pips"><div class="qref-pip on-s"></div><div class="qref-pip on-s"></div><div class="qref-pip on-s"></div><div class="qref-pip"></div><div class="qref-pip"></div></div></div>
+            <div class="qref-stat"><div class="qref-stat-label">Danger</div><div class="qref-stat-pips"><div class="qref-pip on-d"></div><div class="qref-pip on-d"></div><div class="qref-pip"></div><div class="qref-pip"></div><div class="qref-pip"></div></div></div>
+          </div>
+        </a>
+        <a class="qref-card" href="#golden" style="--d-color:#d4a017">
+          <div class="qref-name"><span class="qref-dot" style="background:#d4a017"></span>Golden Crescent</div>
+          <div class="qref-row"><b>Tension</b>Guild เรียกหนี้คืนพร้อมกัน</div>
+          <div class="qref-row"><b>Hook</b>อาคารกระทรวงไหม้จากชั้นใต้ดิน</div>
+          <div class="qref-npcs">
+            <span class="qref-npc">Hadren Moss</span>
+            <span class="qref-npc">Councilor Vira</span>
+          </div>
+          <div class="qref-stats">
+            <div class="qref-stat"><div class="qref-stat-label">Wealth</div><div class="qref-stat-pips"><div class="qref-pip on-w"></div><div class="qref-pip on-w"></div><div class="qref-pip on-w"></div><div class="qref-pip on-w"></div><div class="qref-pip on-w"></div></div></div>
+            <div class="qref-stat"><div class="qref-stat-label">Safety</div><div class="qref-stat-pips"><div class="qref-pip on-s"></div><div class="qref-pip on-s"></div><div class="qref-pip on-s"></div><div class="qref-pip on-s"></div><div class="qref-pip"></div></div></div>
+            <div class="qref-stat"><div class="qref-stat-label">Danger</div><div class="qref-stat-pips"><div class="qref-pip on-d"></div><div class="qref-pip on-d"></div><div class="qref-pip"></div><div class="qref-pip"></div><div class="qref-pip"></div></div></div>
+          </div>
+        </a>
+        <a class="qref-card" href="#whitecliff" style="--d-color:#7fa0b5">
+          <div class="qref-name"><span class="qref-dot" style="background:#7fa0b5"></span>White Cliff Ward</div>
+          <div class="qref-row"><b>Tension</b>Library ปิด 3 เดือน ไม่มีช่างเข้า</div>
+          <div class="qref-row"><b>Hook</b>นักศึกษา 2 คนหาย → "ลาออกเอง"</div>
+          <div class="qref-npcs">
+            <span class="qref-npc">Prof. Elwen</span>
+            <span class="qref-npc">Cadet Silus</span>
+          </div>
+          <div class="qref-stats">
+            <div class="qref-stat"><div class="qref-stat-label">Wealth</div><div class="qref-stat-pips"><div class="qref-pip on-w"></div><div class="qref-pip on-w"></div><div class="qref-pip on-w"></div><div class="qref-pip on-w"></div><div class="qref-pip"></div></div></div>
+            <div class="qref-stat"><div class="qref-stat-label">Safety</div><div class="qref-stat-pips"><div class="qref-pip on-s"></div><div class="qref-pip on-s"></div><div class="qref-pip on-s"></div><div class="qref-pip on-s"></div><div class="qref-pip on-s"></div></div></div>
+            <div class="qref-stat"><div class="qref-stat-label">Danger</div><div class="qref-stat-pips"><div class="qref-pip on-d"></div><div class="qref-pip"></div><div class="qref-pip"></div><div class="qref-pip"></div><div class="qref-pip"></div></div></div>
+          </div>
+        </a>
+        <a class="qref-card" href="#aurora" style="--d-color:#c98a6d">
+          <div class="qref-name"><span class="qref-dot" style="background:#c98a6d"></span>Aurora Promenade</div>
+          <div class="qref-row"><b>Tension</b>นักท่องเที่ยวตาย เมืองปิดข่าว</div>
+          <div class="qref-row"><b>Hook</b>Club ลึกลับ invite-only สมาชิกหาย</div>
+          <div class="qref-npcs">
+            <span class="qref-npc">Seraphine Lux</span>
+            <span class="qref-npc">Oswin Crale</span>
+          </div>
+          <div class="qref-stats">
+            <div class="qref-stat"><div class="qref-stat-label">Wealth</div><div class="qref-stat-pips"><div class="qref-pip on-w"></div><div class="qref-pip on-w"></div><div class="qref-pip on-w"></div><div class="qref-pip on-w"></div><div class="qref-pip"></div></div></div>
+            <div class="qref-stat"><div class="qref-stat-label">Safety</div><div class="qref-stat-pips"><div class="qref-pip on-s"></div><div class="qref-pip on-s"></div><div class="qref-pip on-s"></div><div class="qref-pip on-s"></div><div class="qref-pip"></div></div></div>
+            <div class="qref-stat"><div class="qref-stat-label">Danger</div><div class="qref-stat-pips"><div class="qref-pip on-d"></div><div class="qref-pip on-d"></div><div class="qref-pip"></div><div class="qref-pip"></div><div class="qref-pip"></div></div></div>
+          </div>
+        </a>
+        <a class="qref-card" href="#iron" style="--d-color:#7b6a59">
+          <div class="qref-name"><span class="qref-dot" style="background:#7b6a59"></span>Iron Quarters</div>
+          <div class="qref-row"><b>Tension</b>โรงงานระเบิด 11 ศพ "อุบัติเหตุ"</div>
+          <div class="qref-row"><b>Hook</b>เด็กหาย → รอยเท้าสิ้นสุดที่ท่อเก่า</div>
+          <div class="qref-npcs">
+            <span class="qref-npc">Brynn Ashford</span>
+            <span class="qref-npc">Foreman Greiss</span>
+          </div>
+          <div class="qref-stats">
+            <div class="qref-stat"><div class="qref-stat-label">Wealth</div><div class="qref-stat-pips"><div class="qref-pip on-w"></div><div class="qref-pip"></div><div class="qref-pip"></div><div class="qref-pip"></div><div class="qref-pip"></div></div></div>
+            <div class="qref-stat"><div class="qref-stat-label">Safety</div><div class="qref-stat-pips"><div class="qref-pip on-s"></div><div class="qref-pip on-s"></div><div class="qref-pip"></div><div class="qref-pip"></div><div class="qref-pip"></div></div></div>
+            <div class="qref-stat"><div class="qref-stat-label">Danger</div><div class="qref-stat-pips"><div class="qref-pip on-d"></div><div class="qref-pip on-d"></div><div class="qref-pip on-d"></div><div class="qref-pip"></div><div class="qref-pip"></div></div></div>
+          </div>
+        </a>
+        <a class="qref-card" href="#oldcrown" style="--d-color:#8a4a63">
+          <div class="qref-name"><span class="qref-dot" style="background:#8a4a63"></span>Old Crown</div>
+          <div class="qref-row"><b>Tension</b>พระทำพิธีลึกลับ สัตว์อพยพออก</div>
+          <div class="qref-row"><b>Hook</b>นก+หนูออกไปทุกสัปดาห์ (เคยเกิดมาก่อน)</div>
+          <div class="qref-npcs">
+            <span class="qref-npc">Father Aldous</span>
+            <span class="qref-npc">Archivist Tenne</span>
+          </div>
+          <div class="qref-stats">
+            <div class="qref-stat"><div class="qref-stat-label">Wealth</div><div class="qref-stat-pips"><div class="qref-pip on-w"></div><div class="qref-pip on-w"></div><div class="qref-pip"></div><div class="qref-pip"></div><div class="qref-pip"></div></div></div>
+            <div class="qref-stat"><div class="qref-stat-label">Safety</div><div class="qref-stat-pips"><div class="qref-pip on-s"></div><div class="qref-pip"></div><div class="qref-pip"></div><div class="qref-pip"></div><div class="qref-pip"></div></div></div>
+            <div class="qref-stat"><div class="qref-stat-label">Danger</div><div class="qref-stat-pips"><div class="qref-pip on-d"></div><div class="qref-pip on-d"></div><div class="qref-pip on-d"></div><div class="qref-pip on-d"></div><div class="qref-pip"></div></div></div>
+          </div>
+        </a>
+        <a class="qref-card" href="#stellamar" style="--d-color:#2f7088">
+          <div class="qref-name"><span class="qref-dot" style="background:#2f7088"></span>Stellamar Port</div>
+          <div class="qref-row"><b>Tension</b>เรือเข้าท่า ลูกเรือตายหมด สินค้าครบ</div>
+          <div class="qref-row"><b>Hook</b>แสงใต้น้ำทุกคืนที่ทะเลเงียบ</div>
+          <div class="qref-npcs">
+            <span class="qref-npc">Harbormaster Vel</span>
+            <span class="qref-npc">Lira of the Docks</span>
+          </div>
+          <div class="qref-stats">
+            <div class="qref-stat"><div class="qref-stat-label">Wealth</div><div class="qref-stat-pips"><div class="qref-pip on-w"></div><div class="qref-pip on-w"></div><div class="qref-pip on-w"></div><div class="qref-pip"></div><div class="qref-pip"></div></div></div>
+            <div class="qref-stat"><div class="qref-stat-label">Safety</div><div class="qref-stat-pips"><div class="qref-pip on-s"></div><div class="qref-pip on-s"></div><div class="qref-pip"></div><div class="qref-pip"></div><div class="qref-pip"></div></div></div>
+            <div class="qref-stat"><div class="qref-stat-label">Danger</div><div class="qref-stat-pips"><div class="qref-pip on-d"></div><div class="qref-pip on-d"></div><div class="qref-pip on-d"></div><div class="qref-pip on-d"></div><div class="qref-pip"></div></div></div>
+          </div>
+        </a>
+      </div>
+
+      <!-- NPC Key Connections -->
+      <div class="sub-h">NPC Key Connections</div>
+      <div class="npc-web">
+        <div class="npc-conn">
+          <div class="npc-conn-who">Councilor Vira Seln</div>
+          <div class="npc-conn-detail">สั่ง Harbormaster Vel ให้ปล่อยสินค้าบางล็อตผ่าน · ซื้อความเงียบของ Oswin Crale · รู้ว่า Hadren Moss พบอะไร · เชื่อมโยงกับ syndicate ใต้เมือง</div>
+        </div>
+        <div class="npc-conn">
+          <div class="npc-conn-who">Father Aldous</div>
+          <div class="npc-conn-detail">มีกุญแจ Lower Vaults ดอกเดียวที่ยังใช้ได้ · รู้ว่า Hollow Below เปิดจากข้างล่าง · ตัดสินใจแล้วว่าใครจะเป็นผู้เสียสละ · เชื่อมโยงกับ Lady Corveth ผ่านเอกสารโบราณ</div>
+        </div>
+        <div class="npc-conn">
+          <div class="npc-conn-who">Professor Elwen Dray</div>
+          <div class="npc-conn-detail">แปลเอกสารโบราณที่เปิดเผยภาษาของ Hollow Below · รู้จักสัญลักษณ์บนสินค้าของ Stellamar · กำลังหวาดกลัว — เชื่อมกับ Lira of the Docks ถ้า PC นำทั้งสองมาพบกัน</div>
+        </div>
+        <div class="npc-conn">
+          <div class="npc-conn-who">Ser Aldric Thane</div>
+          <div class="npc-conn-detail">รู้คำสั่งผิดกฎหมายที่ผ่านมาทุกข้อ · ครอบครัวอยู่ใน Iron Quarters (จุดแบล็คเมล์) · อาจเปลี่ยนฝ่ายถ้า PC ป้องกันครอบครัวเขา · รู้จัก Brynn Ashford แต่ยังไม่ช่วย</div>
+        </div>
+        <div class="npc-conn">
+          <div class="npc-conn-who">Lira of the Docks</div>
+          <div class="npc-conn-detail">รู้จักสัญลักษณ์บนสินค้าที่ Vel ปล่อยผ่าน = ภาษาเดียวกับที่ Elwen แปล · หนีมาจากทางเหนือที่มีเหตุการณ์คล้าย Hollow Below เกิดขึ้นก่อน · กุญแจเชื่อม Stellamar + White Cliff + Hollow Below</div>
+        </div>
+        <div class="npc-conn">
+          <div class="npc-conn-who">Maren Sollis</div>
+          <div class="npc-conn-detail">รู้ว่าใครสั่งปิดปากศพในคลอง · มีข้อมูลทุก district แต่ขายได้ราคาเดียว · ถ้า PC ได้รับความไว้วางใจ เธอเชื่อมทุกข้อมูลที่กระจัดกระจายให้เป็นเส้นตรงเส้นเดียว</div>
+        </div>
+      </div>
+
+      <!-- Active plot threads -->
+      <div class="sub-h">Active Plot Threads</div>
+      <div class="thread-list">
+        <div class="thread-item">
+          <div class="thread-num">I</div>
+          <div class="thread-body">
+            <div class="thread-title">The Hollow Wakes</div>
+            <div class="thread-desc">สิ่งใน Hollow Below ทดสอบทางออก — สัตว์อพยพ Old Crown, เด็กหายใน Iron Quarters, แสงใต้ Moonlit Bay, Starhill ปิด เป็นส่วนหนึ่งของกระบวนการเดียวกัน ถ้าไม่มีใครปิด Vaults ก่อน Resonance จะเริ่ม assimilate ผิวดิน</div>
+            <div class="thread-tags">
+              <span class="thread-tag" style="color:#8a4a63;border-color:#8a4a63">Old Crown</span>
+              <span class="thread-tag" style="color:#7b6a59;border-color:#7b6a59">Iron Quarters</span>
+              <span class="thread-tag" style="color:#2f7088;border-color:#2f7088">Stellamar</span>
+              <span class="thread-tag" style="color:#4a7c4e;border-color:#4a7c4e">Verdant</span>
+              <span class="thread-tag" style="color:rgba(160,100,220,0.7);border-color:rgba(160,100,220,0.4)">Hollow Below</span>
+            </div>
+          </div>
+        </div>
+        <div class="thread-item">
+          <div class="thread-num">II</div>
+          <div class="thread-body">
+            <div class="thread-title">The Corrupt Council</div>
+            <div class="thread-desc">Councilor Vira สร้างเครือข่ายผลประโยชน์เชื่อม Golden Crescent → Stellamar → Aurora บัญชีของ Hadren Moss (ยังไม่พบ) พิสูจน์ทุกอย่าง Guild เรียกหนี้คืนเพราะรู้ว่า Council กำลังจะล้มละลาย</div>
+            <div class="thread-tags">
+              <span class="thread-tag" style="color:#d4a017;border-color:#d4a017">Golden Crescent</span>
+              <span class="thread-tag" style="color:#2f7088;border-color:#2f7088">Stellamar</span>
+              <span class="thread-tag" style="color:#c98a6d;border-color:#c98a6d">Aurora</span>
+            </div>
+          </div>
+        </div>
+        <div class="thread-item">
+          <div class="thread-num">III</div>
+          <div class="thread-body">
+            <div class="thread-title">The Suppressed History</div>
+            <div class="thread-desc">Grand Library ถูกปิดเพราะเอกสารที่ Prof. Elwen กำลังแปล Archivist Tenne กำลังลบบันทึกที่เชื่อมเมืองปัจจุบันกับ Hollow Below รู้เรื่อง Resonance มาหลายร้อยปีและถูกซ่อน</div>
+            <div class="thread-tags">
+              <span class="thread-tag" style="color:#7fa0b5;border-color:#7fa0b5">White Cliff</span>
+              <span class="thread-tag" style="color:#8a4a63;border-color:#8a4a63">Old Crown</span>
+              <span class="thread-tag" style="color:#4a7c4e;border-color:#4a7c4e">Verdant</span>
+            </div>
+          </div>
+        </div>
+        <div class="thread-item">
+          <div class="thread-num">IV</div>
+          <div class="thread-body">
+            <div class="thread-title">The Labor Breaking Point</div>
+            <div class="thread-desc">ระเบิดโรงงาน Iron Quarters ไม่ใช่อุบัติเหตุ เด็กหาย Brynn รวบรวมลายเซ็น Ser Aldric รู้ว่าคำสั่งมาจากไหน ถ้าไม่มีใครช่วย Silver Steps จะระเบิดเป็นการประท้วงที่เมืองปราบด้วยกำลัง</div>
+            <div class="thread-tags">
+              <span class="thread-tag" style="color:#7b6a59;border-color:#7b6a59">Iron Quarters</span>
+              <span class="thread-tag" style="color:#8c97a3;border-color:#8c97a3">Silver Steps</span>
+              <span class="thread-tag" style="color:#d4a017;border-color:#d4a017">Golden Crescent</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="district-rule" />
+
+    <!-- ─── VERDANT TERRACES ─── -->
+    <section class="district-section" id="verdant" style="--d-color: #4a7c4e">
+      <div class="district-title-row">
+        <div class="district-dot" style="background:#4a7c4e; box-shadow:0 0 10px #4a7c4e"></div>
+        <div class="district-title-text">
+          <div class="district-type-tag">Luxury Residential — Old Nobility</div>
+          <div class="district-name">Verdant Terraces</div>
+          <div class="district-alias">The Heights · Upper Terraces · Old Money</div>
+        </div>
+      </div>
+
+      <div class="overview-card">
+        <p>เขตตอนบนของ Porto Stellare บนหน้าผาฝั่งตะวันตก เต็มไปด้วยคฤหาสน์หรู สวนพฤกษศาสตร์ และที่พักของตระกูลเก่าแก่ ถูกออกแบบมาเพื่อแยกความมั่งคั่งออกจากส่วนอื่นของเมือง ต่างจาก Aurora Promenade ที่โชว์ความมั่งคั่งอย่างเปิดเผย Verdant Terraces ถูกสร้างให้ปิดและโดดเดี่ยว</p>
+      </div>
+
+      <div class="sub-h">Key Locations</div>
+      <ul class="loc-list">
+        <li>Starhill — Observatory &amp; Ancient Tower</li>
+        <li>Ivory Gardens — botanical garden across the cliff terraces</li>
+        <li>Crescent Villas — old noble residences</li>
+        <li>West Skywalk — cliff walkway overlooking all of Moonlit Bay</li>
+      </ul>
+
+      <div class="district-quote">เงินหลับใหลอยู่ใน Golden Crescent แต่ความมั่งคั่งอาศัยอยู่ใน Verdant</div>
+
+      <div class="sub-h">Notable Characters</div>
+      <div class="npc-grid">
+        <div class="npc-card">
+          <div class="npc-name">Lady Corveth Ansel</div>
+          <div class="npc-role">ผู้อาวุโสแห่งตระกูลที่เก่าแก่ที่สุด รู้ความจริงบางอย่างเกี่ยวกับ Starhill ที่ไม่เคยบอกใคร เธออยู่มาตลอดที่ผ่านมา ยาวนานเกินกว่าที่ควรจะเป็น</div>
+        </div>
+        <div class="npc-card">
+          <div class="npc-name">Dorian Veth</div>
+          <div class="npc-role">ทายาทขุนนางที่ถูกตัดออกจากมรดก กำลังขายความลับของตระกูลให้ Golden Crescent ยังไม่รู้ว่าสิ่งที่เขาขายอาจเป็นสิ่งที่เขาไม่ควรแตะต้อง</div>
+        </div>
+      </div>
+
+      <div class="tension-block">
+        <div class="tb-label">Current Situation</div>
+        <p>ตระกูลขุนนางหลายตระกูลกำลังขายทรัพย์สินอย่างเงียบๆ ราวกับรู้ว่าบางอย่างกำลังจะเกิดขึ้น — แต่ไม่มีใครยอมพูด คนภายนอกสังเกตเห็นว่า Verdant เงียบเกินไปในช่วงนี้</p>
+      </div>
+      <div class="hook-block">
+        <div class="hb-label">DM Hook</div>
+        <p>หอดูดาว Starhill ถูกปิดกะทันหันโดยไม่มีคำอธิบาย นักดาราศาสตร์ประจำหอหายตัวพร้อมกัน ชั้นบนสุดของหอส่องแสงสว่างในทุกคืนตี 3 แต่ประตูล็อคจากข้างใน</p>
+      </div>
+
+      <button class="dm-notes-toggle" onclick="toggleDmNotes(this)">
+        <span class="dn-icon">&#9658;</span>
+        DM Notes — Verdant Terraces
+      </button>
+      <div class="dm-notes-body">
+        <p>Starhill เป็นกุญแจสำคัญ มีอายุมากกว่าตัวเมือง Porto Stellare มาก Lady Corveth รู้ว่า Observatory ถูกสร้างทับสิ่งที่อยู่ก่อนหน้า — หนึ่งในจุดที่เชื่อมโยงกับ Lower Vaults ใน Old Crown</p>
+        <p>ตระกูลขุนนางที่ขายทรัพย์สินได้รับข้อมูลจากแหล่งที่ไม่รู้จัก บางทีเป็น Council ที่รั่ว บางทีเป็นอะไรก็ตามที่อยู่ใต้ Old Crown ส่งสัญญาณเตือน</p>
+      </div>
+      <a class="view-on-map" href="/map/porto-stellare#verdant">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="12" height="12"><polygon points="3,6 3,20 9,17 15,20 21,17 21,3 15,6 9,3"/><line x1="9" y1="3" x2="9" y2="17"/><line x1="15" y1="6" x2="15" y2="20"/></svg>
+        View on Map
+      </a>
+    </section>
+
+    <hr class="district-rule" />
+
+    <!-- ─── SILVER STEPS ─── -->
+    <section class="district-section" id="silver" style="--d-color: #8c97a3">
+      <div class="district-title-row">
+        <div class="district-dot" style="background:#8c97a3; box-shadow:0 0 10px #8c97a3"></div>
+        <div class="district-title-text">
+          <div class="district-type-tag">Central District — Most Populated</div>
+          <div class="district-name">Silver Steps</div>
+          <div class="district-alias">The Connective Spine · The Heart of Porto Stellare</div>
+        </div>
+      </div>
+
+      <div class="overview-card">
+        <p>เขตที่มีประชากรมากที่สุดของเมือง หัวใจที่เชื่อม Porto Stellare ทั้งหมดเข้าด้วยกัน เต็มไปด้วยตลาด โรงเตี๊ยม บ้านพัก และ Workshop นับไม่ถ้วน เชื่อมต่อกับทุก district ผ่านบันได gondola และ tram ถ้าคุณอยากไปที่ไหนใน Porto Stellare คุณต้องผ่านที่นี่</p>
+      </div>
+
+      <div class="sub-h">Key Locations</div>
+      <ul class="loc-list">
+        <li>Seven Steps Market — main public market spanning seven levels</li>
+        <li>Lantern Square — heart of Silver Steps, gathering place</li>
+        <li>Silver Plaza — administrative center of the district</li>
+        <li>Craftsman's Row — workshop street for skilled tradespeople</li>
+        <li>Canal Network — water routes to Stellamar Port</li>
+        <li>Industrial Tram stop — connection to Iron Quarters</li>
+        <li>Gondola stations — multiple connections to upper districts</li>
+      </ul>
+
+      <div class="district-quote">หาก Aurora คือหน้าตาของเมือง Silver Steps คือหัวใจของเมือง</div>
+
+      <div class="sub-h">Notable Characters</div>
+      <div class="npc-grid">
+        <div class="npc-card">
+          <div class="npc-name">Maren Sollis</div>
+          <div class="npc-role">เจ้าของ Lantern Square Tavern ที่ฟังทุกอย่างและพูดน้อย รู้ข่าวในเมืองมากที่สุด ข้อมูลของเธอมีราคา — และเธอรู้ว่าใครเสนอราคาให้เธอเงียบอยู่</div>
+        </div>
+        <div class="npc-card">
+          <div class="npc-name">Ser Aldric Thane</div>
+          <div class="npc-role">กัปตัน City Watch ที่รู้ว่าคำสั่งจากบนไม่ถูกต้อง แต่ยังคงทำตาม มีครอบครัวใน Iron Quarters — นั่นคือเหตุผลที่เขาไม่กล้าขัดขืน</div>
+        </div>
+      </div>
+
+      <div class="tension-block">
+        <div class="tb-label">Current Situation</div>
+        <p>City Watch เริ่มบุกสลายการประชุมของคนงานอย่างรุนแรง ความโกรธสะสมอยู่ในทุก tavern ของ Silver Steps ผู้คนพูดถึงการหยุดงานทั่วเมือง แต่ยังไม่มีใครกล้าก้าวออกมาเป็นคนแรก</p>
+      </div>
+      <div class="hook-block">
+        <div class="hb-label">DM Hook</div>
+        <p>ศพในคลองที่ไม่มีบาดแผล — ครั้งที่สามในเดือนนี้ City Watch ปิดเรื่องทุกครั้ง Maren บอกว่าศพทุกคนเคยเห็นอะไรบางอย่างที่พวกเขาไม่ควรเห็น</p>
+      </div>
+
+      <button class="dm-notes-toggle" onclick="toggleDmNotes(this)">
+        <span class="dn-icon">&#9658;</span>
+        DM Notes — Silver Steps
+      </button>
+      <div class="dm-notes-body">
+        <p>ศพไม่มีบาดแผลเพราะถูกฆ่าด้วยสิ่งที่ไม่ทิ้งร่องรอย — อาจเป็นพิษที่หาไม่ได้ในตลาดทั่วไป หรืออาจเป็นบางอย่างที่มาจาก Lower Vaults</p>
+        <p>Ser Aldric สามารถเป็น NPC ที่เปลี่ยนฝ่ายได้ถ้า PC ช่วยป้องกันครอบครัวของเขา เขารู้คำสั่งที่ผิดกฎหมายทั้งหมดที่เขาเคยทำตาม</p>
+      </div>
+      <a class="view-on-map" href="/map/porto-stellare#silver">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="12" height="12"><polygon points="3,6 3,20 9,17 15,20 21,17 21,3 15,6 9,3"/><line x1="9" y1="3" x2="9" y2="17"/><line x1="15" y1="6" x2="15" y2="20"/></svg>
+        View on Map
+      </a>
+    </section>
+
+    <hr class="district-rule" />
+
+    <!-- ─── GOLDEN CRESCENT ─── -->
+    <section class="district-section" id="golden" style="--d-color: #d4a017">
+      <div class="district-title-row">
+        <div class="district-dot" style="background:#d4a017; box-shadow:0 0 10px #d4a017"></div>
+        <div class="district-title-text">
+          <div class="district-type-tag">Economic &amp; Political Center</div>
+          <div class="district-name">Golden Crescent</div>
+          <div class="district-alias">The Crescent · Financial District · Where Wars Begin</div>
+        </div>
+      </div>
+
+      <div class="overview-card">
+        <p>ศูนย์กลางเศรษฐกิจและการเมืองของ Porto Stellare ที่ซึ่งสงครามเริ่มต้นก่อนที่ดาบจะถูกชักออก เต็มไปด้วยธนาคาร Guild Halls สภาเมือง และโรงละคร เงินและอำนาจไหลเวียนที่นี่ก่อนที่จะไปถึงที่อื่น ถ้าอยากรู้ว่าใครมีอำนาจจริง มาดูที่ Golden Crescent</p>
+      </div>
+
+      <div class="sub-h">Key Locations</div>
+      <ul class="loc-list">
+        <li>City Council Hall — seat of the Merchant Republic government</li>
+        <li>Major Banks — controlling credit and debt across all districts</li>
+        <li>Guild Halls — headquarters of the major trade guilds</li>
+        <li>Merchant Houses — private counting houses of the wealthiest families</li>
+        <li>Grand Theater — cultural landmark, also used for political ceremony</li>
+      </ul>
+
+      <div class="district-quote">สงครามจำนวนมากเริ่มต้นที่นี่ ก่อนที่ดาบจะถูกชักออกจากฝัก</div>
+
+      <div class="sub-h">Notable Characters</div>
+      <div class="npc-grid">
+        <div class="npc-card">
+          <div class="npc-name">Hadren Moss</div>
+          <div class="npc-role">นักบัญชีที่หายตัวไปหลังพบรูปแบบบัญชีผิดปกติ มีคนกำลังตามหาอยู่ เขาทิ้งบันทึกไว้ที่ไหนสักแห่งก่อนหาย — ถ้าหาพบก็จะเปิดเผยว่าใครโกงใคร</div>
+        </div>
+        <div class="npc-card">
+          <div class="npc-name">Councilor Vira Seln</div>
+          <div class="npc-role">ใบหน้าของการปกครองที่ยุติธรรม แต่มีเส้นตรงถึง syndicate ใต้เมือง เธอรู้ว่า Hadren Moss พบอะไร และเธอสั่งให้ปิดปากเขา</div>
+        </div>
+      </div>
+
+      <div class="tension-block">
+        <div class="tb-label">Current Situation</div>
+        <p>Guild ใหญ่แห่งหนึ่งเรียกหนี้คืนพร้อมกันทั่วเมืองโดยไม่มีการแจ้งเตือน ไม่มีใครรู้ว่าทำเพื่ออะไร แต่ผลคือผู้ประกอบการรายย่อยทั่วเมืองกำลังล้มละลายพร้อมกัน</p>
+      </div>
+      <div class="hook-block">
+        <div class="hb-label">DM Hook</div>
+        <p>อาคารกระทรวงแห่งหนึ่งถูกไฟไหม้ในคืนที่ไม่มีใครอยู่ ไฟเริ่มจากชั้นใต้ดินที่ควรจะปิดล็อคอยู่ สิ่งที่เผาอยู่ในนั้นก่อนไฟไหม้ไม่ใช่เอกสารธรรมดา</p>
+      </div>
+
+      <button class="dm-notes-toggle" onclick="toggleDmNotes(this)">
+        <span class="dn-icon">&#9658;</span>
+        DM Notes — Golden Crescent
+      </button>
+      <div class="dm-notes-body">
+        <p>Guild เรียกหนี้คืนเพราะได้รับสัญญาณว่ามีความไม่มั่นคงทางการเมืองกำลังจะเกิด — อาจเชื่อมกับสิ่งที่เกิดใน Old Crown</p>
+        <p>บันทึกของ Hadren Moss ถ้าพบจะเผยให้เห็นว่า Councilor Vira มีส่วนในการเบิกเงินจากกองทุนสาธารณะเพื่อสนับสนุนกิจกรรมใต้ดิน รวมถึงการจัดหาคนสำหรับ Lower Vaults</p>
+      </div>
+      <a class="view-on-map" href="/map/porto-stellare#golden">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="12" height="12"><polygon points="3,6 3,20 9,17 15,20 21,17 21,3 15,6 9,3"/><line x1="9" y1="3" x2="9" y2="17"/><line x1="15" y1="6" x2="15" y2="20"/></svg>
+        View on Map
+      </a>
+    </section>
+
+    <hr class="district-rule" />
+
+    <!-- ─── WHITE CLIFF WARD ─── -->
+    <section class="district-section" id="whitecliff" style="--d-color: #7fa0b5">
+      <div class="district-title-row">
+        <div class="district-dot" style="background:#7fa0b5; box-shadow:0 0 10px #7fa0b5"></div>
+        <div class="district-title-text">
+          <div class="district-type-tag">Education &amp; Government</div>
+          <div class="district-name">White Cliff Ward</div>
+          <div class="district-alias">The Ward · Scholar's District · The Safest Place in the City</div>
+        </div>
+      </div>
+
+      <div class="overview-card">
+        <p>เขตพักอาศัยและการศึกษา ถือเป็นหนึ่งในเขตที่ปลอดภัยที่สุดของเมือง อย่างน้อยผู้คนก็เชื่อเช่นนั้น เต็มไปด้วยมหาวิทยาลัย ห้องสมุด อาคารราชการ และที่พักของนักวิชาการ ความรู้ที่ผิดสามารถกลายเป็นอาวุธที่อันตรายที่สุดในเมืองนี้</p>
+      </div>
+
+      <div class="sub-h">Key Locations</div>
+      <ul class="loc-list">
+        <li>Porto Stellare University — largest institution of learning in the city</li>
+        <li>Grand Library — archive of city history, partially sealed</li>
+        <li>Scholar Residences — housing for faculty and senior students</li>
+        <li>Government Administrative Buildings — bureaucratic core of the republic</li>
+        <li>Lantern Steps — descends to Silver Steps</li>
+      </ul>
+
+      <div class="district-quote">ที่ปลอดภัยที่สุดของเมือง — อย่างน้อยผู้คนก็เชื่อเช่นนั้น</div>
+
+      <div class="sub-h">Notable Characters</div>
+      <div class="npc-grid">
+        <div class="npc-card">
+          <div class="npc-name">Professor Elwen Dray</div>
+          <div class="npc-role">นักประวัติศาสตร์ที่แปลเอกสารโบราณบางอย่างได้ ตอนนี้หวาดกลัวมากผิดปกติ เขาได้รู้บางอย่างเกี่ยวกับ Old Crown ที่ทำให้เขาหยุดทำงานวิจัย</div>
+        </div>
+        <div class="npc-card">
+          <div class="npc-name">Cadet Silus</div>
+          <div class="npc-role">นักศึกษาที่สังเกตว่ามีเจ้าหน้าที่นอกเครื่องแบบเฝ้า Grand Library ทุกคืน กำลังรวบรวมหลักฐาน แต่ไม่รู้ว่ากำลังเดินเข้าหาอะไร</div>
+        </div>
+      </div>
+
+      <div class="tension-block">
+        <div class="tb-label">Current Situation</div>
+        <p>ส่วนหนึ่งของ Grand Library ถูกปิดตายมา 3 เดือนแล้ว อ้างว่า "งานบูรณะ" แต่ไม่มีช่างคนใดเข้าออก เจ้าหน้าที่ที่เฝ้าอยู่ไม่ใช่ City Watch — เป็นคนแปลกหน้าที่ไม่มีใครรู้ว่าสังกัดใคร</p>
+      </div>
+      <div class="hook-block">
+        <div class="hb-label">DM Hook</div>
+        <p>นักศึกษา 2 คนที่พยายามเข้าไปในส่วนที่ปิดหายตัวไป ถูกบันทึกว่า "ลาออกจากมหาวิทยาลัยด้วยความสมัครใจ" ครอบครัวทั้งสองไม่เคยได้รับข่าว</p>
+      </div>
+
+      <button class="dm-notes-toggle" onclick="toggleDmNotes(this)">
+        <span class="dn-icon">&#9658;</span>
+        DM Notes — White Cliff Ward
+      </button>
+      <div class="dm-notes-body">
+        <p>ส่วนที่ปิดของ Grand Library เก็บบันทึกเกี่ยวกับ Old Crown ก่อนที่เมืองจะถูกสร้าง ใครก็ตามที่สั่งปิดรู้ว่าบันทึกเหล่านี้จะยืนยันสิ่งที่กำลังเกิดใน Lower Vaults</p>
+        <p>Professor Elwen แปล "สิ่งที่อยู่ก่อน" — ภาษาที่เก่าแก่กว่าการก่อตั้งเมืองหลายร้อยปี เขารู้ว่ามีบางอย่างใต้ Old Crown กำลังสื่อสาร ไม่ใช่หลับอยู่</p>
+      </div>
+      <a class="view-on-map" href="/map/porto-stellare#whitecliff">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="12" height="12"><polygon points="3,6 3,20 9,17 15,20 21,17 21,3 15,6 9,3"/><line x1="9" y1="3" x2="9" y2="17"/><line x1="15" y1="6" x2="15" y2="20"/></svg>
+        View on Map
+      </a>
+    </section>
+
+    <hr class="district-rule" />
+
+    <!-- ─── AURORA PROMENADE ─── -->
+    <section class="district-section" id="aurora" style="--d-color: #c98a6d">
+      <div class="district-title-row">
+        <div class="district-dot" style="background:#c98a6d; box-shadow:0 0 10px #c98a6d"></div>
+        <div class="district-title-text">
+          <div class="district-type-tag">Luxury Waterfront — Tourism</div>
+          <div class="district-name">Aurora Promenade</div>
+          <div class="district-alias">Aurora · The Promenade · The Face of the City</div>
+        </div>
+      </div>
+
+      <div class="overview-card">
+        <p>เขตริมน้ำอันหรูหราที่ปรากฏอยู่ในโปสเตอร์ท่องเที่ยวแทบทั้งหมดของ Porto Stellare รีสอร์ท คาสิโน โรงแรม ชายหาด ร้านอาหาร — ทุกอย่างถูกออกแบบมาเพื่อให้ดูสวยงามและน่าลืม สิ่งที่เกิดในความมืดของ Aurora ไม่มีวันถูกรายงาน</p>
+      </div>
+
+      <div class="sub-h">Key Locations</div>
+      <ul class="loc-list">
+        <li>Grand Casino — largest gambling establishment in Porto Stellare</li>
+        <li>Luxury Resorts — international-facing hotels along the promenade</li>
+        <li>Aurora Beach — public face of the district, heavily patrolled</li>
+        <li>Rooftop Restaurants — exclusive dining overlooking Moonlit Bay</li>
+        <li>The Promenade Walk — main public boulevard</li>
+      </ul>
+
+      <div class="district-quote">นี่คือ Porto Stellare ที่คนภายนอกคิดว่าพวกเขารู้จัก</div>
+
+      <div class="sub-h">Notable Characters</div>
+      <div class="npc-grid">
+        <div class="npc-card">
+          <div class="npc-name">Seraphine Lux</div>
+          <div class="npc-role">นักแสดงชื่อดังที่รับงานร้องเพลงใน Aurora แต่จริงๆ รับจ้างรายงานข้อมูลนักท่องเที่ยวร่ำรวยให้บางคน รู้สึกผิดแต่ไม่รู้วิธีออก</div>
+        </div>
+        <div class="npc-card">
+          <div class="npc-name">Oswin Crale</div>
+          <div class="npc-role">เจ้าของ Casino ที่ยิ้มตลอดเวลา ไม่มีใครรู้ว่าเขาเป็นหนี้ใครอยู่ — แต่ Casino ของเขาเป็นจุดที่สินค้าบางอย่างจาก Stellamar ผ่านโดยไม่ถูกตรวจ</div>
+        </div>
+      </div>
+
+      <div class="tension-block">
+        <div class="tb-label">Current Situation</div>
+        <p>นักท่องเที่ยวร่ำรวยคนหนึ่งถูกพบตายในโรงแรม เมืองปิดข่าวทันที กลัวกระทบอุตสาหกรรมการท่องเที่ยว แต่นักสืบเอกชนที่ครอบครัวส่งมายังอยู่ในเมืองและกำลังถามคำถามที่ผิด</p>
+      </div>
+      <div class="hook-block">
+        <div class="hb-label">DM Hook</div>
+        <p>Club ใหม่เพิ่งเปิด รับสมาชิกโดย invitation เท่านั้น ไม่มีใครรู้ว่าใครเป็นเจ้าของ และสมาชิกไม่พูดถึงสิ่งที่เกิดขึ้นข้างใน แต่สมาชิกบางคนหายไปหลังจากเข้าร่วมมาสักพัก</p>
+      </div>
+
+      <button class="dm-notes-toggle" onclick="toggleDmNotes(this)">
+        <span class="dn-icon">&#9658;</span>
+        DM Notes — Aurora Promenade
+      </button>
+      <div class="dm-notes-body">
+        <p>Club ลึกลับนั้นเป็นหน้าฉากสำหรับการสรรหาคนที่มีทักษะเฉพาะ — บางคนถูกส่งไปยัง Lower Vaults เพื่อ "โครงการพิเศษ" ที่ไม่มีใครกลับมารายงาน</p>
+        <p>Oswin Crale รู้เรื่อง Club แต่ยังไม่กล้าพูดเพราะ Casino ของเขาได้ผลประโยชน์จากความเงียบ เขาสามารถเป็นพันธมิตรที่ไม่น่าเชื่อถือได้ถ้า PC เข้าใจว่าจะต้องสัญญาอะไรกับเขา</p>
+      </div>
+      <a class="view-on-map" href="/map/porto-stellare#aurora">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="12" height="12"><polygon points="3,6 3,20 9,17 15,20 21,17 21,3 15,6 9,3"/><line x1="9" y1="3" x2="9" y2="17"/><line x1="15" y1="6" x2="15" y2="20"/></svg>
+        View on Map
+      </a>
+    </section>
+
+    <hr class="district-rule" />
+
+    <!-- ─── IRON QUARTERS ─── -->
+    <section class="district-section" id="iron" style="--d-color: #7b6a59">
+      <div class="district-title-row">
+        <div class="district-dot" style="background:#7b6a59; box-shadow:0 0 10px #7b6a59"></div>
+        <div class="district-title-text">
+          <div class="district-type-tag">Industrial — Labor District</div>
+          <div class="district-name">Iron Quarters</div>
+          <div class="district-alias">The Quarters · Iron District · Lower Works · The Engine Room</div>
+        </div>
+      </div>
+
+      <div class="overview-card">
+        <p>เขตอุตสาหกรรมและแรงงานหลักของ Porto Stellare ความมั่งคั่งของเมืองถูกสร้างขึ้นที่นี่ เต็มไปด้วยโรงตีเหล็ก อู่ต่อเรือ โรงงาน และผู้คนที่พยายามหาเงินเพื่ออยู่รอด แทบทุกอย่างที่คนในเมืองครอบครองเคยผ่านที่นี่มาก่อน แต่คนที่สร้างมันไม่เคยได้ส่วนแบ่งที่ยุติธรรม</p>
+      </div>
+
+      <div class="sub-h">Key Locations</div>
+      <ul class="loc-list">
+        <li>Black Forge Row — largest smithing street in the city</li>
+        <li>South Drydock — main shipyard for construction and repair</li>
+        <li>Smoke Market — large affordable market serving the labor class</li>
+        <li>Worker Blocks — dense labor housing, overcrowded</li>
+        <li>The Foundries — industrial manufacturing district core</li>
+      </ul>
+
+      <div class="district-quote">จาก Verdant พวกเขามองลงมาเห็นควัน จาก Iron เรามองขึ้นไปเห็นดวงดาว</div>
+
+      <div class="sub-h">Notable Characters</div>
+      <div class="npc-grid">
+        <div class="npc-card">
+          <div class="npc-name">Brynn Ashford</div>
+          <div class="npc-role">หัวหน้าแรงงานที่กำลังรวบรวมลายเซ็นเพื่อร้องเรียน ถ้าถูกจับจะโดนข้อหาก่อกบฏ เขารู้ว่าความเสี่ยงคืออะไร แต่เห็นว่าไม่มีทางออกอื่น</div>
+        </div>
+        <div class="npc-card">
+          <div class="npc-name">Foreman Greiss</div>
+          <div class="npc-role">คนดูแลโรงงานที่รู้ว่าระเบิดเกิดจากอะไร — กลัวเกินกว่าจะพูด เขาเห็นคนที่มาตรวจโรงงานก่อนระเบิด และรู้ว่าพวกเขาไม่ใช่เจ้าหน้าที่จริง</div>
+        </div>
+      </div>
+
+      <div class="tension-block">
+        <div class="tb-label">Current Situation</div>
+        <p>โรงงานระเบิดคร่าชีวิตคนงาน 11 คน ถูกประกาศว่าเป็นอุบัติเหตุ ทั้งที่คนงานรู้ว่าไม่ใช่ มีคนพยายามปิดปากพยานที่รอดชีวิต Brynn Ashford กำลังพยายามรวบรวมกลุ่ม แต่เวลาอาจจะไม่มากพอ</p>
+      </div>
+      <div class="hook-block">
+        <div class="hb-label">DM Hook</div>
+        <p>เด็กใน Iron Quarters หายไปหลายคนในช่วง 2 สัปดาห์ที่ผ่านมา City Watch บอกว่า "ออกไปหางานที่อื่น" แต่ไม่มีครอบครัวไหนเชื่อ รอยเท้าสุดท้ายพาไปถึงทางเข้าท่อระบายน้ำเก่าที่ควรจะปิดตายแล้ว</p>
+      </div>
+
+      <button class="dm-notes-toggle" onclick="toggleDmNotes(this)">
+        <span class="dn-icon">&#9658;</span>
+        DM Notes — Iron Quarters
+      </button>
+      <div class="dm-notes-body">
+        <p>การระเบิดไม่ใช่อุบัติเหตุ — โรงงานถูกใช้ทดสอบบางอย่างที่มาจาก Lower Vaults ของ Old Crown ซึ่งระเบิดเพราะปฏิกิริยาที่คาดไม่ถึง</p>
+        <p>เด็กที่หายไปถูกพาลงสู่ท่อระบายน้ำที่เชื่อมกับ Lower Vaults ผ่านทางเข้าที่ไม่ได้ถูกบันทึกในแผนที่อย่างเป็นทางการ พวกเขายังมีชีวิตอยู่ — แต่ไม่ได้ถูกกักขังอย่างเดียว</p>
+      </div>
+      <a class="view-on-map" href="/map/porto-stellare#iron">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="12" height="12"><polygon points="3,6 3,20 9,17 15,20 21,17 21,3 15,6 9,3"/><line x1="9" y1="3" x2="9" y2="17"/><line x1="15" y1="6" x2="15" y2="20"/></svg>
+        View on Map
+      </a>
+    </section>
+
+    <hr class="district-rule" />
+
+    <!-- ─── OLD CROWN ─── -->
+    <section class="district-section" id="oldcrown" style="--d-color: #8a4a63">
+      <div class="district-title-row">
+        <div class="district-dot" style="background:#8a4a63; box-shadow:0 0 10px #8a4a63"></div>
+        <div class="district-title-text">
+          <div class="district-type-tag">Historic — Oldest District</div>
+          <div class="district-name">Old Crown</div>
+          <div class="district-alias">Crown District · Old City · The Peninsula · The Stagnant Anchor</div>
+        </div>
+      </div>
+
+      <div class="overview-card">
+        <p>ส่วนที่เก่าแก่ที่สุดของ Porto Stellare สร้างอยู่บนคาบสมุทรหินซึ่งยื่นออกไปยัง Moonlit Bay แม้ Porto Stellare จะถูกสร้างใหม่หลายครั้ง Old Crown แทบไม่เปลี่ยนแปลง หลายส่วนดูเหมือนจะเก่าแก่กว่าตัวเมืองเสียอีก ทุกสิ่งที่เก่าพอจะจำได้มักวนกลับมาที่นี่</p>
+      </div>
+
+      <div class="sub-h">Key Locations</div>
+      <ul class="loc-list">
+        <li>Crown Cathedral — largest cathedral in Porto Stellare</li>
+        <li>Founder Plaza — believed to be the city's original settlement point</li>
+        <li>The Ancient Walls — stone fortifications predating the republic</li>
+        <li>Archive Basilica — official historical record, partially falsified</li>
+        <li>The Lower Vaults — partially unexplored underground network</li>
+      </ul>
+
+      <div class="district-quote">อย่าถามว่าอะไรอยู่ใต้ Old Crown ถ้ายังไม่พร้อมฟังคำตอบ</div>
+
+      <div class="sub-h">Notable Characters</div>
+      <div class="npc-grid">
+        <div class="npc-card">
+          <div class="npc-name">Father Aldous</div>
+          <div class="npc-role">บาทหลวงสูงอายุผู้รู้ว่า Lower Vaults ถูกเปิดจากข้างล่าง ไม่ใช่จากข้างบน เขาเคยลงไปข้างล่างเมื่อ 40 ปีก่อนและไม่เคยพูดถึงสิ่งที่เห็นกับใครเลย</div>
+        </div>
+        <div class="npc-card">
+          <div class="npc-name">Archivist Tenne</div>
+          <div class="npc-role">ผู้ดูแล Archive Basilica ที่กำลังลบบันทึกบางอย่างออก ยังไม่ชัดว่าถูกบังคับหรือสมัครใจ มือของเขาสั่นทุกครั้งที่พูดถึง Lower Vaults</div>
+        </div>
+      </div>
+
+      <div class="tension-block">
+        <div class="tb-label">Current Situation</div>
+        <p>พระในสำนักเล็กๆ เริ่มทำพิธีในคืนที่เงียบผิดปกติ Crown Cathedral พยายามปิดปากพวกเขา แต่ทำไม่สำเร็จ — พวกเขาบอกว่า "ได้รับคำสั่งจากสิ่งที่เก่าแก่กว่าอาสนวิหาร"</p>
+      </div>
+      <div class="hook-block">
+        <div class="hb-label">DM Hook</div>
+        <p>หนูและนกกำลังออกจาก Old Crown ทีละน้อยมาหลายสัปดาห์แล้ว ชาวเมืองที่อยู่นานพอจำได้ว่าเคยเกิดแบบนี้มาก่อน — ครั้งสุดท้ายที่เกิดขึ้น ส่วนหนึ่งของ Lower Vaults พังถล่ม</p>
+      </div>
+
+      <button class="dm-notes-toggle" onclick="toggleDmNotes(this)">
+        <span class="dn-icon">&#9658;</span>
+        DM Notes — Old Crown
+      </button>
+      <div class="dm-notes-body">
+        <p>Lower Vaults ถูกเปิดจากข้างล่างโดยบางสิ่งที่อยู่ในนั้นมานานหลายร้อยปี Porto Stellare ไม่ได้ถูกสร้างบนก้อนหิน — มันถูกสร้างบนหลังคาของบางอย่าง</p>
+        <p>Father Aldous เป็น key NPC สำหรับ endgame เขารู้วิธีปิด Lower Vaults อีกครั้ง แต่ต้องแลกกับราคาที่สูง — บางทีชีวิตของเขาเอง</p>
+        <p>สัตว์ที่ออกไปนั้นไม่ใช่แค่หนีจากอันตราย พวกมันถูก "ส่งออก" โดยสิ่งที่อยู่ข้างล่างเพื่อทดสอบว่าทางออกใดเปิดอยู่</p>
+      </div>
+      <a class="view-on-map" href="/map/porto-stellare#oldcrown">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="12" height="12"><polygon points="3,6 3,20 9,17 15,20 21,17 21,3 15,6 9,3"/><line x1="9" y1="3" x2="9" y2="17"/><line x1="15" y1="6" x2="15" y2="20"/></svg>
+        View on Map
+      </a>
+    </section>
+
+    <hr class="district-rule" />
+
+    <!-- ─── STELLAMAR PORT ─── -->
+    <section class="district-section" id="stellamar" style="--d-color: #2f7088">
+      <div class="district-title-row">
+        <div class="district-dot" style="background:#2f7088; box-shadow:0 0 10px #2f7088"></div>
+        <div class="district-title-text">
+          <div class="district-type-tag">Main Harbor — Gateway to the City</div>
+          <div class="district-name">Stellamar Port</div>
+          <div class="district-alias">Stellamar · Harbor District · The Port · The Gateway</div>
+        </div>
+      </div>
+
+      <div class="overview-card">
+        <p>ประตูหลักของ Porto Stellare ผู้คนที่เดินทางมายังเมืองเป็นครั้งแรกมักเห็น Stellamar ก่อนเสมอ เต็มไปด้วยท่าเรือ ตลาด คลังสินค้า และผู้คนจากทั่วทุกมุมโลก สินค้าส่วนใหญ่ที่เข้าสู่ Porto Stellare มักผ่าน Stellamar ก่อน — รวมถึงสิ่งที่ไม่ควรผ่านด้วย</p>
+      </div>
+
+      <div class="sub-h">Key Locations</div>
+      <ul class="loc-list">
+        <li>The Grand Harbor — main deep-water port</li>
+        <li>Connective Canals — network linking Stellamar to Silver Steps</li>
+        <li>Iron Dockyards — heavy repair and industrial docking</li>
+        <li>The Lantern Mile — main harbor street, full of inns and merchants</li>
+        <li>Moonlit Bay Sentinel — lighthouse at harbor mouth</li>
+        <li>Harbor Watch — port authority and customs</li>
+        <li>Salt Row Market — fresh goods market near the docks</li>
+      </ul>
+
+      <div class="district-quote">อย่าไว้ใจ Moonlit Bay ในคืนที่ทะเลเงียบเกินไป</div>
+
+      <div class="sub-h">Notable Characters</div>
+      <div class="npc-grid">
+        <div class="npc-card">
+          <div class="npc-name">Harbormaster Vel</div>
+          <div class="npc-role">รู้ว่าสินค้าบางอย่างเข้าเมืองโดยไม่ผ่านการตรวจ เพราะเขาคือคนอนุมัติมันเอง รับเงินจาก Councilor Vira และ Oswin Crale มาหลายปีแล้ว</div>
+        </div>
+        <div class="npc-card">
+          <div class="npc-name">Lira of the Docks</div>
+          <div class="npc-role">ผู้ลี้ภัยจากทางเหนือที่พกแผลเป็นและความลับ ไม่ยอมบอกว่าหนีมาจากอะไร แต่รู้จักสัญลักษณ์บางอย่างบนสินค้าที่ Harbormaster ปล่อยผ่าน</div>
+        </div>
+      </div>
+
+      <div class="tension-block">
+        <div class="tb-label">Current Situation</div>
+        <p>เรือลำหนึ่งเข้าท่าพร้อมลูกเรือทั้งหมดที่ตายแล้ว แต่สินค้าในระวางไม่ขาดแม้ชิ้นเดียว ท่าเรือปิดข่าว Harbormaster รู้ว่าสินค้านั้นมาจากไหน แต่ไม่กล้าเปิดตู้คอนเทนเนอร์</p>
+      </div>
+      <div class="hook-block">
+        <div class="hb-label">DM Hook</div>
+        <p>แสงแปลกๆ ใต้น้ำใน Moonlit Bay ปรากฏทุกคืนที่ทะเลเงียบ นักเดินเรือเก่าบอกว่าเห็นแบบนี้ครั้งสุดท้ายก่อนมีคนหายไปทั้งหมู่บ้าน ใต้น้ำตรงนั้นตื้นกว่าที่ควรจะเป็นตามแผนที่ทุกฉบับ</p>
+      </div>
+
+      <button class="dm-notes-toggle" onclick="toggleDmNotes(this)">
+        <span class="dn-icon">&#9658;</span>
+        DM Notes — Stellamar Port
+      </button>
+      <div class="dm-notes-body">
+        <p>สินค้าในเรือที่ลูกเรือตายนั้นมาจากทิศเหนือ — จากที่ที่ Lira หนีมา สัญลักษณ์บนตู้เป็นภาษาเดียวกับที่ Professor Elwen แปลใน Grand Library</p>
+        <p>แสงใต้น้ำมาจากโครงสร้างที่อยู่ใต้ Moonlit Bay — เชื่อมกับ Lower Vaults ของ Old Crown ผ่านอุโมงค์ใต้ทะเล นั่นคือทางเข้า/ออกที่ "สิ่งข้างล่าง" ใช้โดยที่ไม่ต้องผ่านเมือง</p>
+      </div>
+      <a class="view-on-map" href="/map/porto-stellare#stellamar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="12" height="12"><polygon points="3,6 3,20 9,17 15,20 21,17 21,3 15,6 9,3"/><line x1="9" y1="3" x2="9" y2="17"/><line x1="15" y1="6" x2="15" y2="20"/></svg>
+        View on Map
+      </a>
+    </section>
+
+    <hr class="hollow-separator" />
+
+    <!-- ─── THE HOLLOW BELOW ─── -->
+    <section class="hollow-section" id="hollow">
+      <div class="district-title-row">
+        <div class="district-dot" style="background:#5a3a7a;box-shadow:0 0 12px #5a3a7a"></div>
+        <div class="district-title-text">
+          <div class="hollow-tag">Hidden District — Below the City</div>
+          <div class="hollow-name">The Hollow Below</div>
+          <div class="hollow-alias">The Forgotten Mirror · The Undercity · What Was Before</div>
+        </div>
+      </div>
+
+      <div class="hollow-overview">
+        <p>Porto Stellare ไม่ได้ถูกสร้างบนก้อนหิน — มันถูกสร้างบนหลังคาของบางอย่าง ใต้เมืองทั้งหมดมีโครงข่ายอุโมงค์และห้องโถงที่เก่าแก่กว่า Porto Stellare มาก บางส่วนดูเหมือนซากปรักหักพังของเมืองอีกเมืองหนึ่งที่สร้างในแบบเดียวกัน แต่กลับหัวอยู่ข้างล่าง ทุกอย่างที่เมืองพยายามซ่อน ในที่สุดก็ตกลงมาที่นี่</p>
+      </div>
+
+      <div class="sub-h">Entrances from the Surface</div>
+      <div class="hollow-access">
+        <div class="hollow-access-card">
+          <div class="hollow-access-from">From Old Crown</div>
+          <div class="hollow-access-how">Lower Vaults — ทางเข้าหลักผ่านประตูที่ถูกปิดตายใต้ Crown Cathedral ปัจจุบัน Father Aldous มีกุญแจดอกเดียวที่ยังใช้ได้</div>
+        </div>
+        <div class="hollow-access-card">
+          <div class="hollow-access-from">From Iron Quarters</div>
+          <div class="hollow-access-how">ท่อระบายน้ำเก่าในส่วนใต้ดิน Worker Blocks — ทางเข้าที่เด็กหายตัวไปใช้ ไม่มีแผนที่เป็นทางการ</div>
+        </div>
+        <div class="hollow-access-card">
+          <div class="hollow-access-from">From Stellamar</div>
+          <div class="hollow-access-how">อุโมงค์ใต้ท้องทะเล Moonlit Bay — เชื่อมกับโถงกลางของ Hollow Below เป็นเส้นทางที่ "สิ่งข้างล่าง" ใช้เมื่อมันออกไปทดสอบโลกภายนอก</div>
+        </div>
+        <div class="hollow-access-card">
+          <div class="hollow-access-from">From Verdant Terraces</div>
+          <div class="hollow-access-how">ชั้นใต้ดินลึกสุดของ Starhill Observatory — Lady Corveth รู้เรื่องนี้ นั่นคือเหตุผลที่เธอปิดหอดูดาว</div>
+        </div>
+      </div>
+
+      <div class="sub-h">Key Locations Below</div>
+      <ul class="loc-list" style="margin-bottom:24px">
+        <li><span style="color:rgba(180,130,240,0.7)">The Mirror Halls</span> — ซากโครงสร้างของเมืองเก่าที่สร้างก่อน Porto Stellare หลายร้อยปี สถาปัตยกรรมเหมือนกันทุกอย่าง แต่ทุกอย่างกลับหัว เหมือนเงาสะท้อนของเมืองด้านบน</li>
+        <li><span style="color:rgba(180,130,240,0.7)">The Resonance Pit</span> — ศูนย์กลางของ Hollow Below ที่เสียงสะท้อนแบบไม่ถูกต้อง และบางครั้งพูดกลับมาเป็นภาษาที่ไม่มีใครจำได้ว่าสอนพวกเขา</li>
+        <li><span style="color:rgba(180,130,240,0.7)">The Bone Market</span> — ตลาดใต้ดินที่ดำเนินการโดยผู้คนที่ "ลงมาแล้วไม่กลับขึ้นไป" พวกเขายังมีชีวิตอยู่ แต่ไม่แน่ใจว่ายังเป็นคนอยู่หรือเปล่า</li>
+        <li><span style="color:rgba(180,130,240,0.7)">The Drowned Gates</span> — ประตูโค้งขนาดใหญ่ที่อยู่ใต้ระดับน้ำทะเล จมอยู่บางส่วน เปิดเฉพาะเมื่อทะเลเงียบ</li>
+        <li><span style="color:rgba(180,130,240,0.7)">The Kept</span> — พื้นที่ที่เด็กหายตัวจาก Iron Quarters อยู่ พวกเขาไม่ได้ถูกขัง — พวกเขาแค่ไม่ต้องการกลับขึ้นไปอีกต่อไป</li>
+      </ul>
+
+      <div class="hollow-quote">ข้างบนคือ Porto Stellare ข้างล่างคือความจริง ทุกอย่างที่เมืองพยายามซ่อน จบลงที่นี่</div>
+
+      <div class="sub-h">Notable Presences</div>
+      <div class="npc-grid">
+        <div class="npc-card" style="border-top-color:rgba(120,70,180,0.6)">
+          <div class="npc-name" style="color:rgba(200,160,255,0.85)">The Hollow Keeper</div>
+          <div class="npc-role" style="color:rgba(220,190,255,0.55)">ตัวตนไม่ชัดเจน — บางคนบอกว่าเป็นคน บางคนบอกว่าเป็นเสียง ทิ้งข้อความใน Low Thieves' Cant ที่อ้างอิงเหตุการณ์บนผิวดินก่อนที่มันจะเกิดขึ้น รู้จัก PC ตั้งแต่ก่อนที่พวกเขาจะรู้จัก Hollow Below</div>
+        </div>
+        <div class="npc-card" style="border-top-color:rgba(120,70,180,0.6)">
+          <div class="npc-name" style="color:rgba(200,160,255,0.85)">Ser Morrow</div>
+          <div class="npc-role" style="color:rgba(220,190,255,0.55)">ทหาร City Watch ที่ลงไปใน Lower Vaults 10 ปีก่อนและกลับขึ้นมา — เปลี่ยนไป เขายังทำหน้าที่อยู่แต่ไม่นอน ไม่กิน และรู้ชื่อคนที่ยังไม่เคยพบ</div>
+        </div>
+      </div>
+
+      <div class="tension-block" style="border-left-color:rgba(120,70,180,0.55);background:rgba(60,20,100,0.1)">
+        <div class="tb-label" style="color:rgba(160,100,220,0.65)">Current State</div>
+        <p style="color:rgba(220,190,255,0.6)">สิ่งที่อยู่ใน Hollow Below ไม่ได้ตื่นขึ้น — มันไม่เคยหลับ มันแค่เพิ่งเริ่มสนใจ การที่สัตว์ออกจาก Old Crown ไม่ใช่การหนี คือการทดสอบว่าทางออกไหนยังเปิดอยู่ มันไม่ได้ต้องการทำลาย Porto Stellare มันต้องการ ใช้ มัน</p>
+      </div>
+
+      <div class="hook-block" style="border-left-color:rgba(120,70,180,0.45);background:rgba(60,20,100,0.08)">
+        <div class="hb-label" style="color:rgba(160,100,220,0.6)">Entry Hook</div>
+        <p style="color:rgba(220,190,255,0.6)">ชิ้นส่วนแผนที่ถูกพบในกระเป๋าของศพในคลอง Silver Steps แผนที่แสดงช่องทางใต้ดินที่ไม่ตรงกับผังเมืองอย่างเป็นทางการ และมีเครื่องหมายระบุสิ่งที่ดูเหมือนห้องใต้โถงของ Golden Crescent — ที่ไม่มีใครรู้ว่ามีอยู่</p>
+      </div>
+
+      <div class="hollow-warning">
+        <div class="hw-label">DM Warning — Endgame Material</div>
+        <p>The Hollow Below เป็น endgame content ที่เชื่อมทุก thread เข้าด้วยกัน ควรเปิดเผยทีละชั้นตลอดแคมเปญ ไม่ใช่ทีเดียว แต่ละ district มี thread ที่นำลงมาที่นี่ — คนที่รู้ทุกอย่างคือ Father Aldous (ทางเข้า) + Professor Elwen (ภาษา) + Lira of the Docks (สัญลักษณ์) + Lady Corveth (ประวัติ) PC ต้องรวบรวมพวกเขาทั้งหมดจึงจะเข้าใจว่ากำลังเผชิญกับอะไร</p>
+      </div>
+
+      <button class="dm-notes-toggle" onclick="toggleDmNotes(this)" style="border-color:rgba(100,60,160,0.35)">
+        <span class="dn-icon">&#9658;</span>
+        DM Notes — The Hollow Below (Full Reveal)
+      </button>
+      <div class="dm-notes-body">
+        <p>สิ่งที่อยู่ใน Hollow Below ไม่ใช่ "ปีศาจ" หรือ "มอนสเตอร์" ในแบบ DnD ทั่วไป มันคือ Resonance — ร่องรอยจิตสำนึกของเมืองที่อยู่ก่อน Porto Stellare ที่ถูกทำลายไป มันคือสิ่งที่ผู้คนในเมืองนั้นเชื่อ กลัว และต้องการ ถูกบีบอัดรวมกันและยังคงอยู่</p>
+        <p>มันไม่ได้ต้องการล้าง Porto Stellare มันต้องการเป็น Porto Stellare คือมันต้องการแทนที่ชั้นบนด้วยตัวเองทีละชั้น — นั่นคือสิ่งที่ "เด็กที่ไม่ต้องการกลับขึ้นไป" หมายถึง พวกเขากำลังถูก assimilated เข้าในภาพจำของเมืองเก่า</p>
+        <p>การปิด Hollow Below ต้องมีคนเสียสละ — ใครสักคนต้องอยู่ข้างล่างเพื่อเป็น "ผู้รับ" ความทรงจำของ Resonance แทนที่ Porto Stellare Father Aldous รู้เรื่องนี้มา 40 ปีแล้ว และเขาตัดสินใจแล้วว่าใครจะเป็นคนนั้น — เว้นแต่ PC จะหาทางออกอื่น</p>
+      </div>
+    </section>
+
+    <!-- Back link -->
+    <a class="back-to-map" href="/map/porto-stellare">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="12" height="12"><path d="M9 4 3 6.5v13L9 17l6 2.5 6-2.5v-13L15 6.5 9 4Z"/><path d="M9 4v13M15 6.5v13"/></svg>
+      Return to Interactive Map
+    </a>
+
+  </main>
+</div>
+
+<button id="scroll-top" aria-label="Scroll to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#8679;</button>
+
+<!-- Mobile district-jump floating button -->
+<button id="mob-jump-btn" aria-label="Jump to district" onclick="openMobJump()">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="12" height="12"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>
+  Districts
+</button>
+<div id="mob-jump-drawer" role="dialog" aria-modal="true" aria-label="Jump to district">
+  <div class="mob-jump-head">
+    Jump to District
+    <button class="mob-jump-close" onclick="closeMobJump()" aria-label="Close">✕</button>
+  </div>
+  <div class="mob-jump-grid">
+    <a class="mob-jump-link" href="#quickref" style="--d-color:#c9a45c;grid-column:1/-1" onclick="closeMobJump()">
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="rgba(201,164,92,0.6)"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+      DM Quick Reference
+    </a>
+    <a class="mob-jump-link" href="#verdant" style="--d-color:#4a7c4e" onclick="closeMobJump()">
+      <span class="mob-jump-dot" style="background:#4a7c4e"></span>Verdant Terraces
+    </a>
+    <a class="mob-jump-link" href="#silver" style="--d-color:#8c97a3" onclick="closeMobJump()">
+      <span class="mob-jump-dot" style="background:#8c97a3"></span>Silver Steps
+    </a>
+    <a class="mob-jump-link" href="#golden" style="--d-color:#d4a017" onclick="closeMobJump()">
+      <span class="mob-jump-dot" style="background:#d4a017"></span>Golden Crescent
+    </a>
+    <a class="mob-jump-link" href="#whitecliff" style="--d-color:#7fa0b5" onclick="closeMobJump()">
+      <span class="mob-jump-dot" style="background:#7fa0b5"></span>White Cliff Ward
+    </a>
+    <a class="mob-jump-link" href="#aurora" style="--d-color:#c98a6d" onclick="closeMobJump()">
+      <span class="mob-jump-dot" style="background:#c98a6d"></span>Aurora Promenade
+    </a>
+    <a class="mob-jump-link" href="#iron" style="--d-color:#7b6a59" onclick="closeMobJump()">
+      <span class="mob-jump-dot" style="background:#7b6a59"></span>Iron Quarters
+    </a>
+    <a class="mob-jump-link" href="#oldcrown" style="--d-color:#8a4a63" onclick="closeMobJump()">
+      <span class="mob-jump-dot" style="background:#8a4a63"></span>Old Crown
+    </a>
+    <a class="mob-jump-link" href="#stellamar" style="--d-color:#2f7088" onclick="closeMobJump()">
+      <span class="mob-jump-dot" style="background:#2f7088"></span>Stellamar Port
+    </a>
+    <a class="mob-jump-link" href="#hollow" style="--d-color:#5a3a7a;color:rgba(180,130,240,0.6);grid-column:1/-1" onclick="closeMobJump()">
+      <span class="mob-jump-dot" style="background:#5a3a7a;box-shadow:0 0 5px #5a3a7a"></span>The Hollow Below
+    </a>
+  </div>
+</div>
+
+<script>
+function toggleDmNotes(btn){
+  btn.classList.toggle('open');
+  const body = btn.nextElementSibling;
+  body.classList.toggle('open');
+}
+
+function toggleAllDmNotes(btn){
+  const allBtns = document.querySelectorAll('.dm-notes-toggle');
+  const anyOpen = [...allBtns].some(b => b.classList.contains('open'));
+  allBtns.forEach(b => {
+    const shouldOpen = !anyOpen;
+    b.classList.toggle('open', shouldOpen);
+    const body = b.nextElementSibling;
+    if(body) body.classList.toggle('open', shouldOpen);
+  });
+  btn.textContent = anyOpen ? 'Expand All Notes' : 'Collapse All Notes';
+}
+
+// Sidebar collapse toggle (tablet/mobile)
+const sbBody = document.getElementById('sb-body');
+const sbToggleIcon = document.getElementById('sb-toggle-icon');
+const sbHeadToggle = document.getElementById('sb-head-toggle');
+function toggleSidebar(){
+  const collapsed = sbBody.classList.toggle('collapsed');
+  sbToggleIcon.classList.toggle('collapsed', collapsed);
+  sbHeadToggle.setAttribute('aria-expanded', String(!collapsed));
+}
+sbHeadToggle.addEventListener('click', toggleSidebar);
+sbHeadToggle.addEventListener('keydown', e => {
+  if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); toggleSidebar(); }
+});
+// Auto-collapse on tablet/mobile
+if(window.innerWidth <= 820){ toggleSidebar(); }
+
+const mobDrawer = document.getElementById('mob-jump-drawer');
+function openMobJump(){ mobDrawer.classList.add('open'); }
+function closeMobJump(){ mobDrawer.classList.remove('open'); }
+mobDrawer.addEventListener('click', e => { if(e.target === mobDrawer) closeMobJump(); });
+
+// Scroll-to-top visibility
+const scrollTopBtn = document.getElementById('scroll-top');
+window.addEventListener('scroll', () => {
+  scrollTopBtn.classList.toggle('show', window.scrollY > 400);
+}, { passive: true });
+
+// Sidebar active link on scroll (with sidebar auto-scroll)
+(function(){
+  const sidebar = document.getElementById('sidebar');
+  const links = document.querySelectorAll('#sidebar .sb-link[href^="#"]');
+  const sections = [...links].map(l => document.querySelector(l.getAttribute('href'))).filter(Boolean);
+  let activeIdx = null;
+
+  function onScroll(){
+    const top = window.scrollY + 100;
+    let next = null;
+    sections.forEach((s, i) => { if(s.offsetTop <= top) next = i; });
+    if(next === activeIdx) return;
+    activeIdx = next;
+    links.forEach((l, i) => l.classList.toggle('active', i === next));
+    if(next !== null && sidebar && window.innerWidth > 820){
+      const activeLink = links[next];
+      const sbRect  = sidebar.getBoundingClientRect();
+      const lnRect  = activeLink.getBoundingClientRect();
+      if(lnRect.top < sbRect.top + 60 || lnRect.bottom > sbRect.bottom - 60){
+        activeLink.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  // Scroll to hash on load
+  if(location.hash){
+    const target = document.querySelector(location.hash);
+    if(target) setTimeout(() => target.scrollIntoView({ behavior: 'smooth', block: 'start' }), 150);
+  }
+})();
+</script>
+</body>
+</html>

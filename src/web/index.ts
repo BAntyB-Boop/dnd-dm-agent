@@ -281,6 +281,14 @@ export async function startWebServer(): Promise<void> {
     const { slug } = req.params as { slug: string };
     return reply.sendFile(`sessions/${slug}.html`);
   });
+  app.get("/map/:slug", (req, reply) => {
+    const { slug } = req.params as { slug: string };
+    return reply.sendFile(`map/${slug}.html`);
+  });
+  app.get("/lore/:slug", (req, reply) => {
+    const { slug } = req.params as { slug: string };
+    return reply.sendFile(`lore/${slug}.html`);
+  });
 
   // ── Auth ──────────────────────────────────────────────────────────────
 

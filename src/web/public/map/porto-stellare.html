@@ -1408,9 +1408,13 @@ DISTRICTS.forEach(d => {
   const item = document.createElement('div');
   item.className = "leg-item";
   item.dataset.id = d.id;
+  item.setAttribute("tabindex", "0");
+  item.setAttribute("role", "button");
+  item.setAttribute("aria-label", d.name + " district");
   item.style.setProperty("--accent-glow", tintColor(d.color, 0.85));
   item.innerHTML = `<span class="ldot" style="background:${d.color}"></span><span class="lname">${d.name}</span>`;
   item.addEventListener("click", () => openDistrict(d.id));
+  item.addEventListener("keydown", e => { if(e.key==="Enter"||e.key===" "){ e.preventDefault(); openDistrict(d.id); } });
   item.addEventListener("mouseenter", () => {
     if(activeId === d.id) return;
     svg.querySelectorAll(`.district[data-id="${d.id}"]`).forEach(p => p.classList.add("highlighted"));

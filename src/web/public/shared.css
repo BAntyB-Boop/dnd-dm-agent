@@ -160,6 +160,29 @@ h1, h2, h3, h4 {
 .folio-nav-link .fn-name { font-size: 0.64rem; color: inherit; }
 .folio-nav-spacer { flex: 1; }
 
+/* ----- Scroll-to-top button ----- */
+#scroll-top {
+  position: fixed;
+  bottom: 24px; right: 22px;
+  z-index: 300;
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: rgba(7,7,10,.82);
+  border: 1px solid var(--gold-dim, #8a6f3a);
+  color: var(--gold, #c9a45c);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .35s ease, border-color .2s, color .2s;
+  backdrop-filter: blur(4px);
+}
+#scroll-top.show { opacity: 1; pointer-events: auto; }
+#scroll-top:hover { color: var(--gold-bright, #f6efd2); border-color: var(--gold, #c9a45c); }
+
 /* ----- Page container ----- */
 .page {
   max-width: 1280px;

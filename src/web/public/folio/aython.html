@@ -1328,6 +1328,8 @@ body.cellar .wine-stain{opacity:1}
   </a>
 </nav>
 
+<button id="scroll-top" aria-label="Scroll to top">&#8679;</button>
+
 <script>
   // ====== 1. Name letter-by-letter reveal ======
   (function(){
@@ -1501,6 +1503,14 @@ body.cellar .wine-stain{opacity:1}
       const dh = document.documentElement.scrollHeight - window.innerHeight;
       bar.style.width = (dh > 0 ? (window.scrollY / dh * 100) : 0) + '%';
     }, { passive: true });
+  })();
+
+  // Scroll-to-top
+  (function(){
+    const btn = document.getElementById('scroll-top');
+    if(!btn) return;
+    window.addEventListener('scroll', function(){ btn.classList.toggle('show', window.scrollY > 400); }, { passive: true });
+    btn.addEventListener('click', function(){ window.scrollTo({ top: 0, behavior: 'smooth' }); });
   })();
 </script>
 

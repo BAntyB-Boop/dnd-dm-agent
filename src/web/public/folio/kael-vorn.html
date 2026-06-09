@@ -1083,6 +1083,8 @@ em,i{font-style:italic;color:var(--ink-soft)}
   </a>
 </nav>
 
+<button id="scroll-top" aria-label="Scroll to top">&#8679;</button>
+
 <script>
   // ====== 1. Floating embers (hellfire) ======
   (function(){
@@ -1237,6 +1239,14 @@ em,i{font-style:italic;color:var(--ink-soft)}
       const dh = document.documentElement.scrollHeight - window.innerHeight;
       bar.style.width = (dh > 0 ? (window.scrollY / dh * 100) : 0) + '%';
     }, { passive: true });
+  })();
+
+  // Scroll-to-top
+  (function(){
+    const btn = document.getElementById('scroll-top');
+    if(!btn) return;
+    window.addEventListener('scroll', function(){ btn.classList.toggle('show', window.scrollY > 400); }, { passive: true });
+    btn.addEventListener('click', function(){ window.scrollTo({ top: 0, behavior: 'smooth' }); });
   })();
 </script>
 

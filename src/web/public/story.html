@@ -1086,6 +1086,29 @@ body.th-active .roster-list-th{display:flex !important}
 #ci-skip-btn.show { opacity: 1; pointer-events: auto; }
 #ci-skip-btn:hover { color: var(--gold); border-color: rgba(201,164,92,0.55); }
 
+/* scroll-to-top */
+#scroll-top {
+  position: fixed;
+  bottom: 24px; right: 22px;
+  z-index: 300;
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: rgba(7,7,10,.82);
+  border: 1px solid var(--gold-dim);
+  color: var(--gold);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .35s ease, border-color .2s, color .2s;
+  backdrop-filter: blur(4px);
+}
+#scroll-top.show { opacity: 1; pointer-events: auto; }
+#scroll-top:hover { color: var(--gold-bright); border-color: var(--gold); }
+
 @media (max-width:768px){
   .cosmic-intro{height:600vh;margin-left:0;margin-right:0}
   .ci-dots{right:14px}
@@ -1800,6 +1823,8 @@ body.th-active .roster-list-th{display:flex !important}
   </div>
 </div>
 
+<button id="scroll-top" aria-label="Scroll to top">&#8679;</button>
+
 <script>
   // ─── 1. Particle title reveal ───
   (function(){
@@ -2160,6 +2185,14 @@ body.th-active .roster-list-th{display:flex !important}
       const target = document.getElementById('prologue') || document.querySelector('.story-head');
       if(target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
+  })();
+
+  // ── Scroll-to-top button ──────────────────────────────────────
+  (function(){
+    const btn = document.getElementById('scroll-top');
+    if(!btn) return;
+    window.addEventListener('scroll', function(){ btn.classList.toggle('show', window.scrollY > 600); }, { passive: true });
+    btn.addEventListener('click', function(){ window.scrollTo({ top: 0, behavior: 'smooth' }); });
   })();
 </script>
 

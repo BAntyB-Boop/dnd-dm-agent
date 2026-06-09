@@ -999,6 +999,26 @@
     .atlas-kbd { display: none; }
   }
 
+  /* ---- Stat Bars ---- */
+  .p-stats {
+    display: flex; gap: 8px;
+    margin-bottom: 6px;
+    padding: 10px 12px;
+    background: rgba(92,58,30,0.06);
+    border-radius: 2px;
+  }
+  .p-stat { flex: 1; display: flex; flex-direction: column; gap: 3px; }
+  .p-stat-label {
+    font-family: var(--display); font-size: 7px;
+    letter-spacing: .2em; text-transform: uppercase;
+    color: rgba(92,58,30,0.45);
+  }
+  .p-stat-pips { display: flex; gap: 2px; }
+  .p-pip { flex: 1; height: 3px; border-radius: 1px; background: rgba(92,58,30,0.12); }
+  .p-pip.on-w { background: rgba(212,160,23,0.72); }
+  .p-pip.on-s { background: rgba(80,140,190,0.72); }
+  .p-pip.on-d { background: rgba(190,55,35,0.72); }
+
   /* ---- NPC Cards ---- */
   .p-npc-card {
     display: flex; flex-direction: column; gap: 3px;
@@ -1159,6 +1179,7 @@ const DISTRICTS = [
     aliases: "Verdant · Upper Terraces · The Heights",
     type: "Luxury residential — old nobility",
     color: "#4a7c4e",
+    stats: { w:5, s:5, d:1 },
     points: "7.9,39.5 9.8,29.9 17.1,23.9 25.6,23.9 26.9,37.1 18.3,43.1 9.2,44.3",
     overview: "เขตตอนบนของ Porto Stellare บนหน้าผาฝั่งตะวันตก เต็มไปด้วยคฤหาสน์หรู สวนพฤกษศาสตร์ และที่พักของตระกูลเก่าแก่ ถูกออกแบบมาเพื่อแยกความมั่งคั่งออกจากส่วนอื่นของเมือง ต่างจาก Aurora Promenade ที่โชว์ความมั่งคั่งอย่างเปิดเผย Verdant Terraces ถูกสร้างให้ปิดและโดดเดี่ยว",
     locations: ["Starhill — Observatory &amp; Ancient Tower", "Ivory Gardens — botanical garden across the cliff terraces", "Crescent Villas — old noble residences", "West Skywalk — cliff walkway overlooking all of Moonlit Bay"],
@@ -1178,6 +1199,7 @@ const DISTRICTS = [
     aliases: "The Connective Spine · The Heart",
     type: "Central district — most populated",
     color: "#8c97a3",
+    stats: { w:3, s:3, d:2 },
     points: "26.9,27.5 37.8,25.1 40.9,39.5 34.2,47.9 26.9,43.1",
     overview: "เขตที่มีประชากรมากที่สุดของเมือง หัวใจที่เชื่อม Porto Stellare ทั้งหมดเข้าด้วยกัน เต็มไปด้วยตลาด โรงเตี๊ยม บ้านพัก และ Workshop นับไม่ถ้วน เชื่อมต่อกับทุก district ผ่านบันได gondola และ tram",
     locations: ["Seven Steps Market", "Lantern Square", "Silver Plaza", "Craftsman's Row", "West Skywalk connector", "Canal Network — to Stellamar Port", "Industrial Tram stop — from Iron Quarters", "Gondola stations"],
@@ -1198,6 +1220,7 @@ const DISTRICTS = [
     aliases: "The Crescent · Financial District",
     type: "Economic &amp; political center",
     color: "#d4a017",
+    stats: { w:5, s:4, d:2 },
     points: "43,28 52,24 60,28 60,44 50,48 43,42",
     overview: "ศูนย์กลางเศรษฐกิจและการเมืองของ Porto Stellare ที่ซึ่งสงครามเริ่มต้นก่อนที่ดาบจะถูกชักออก เต็มไปด้วยธนาคาร Guild Halls สภาเมือง และโรงละคร เงินและอำนาจไหลเวียนที่นี่ก่อนที่จะไปถึงที่อื่น",
     locations: ["City Council Hall", "Major Banks", "Guild Halls", "Merchant Houses", "Grand Theater"],
@@ -1217,6 +1240,7 @@ const DISTRICTS = [
     aliases: "The Ward · Scholar's District",
     type: "Education &amp; government",
     color: "#7fa0b5",
+    stats: { w:4, s:5, d:1 },
     points: "62.2,23.9 75.6,16.8 82.0,24.5 81.0,35.0 72.0,37.1 63.4,34.7",
     overview: "เขตพักอาศัยและการศึกษา ถือเป็นหนึ่งในเขตที่ปลอดภัยที่สุดของเมือง อย่างน้อยผู้คนก็เชื่อเช่นนั้น เต็มไปด้วยมหาวิทยาลัย ห้องสมุด อาคารราชการ และที่พักของนักวิชาการ",
     locations: ["Porto Stellare University", "Grand Library", "Scholar Residences", "Government Administrative Buildings", "Lantern Steps — descends to Silver Steps"],
@@ -1236,6 +1260,7 @@ const DISTRICTS = [
     aliases: "Aurora · The Promenade · The Face of the City",
     type: "Luxury waterfront — tourism",
     color: "#c98a6d",
+    stats: { w:4, s:4, d:2 },
     points: "56.1,37.1 72.0,37.1 83.0,39.5 81.7,50.3 68.3,51.5 57.3,47.9",
     overview: "เขตริมน้ำอันหรูหราที่ปรากฏอยู่ในโปสเตอร์ท่องเที่ยวแทบทั้งหมดของ Porto Stellare รีสอร์ท คาสิโน โรงแรม ชายหาด ร้านอาหาร — ทุกอย่างถูกออกแบบมาเพื่อให้ดูสวยงาม นี่คือ Porto Stellare ที่คนภายนอกคิดว่าพวกเขารู้จัก",
     locations: ["Grand Casino", "Luxury Resorts", "Aurora Beach", "Rooftop Restaurants", "The Promenade Walk"],
@@ -1255,6 +1280,7 @@ const DISTRICTS = [
     aliases: "The Quarters · Iron District · Lower Works",
     type: "Industrial — labor",
     color: "#7b6a59",
+    stats: { w:1, s:2, d:3 },
     points: "8.5,45.5 23.2,44.3 22.6,67.0 18.3,73.0 9.2,71.8 7.9,56.3",
     overview: "เขตอุตสาหกรรมและแรงงานหลักของ Porto Stellare ความมั่งคั่งของเมืองถูกสร้างขึ้นที่นี่ เต็มไปด้วยโรงตีเหล็ก อู่ต่อเรือ โรงงาน และผู้คนที่พยายามหาเงินเพื่ออยู่รอด แทบทุกอย่างที่คนในเมืองครอบครองเคยผ่านที่นี่มาก่อน",
     locations: ["Black Forge Row — largest smithing street in the city", "South Drydock — main shipyard", "Smoke Market — large cheap market", "Worker Blocks — dense labor housing", "The Foundries"],
@@ -1274,6 +1300,7 @@ const DISTRICTS = [
     aliases: "Crown District · Old City · The Peninsula",
     type: "Historic — oldest district",
     color: "#8a4a63",
+    stats: { w:2, s:1, d:4 },
     points: "25.0,58 33,57 35,68 30,74 25,73 23.5,63",
     overview: "ส่วนที่เก่าแก่ที่สุดของ Porto Stellare สร้างอยู่บนคาบสมุทรหินซึ่งยื่นออกไปยัง Moonlit Bay แม้ Porto Stellare จะถูกสร้างใหม่หลายครั้ง Old Crown แทบไม่เปลี่ยนแปลง หลายส่วนดูเหมือนจะเก่าแก่กว่าตัวเมืองเสียอีก",
     locations: ["Crown Cathedral — largest cathedral in Porto Stellare", "Founder Plaza — believed to be the city's origin point", "The Ancient Walls", "Archive Basilica", "The Lower Vaults — partially unexplored underground network"],
@@ -1293,6 +1320,7 @@ const DISTRICTS = [
     aliases: "Stellamar · Harbor District · The Port · The Gateway",
     type: "Main harbor — gateway to the city",
     color: "#2f7088",
+    stats: { w:3, s:2, d:4 },
     points: "34.2,45.5 43.9,47.9 45.2,62.3 38,66 34,55",
     overview: "ประตูหลักของ Porto Stellare ผู้คนที่เดินทางมายังเมืองเป็นครั้งแรกมักเห็น Stellamar ก่อนเสมอ เต็มไปด้วยท่าเรือ ตลาด คลังสินค้า และผู้คนจากทั่วทุกมุมโลก สินค้าส่วนใหญ่ที่เข้าสู่ Porto Stellare มักผ่าน Stellamar ก่อน",
     locations: ["The Grand Harbor", "Connective Canals", "Iron Dockyards", "The Lantern Mile — main harbor street", "Rustic Revels Inn", "Moonlit Bay Sentinel — lighthouse", "Harbor Watch", "East Shipyards", "Salt Row Market"],
@@ -1422,6 +1450,7 @@ legHead.addEventListener("keydown", e => { if(e.key==="Enter"||e.key===" "){ e.p
 const panel = document.getElementById('panel');
 let activeId = null;
 
+function pips(n, cls){ return Array.from({length:5}, (_,i) => `<div class="p-pip${i<n?' '+cls:''}"></div>`).join(""); }
 function buildPanel(d){
   const accentGlow = tintColor(d.color, 0.85);
   const locs = d.locations.map(l => `<li>${l}</li>`).join("");
@@ -1435,6 +1464,12 @@ function buildPanel(d){
       <div class="p-npc-name">${n.name}</div>
       <div class="p-npc-role">${n.role}</div>
     </div>`).join("");
+  const statsBar = d.stats ? `
+    <div class="p-stats">
+      <div class="p-stat"><div class="p-stat-label">Wealth</div><div class="p-stat-pips">${pips(d.stats.w,'on-w')}</div></div>
+      <div class="p-stat"><div class="p-stat-label">Safety</div><div class="p-stat-pips">${pips(d.stats.s,'on-s')}</div></div>
+      <div class="p-stat"><div class="p-stat-label">Danger</div><div class="p-stat-pips">${pips(d.stats.d,'on-d')}</div></div>
+    </div>` : "";
   return `
     <div class="panel-handle" aria-hidden="true"></div>
     <button class="p-close" aria-label="Close panel">✕</button>
@@ -1443,6 +1478,7 @@ function buildPanel(d){
       <h2 class="p-name">${d.name}</h2>
       <div class="p-alias">${d.aliases}</div>
       <div class="p-type">${d.type}</div>
+      ${statsBar}
       <hr class="rule" />
       <p class="p-overview">${d.overview}</p>
       ${thumb}

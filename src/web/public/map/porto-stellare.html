@@ -526,6 +526,26 @@
   }
   .m-close:hover { transform: rotate(90deg) scale(1.06); }
 
+  /* Atlas modal nav arrows */
+  .m-nav {
+    position: absolute;
+    top: 50%; transform: translateY(-50%);
+    z-index: 8;
+    width: 36px; height: 60px;
+    border: none;
+    background: rgba(8,4,0,0.55);
+    color: rgba(244,228,193,0.6);
+    font-size: 18px; line-height: 1;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .2s, color .2s, opacity .2s;
+    backdrop-filter: blur(2px);
+  }
+  .m-nav-prev { left: 0; border-radius: 0 4px 4px 0; }
+  .m-nav-next { right: 0; border-radius: 4px 0 0 4px; }
+  .m-nav:hover:not(:disabled) { background: rgba(212,160,23,0.22); color: var(--gold-bright); }
+  .m-nav:disabled { opacity: 0.18; cursor: default; }
+
   /* ---------- Home Button ---------- */
   #home-btn {
     position: fixed;
@@ -1511,7 +1531,10 @@ function closeModal(){
   modal.classList.remove("open");
   modal.setAttribute("aria-hidden", "true");
 }
+let modalAtlasPage = 0;
+const ATLAS_TOTAL = 14;
 function openAtlasModal(pageNum){
+  modalAtlasPage = pageNum;
   const pad = String(pageNum).padStart(2, '0');
   const cap = ATLAS_CAPTIONS[pageNum - 1];
   modalCard.className = 'modal-card';
@@ -1521,12 +1544,16 @@ function openAtlasModal(pageNum){
       <span class="corner tl"></span><span class="corner tr"></span>
       <span class="corner bl"></span><span class="corner br"></span>
       <img id="modal-atlas-img" src="assets/atlas/atlas-p${pad}.jpg" alt="Atlas page ${pageNum}" style="opacity:0;transition:opacity .35s" />
+      <button class="m-nav m-nav-prev" aria-label="Previous page" ${pageNum <= 1 ? 'disabled' : ''}>&#8592;</button>
+      <button class="m-nav m-nav-next" aria-label="Next page" ${pageNum >= ATLAS_TOTAL ? 'disabled' : ''}>&#8594;</button>
     </div>
     <div class="modal-cap"><div class="t">${cap.title}</div><div class="s">${cap.sub}</div></div>`;
   const mImg = modalCard.querySelector('#modal-atlas-img');
   mImg.onload = () => { mImg.style.opacity = '1'; };
   if(mImg.complete) mImg.style.opacity = '1';
   modalCard.querySelector('.m-close').addEventListener('click', closeModal);
+  modalCard.querySelector('.m-nav-prev').addEventListener('click', () => openAtlasModal(modalAtlasPage - 1));
+  modalCard.querySelector('.m-nav-next').addEventListener('click', () => openAtlasModal(modalAtlasPage + 1));
   modal.classList.add("open");
   modal.setAttribute("aria-hidden", "false");
 }
@@ -1628,13 +1655,24 @@ function enterCity(){
 document.getElementById('atlas-enter').addEventListener('click', enterCity);
 document.getElementById('atlas-skip').addEventListener('click', enterCity);
 
-// keyboard: arrow keys navigate atlas, Escape skips
+// keyboard: arrow keys navigate atlas/modal, Escape skips/closes
 document.addEventListener("keydown", e => {
   if(e.key === "Escape"){
     if(modal.classList.contains("open")) closeModal();
     else if(panel.classList.contains("open")) closePanel();
     else if(!veil.classList.contains("gone")) enterCity();
   }
+  // Atlas modal navigation
+  if(modal.classList.contains("open") && modalAtlasPage > 0){
+    if(e.key === "ArrowRight" || e.key === "ArrowDown"){
+      if(modalAtlasPage < ATLAS_TOTAL) openAtlasModal(modalAtlasPage + 1);
+    }
+    if(e.key === "ArrowLeft" || e.key === "ArrowUp"){
+      if(modalAtlasPage > 1) openAtlasModal(modalAtlasPage - 1);
+    }
+    return;
+  }
+  // Intro atlas navigation
   if(!veil.classList.contains("gone") && phaseAtlas.classList.contains("in")){
     if(e.key === "ArrowRight" || e.key === "ArrowDown") goAtlasPage(atlasPage + 1);
     if(e.key === "ArrowLeft"  || e.key === "ArrowUp")   goAtlasPage(atlasPage - 1);

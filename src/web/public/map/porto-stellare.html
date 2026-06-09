@@ -1391,6 +1391,16 @@ sh.addEventListener("focus", () => {
   tip.classList.add("show");
 });
 sh.addEventListener("blur", () => tip.classList.remove("show"));
+// Touch: tap starhill to toggle tooltip
+sh.addEventListener("click", e => {
+  if(tip.classList.contains("show")){ tip.classList.remove("show"); return; }
+  tip.innerHTML = STARHILL_TIP;
+  const b = sh.getBoundingClientRect();
+  tip.style.left = Math.min(b.right + 8, window.innerWidth - 280) + "px";
+  tip.style.top = Math.max(b.bottom + 8, 8) + "px";
+  tip.classList.add("show");
+  setTimeout(() => tip.classList.remove("show"), 5000);
+});
 
 // ---- Legend ----
 const legBody = document.getElementById('leg-body');

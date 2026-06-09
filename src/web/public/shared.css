@@ -159,6 +159,12 @@ h1, h2, h3, h4 {
 .folio-nav-link .fn-num  { font-size: 0.52rem; color: var(--gold-dim, #8a6f3a); letter-spacing: 0.3em; }
 .folio-nav-link .fn-name { font-size: 0.64rem; color: inherit; }
 .folio-nav-spacer { flex: 1; }
+@media (max-width: 480px) {
+  .folio-nav { padding: 20px 0 8px; }
+  .folio-nav-link { padding: 7px 12px; gap: 8px; }
+  .folio-nav-link .fn-num { display: none; }
+  .folio-nav-link .fn-name { font-size: 0.58rem; }
+}
 
 /* ----- Scroll-to-top button ----- */
 #scroll-top {

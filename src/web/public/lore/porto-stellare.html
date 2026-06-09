@@ -1006,6 +1006,8 @@
     border-radius: 2px;
     border: 1px solid;
   }
+  a.thread-tag { text-decoration: none; transition: opacity .2s, transform .15s; }
+  a.thread-tag:hover { opacity: 0.7; transform: translateY(-1px); }
 
   /* ─── The Hollow Below — special styling ─── */
   .hollow-section {
@@ -2375,6 +2377,34 @@ window.addEventListener('scroll', () => {
     const target = document.querySelector(location.hash);
     if(target) setTimeout(() => target.scrollIntoView({ behavior: 'smooth', block: 'start' }), 150);
   }
+})();
+
+// Thread tags → anchor links
+(function(){
+  const tagMap = {
+    'old crown': '#oldcrown',
+    'iron quarters': '#iron',
+    'stellamar': '#stellamar',
+    'verdant': '#verdant',
+    'hollow below': '#hollow',
+    'golden crescent': '#golden',
+    'aurora': '#aurora',
+    'white cliff': '#whitecliff',
+    'silver steps': '#silver',
+  };
+  document.querySelectorAll('.thread-tag').forEach(tag => {
+    const key = tag.textContent.trim().toLowerCase();
+    const target = tagMap[key];
+    if(target){
+      const a = document.createElement('a');
+      a.href = target;
+      a.className = tag.className;
+      const style = tag.getAttribute('style');
+      if(style) a.setAttribute('style', style);
+      a.textContent = tag.textContent;
+      tag.replaceWith(a);
+    }
+  });
 })();
 </script>
 </body>

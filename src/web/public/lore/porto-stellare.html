@@ -1127,7 +1127,7 @@
   @media print {
     body { background: #fff; color: #1a0f07; }
     #topbar, #sidebar, #read-progress, #scroll-top,
-    #mob-jump-btn, #mob-jump-drawer, .view-on-map { display: none !important; }
+    #mob-jump-btn, #mob-jump-drawer, .view-on-map, .dm-session-notes { display: none !important; }
     .layout { display: block; padding-top: 0; }
     #main { padding: 12px; }
     .city-header { border-bottom: 2px solid #5c3a1e; padding-bottom: 12px; margin-bottom: 24px; }
@@ -1169,6 +1169,9 @@
     <span id="topbar-district-name"></span>
   </div>
   <div class="topbar-nav">
+    <button class="topbar-link" onclick="window.print()" aria-label="Print this page" style="background:none;border:1px solid transparent;cursor:pointer">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="12" height="12" style="vertical-align:-1px;margin-right:5px"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>Print
+    </button>
     <a class="topbar-link" id="topbar-map-link" href="/map/porto-stellare">&#8592; Back to Map</a>
   </div>
 </nav>

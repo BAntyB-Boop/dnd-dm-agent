@@ -563,6 +563,35 @@ body.th-active .dm-voice p{font-family:"Noto Serif Thai",serif;font-size:.95rem;
 }
 #scroll-top.show{opacity:1;pointer-events:auto}
 #scroll-top:hover{color:var(--gold-bright);border-color:var(--gold)}
+/* ── DM Session Notes ── */
+.dm-note-wrap{margin:12px 0 4px;max-width:740px}
+.dm-note-toggle{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:"Cinzel",serif;font-size:.52rem;letter-spacing:.28em;text-transform:uppercase;
+  color:var(--ink-faint);background:none;border:1px solid var(--line-soft);
+  padding:6px 14px;cursor:pointer;transition:color .2s,border-color .2s;
+}
+.dm-note-toggle:hover{color:var(--gold-dim);border-color:var(--gold-dim)}
+.dm-note-toggle.open{color:var(--gold-dim);border-color:var(--gold-dim)}
+.dm-note-body{
+  display:none;padding:12px 0 4px;
+}
+.dm-note-body.open{display:block}
+.dm-note-ta{
+  width:100%;min-height:72px;resize:vertical;
+  background:rgba(7,7,10,.55);border:1px solid var(--line-soft);
+  color:var(--ink-soft);font-family:"Cormorant Garamond",Georgia,serif;font-size:.9rem;
+  padding:10px 13px;outline:none;transition:border-color .2s;
+}
+.dm-note-ta:focus{border-color:var(--gold-dim)}
+.dm-note-ta::placeholder{color:var(--ink-faint)}
+.dm-note-saved{
+  display:inline-block;font-family:"Cinzel",serif;font-size:.48rem;
+  letter-spacing:.24em;text-transform:uppercase;color:var(--gold-dim);
+  opacity:0;transition:opacity .3s;padding-left:8px;
+}
+.dm-note-saved.show{opacity:1}
+@media print{.dm-note-wrap{display:none}}
 </style>
 </head>
 <body>
@@ -1240,6 +1269,49 @@ function setLang(l){
   }, { passive: true });
   btn.addEventListener('click', function(){
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+})();
+
+// ── DM session notes ─────────────────────────────────────────────
+(function(){
+  const NOTE_PREFIX = 'session-1:note:';
+  document.querySelectorAll('article.chapter[id]').forEach(ch => {
+    const id = ch.id;
+    const saved = (() => { try { return localStorage.getItem(NOTE_PREFIX + id) || ''; } catch(e){ return ''; } })();
+    const wrap = document.createElement('div');
+    wrap.className = 'dm-note-wrap';
+    wrap.innerHTML =
+      '<button class="dm-note-toggle" aria-expanded="false"><span>&#9658;</span> DM Notes</button>' +
+      '<div class="dm-note-body">' +
+        '<textarea class="dm-note-ta" placeholder="Session notes for this chapter — auto-saved…" rows="3"></textarea>' +
+        '<span class="dm-note-saved">Saved</span>' +
+      '</div>';
+    ch.appendChild(wrap);
+    const btn    = wrap.querySelector('.dm-note-toggle');
+    const body   = wrap.querySelector('.dm-note-body');
+    const ta     = wrap.querySelector('.dm-note-ta');
+    const label  = wrap.querySelector('.dm-note-saved');
+    // restore persisted open state
+    const openKey = NOTE_PREFIX + 'open:' + id;
+    if(localStorage.getItem(openKey) === '1'){ btn.classList.add('open'); body.classList.add('open'); btn.setAttribute('aria-expanded','true'); btn.querySelector('span').textContent = '▾'; }
+    if(saved) ta.value = saved;
+    btn.addEventListener('click', () => {
+      const opening = !body.classList.contains('open');
+      btn.classList.toggle('open', opening);
+      body.classList.toggle('open', opening);
+      btn.setAttribute('aria-expanded', String(opening));
+      btn.querySelector('span').textContent = opening ? '▾' : '▶';
+      try { localStorage.setItem(openKey, opening ? '1' : '0'); } catch(e){}
+    });
+    let saveTimer;
+    ta.addEventListener('input', () => {
+      clearTimeout(saveTimer);
+      saveTimer = setTimeout(() => {
+        try { localStorage.setItem(NOTE_PREFIX + id, ta.value); } catch(e){}
+        label.classList.add('show');
+        setTimeout(() => label.classList.remove('show'), 1600);
+      }, 600);
+    });
   });
 })();
 

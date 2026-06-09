@@ -1898,9 +1898,11 @@ body.th-active .roster-list-th{display:flex !important}
       'assets/celestial-warpath.mp3'
     ];
     let trackIdx = 0;
+    audio.dataset.trackIdx = 0;
 
     audio.addEventListener('ended', function(){
       trackIdx = (trackIdx + 1) % playlist.length;
+      audio.dataset.trackIdx = trackIdx;
       audio.src = playlist[trackIdx];
       audio.load();
       audio.play().catch(() => {});
@@ -1975,7 +1977,8 @@ body.th-active .roster-list-th{display:flex !important}
             currentTime: audio.currentTime,
             volume: audio.volume,
             muted: audio.muted,
-            paused: audio.paused || audio.ended
+            paused: audio.paused || audio.ended,
+            trackIdx: parseInt(audio.dataset.trackIdx || '0')
           }));
         } catch(e) {}
       });

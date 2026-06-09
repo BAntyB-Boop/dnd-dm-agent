@@ -557,7 +557,7 @@ body.th-active .dm-voice p{font-family:"Noto Serif Thai",serif;font-size:.95rem;
 </div>
 <div class="grain" aria-hidden="true"></div>
 
-<audio id="bg-audio" src="/assets/borderland-echoes.mp3" loop preload="auto"></audio>
+<audio id="bg-audio" src="/assets/borderland-echoes.mp3" preload="auto"></audio>
 
 <a class="back-link" href="/story">
   <span class="arr"></span>
@@ -1101,17 +1101,40 @@ function setLang(l){
     volSlider.style.setProperty('--fill', pct);
   }
 
+  const playlist = [
+    '/assets/borderland-echoes.mp3',
+    '/assets/celestial-warpath.mp3'
+  ];
+  let trackIdx = 0;
+
+  // เมื่อเพลงจบให้สลับ track เหมือน story page
+  audio.addEventListener('ended', function(){
+    trackIdx = (trackIdx + 1) % playlist.length;
+    audio.dataset.trackIdx = trackIdx;
+    audio.src = playlist[trackIdx];
+    audio.load();
+    audio.play().catch(() => {});
+  });
+
   // Restore carried state from story page (takes priority)
   let carried = null;
   try { carried = JSON.parse(sessionStorage.getItem('music-carry')); } catch(e) {}
 
   if (carried) {
     sessionStorage.removeItem('music-carry');
-    audio.volume       = carried.volume   ?? 0.3;
-    audio.muted        = carried.muted    ?? false;
-    audio.currentTime  = carried.currentTime ?? 0;
-    volSlider.value    = audio.volume;
+    audio.volume = carried.volume ?? 0.3;
+    audio.muted  = carried.muted  ?? false;
+    volSlider.value = audio.volume;
     if (audio.muted){ iconSound.style.display = 'none'; iconMute.style.display = ''; }
+
+    // ตั้ง track ที่ถูกต้องแล้ว seek ไปยัง currentTime
+    trackIdx = carried.trackIdx ?? 0;
+    audio.dataset.trackIdx = trackIdx;
+    audio.src = playlist[trackIdx];
+    audio.load();
+    audio.addEventListener('loadedmetadata', function(){
+      audio.currentTime = carried.currentTime ?? 0;
+    }, { once: true });
   } else {
     // Fallback: read localStorage prefs
     try {

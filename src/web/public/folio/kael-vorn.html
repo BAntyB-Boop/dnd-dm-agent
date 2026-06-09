@@ -622,6 +622,7 @@ em,i{font-style:italic;color:var(--ink-soft)}
 </head>
 <body>
 
+<div id="read-progress" aria-hidden="true"></div>
 <audio id="bg-audio" src="/assets/ashen-charge.mp3" loop preload="auto"></audio>
 
 <!-- Music control -->
@@ -1065,6 +1066,23 @@ em,i{font-style:italic;color:var(--ink-soft)}
 
 </div>
 
+<nav class="folio-nav" aria-label="Folio navigation">
+  <a class="folio-nav-link prev" href="/folio/anuchit">
+    <span class="fn-arr"></span>
+    <span class="fn-label">
+      <span class="fn-num">Folio · IV</span>
+      <span class="fn-name">Anuchit Thepsuang</span>
+    </span>
+  </a>
+  <a class="folio-nav-link next" href="/folio/jen">
+    <span class="fn-label">
+      <span class="fn-num">Folio · VI</span>
+      <span class="fn-name">Jen Corner</span>
+    </span>
+    <span class="fn-arr"></span>
+  </a>
+</nav>
+
 <script>
   // ====== 1. Floating embers (hellfire) ======
   (function(){
@@ -1211,6 +1229,16 @@ em,i{font-style:italic;color:var(--ink-soft)}
   })();
 </script>
 <script src="shared.js"></script>
+<script>
+  (function(){
+    const bar = document.getElementById('read-progress');
+    if(!bar) return;
+    window.addEventListener('scroll', function(){
+      const dh = document.documentElement.scrollHeight - window.innerHeight;
+      bar.style.width = (dh > 0 ? (window.scrollY / dh * 100) : 0) + '%';
+    }, { passive: true });
+  })();
+</script>
 
 </body>
 </html>

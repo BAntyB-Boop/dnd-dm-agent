@@ -814,6 +814,7 @@ em,i{font-style:italic;color:var(--ink-soft)}
 </head>
 <body>
 
+<div id="read-progress" aria-hidden="true"></div>
 <audio id="bg-audio" src="/assets/fallow-crown.mp3" loop preload="auto"></audio>
 
 <a class="back-link" href="/"><span class="arr"></span>Back to Codex</a>
@@ -1533,6 +1534,28 @@ em,i{font-style:italic;color:var(--ink-soft)}
     </div><!-- /crow-scroll-box -->
   </div><!-- /crow-scroll-outer -->
 </div><!-- /crow-scroll-bg -->
+
+<nav class="folio-nav" aria-label="Folio navigation">
+  <a class="folio-nav-link prev" href="/folio/kael-vorn">
+    <span class="fn-arr"></span>
+    <span class="fn-label">
+      <span class="fn-num">Folio · V</span>
+      <span class="fn-name">Kael Vorn</span>
+    </span>
+  </a>
+  <span class="folio-nav-spacer"></span>
+</nav>
+
+<script>
+  (function(){
+    const bar = document.getElementById('read-progress');
+    if(!bar) return;
+    window.addEventListener('scroll', function(){
+      const dh = document.documentElement.scrollHeight - window.innerHeight;
+      bar.style.width = (dh > 0 ? (window.scrollY / dh * 100) : 0) + '%';
+    }, { passive: true });
+  })();
+</script>
 
 </body>
 </html>

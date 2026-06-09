@@ -888,6 +888,7 @@ body.cellar .wine-stain{opacity:1}
 </head>
 <body>
 
+<div id="read-progress" aria-hidden="true"></div>
 <audio id="bg-audio" src="/assets/gilded-chalice-waltz.mp3" preload="auto"></audio>
 
 <!-- Music control -->
@@ -1310,6 +1311,23 @@ body.cellar .wine-stain{opacity:1}
 
 </div>
 
+<nav class="folio-nav" aria-label="Folio navigation">
+  <a class="folio-nav-link prev" href="/folio/aurora">
+    <span class="fn-arr"></span>
+    <span class="fn-label">
+      <span class="fn-num">Folio · I</span>
+      <span class="fn-name">Aurora Elaris</span>
+    </span>
+  </a>
+  <a class="folio-nav-link next" href="/folio/kael-veranth">
+    <span class="fn-label">
+      <span class="fn-num">Folio · III</span>
+      <span class="fn-name">Kael Veranth</span>
+    </span>
+    <span class="fn-arr"></span>
+  </a>
+</nav>
+
 <script>
   // ====== 1. Name letter-by-letter reveal ======
   (function(){
@@ -1475,6 +1493,16 @@ body.cellar .wine-stain{opacity:1}
   })();
 </script>
 <script src="shared.js"></script>
+<script>
+  (function(){
+    const bar = document.getElementById('read-progress');
+    if(!bar) return;
+    window.addEventListener('scroll', function(){
+      const dh = document.documentElement.scrollHeight - window.innerHeight;
+      bar.style.width = (dh > 0 ? (window.scrollY / dh * 100) : 0) + '%';
+    }, { passive: true });
+  })();
+</script>
 
 </body>
 </html>

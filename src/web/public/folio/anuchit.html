@@ -971,6 +971,7 @@ body::after{
 </head>
 <body>
 
+<div id="read-progress" aria-hidden="true"></div>
 <audio id="bg-audio" src="/assets/khlui-at-dawn-shrine.mp3" loop preload="auto"></audio>
 
 <a class="back-link" href="/"><span class="arr"></span>Back to Codex</a>
@@ -1449,6 +1450,23 @@ body::after{
 
 </div>
 
+<nav class="folio-nav" aria-label="Folio navigation">
+  <a class="folio-nav-link prev" href="/folio/kael-veranth">
+    <span class="fn-arr"></span>
+    <span class="fn-label">
+      <span class="fn-num">Folio · III</span>
+      <span class="fn-name">Kael Veranth</span>
+    </span>
+  </a>
+  <a class="folio-nav-link next" href="/folio/kael-vorn">
+    <span class="fn-label">
+      <span class="fn-num">Folio · V</span>
+      <span class="fn-name">Kael Vorn</span>
+    </span>
+    <span class="fn-arr"></span>
+  </a>
+</nav>
+
 <script>
   // ====== 1. Floating motes + lotus petals ======
   (function(){
@@ -1870,6 +1888,16 @@ body::after{
   volSlider.addEventListener('change', function(){
     try { localStorage.setItem('anuchit-music-vol', audio.volume); } catch(e){}
   });
+})();
+
+// Reading progress
+(function(){
+  const bar = document.getElementById('read-progress');
+  if(!bar) return;
+  window.addEventListener('scroll', function(){
+    const dh = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (dh > 0 ? (window.scrollY / dh * 100) : 0) + '%';
+  }, { passive: true });
 })();
 </script>
 

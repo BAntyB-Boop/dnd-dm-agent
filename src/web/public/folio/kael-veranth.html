@@ -756,6 +756,7 @@ em,i{font-style:italic;color:var(--ink-soft)}
 </head>
 <body>
 
+<div id="read-progress" aria-hidden="true"></div>
 <audio id="bg-audio" src="/assets/ashen-pact.mp3" loop preload="auto"></audio>
 
 <a class="back-link" href="/"><span class="arr"></span>Back to Codex</a>
@@ -1104,6 +1105,23 @@ em,i{font-style:italic;color:var(--ink-soft)}
 
   <div class="colophon">Codex of the Veiled Watch · Folio III of VIII · Ashen Chronicle</div>
 </div>
+
+<nav class="folio-nav" aria-label="Folio navigation">
+  <a class="folio-nav-link prev" href="/folio/aython">
+    <span class="fn-arr"></span>
+    <span class="fn-label">
+      <span class="fn-num">Folio · II</span>
+      <span class="fn-name">Aython Aurelius</span>
+    </span>
+  </a>
+  <a class="folio-nav-link next" href="/folio/anuchit">
+    <span class="fn-label">
+      <span class="fn-num">Folio · IV</span>
+      <span class="fn-name">Anuchit Thepsuang</span>
+    </span>
+    <span class="fn-arr"></span>
+  </a>
+</nav>
 
 <!-- ===== FIRE FLASH ===== -->
 <div class="grm-fire-ov" id="grmFireOv" aria-hidden="true"></div>
@@ -1923,6 +1941,16 @@ em,i{font-style:italic;color:var(--ink-soft)}
       e.style.height = sz + 'px';
       container.appendChild(e);
     }
+  })();
+
+  // Reading progress
+  (function(){
+    const bar = document.getElementById('read-progress');
+    if(!bar) return;
+    window.addEventListener('scroll', function(){
+      const dh = document.documentElement.scrollHeight - window.innerHeight;
+      bar.style.width = (dh > 0 ? (window.scrollY / dh * 100) : 0) + '%';
+    }, { passive: true });
   })();
 </script>
 

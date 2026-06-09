@@ -795,6 +795,11 @@ body.th-active .roster-list-th{display:flex !important}
   *,*::before,*::after{animation-duration:0.001ms !important;animation-iteration-count:1 !important;transition-duration:0.001ms !important}
   .shader-wallpaper,.cosmos,.chapter-fx,.shooting-star{display:none}
 }
+#read-progress{
+  position:fixed;top:0;left:0;width:0%;height:2px;
+  background:linear-gradient(90deg, var(--gold), var(--gold-bright, #f6efd2));
+  z-index:999;transition:width .1s linear;pointer-events:none;
+}
 /* =================================================================
    COSMIC INTRO — scroll-driven zoom from cosmos → tavern
 ================================================================= */
@@ -1076,6 +1081,8 @@ body.th-active .roster-list-th{display:flex !important}
 </style>
 </head>
 <body>
+
+<div id="read-progress" aria-hidden="true"></div>
 
 <!-- =========== SHADER WALLPAPER =========== -->
 <div class="shader-wallpaper" id="shader" aria-hidden="true"></div>
@@ -2097,6 +2104,16 @@ body.th-active .roster-list-th{display:flex !important}
     update();
     window.addEventListener('scroll', onScroll, { passive:true });
     window.addEventListener('resize', onScroll);
+  })();
+
+  // ── Reading progress bar ──────────────────────────────────────
+  (function(){
+    const bar = document.getElementById('read-progress');
+    if(!bar) return;
+    window.addEventListener('scroll', function(){
+      const dh = document.documentElement.scrollHeight - window.innerHeight;
+      bar.style.width = (dh > 0 ? (window.scrollY / dh * 100) : 0) + '%';
+    }, { passive: true });
   })();
 </script>
 

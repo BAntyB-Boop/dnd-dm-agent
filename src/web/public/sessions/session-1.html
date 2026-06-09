@@ -545,10 +545,16 @@ body.th-active .dm-voice p{font-family:"Noto Serif Thai",serif;font-size:.95rem;
   *,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important}
   .shader-wallpaper,.cosmos,.chapter-fx,.shooting-star{display:none}
 }
+#read-progress{
+  position:fixed;top:0;left:0;width:0%;height:2px;
+  background:linear-gradient(90deg,var(--gold),var(--gold-bright));
+  z-index:999;transition:width .1s linear;pointer-events:none;
+}
 </style>
 </head>
 <body>
 
+<div id="read-progress" aria-hidden="true"></div>
 <div class="shader-wallpaper" id="shader"></div>
 <div class="cosmos" aria-hidden="true">
   <div class="star-layer l1"></div>
@@ -1061,20 +1067,23 @@ function setLang(l){
     shader.style.setProperty('--accent2', color);
   }
 
-  const io = new IntersectionObserver(entries => {
+  // Scroll reveal — add .in when chapter enters view
+  const ioReveal = new IntersectionObserver(entries => {
+    entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('in'); });
+  }, { threshold: 0.08 });
+  chapters.forEach(c => ioReveal.observe(c));
+
+  // Active nav tracking — band in upper viewport matches current chapter
+  const ioActive = new IntersectionObserver(entries => {
     entries.forEach(e => {
       if(e.isIntersecting){
-        e.target.classList.add('in');
         const id = e.target.id;
         setShaderAccent(chapterAccents[id] || '#c9a45c');
-        navLinks.forEach(a => {
-          a.classList.toggle('active', a.dataset.chapter === id);
-        });
+        navLinks.forEach(a => a.classList.toggle('active', a.dataset.chapter === id));
       }
     });
-  }, { threshold: 0.15 });
-
-  chapters.forEach(c => io.observe(c));
+  }, { rootMargin: '-15% 0px -55% 0px', threshold: 0 });
+  chapters.forEach(c => ioActive.observe(c));
 
   // smooth scroll for nav links
   navLinks.forEach(a => {
@@ -1195,6 +1204,16 @@ function setLang(l){
   volSlider.addEventListener('change', function(){
     try { localStorage.setItem('story-music-vol', audio.volume); } catch(e){}
   });
+})();
+
+// ── Reading progress bar ──────────────────────────────────────────
+(function(){
+  const bar = document.getElementById('read-progress');
+  if(!bar) return;
+  window.addEventListener('scroll', function(){
+    const dh = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (dh > 0 ? (window.scrollY / dh * 100) : 0) + '%';
+  }, { passive: true });
 })();
 
 // ── Shooting stars ────────────────────────────────────────────────

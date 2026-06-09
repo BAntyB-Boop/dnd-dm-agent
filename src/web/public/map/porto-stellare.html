@@ -1429,11 +1429,18 @@ DISTRICTS.forEach(d => {
     if(activeId === d.id) return;
     svg.querySelectorAll(`.district[data-id="${d.id}"]`).forEach(p => p.classList.add("highlighted"));
     svg.querySelectorAll(`.district-label[data-id="${d.id}"]`).forEach(l => l.classList.add("bright"));
+    const rect = item.getBoundingClientRect();
+    tip.innerHTML = `<b>${d.name}</b><span style="display:block;font-size:12px;color:#7a3a1a;margin-bottom:2px">⚡ ${d.tension}</span><span style="display:block;font-size:12px;font-style:italic;color:#2e244a">↪ ${d.hook}</span>`;
+    const tx = rect.right + 10;
+    const ty = Math.min(Math.max(rect.top - 20, 8), window.innerHeight - 140);
+    tip.style.left = tx + "px"; tip.style.top = ty + "px";
+    tip.classList.add("show");
   });
   item.addEventListener("mouseleave", () => {
     if(activeId === d.id) return;
     svg.querySelectorAll(`.district[data-id="${d.id}"]`).forEach(p => p.classList.remove("highlighted"));
     svg.querySelectorAll(`.district-label[data-id="${d.id}"]`).forEach(l => l.classList.remove("bright"));
+    tip.classList.remove("show");
   });
   legBody.appendChild(item);
 });

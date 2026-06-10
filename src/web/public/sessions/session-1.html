@@ -1413,7 +1413,7 @@ function setLang(l){
   }catch(e){}
 })();
 
-// ── J/K keyboard chapter navigation ─────────────────────────────
+// ── J/K/F keyboard chapter navigation ─────────────────────────────
 (function(){
   const chapters = Array.from(document.querySelectorAll('article.chapter[id]'));
   if(!chapters.length) return;
@@ -1424,13 +1424,21 @@ function setLang(l){
     return best;
   }
   document.addEventListener('keydown', function(e){
-    if(e.key !== 'j' && e.key !== 'J' && e.key !== 'k' && e.key !== 'K') return;
     if(e.ctrlKey || e.metaKey || e.altKey) return;
     var tag = (document.activeElement || {}).tagName || '';
     if(tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
-    var idx = currentIdx();
-    var next = (e.key === 'j' || e.key === 'J') ? Math.min(idx + 1, chapters.length - 1) : Math.max(idx - 1, 0);
-    if(next !== idx) chapters[next].scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if(e.key === 'j' || e.key === 'J' || e.key === 'k' || e.key === 'K'){
+      var idx = currentIdx();
+      var next = (e.key === 'j' || e.key === 'J') ? Math.min(idx + 1, chapters.length - 1) : Math.max(idx - 1, 0);
+      if(next !== idx) chapters[next].scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else if(e.key === 'f' || e.key === 'F'){
+      var cur = currentIdx();
+      var flagged = chapters.filter(function(ch){ return ch.classList.contains('flagged'); });
+      if(!flagged.length) return;
+      var after = flagged.filter(function(ch){ return chapters.indexOf(ch) > cur; });
+      var target = after.length ? after[0] : flagged[0];
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   });
 })();
 

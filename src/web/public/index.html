@@ -445,6 +445,13 @@ h1.title{
   color:var(--gold-dim);border:1px solid var(--gold-deep);padding:3px 7px;
   opacity:0.75;pointer-events:none;flex-shrink:0;
 }
+/* ---- Flag count on chronicle buttons ---- */
+.cb-flag-count{
+  font-family:"Cinzel",serif;font-size:0.42rem;letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--gold-dim);border:1px solid var(--gold-deep);padding:2px 7px;
+  opacity:0.8;flex-shrink:0;transition:opacity .2s;
+}
+.cb-btn:hover .cb-flag-count{opacity:1;color:var(--gold)}
 
 /* ============ FOOTER ============ */
 .colophon{
@@ -943,6 +950,42 @@ h1.title{
         }
       }
     });
+  })();
+
+  // ── Chronicle button: flagged chapter count badges ───────────────
+  (function(){
+    function countFlags(prefix){
+      var count = 0;
+      try{
+        for(var i = 0; i < localStorage.length; i++){
+          var k = localStorage.key(i);
+          if(k && k.indexOf(prefix) === 0 && localStorage.getItem(k) === '1') count++;
+        }
+      }catch(e){}
+      return count;
+    }
+    var storyFlags   = countFlags('story:flag:');
+    var sessionFlags = countFlags('session-1:flag:');
+    if(storyFlags > 0){
+      var storyBtn = document.querySelector('.cb-btns a[href="/story"]');
+      if(storyBtn){
+        var badge = document.createElement('span');
+        badge.className = 'cb-flag-count';
+        badge.textContent = '⚑ ' + storyFlags;
+        badge.title = storyFlags + ' chapter' + (storyFlags > 1 ? 's' : '') + ' flagged';
+        storyBtn.insertBefore(badge, storyBtn.querySelector('.arr'));
+      }
+    }
+    if(sessionFlags > 0){
+      var sessionBtn = document.querySelector('.cb-btns a[href="/sessions/session-1"]');
+      if(sessionBtn){
+        var badge2 = document.createElement('span');
+        badge2.className = 'cb-flag-count';
+        badge2.textContent = '⚑ ' + sessionFlags;
+        badge2.title = sessionFlags + ' chapter' + (sessionFlags > 1 ? 's' : '') + ' flagged';
+        sessionBtn.insertBefore(badge2, sessionBtn.querySelector('.arr'));
+      }
+    }
   })();
 
   // ── Scroll-to-top ────────────────────────────────────────────────

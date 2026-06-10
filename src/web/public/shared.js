@@ -35,11 +35,53 @@
   });
 })();
 
+// Arrow keys — navigate prev/next folio when .folio-nav-link exists
+(function() {
+  var prev = document.querySelector('.folio-nav-link.prev');
+  var next = document.querySelector('.folio-nav-link.next');
+  if (!prev && !next) return;
+  document.addEventListener('keydown', function(e) {
+    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    if (e.shiftKey || e.ctrlKey || e.metaKey || e.altKey) return;
+    var tag = (document.activeElement || {}).tagName || '';
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+    var link = e.key === 'ArrowLeft' ? prev : next;
+    if (link) { e.preventDefault(); window.location.href = link.href; }
+  });
+})();
+
 // Folio visit tracking — record timestamp on folio pages so the roster can show recent visits
 (function() {
   if (!document.querySelector('.folio-nav')) return;
   var key = 'folio:visited:' + window.location.pathname.replace(/\//g, '-').replace(/^-/, '');
   try { localStorage.setItem(key, Date.now()); } catch(e) {}
+})();
+
+// Folio scroll persistence — save and restore scroll position per folio
+(function() {
+  if (!document.querySelector('.folio-nav')) return;
+  var scrollKey = 'folio:scroll:' + window.location.pathname.replace(/\//g, '-').replace(/^-/, '');
+  // Restore on load (skip if URL has an anchor hash)
+  try {
+    var saved = parseInt(localStorage.getItem(scrollKey) || '0', 10);
+    if (saved > 200 && !window.location.hash) window.scrollTo(0, saved);
+  } catch(e) {}
+  // Save on scroll (debounced)
+  var scrollTimer;
+  window.addEventListener('scroll', function() {
+    if (window.scrollY < 200) return;
+    clearTimeout(scrollTimer);
+    scrollTimer = setTimeout(function() {
+      try { localStorage.setItem(scrollKey, window.scrollY); } catch(e) {}
+    }, 500);
+  }, { passive: true });
+  // Clear when scroll-to-top is clicked
+  var scrollTopBtn = document.getElementById('scroll-top');
+  if (scrollTopBtn) {
+    scrollTopBtn.addEventListener('click', function() {
+      try { localStorage.removeItem(scrollKey); } catch(e) {}
+    });
+  }
 })();
 
 // Folio DM note — inject collapsible textarea before .colophon on folio pages only

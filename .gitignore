@@ -7,5 +7,6 @@ dnd.db-wal
 maps/
 avatars/
 monsters/
+!src/web/public/monsters/
 *.log
 .claude/

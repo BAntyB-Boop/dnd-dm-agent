@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Monster — Bestiary</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --bg-deep:#07070a;
+  --bg-paper:#0e0e13;
+  --bg-card:#15151c;
+  --bg-card-2:#1c1c25;
+  --line:#2a2a35;
+  --line-soft:#1d1d25;
+  --ink:#e8e2cf;
+  --ink-soft:#c9c2ad;
+  --ink-mute:#7a7461;
+  --ink-faint:#4a4636;
+  --gold:#c9a45c;
+  --gold-dim:#8a6f3a;
+  --gold-deep:#5a4622;
+  --blood:#8c2222;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg-deep);color:var(--ink);overflow-x:hidden;min-height:100vh}
+body{
+  background:
+    radial-gradient(1200px 800px at 50% -10%,#14141d 0%,transparent 60%),
+    radial-gradient(900px 600px at 50% 110%,#110b0b 0%,transparent 65%),
+    var(--bg-deep);
+}
+
+/* ── Topbar ── */
+#topbar{
+  position:fixed;top:0;left:0;right:0;z-index:80;
+  height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;
+  background:linear-gradient(180deg,rgba(7,7,10,0.97),rgba(7,7,10,0.88));
+  border-bottom:1px solid rgba(201,164,92,0.18);backdrop-filter:blur(8px);
+}
+.breadcrumb{display:flex;align-items:center;gap:10px;font-family:"Cinzel",serif;font-size:10.5px;letter-spacing:.24em;text-transform:uppercase}
+.breadcrumb a{color:rgba(201,164,92,0.5);text-decoration:none;transition:color .2s}
+.breadcrumb a:hover{color:var(--gold)}
+.breadcrumb .sep{color:rgba(201,164,92,0.3)}
+.breadcrumb .cur{color:rgba(232,226,207,0.8)}
+
+/* ── Ambient motes ── */
+.atmos{position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden}
+.mote{
+  position:absolute;bottom:-12px;width:2px;height:2px;border-radius:50%;
+  background:radial-gradient(circle,#fff5d0,var(--gold) 50%,transparent 80%);
+  box-shadow:0 0 6px rgba(201,164,92,0.4);
+  animation:mote-rise linear infinite;opacity:0;
+}
+@keyframes mote-rise{
+  0%{transform:translate(0,0) scale(0.6);opacity:0}
+  10%{opacity:0.7}
+  100%{transform:translate(var(--dx,40px),-110vh) scale(0.2);opacity:0}
+}
+@keyframes fade-up{0%{opacity:0;transform:translateY(12px)}100%{opacity:1;transform:translateY(0)}}
+
+/* ── Page ── */
+.page{max-width:900px;margin:0 auto;padding:80px clamp(16px,3vw,40px) 80px;position:relative;z-index:5}
+
+/* ── Loading / error ── */
+#state{
+  text-align:center;padding:100px 20px;
+  font-family:"Cinzel",serif;font-size:0.75rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--ink-mute);
+  display:none;
+}
+#state.vis{display:block}
+#state.err{color:var(--blood)}
+
+/* ── Stat block wrapper ── */
+#monster{display:none}
+#monster.vis{display:block;animation:fade-up 0.7s ease-out both}
+
+/* ── Monster header ── */
+.mon-header{margin-bottom:32px;position:relative}
+.mon-header .seal-rule{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:16px}
+.seal-rule .line{flex:1 1 40px;max-width:140px;height:1px;background:linear-gradient(to right,transparent,var(--gold-dim) 50%,transparent)}
+.seal-rule .diamond{width:7px;height:7px;border:1px solid var(--gold-dim);background:var(--bg-deep);transform:rotate(45deg)}
+
+.mon-name{
+  font-family:"Cinzel Decorative","Cinzel",serif;font-weight:700;text-align:center;
+  font-size:clamp(28px,5vw,56px);letter-spacing:0.12em;line-height:1.1;margin-bottom:8px;
+  background:linear-gradient(180deg,#f6efd2 0%,var(--gold) 60%,var(--gold-deep) 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;
+}
+.mon-meta-line{
+  text-align:center;font-family:"Cormorant Garamond",serif;font-style:italic;
+  font-size:1.05rem;color:var(--ink-mute);text-transform:capitalize;
+}
+
+/* ── Stat block frame ── */
+.sb{
+  position:relative;border:1px solid var(--gold-dim);
+  background:linear-gradient(180deg,rgba(201,164,92,0.04) 0%,transparent 40%),var(--bg-card);
+  padding:28px clamp(20px,4vw,40px);margin-bottom:20px;
+}
+.sb::before,.sb::after,.sb .sb-bl,.sb .sb-br{
+  content:"";position:absolute;width:10px;height:10px;
+  border:1px solid var(--gold-dim);background:var(--bg-deep);transform:rotate(45deg);pointer-events:none;
+}
+.sb::before{top:-5px;left:-5px}
+.sb::after{top:-5px;right:-5px}
+.sb .sb-bl{bottom:-5px;left:-5px}
+.sb .sb-br{bottom:-5px;right:-5px}
+
+/* ── Divider ── */
+.sb-divider{height:1px;background:linear-gradient(to right,transparent,var(--gold-dim) 40%,transparent);margin:18px 0}
+
+/* ── Core stats row (AC / HP / Speed) ── */
+.core-stats{display:flex;flex-wrap:wrap;gap:0;border:1px solid var(--line)}
+.core-stat{flex:1 1 100px;padding:14px 16px;text-align:center;border-right:1px solid var(--line)}
+.core-stat:last-child{border-right:none}
+.cs-label{font-family:"Cinzel",serif;font-size:0.54rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--gold-dim);display:block;margin-bottom:4px}
+.cs-val{font-family:"Cinzel",serif;font-size:1rem;color:var(--ink);letter-spacing:0.05em}
+.cs-note{font-family:"Cormorant Garamond",serif;font-style:italic;font-size:0.78rem;color:var(--ink-mute);margin-top:2px}
+
+/* ── Ability scores ── */
+.ability-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:0;border:1px solid var(--line)}
+.ability-cell{padding:14px 8px;text-align:center;border-right:1px solid var(--line)}
+.ability-cell:last-child{border-right:none}
+.ab-name{font-family:"Cinzel",serif;font-size:0.54rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--gold-dim);display:block;margin-bottom:4px}
+.ab-score{font-family:"Cinzel",serif;font-size:1.1rem;color:var(--ink)}
+.ab-mod{font-family:"Cinzel",serif;font-size:0.7rem;color:var(--ink-mute);margin-top:2px}
+@media(max-width:480px){
+  .ability-grid{grid-template-columns:repeat(3,1fr)}
+  .ability-cell:nth-child(3){border-right:none}
+  .ability-cell:nth-child(3)~.ability-cell{border-top:1px solid var(--line)}
+}
+
+/* ── Attribute rows ── */
+.attr-table{width:100%;border-collapse:collapse}
+.attr-table tr{border-bottom:1px solid var(--line-soft)}
+.attr-table tr:last-child{border-bottom:none}
+.attr-table td{padding:7px 0;vertical-align:top}
+.attr-key{
+  font-family:"Cinzel",serif;font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--gold);white-space:nowrap;padding-right:16px;min-width:160px;
+}
+.attr-val{font-family:"Cormorant Garamond",serif;font-size:0.95rem;color:var(--ink-soft);line-height:1.4;text-transform:capitalize}
+
+/* ── Traits / Actions sections ── */
+.section-head{
+  display:flex;align-items:center;gap:14px;margin:28px 0 16px;
+}
+.section-head .sh-line{flex:1;height:1px;background:linear-gradient(to right,var(--gold-dim),transparent)}
+.section-head .sh-label{font-family:"Cinzel",serif;font-size:0.64rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);white-space:nowrap}
+.section-head .sh-diamond{width:6px;height:6px;border:1px solid var(--gold-dim);background:var(--bg-deep);transform:rotate(45deg);flex-shrink:0}
+
+.entry{margin-bottom:14px}
+.entry-name{font-family:"Cinzel",serif;font-size:0.72rem;font-weight:600;letter-spacing:0.08em;color:var(--ink);margin-bottom:4px}
+.entry-name em{font-family:"Cormorant Garamond",serif;font-weight:400;font-style:italic;font-size:0.82rem;color:var(--ink-soft)}
+.entry-desc{font-family:"Cormorant Garamond",serif;font-size:0.97rem;color:var(--ink-soft);line-height:1.55}
+.entry-desc p+p{margin-top:6px}
+
+/* ── CR badge ── */
+.cr-badge{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:10px 20px;border:1px solid var(--gold-dim);background:rgba(201,164,92,0.06);
+  font-family:"Cinzel",serif;font-size:0.68rem;letter-spacing:0.22em;text-transform:uppercase;
+  color:var(--gold);
+}
+.cr-badge .xp{color:var(--ink-mute)}
+.cr-foot{margin-top:18px;text-align:center}
+</style>
+</head>
+<body>
+
+<div class="atmos" id="atmos"></div>
+
+<div id="topbar">
+  <nav class="breadcrumb">
+    <a href="/">Codex</a>
+    <span class="sep">◆</span>
+    <a href="/bestiary">Bestiary</a>
+    <span class="sep">◆</span>
+    <span class="cur" id="bc-name">…</span>
+  </nav>
+</div>
+
+<div class="page">
+  <div id="state" class="vis">Consulting the tome…</div>
+
+  <div id="monster">
+    <!-- filled by JS -->
+  </div>
+</div>
+
+<script>
+const API_BASE = 'https://www.dnd5eapi.co/api/2014';
+
+function mod(score) {
+  const m = Math.floor((score - 10) / 2);
+  return (m >= 0 ? '+' : '') + m;
+}
+
+function crLabel(cr) {
+  if (cr === 0.125) return '1/8';
+  if (cr === 0.25)  return '1/4';
+  if (cr === 0.5)   return '1/2';
+  return String(cr);
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ── Ambient motes ──
+(function(){
+  const atmos = document.getElementById('atmos');
+  for (let i = 0; i < 14; i++) {
+    const m = document.createElement('div');
+    m.className = 'mote';
+    m.style.cssText = `left:${Math.random()*100}%;--dx:${(Math.random()-0.5)*80}px;animation-duration:${8+Math.random()*14}s;animation-delay:${Math.random()*-20}s;width:${1.5+Math.random()}px;height:${1.5+Math.random()}px`;
+    atmos.appendChild(m);
+  }
+})();
+
+// ── Parse ?m= param ──
+const idx = new URLSearchParams(location.search).get('m');
+if (!idx) {
+  showErr('No monster specified. Return to the <a href="/bestiary">Bestiary</a>.');
+} else {
+  loadMonster(idx);
+}
+
+function showErr(html) {
+  const el = document.getElementById('state');
+  el.innerHTML = html;
+  el.classList.add('err');
+}
+
+async function loadMonster(index) {
+  const cacheKey = `monsters:detail:v1:${index}`;
+  let data;
+  const cached = localStorage.getItem(cacheKey);
+  if (cached) {
+    try { data = JSON.parse(cached); } catch {}
+  }
+  if (!data) {
+    try {
+      const res = await fetch(`${API_BASE}/monsters/${index}`);
+      if (!res.ok) throw new Error(res.status);
+      data = await res.json();
+      localStorage.setItem(cacheKey, JSON.stringify(data));
+    } catch (e) {
+      showErr(`Could not load <em>${escHtml(index)}</em>. Check your connection or return to the <a href="/bestiary">Bestiary</a>.`);
+      return;
+    }
+  }
+  render(data);
+}
+
+function render(d) {
+  document.title = `${d.name} — Bestiary`;
+  document.getElementById('bc-name').textContent = d.name;
+
+  const stateEl = document.getElementById('state');
+  stateEl.classList.remove('vis');
+
+  const wrap = document.getElementById('monster');
+  wrap.innerHTML = buildHTML(d);
+  wrap.classList.add('vis');
+}
+
+function buildHTML(d) {
+  const stats = ['strength','dexterity','constitution','intelligence','wisdom','charisma'];
+  const abbrv = ['STR','DEX','CON','INT','WIS','CHA'];
+
+  // ── Ability scores ──
+  const abilCells = stats.map((s, i) =>
+    `<div class="ability-cell">
+      <span class="ab-name">${abbrv[i]}</span>
+      <div class="ab-score">${d[s] ?? '—'}</div>
+      <div class="ab-mod">${d[s] != null ? mod(d[s]) : ''}</div>
+    </div>`
+  ).join('');
+
+  // ── Speed ──
+  const speed = d.speed ? Object.entries(d.speed).map(([k,v]) => k === 'walk' ? v : `${k} ${v}`).join(', ') : '—';
+
+  // ── AC ──
+  const ac = Array.isArray(d.armor_class)
+    ? d.armor_class.map(a => `${a.value}${a.type && a.type !== 'natural' ? ` (${a.type})` : ''}`).join(', ')
+    : (d.armor_class ?? '—');
+
+  // ── HP ──
+  const hp = d.hit_points_roll
+    ? `${d.hit_points} (${d.hit_points_roll})`
+    : (d.hit_points ?? '—');
+
+  // ── Proficiencies: saves vs skills ──
+  const saves = [], skills = [];
+  for (const p of (d.proficiencies ?? [])) {
+    const name = p.proficiency?.name ?? '';
+    if (name.startsWith('Saving Throw: ')) saves.push(`${name.replace('Saving Throw: ','')} +${p.value}`);
+    else if (name.startsWith('Skill: ')) skills.push(`${name.replace('Skill: ','')} +${p.value}`);
+  }
+
+  // ── Senses ──
+  const senses = d.senses
+    ? Object.entries(d.senses).map(([k,v]) => {
+        const label = k.replace(/_/g,' ');
+        return `${label} ${v}`;
+      }).join(', ')
+    : '—';
+
+  // ── Attribute rows ──
+  function attrRow(key, val) {
+    if (!val || (Array.isArray(val) && !val.length)) return '';
+    return `<tr><td class="attr-key">${key}</td><td class="attr-val">${Array.isArray(val) ? val.join(', ') : val}</td></tr>`;
+  }
+
+  const attrRows = [
+    attrRow('Saving Throws', saves),
+    attrRow('Skills', skills),
+    attrRow('Damage Vulnerabilities', d.damage_vulnerabilities),
+    attrRow('Damage Resistances', d.damage_resistances),
+    attrRow('Damage Immunities', d.damage_immunities),
+    attrRow('Condition Immunities', (d.condition_immunities ?? []).map(c => c.name ?? c.index ?? c)),
+    attrRow('Senses', [senses]),
+    attrRow('Languages', [d.languages || '—']),
+  ].join('');
+
+  // ── Entries builder ──
+  function entryBlock(e) {
+    const usageLine = e.usage ? ` <em>(${e.usage.type?.replace(/-/g,' ') ?? ''}${e.usage.times ? ` ${e.usage.times}/` : ''}${e.usage.rest_types?.join(', ') ?? ''})</em>` : '';
+    const dcLine = e.dc ? ` <em>DC ${e.dc.dc_value} ${e.dc.dc_type?.name ?? ''}</em>` : '';
+    const dmgLine = (e.damage ?? []).map(dm =>
+      `${dm.damage_dice ?? ''} ${dm.damage_type?.name ?? ''}`.trim()
+    ).filter(Boolean).join(', ');
+
+    let desc = escHtml(e.desc ?? '');
+    return `<div class="entry">
+      <div class="entry-name">${escHtml(e.name ?? '')}${usageLine}${dcLine}${dmgLine ? ` — <em>${escHtml(dmgLine)}</em>` : ''}</div>
+      <div class="entry-desc">${desc.replace(/\n+/g,'<br>')}</div>
+    </div>`;
+  }
+
+  function section(label, items) {
+    if (!items?.length) return '';
+    return `<div class="section-head">
+        <span class="sh-diamond"></span>
+        <span class="sh-label">${label}</span>
+        <div class="sh-line"></div>
+      </div>
+      ${items.map(entryBlock).join('')}`;
+  }
+
+  // ── Meta line ──
+  const metaParts = [d.size, d.type, d.subtype ? `(${d.subtype})` : '', d.alignment].filter(Boolean);
+
+  // ── CR / XP ──
+  const xp = d.xp != null ? `${d.xp.toLocaleString()} XP` : '';
+
+  return `
+    <header class="mon-header">
+      <div class="seal-rule"><div class="line"></div><div class="diamond"></div><div class="line"></div></div>
+      <h1 class="mon-name">${escHtml(d.name)}</h1>
+      <div class="mon-meta-line">${escHtml(metaParts.join(' '))}</div>
+    </header>
+
+    <div class="sb">
+      <div class="sb-bl"></div><div class="sb-br"></div>
+
+      <div class="core-stats">
+        <div class="core-stat">
+          <span class="cs-label">Armor Class</span>
+          <div class="cs-val">${escHtml(String(ac))}</div>
+        </div>
+        <div class="core-stat">
+          <span class="cs-label">Hit Points</span>
+          <div class="cs-val">${escHtml(String(hp))}</div>
+        </div>
+        <div class="core-stat">
+          <span class="cs-label">Speed</span>
+          <div class="cs-val">${escHtml(speed)}</div>
+        </div>
+      </div>
+
+      <div class="sb-divider"></div>
+
+      <div class="ability-grid">${abilCells}</div>
+
+      ${attrRows ? `<div class="sb-divider"></div><table class="attr-table">${attrRows}</table>` : ''}
+    </div>
+
+    ${section('Traits', d.special_abilities)}
+    ${section('Actions', d.actions)}
+    ${section('Reactions', d.reactions)}
+    ${section('Legendary Actions', d.legendary_actions)}
+
+    <div class="cr-foot">
+      <div class="cr-badge">
+        Challenge Rating ${crLabel(d.challenge_rating ?? 0)}
+        ${xp ? `<span class="xp">· ${escHtml(xp)}</span>` : ''}
+      </div>
+    </div>
+  `;
+}
+</script>
+</body>
+</html>

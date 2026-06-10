@@ -1,0 +1,420 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Bestiary — The Veiled Codex</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --bg-deep:#07070a;
+  --bg-paper:#0e0e13;
+  --bg-card:#15151c;
+  --bg-card-2:#1c1c25;
+  --line:#2a2a35;
+  --line-soft:#1d1d25;
+  --ink:#e8e2cf;
+  --ink-soft:#c9c2ad;
+  --ink-mute:#7a7461;
+  --ink-faint:#4a4636;
+  --gold:#c9a45c;
+  --gold-dim:#8a6f3a;
+  --gold-deep:#5a4622;
+  --blood:#b01a1a;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg-deep);color:var(--ink);overflow-x:hidden;min-height:100vh}
+body{
+  background:
+    radial-gradient(1200px 800px at 50% -10%, #14141d 0%, transparent 60%),
+    radial-gradient(900px 600px at 50% 110%, #110b0b 0%, transparent 65%),
+    var(--bg-deep);
+}
+
+/* ── Topbar ── */
+#topbar{
+  position:fixed;top:0;left:0;right:0;z-index:80;
+  height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;
+  background:linear-gradient(180deg,rgba(7,7,10,0.97),rgba(7,7,10,0.88));
+  border-bottom:1px solid rgba(201,164,92,0.18);backdrop-filter:blur(8px);
+}
+.breadcrumb{display:flex;align-items:center;gap:10px;font-family:"Cinzel",serif;font-size:10.5px;letter-spacing:.24em;text-transform:uppercase}
+.breadcrumb a{color:rgba(201,164,92,0.5);text-decoration:none;transition:color .2s}
+.breadcrumb a:hover{color:var(--gold)}
+.breadcrumb .sep{color:rgba(201,164,92,0.3)}
+.breadcrumb .cur{color:rgba(232,226,207,0.8)}
+.topbar-count{font-family:"Cinzel",serif;font-size:10px;letter-spacing:.22em;color:var(--ink-mute);text-transform:uppercase}
+
+/* ── Ambient motes ── */
+.atmos{position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden}
+.mote{
+  position:absolute;bottom:-12px;width:2px;height:2px;border-radius:50%;
+  background:radial-gradient(circle,#fff5d0,var(--gold) 50%,transparent 80%);
+  box-shadow:0 0 6px rgba(201,164,92,0.4);
+  animation:mote-rise linear infinite;opacity:0;
+}
+@keyframes mote-rise{
+  0%{transform:translate(0,0) scale(0.6);opacity:0}
+  10%{opacity:0.7}
+  100%{transform:translate(var(--dx,40px),-110vh) scale(0.2);opacity:0}
+}
+
+/* ── Page layout ── */
+.page{max-width:1400px;margin:0 auto;padding:80px clamp(16px,3vw,40px) 80px;position:relative;z-index:5}
+
+/* ── Header ── */
+.page-head{text-align:center;margin-bottom:48px;animation:fade-up 0.8s ease-out 0.1s both}
+@keyframes fade-up{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:translateY(0)}}
+
+.seal-rule{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:20px}
+.seal-rule .line{flex:1 1 40px;max-width:160px;height:1px;background:linear-gradient(to right,transparent,var(--gold-dim) 50%,transparent)}
+.seal-rule .diamond{width:8px;height:8px;border:1px solid var(--gold-dim);background:var(--bg-deep);transform:rotate(45deg)}
+
+.page-eyebrow{font-family:"Cinzel",serif;font-size:0.6rem;letter-spacing:0.38em;text-transform:uppercase;color:var(--gold-dim);display:block;margin-bottom:12px}
+h1.page-title{
+  font-family:"Cinzel Decorative","Cinzel",serif;font-weight:700;
+  font-size:clamp(36px,5vw,72px);letter-spacing:0.14em;line-height:1;margin:0 0 10px;
+  background:linear-gradient(180deg,#f6efd2 0%,var(--gold) 60%,var(--gold-deep) 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;
+}
+.page-sub{font-family:"Cormorant Garamond",serif;font-style:italic;color:var(--ink-mute);font-size:1.1rem;max-width:520px;margin:0 auto}
+
+/* ── Filter bar ── */
+.filter-bar{
+  display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;
+  padding:20px 24px;margin-bottom:32px;
+  border:1px solid var(--line);background:var(--bg-card);position:relative;
+  animation:fade-up 0.8s ease-out 0.3s both;
+}
+.filter-bar::before,.filter-bar::after,.filter-bar .fc-bl,.filter-bar .fc-br{
+  content:"";position:absolute;width:8px;height:8px;
+  border:1px solid var(--gold-deep);background:var(--bg-deep);transform:rotate(45deg);pointer-events:none;
+}
+.filter-bar::before{top:-4px;left:-4px}
+.filter-bar::after{top:-4px;right:-4px}
+.filter-bar .fc-bl{bottom:-4px;left:-4px}
+.filter-bar .fc-br{bottom:-4px;right:-4px}
+
+.filter-group{display:flex;flex-direction:column;gap:5px;min-width:120px}
+.filter-group.wide{flex:1 1 220px}
+.filter-label{font-family:"Cinzel",serif;font-size:0.55rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold-dim)}
+.filter-input,.filter-select{
+  background:var(--bg-paper);border:1px solid var(--line);color:var(--ink);
+  font-family:"Cinzel",serif;font-size:0.72rem;letter-spacing:0.08em;
+  padding:8px 12px;outline:none;transition:border-color .2s;
+}
+.filter-input::placeholder{color:var(--ink-faint)}
+.filter-input:focus,.filter-select:focus{border-color:var(--gold-dim)}
+.filter-select option{background:var(--bg-paper)}
+.cr-range{display:flex;align-items:center;gap:8px}
+.cr-range .filter-input{width:64px}
+.cr-range .cr-sep{color:var(--ink-mute);font-size:0.7rem}
+
+.filter-stats{
+  margin-left:auto;align-self:flex-end;
+  font-family:"Cinzel",serif;font-size:0.62rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--ink-mute);
+  white-space:nowrap;
+}
+.filter-stats span{color:var(--gold)}
+
+/* ── Monster grid ── */
+.monster-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+  gap:12px;
+  animation:fade-up 0.8s ease-out 0.5s both;
+}
+
+/* ── Monster card ── */
+.m-card{
+  position:relative;text-decoration:none;color:inherit;
+  display:flex;flex-direction:column;padding:16px 18px 14px;
+  background:linear-gradient(180deg,var(--bg-card),var(--bg-card-2));
+  border:1px solid var(--line);overflow:hidden;cursor:pointer;isolation:isolate;
+  transition:transform 0.3s cubic-bezier(.2,.7,.2,1),border-color 0.3s,box-shadow 0.3s;
+}
+.m-card::before,.m-card::after,.m-card .cc-bl,.m-card .cc-br{
+  content:"";position:absolute;width:7px;height:7px;
+  border:1px solid var(--gold-deep);background:var(--bg-deep);transform:rotate(45deg);
+  z-index:7;pointer-events:none;transition:border-color 0.3s;
+}
+.m-card::before{top:-3.5px;left:-3.5px}
+.m-card::after{top:-3.5px;right:-3.5px}
+.m-card .cc-bl{bottom:-3.5px;left:-3.5px}
+.m-card .cc-br{bottom:-3.5px;right:-3.5px}
+
+.m-card:hover{transform:translateY(-3px);border-color:var(--gold-dim);box-shadow:0 8px 32px rgba(201,164,92,0.12)}
+.m-card:hover::before,.m-card:hover::after,.m-card:hover .cc-bl,.m-card:hover .cc-br{border-color:var(--gold-dim)}
+
+/* shimmer on hover */
+.m-card::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(120deg,transparent 30%,rgba(201,164,92,0.07) 50%,transparent 70%);
+  transform:translateX(-100%);transition:transform 0.5s ease;z-index:1;
+}
+.m-card:hover::after{transform:translateX(100%)}
+.m-card .cc-br{content:"";z-index:8}
+
+.m-name{font-family:"Cinzel",serif;font-size:0.82rem;font-weight:600;letter-spacing:0.06em;color:var(--ink);line-height:1.2;margin-bottom:8px;position:relative;z-index:2}
+.m-meta{display:flex;align-items:center;justify-content:space-between;position:relative;z-index:2}
+.m-type-line{font-family:"Cormorant Garamond",serif;font-style:italic;font-size:0.8rem;color:var(--ink-mute);text-transform:capitalize}
+.m-cr{
+  font-family:"Cinzel",serif;font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--gold);background:rgba(201,164,92,0.08);
+  border:1px solid var(--gold-deep);padding:2px 7px;flex-shrink:0;
+}
+
+/* loading / error states */
+.state-msg{
+  grid-column:1/-1;text-align:center;padding:80px 20px;
+  font-family:"Cinzel",serif;font-size:0.72rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--ink-mute);
+}
+.state-msg.err{color:var(--blood)}
+
+/* back-to-top */
+#btt{
+  position:fixed;bottom:28px;right:28px;z-index:100;
+  width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+  background:var(--bg-card);border:1px solid var(--gold-deep);color:var(--gold);
+  cursor:pointer;transition:border-color .2s,opacity .2s,transform .2s;opacity:0;pointer-events:none;
+  font-size:16px;
+}
+#btt.vis{opacity:1;pointer-events:auto}
+#btt:hover{border-color:var(--gold);transform:translateY(-2px)}
+</style>
+</head>
+<body>
+
+<div class="atmos" id="atmos"></div>
+
+<div id="topbar">
+  <nav class="breadcrumb">
+    <a href="/">Codex</a>
+    <span class="sep">◆</span>
+    <span class="cur">Bestiary</span>
+  </nav>
+  <div class="topbar-count" id="topbar-count"></div>
+</div>
+
+<div class="page">
+  <header class="page-head">
+    <div class="seal-rule"><div class="line"></div><div class="diamond"></div><div class="line"></div></div>
+    <span class="page-eyebrow">Dungeons &amp; Dragons · 5th Edition</span>
+    <h1 class="page-title">Bestiary</h1>
+    <p class="page-sub">A compendium of creatures catalogued from across the planes — 334 monsters of the 2014 edition.</p>
+  </header>
+
+  <!-- Filter bar -->
+  <div class="filter-bar" id="filter-bar">
+    <div class="fc-bl"></div><div class="fc-br"></div>
+
+    <div class="filter-group wide">
+      <label class="filter-label" for="f-name">Search</label>
+      <input id="f-name" class="filter-input" type="text" placeholder="monster name…" autocomplete="off" />
+    </div>
+
+    <div class="filter-group">
+      <label class="filter-label">Challenge Rating</label>
+      <div class="cr-range">
+        <input id="f-cr-min" class="filter-input" type="number" placeholder="0" min="0" max="30" step="0.125" />
+        <span class="cr-sep">—</span>
+        <input id="f-cr-max" class="filter-input" type="number" placeholder="30" min="0" max="30" step="0.125" />
+      </div>
+    </div>
+
+    <div class="filter-group">
+      <label class="filter-label" for="f-type">Type</label>
+      <select id="f-type" class="filter-select">
+        <option value="">All types</option>
+        <option>aberration</option><option>beast</option><option>celestial</option>
+        <option>construct</option><option>dragon</option><option>elemental</option>
+        <option>fey</option><option>fiend</option><option>giant</option><option>humanoid</option>
+        <option>monstrosity</option><option>ooze</option><option>plant</option><option>undead</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label class="filter-label" for="f-size">Size</label>
+      <select id="f-size" class="filter-select">
+        <option value="">All sizes</option>
+        <option>Tiny</option><option>Small</option><option>Medium</option>
+        <option>Large</option><option>Huge</option><option>Gargantuan</option>
+      </select>
+    </div>
+
+    <div class="filter-stats" id="filter-stats"></div>
+  </div>
+
+  <!-- Monster grid -->
+  <div class="monster-grid" id="monster-grid">
+    <div class="state-msg" id="loading-msg">Consulting the arcane index…</div>
+  </div>
+</div>
+
+<div id="btt" title="Back to top">↑</div>
+
+<script>
+const API_BASE = 'https://www.dnd5eapi.co/api/2014';
+const CACHE_KEY = 'monsters:list:v1';
+
+function crLabel(cr) {
+  if (cr === 0.125) return '1/8';
+  if (cr === 0.25)  return '1/4';
+  if (cr === 0.5)   return '1/2';
+  return String(cr);
+}
+
+function crSort(cr) {
+  return cr;
+}
+
+// ── Ambient motes ──
+(function(){
+  const atmos = document.getElementById('atmos');
+  for (let i = 0; i < 18; i++) {
+    const m = document.createElement('div');
+    m.className = 'mote';
+    m.style.cssText = `left:${Math.random()*100}%;--dx:${(Math.random()-0.5)*80}px;animation-duration:${8+Math.random()*14}s;animation-delay:${Math.random()*-20}s;width:${1.5+Math.random()}px;height:${1.5+Math.random()}px`;
+    atmos.appendChild(m);
+  }
+})();
+
+// ── Back to top ──
+const btt = document.getElementById('btt');
+window.addEventListener('scroll', () => btt.classList.toggle('vis', scrollY > 400), {passive:true});
+btt.addEventListener('click', () => scrollTo({top:0,behavior:'smooth'}));
+
+// ── Data ──
+let allMonsters = [];
+
+async function loadMonsters() {
+  const cached = localStorage.getItem(CACHE_KEY);
+  if (cached) {
+    try {
+      allMonsters = JSON.parse(cached);
+      renderGrid(allMonsters);
+      return;
+    } catch {}
+  }
+  try {
+    const res = await fetch(`${API_BASE}/monsters?limit=500`);
+    if (!res.ok) throw new Error(res.statusText);
+    const data = await res.json();
+    allMonsters = data.results ?? [];
+    localStorage.setItem(CACHE_KEY, JSON.stringify(allMonsters));
+    renderGrid(allMonsters);
+  } catch (e) {
+    const el = document.getElementById('loading-msg');
+    el.textContent = 'Failed to reach the arcane index. Check your connection.';
+    el.classList.add('err');
+  }
+}
+
+function buildCard(m) {
+  const a = document.createElement('a');
+  a.className = 'm-card';
+  a.href = `/bestiary/detail?m=${m.index}`;
+
+  const bl = document.createElement('span'); bl.className = 'cc-bl';
+  const br = document.createElement('span'); br.className = 'cc-br';
+
+  const name = document.createElement('div');
+  name.className = 'm-name';
+  name.textContent = m.name;
+
+  const meta = document.createElement('div');
+  meta.className = 'm-meta';
+
+  const typeLine = document.createElement('div');
+  typeLine.className = 'm-type-line';
+  typeLine.textContent = m.type ?? '—';
+
+  const cr = document.createElement('div');
+  cr.className = 'm-cr';
+  cr.textContent = `CR ${crLabel(m.challenge_rating ?? 0)}`;
+
+  meta.appendChild(typeLine);
+  meta.appendChild(cr);
+  a.appendChild(bl); a.appendChild(br);
+  a.appendChild(name);
+  a.appendChild(meta);
+
+  // size badge in type line
+  if (m.size) {
+    typeLine.textContent = `${m.size} ${m.type ?? ''}`.trim();
+  }
+
+  return a;
+}
+
+function renderGrid(monsters) {
+  const grid = document.getElementById('monster-grid');
+  const msg  = document.getElementById('loading-msg');
+  if (msg) msg.remove();
+  grid.innerHTML = '';
+
+  if (monsters.length === 0) {
+    const el = document.createElement('div');
+    el.className = 'state-msg';
+    el.textContent = 'No creatures match your filters.';
+    grid.appendChild(el);
+    updateStats(0);
+    return;
+  }
+
+  const frag = document.createDocumentFragment();
+  monsters.forEach(m => frag.appendChild(buildCard(m)));
+  grid.appendChild(frag);
+  updateStats(monsters.length);
+}
+
+function updateStats(count) {
+  const el = document.getElementById('filter-stats');
+  el.innerHTML = `<span>${count}</span> of <span>${allMonsters.length || count}</span> creatures`;
+  document.getElementById('topbar-count').textContent = `${count} creatures`;
+}
+
+// ── Filters ──
+let filterTimer = null;
+
+function applyFilters() {
+  const name   = document.getElementById('f-name').value.trim().toLowerCase();
+  const type   = document.getElementById('f-type').value.toLowerCase();
+  const size   = document.getElementById('f-size').value.toLowerCase();
+  const crMin  = parseFloat(document.getElementById('f-cr-min').value);
+  const crMax  = parseFloat(document.getElementById('f-cr-max').value);
+
+  const filtered = allMonsters.filter(m => {
+    if (name && !m.name.toLowerCase().includes(name)) return false;
+    if (type && (m.type ?? '').toLowerCase() !== type) return false;
+    if (size && (m.size ?? '').toLowerCase() !== size) return false;
+    const cr = m.challenge_rating ?? 0;
+    if (!isNaN(crMin) && cr < crMin) return false;
+    if (!isNaN(crMax) && cr > crMax) return false;
+    return true;
+  });
+
+  renderGrid(filtered);
+}
+
+function debounce(fn, ms) {
+  return (...args) => {
+    clearTimeout(filterTimer);
+    filterTimer = setTimeout(() => fn(...args), ms);
+  };
+}
+
+const debouncedFilter = debounce(applyFilters, 180);
+
+document.getElementById('f-name').addEventListener('input', debouncedFilter);
+document.getElementById('f-type').addEventListener('change', applyFilters);
+document.getElementById('f-size').addEventListener('change', applyFilters);
+document.getElementById('f-cr-min').addEventListener('input', debouncedFilter);
+document.getElementById('f-cr-max').addEventListener('input', debouncedFilter);
+
+loadMonsters();
+</script>
+</body>
+</html>

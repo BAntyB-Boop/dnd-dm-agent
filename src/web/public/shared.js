@@ -35,6 +35,13 @@
   });
 })();
 
+// Folio visit tracking — record timestamp on folio pages so the roster can show recent visits
+(function() {
+  if (!document.querySelector('.folio-nav')) return;
+  var key = 'folio:visited:' + window.location.pathname.replace(/\//g, '-').replace(/^-/, '');
+  try { localStorage.setItem(key, Date.now()); } catch(e) {}
+})();
+
 // Folio DM note — inject collapsible textarea before .colophon on folio pages only
 (function() {
   // Only run on character folio pages (has both .colophon and .folio-nav)

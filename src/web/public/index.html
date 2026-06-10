@@ -439,6 +439,13 @@ h1.title{
 .folio:hover .open-row .open .arrow{width:30px}
 .open-row .open .arrow::after{content:"";position:absolute;right:0;top:-3px;width:7px;height:7px;border-top:1px solid currentColor;border-right:1px solid currentColor;transform:rotate(45deg)}
 
+/* ---- DM notes badge on folio cards ---- */
+.note-badge{
+  font-family:"Cinzel",serif;font-size:0.48rem;letter-spacing:0.22em;text-transform:uppercase;
+  color:var(--gold-dim);border:1px solid var(--gold-deep);padding:3px 7px;
+  opacity:0.75;pointer-events:none;flex-shrink:0;
+}
+
 /* ============ FOOTER ============ */
 .colophon{
   margin-top:72px;text-align:center;font-family:"Cinzel",serif;letter-spacing:0.3em;text-transform:uppercase;font-size:0.58rem;color:var(--ink-faint);
@@ -902,6 +909,39 @@ h1.title{
         card.style.transform = '';
         if (img) img.style.transform = '';
       });
+    });
+  })();
+
+  // ── DM notes badge + recent visit indicator on folio cards ──────
+  (function(){
+    const now = Date.now();
+    const DAY = 86400000;
+    document.querySelectorAll('a.folio[href^="/folio/"]').forEach(function(card){
+      const slug = card.getAttribute('href');
+      const pathKey = slug.replace(/\//g, '-').replace(/^-/, '');
+      const noteKey = 'folio:note:' + pathKey;
+      const visitKey = 'folio:visited:' + pathKey;
+      var note = '', visitedAt = 0;
+      try { note = localStorage.getItem(noteKey) || ''; visitedAt = parseInt(localStorage.getItem(visitKey) || '0', 10); } catch(e) {}
+      const row = card.querySelector('.open-row');
+      if (!row) return;
+      const openBtn = row.querySelector('.open');
+      if (note.trim()){
+        const badge = document.createElement('span');
+        badge.className = 'note-badge';
+        badge.textContent = '✎ Notes';
+        badge.title = 'DM notes saved for this character';
+        row.insertBefore(badge, openBtn);
+      }
+      if (visitedAt && (now - visitedAt) < 2 * DAY){
+        const vol = row.querySelector('.vol');
+        if (vol){
+          const age = now - visitedAt;
+          const label = age < 3600000 ? 'just now' : age < DAY ? 'today' : 'yesterday';
+          vol.title = 'Last opened: ' + label;
+          vol.style.color = 'var(--gold-dim)';
+        }
+      }
     });
   })();
 

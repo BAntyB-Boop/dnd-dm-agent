@@ -752,6 +752,10 @@ em,i{font-style:italic;color:var(--ink-soft)}
   .music-ctrl{top:auto;bottom:14px;right:14px;padding:5px 10px}
   .music-vol{width:55px}
 }
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:0.001ms!important;animation-iteration-count:1!important;transition-duration:0.001ms!important}
+  .embers,.grm-chain{display:none!important}
+}
 </style>
 </head>
 <body>
@@ -1963,6 +1967,7 @@ em,i{font-style:italic;color:var(--ink-soft)}
     btn.addEventListener('click', function(){ window.scrollTo({ top: 0, behavior: 'smooth' }); });
   })();
 </script>
+<script src="shared.js"></script>
 
 </body>
 </html>

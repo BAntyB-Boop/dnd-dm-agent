@@ -22,3 +22,15 @@
   }, { threshold: 0.08 });
   panels.forEach(p => io.observe(p));
 })();
+
+// M key — toggle music mute if #music-btn exists (skip when typing in inputs)
+(function() {
+  const btn = document.getElementById('music-btn');
+  if (!btn) return;
+  document.addEventListener('keydown', function(e) {
+    if (e.key !== 'm' && e.key !== 'M') return;
+    const tag = (document.activeElement || {}).tagName || '';
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+    btn.click();
+  });
+})();

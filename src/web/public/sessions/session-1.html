@@ -591,7 +591,18 @@ body.th-active .dm-voice p{font-family:"Noto Serif Thai",serif;font-size:.95rem;
   opacity:0;transition:opacity .3s;padding-left:8px;
 }
 .dm-note-saved.show{opacity:1}
-@media print{.dm-note-wrap{display:none}}
+@media print{
+  #read-progress,#scroll-top,.back-link,.folio-nav,
+  .dm-note-wrap,.shooting-stars{display:none!important}
+  html,body{background:#fff!important;color:#111!important}
+  article.chapter{break-inside:avoid;border:1px solid #ccc;padding:16px;margin-bottom:20px}
+  article.chapter .chapter-header{background:none!important;border-bottom:1px solid #ccc!important;margin-bottom:12px}
+  .chapter-body{color:#222!important;font-size:11pt!important;line-height:1.75!important}
+  .chapter-title{color:#111!important}
+  .chapter-num{color:#555!important}
+  h1,h2,h3{color:#111!important}
+  a{color:#111!important;text-decoration:none}
+}
 </style>
 </head>
 <body>
@@ -1340,5 +1351,6 @@ function setLang(l){
   scheduleNext();
 })();
 </script>
+<script src="shared.js"></script>
 </body>
 </html>

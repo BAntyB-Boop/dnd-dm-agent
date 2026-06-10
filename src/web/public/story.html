@@ -1124,6 +1124,52 @@ body.th-active .roster-list-th{display:flex !important}
   .ci-progress,.ci-dots{display:none}
 }
 
+/* ----- DM Notes (story chapters) ----- */
+.dm-note-wrap{margin:16px 0 4px;max-width:680px}
+.dm-note-toggle{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:"Cinzel",serif;font-size:.52rem;letter-spacing:.28em;text-transform:uppercase;
+  color:var(--ink-faint);background:none;border:1px solid rgba(42,42,53,.8);
+  padding:6px 14px;cursor:pointer;transition:color .2s,border-color .2s;
+}
+.dm-note-toggle:hover{color:var(--gold-dim);border-color:var(--gold-dim)}
+.dm-note-toggle.open{color:var(--gold-dim);border-color:var(--gold-dim)}
+.dm-note-body{display:none;padding:10px 0 4px}
+.dm-note-body.open{display:block}
+.dm-note-ta{
+  width:100%;min-height:72px;resize:vertical;
+  background:rgba(6,6,12,.65);border:1px solid rgba(42,42,53,.8);
+  color:var(--ink-soft);font-family:"Cormorant Garamond",Georgia,serif;font-size:.9rem;
+  padding:10px 13px;outline:none;transition:border-color .2s;
+}
+.dm-note-ta:focus{border-color:var(--gold-dim)}
+.dm-note-ta::placeholder{color:var(--ink-faint)}
+.dm-note-saved{
+  display:inline-block;font-family:"Cinzel",serif;font-size:.48rem;
+  letter-spacing:.24em;text-transform:uppercase;color:var(--gold-dim);
+  opacity:0;transition:opacity .3s;padding-left:8px;
+}
+.dm-note-saved.show{opacity:1}
+
+/* ----- Print styles ----- */
+@media print{
+  .cosmic-intro,.shader-wallpaper,.cosmos,.shooting-stars,
+  #read-progress,#scroll-top,.back-link,.folio-nav,
+  #ci-skip-btn,.dm-note-wrap,.side-nav{display:none!important}
+  html,body{background:#fff!important;color:#111!important}
+  .chapter{opacity:1!important;transform:none!important;break-inside:avoid;border:1px solid #ccc;margin-bottom:20px;padding:16px}
+  .chapter-inner{background:#fff!important;border:none!important;box-shadow:none!important}
+  .chapter-inner::before,.chapter-inner::after,.chapter-fx{display:none!important}
+  .chapter-body{color:#222!important;font-size:11pt!important;line-height:1.7!important}
+  .chapter-num,.chapter-romal{color:#555!important}
+  .chapter-title-en{color:#111!important;font-size:14pt!important}
+  .chapter-image img{max-width:100%;height:auto}
+  .chapter-sep{display:none}
+  .story-head{display:none}
+  h1,h2,h3{color:#111!important}
+  a{color:#111!important;text-decoration:none}
+}
+
 </style>
 </head>
 <body>
@@ -2173,13 +2219,14 @@ body.th-active .roster-list-th{display:flex !important}
     }, { passive: true });
   })();
 
-  // ── Skip Intro button ─────────────────────────────────────────
+  // ── Skip Intro button (visible only while within the cosmic intro) ──
   (function(){
     const btn = document.getElementById('ci-skip-btn');
     if(!btn) return;
-    // Show after user scrolls a bit into the intro
+    const introEl = document.getElementById('cosmic-intro');
+    const introEnd = introEl ? (introEl.offsetTop + introEl.offsetHeight) : Infinity;
     window.addEventListener('scroll', function(){
-      btn.classList.toggle('show', window.scrollY > 120);
+      btn.classList.toggle('show', window.scrollY > 120 && window.scrollY < introEnd - window.innerHeight);
     }, { passive: true });
     btn.addEventListener('click', function(){
       const target = document.getElementById('prologue') || document.querySelector('.story-head');
@@ -2187,14 +2234,66 @@ body.th-active .roster-list-th{display:flex !important}
     });
   })();
 
-  // ── Scroll-to-top button ──────────────────────────────────────
+  // ── Scroll-to-top button (jumps to story head, skipping cosmic intro) ──
   (function(){
     const btn = document.getElementById('scroll-top');
     if(!btn) return;
-    window.addEventListener('scroll', function(){ btn.classList.toggle('show', window.scrollY > 600); }, { passive: true });
-    btn.addEventListener('click', function(){ window.scrollTo({ top: 0, behavior: 'smooth' }); });
+    const introEl = document.getElementById('cosmic-intro');
+    const target  = document.querySelector('.story-head') || document.getElementById('prologue');
+    const introEnd = introEl ? (introEl.offsetTop + introEl.offsetHeight) : 0;
+    window.addEventListener('scroll', function(){
+      btn.classList.toggle('show', window.scrollY > introEnd + 100);
+    }, { passive: true });
+    btn.addEventListener('click', function(){
+      if(target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      else window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  })();
+
+  // ── DM Notes per chapter ──────────────────────────────────────
+  (function(){
+    const NOTE_PREFIX = 'story:note:';
+    document.querySelectorAll('section.chapter[id]').forEach(function(ch){
+      const id = ch.id;
+      const saved = (function(){ try{ return localStorage.getItem(NOTE_PREFIX + id) || ''; }catch(e){ return ''; } })();
+      const wrap = document.createElement('div');
+      wrap.className = 'dm-note-wrap';
+      wrap.innerHTML =
+        '<button class="dm-note-toggle" aria-expanded="false"><span>&#9658;</span> DM Notes</button>' +
+        '<div class="dm-note-body">' +
+          '<textarea class="dm-note-ta" placeholder="Session notes for this chapter — auto-saved…" rows="3"></textarea>' +
+          '<span class="dm-note-saved">Saved</span>' +
+        '</div>';
+      const body = ch.querySelector('.chapter-body');
+      if(body) body.appendChild(wrap); else ch.appendChild(wrap);
+      const btn = wrap.querySelector('.dm-note-toggle');
+      const noteBody = wrap.querySelector('.dm-note-body');
+      const ta = wrap.querySelector('.dm-note-ta');
+      const label = wrap.querySelector('.dm-note-saved');
+      const openKey = NOTE_PREFIX + 'open:' + id;
+      if(localStorage.getItem(openKey) === '1'){ btn.classList.add('open'); noteBody.classList.add('open'); btn.setAttribute('aria-expanded','true'); btn.querySelector('span').textContent = '▾'; }
+      if(saved) ta.value = saved;
+      btn.addEventListener('click', function(){
+        const opening = !noteBody.classList.contains('open');
+        btn.classList.toggle('open', opening);
+        noteBody.classList.toggle('open', opening);
+        btn.setAttribute('aria-expanded', String(opening));
+        btn.querySelector('span').textContent = opening ? '▾' : '▶';
+        try{ localStorage.setItem(openKey, opening ? '1' : '0'); }catch(e){}
+      });
+      var saveTimer;
+      ta.addEventListener('input', function(){
+        clearTimeout(saveTimer);
+        saveTimer = setTimeout(function(){
+          try{ localStorage.setItem(NOTE_PREFIX + id, ta.value); }catch(e){}
+          label.classList.add('show');
+          setTimeout(function(){ label.classList.remove('show'); }, 1600);
+        }, 600);
+      });
+    });
   })();
 </script>
+<script src="shared.js"></script>
 
 </body>
 </html>

@@ -524,6 +524,9 @@ body.broken .view-cell .lbl{color:#ffb4b4}
   .music-ctrl{top:auto;bottom:14px;right:14px;padding:5px 10px}
   .music-vol{width:55px}
 }
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:0.001ms!important;animation-iteration-count:1!important;transition-duration:0.001ms!important}
+}
 </style>
 </head>
 <body>
@@ -997,6 +1000,7 @@ body.broken .view-cell .lbl{color:#ffb4b4}
     });
   })();
 </script>
+<script src="shared.js"></script>
 
 </body>
 </html>

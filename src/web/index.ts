@@ -291,6 +291,7 @@ export async function startWebServer(): Promise<void> {
   });
   app.get("/bestiary", (_req, reply) => reply.sendFile("bestiary/index.html"));
   app.get("/bestiary/detail", (_req, reply) => reply.sendFile("bestiary/detail.html"));
+  app.get("/dm-guide", (_req, reply) => reply.sendFile("dm-guide.html"));
 
   // ── Auth ──────────────────────────────────────────────────────────────
 

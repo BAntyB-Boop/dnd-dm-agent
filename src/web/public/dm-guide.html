@@ -1,0 +1,509 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8" />
+<title>DM Guide — The Veiled Codex</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Sarabun:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --bg-deep:#07070a;
+  --bg-paper:#0e0e13;
+  --bg-card:#15151c;
+  --bg-card-2:#1c1c25;
+  --line:#2a2a35;
+  --line-soft:#1d1d25;
+  --ink:#e8e2cf;
+  --ink-soft:#c9c2ad;
+  --ink-mute:#7a7461;
+  --ink-faint:#4a4636;
+  --gold:#c9a45c;
+  --gold-dim:#8a6f3a;
+  --gold-deep:#5a4622;
+  --blood:#8c2222;
+  --sea:#2f7088;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg-deep);color:var(--ink);overflow-x:hidden;min-height:100vh}
+body{
+  background:
+    radial-gradient(1200px 800px at 50% -10%,#14141d 0%,transparent 60%),
+    radial-gradient(900px 600px at 50% 110%,#0b1114 0%,transparent 65%),
+    var(--bg-deep);
+}
+
+/* ── Topbar ── */
+#topbar{
+  position:fixed;top:0;left:0;right:0;z-index:80;
+  height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;
+  background:linear-gradient(180deg,rgba(7,7,10,0.97),rgba(7,7,10,0.88));
+  border-bottom:1px solid rgba(201,164,92,0.18);backdrop-filter:blur(8px);
+}
+.breadcrumb{display:flex;align-items:center;gap:10px;font-family:"Cinzel",serif;font-size:10.5px;letter-spacing:.24em;text-transform:uppercase}
+.breadcrumb a{color:rgba(201,164,92,0.5);text-decoration:none;transition:color .2s}
+.breadcrumb a:hover{color:var(--gold)}
+.breadcrumb .sep{color:rgba(201,164,92,0.3)}
+.breadcrumb .cur{color:rgba(232,226,207,0.8)}
+.topbar-tag{font-family:"Cinzel",serif;font-size:10px;letter-spacing:.22em;color:var(--ink-mute);text-transform:uppercase}
+
+/* ── Ambient motes ── */
+.atmos{position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden}
+.mote{
+  position:absolute;bottom:-12px;width:2px;height:2px;border-radius:50%;
+  background:radial-gradient(circle,#fff5d0,var(--gold) 50%,transparent 80%);
+  box-shadow:0 0 6px rgba(201,164,92,0.4);
+  animation:mote-rise linear infinite;opacity:0;
+}
+@keyframes mote-rise{
+  0%{transform:translate(0,0) scale(0.6);opacity:0}
+  10%{opacity:0.7}
+  100%{transform:translate(var(--dx,40px),-110vh) scale(0.2);opacity:0}
+}
+@keyframes fade-up{0%{opacity:0;transform:translateY(12px)}100%{opacity:1;transform:translateY(0)}}
+
+/* ── Page ── */
+.page{max-width:880px;margin:0 auto;padding:84px clamp(16px,3vw,40px) 90px;position:relative;z-index:5}
+
+/* ── Header ── */
+.page-head{text-align:center;margin-bottom:40px;animation:fade-up 0.8s ease-out 0.1s both}
+.seal-rule{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:18px}
+.seal-rule .line{flex:1 1 40px;max-width:160px;height:1px;background:linear-gradient(to right,transparent,var(--gold-dim) 50%,transparent)}
+.seal-rule .diamond{width:8px;height:8px;border:1px solid var(--gold-dim);background:var(--bg-deep);transform:rotate(45deg)}
+.page-eyebrow{font-family:"Cinzel",serif;font-size:0.6rem;letter-spacing:0.38em;text-transform:uppercase;color:var(--gold-dim);display:block;margin-bottom:12px}
+h1.page-title{
+  font-family:"Cinzel Decorative","Cinzel",serif;font-weight:700;
+  font-size:clamp(30px,4.5vw,56px);letter-spacing:0.12em;line-height:1.1;margin:0 0 12px;
+  background:linear-gradient(180deg,#f6efd2 0%,var(--gold) 60%,var(--gold-deep) 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;
+}
+.page-sub{font-family:"Cormorant Garamond",serif;font-style:italic;color:var(--ink-mute);font-size:1.1rem;max-width:560px;margin:0 auto}
+
+/* ── Lock panel ── */
+.lock-panel{
+  position:relative;border:1px solid var(--gold-dim);
+  background:linear-gradient(180deg,rgba(201,164,92,0.05) 0%,transparent 50%),var(--bg-card);
+  padding:64px clamp(20px,5vw,48px);text-align:center;
+  animation:fade-up 0.8s ease-out 0.3s both;
+}
+.lock-panel::before,.lock-panel::after,.lock-panel .lk-bl,.lock-panel .lk-br{
+  content:"";position:absolute;width:10px;height:10px;
+  border:1px solid var(--gold-dim);background:var(--bg-deep);transform:rotate(45deg);pointer-events:none;
+}
+.lock-panel::before{top:-5px;left:-5px}
+.lock-panel::after{top:-5px;right:-5px}
+.lock-panel .lk-bl{bottom:-5px;left:-5px}
+.lock-panel .lk-br{bottom:-5px;right:-5px}
+.lock-glyph{
+  width:46px;height:46px;margin:0 auto 20px;
+  border:1px solid var(--gold-dim);transform:rotate(45deg);
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(201,164,92,0.06);
+}
+.lock-glyph span{transform:rotate(-45deg);color:var(--gold);font-size:18px}
+.lock-title{font-family:"Cinzel",serif;font-size:0.95rem;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink);margin-bottom:8px}
+.lock-sub{font-family:"Cormorant Garamond",serif;font-style:italic;font-size:1rem;color:var(--ink-mute);max-width:400px;margin:0 auto 28px}
+.lock-btn{
+  background:rgba(201,164,92,0.08);border:1px solid var(--gold-dim);color:var(--gold);
+  font-family:"Cinzel",serif;font-size:0.66rem;letter-spacing:0.26em;text-transform:uppercase;
+  padding:12px 28px;cursor:pointer;transition:background .2s,border-color .2s,color .2s;
+}
+.lock-btn:hover{background:rgba(201,164,92,0.16);border-color:var(--gold);color:#f6efd2}
+.lock-form{display:flex;flex-direction:column;align-items:center;gap:14px}
+.lock-input{
+  background:var(--bg-paper);border:1px solid var(--line);color:var(--ink);
+  font-family:"Cinzel",serif;font-size:1.1rem;letter-spacing:0.5em;text-align:center;
+  padding:10px 0 10px 0.5em;width:160px;outline:none;transition:border-color .2s;
+}
+.lock-input:focus{border-color:var(--gold-dim)}
+.lock-input::placeholder{color:var(--ink-faint);letter-spacing:0.3em}
+.lock-err{
+  font-family:"Cinzel",serif;font-size:0.6rem;letter-spacing:0.22em;text-transform:uppercase;
+  color:var(--blood);min-height:14px;
+}
+.lock-panel.shake{animation:lock-shake .4s ease}
+@keyframes lock-shake{
+  0%,100%{transform:translateX(0)}
+  20%{transform:translateX(-8px)}40%{transform:translateX(8px)}
+  60%{transform:translateX(-5px)}80%{transform:translateX(5px)}
+}
+
+/* ── Guide content ── */
+#guide{display:none}
+#guide.vis{display:block;animation:fade-up 0.7s ease-out both}
+
+.thai{font-family:"Sarabun","Cormorant Garamond",sans-serif;font-weight:300}
+
+/* meta strip */
+.meta-strip{
+  display:flex;flex-wrap:wrap;gap:0;border:1px solid var(--line);margin-bottom:36px;
+  background:var(--bg-card);
+}
+.meta-cell{flex:1 1 120px;padding:14px 16px;text-align:center;border-right:1px solid var(--line)}
+.meta-cell:last-child{border-right:none}
+.mc-k{font-family:"Cinzel",serif;font-size:0.54rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--gold-dim);display:block;margin-bottom:5px}
+.mc-v{font-family:"Cinzel",serif;font-size:0.82rem;color:var(--ink);letter-spacing:0.05em}
+
+/* section heads */
+.section-head{display:flex;align-items:center;gap:14px;margin:44px 0 18px}
+.section-head .sh-line{flex:1;height:1px;background:linear-gradient(to right,var(--gold-dim),transparent)}
+.section-head .sh-num{
+  font-family:"Cinzel Decorative",serif;font-size:1rem;color:var(--gold);
+  width:34px;height:34px;border:1px solid var(--gold-dim);transform:rotate(45deg);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;background:rgba(201,164,92,0.05);
+}
+.section-head .sh-num span{transform:rotate(-45deg)}
+.section-head .sh-label{font-family:"Cinzel",serif;font-size:0.78rem;font-weight:600;letter-spacing:0.24em;text-transform:uppercase;color:var(--gold);white-space:nowrap}
+.section-head .sh-time{font-family:"Cinzel",serif;font-size:0.56rem;letter-spacing:0.2em;color:var(--ink-mute);text-transform:uppercase;white-space:nowrap}
+
+.guide-card{
+  position:relative;border:1px solid var(--line);
+  background:linear-gradient(180deg,rgba(201,164,92,0.03),transparent 40%),var(--bg-card);
+  padding:24px clamp(18px,3.5vw,32px);margin-bottom:16px;
+}
+.guide-card::before,.guide-card::after,.guide-card .gc-bl,.guide-card .gc-br{
+  content:"";position:absolute;width:8px;height:8px;
+  border:1px solid var(--gold-deep);background:var(--bg-deep);transform:rotate(45deg);pointer-events:none;
+}
+.guide-card::before{top:-4px;left:-4px}
+.guide-card::after{top:-4px;right:-4px}
+.guide-card .gc-bl{bottom:-4px;left:-4px}
+.guide-card .gc-br{bottom:-4px;right:-4px}
+
+.guide-card p{font-size:0.95rem;line-height:1.85;color:var(--ink-soft);margin-bottom:12px}
+.guide-card p:last-child{margin-bottom:0}
+.guide-card strong{color:var(--ink);font-weight:500}
+.guide-card em{color:var(--gold);font-style:normal}
+
+/* read-aloud box */
+.read-aloud{
+  position:relative;border-left:2px solid var(--gold-dim);
+  background:linear-gradient(90deg,rgba(201,164,92,0.07),transparent 70%);
+  padding:18px 22px 18px 26px;margin:16px 0;
+}
+.read-aloud::before{
+  content:"อ่านให้ผู้เล่นฟัง";
+  display:block;font-family:"Cinzel",serif;font-size:0.54rem;letter-spacing:0.26em;
+  text-transform:uppercase;color:var(--gold-dim);margin-bottom:10px;
+}
+.read-aloud p{
+  font-family:"Sarabun",sans-serif;font-weight:300;font-style:italic;
+  font-size:0.98rem;line-height:1.95;color:var(--ink);
+}
+.read-aloud p+p{margin-top:10px}
+
+/* DM tip */
+.dm-tip{
+  display:flex;gap:14px;align-items:flex-start;
+  border:1px dashed rgba(201,164,92,0.3);background:rgba(201,164,92,0.04);
+  padding:14px 18px;margin:16px 0;
+}
+.dm-tip .tip-icon{color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px}
+.dm-tip p{font-size:0.88rem;line-height:1.8;color:var(--ink-soft);margin:0}
+
+/* checks table */
+.check-table{width:100%;border-collapse:collapse;margin:14px 0}
+.check-table th{
+  font-family:"Cinzel",serif;font-size:0.56rem;letter-spacing:0.22em;text-transform:uppercase;
+  color:var(--gold-dim);text-align:left;padding:8px 12px;border-bottom:1px solid var(--line);
+}
+.check-table td{
+  font-size:0.88rem;line-height:1.7;color:var(--ink-soft);
+  padding:9px 12px;border-bottom:1px solid var(--line-soft);vertical-align:top;
+}
+.check-table tr:last-child td{border-bottom:none}
+.check-table .dc{font-family:"Cinzel",serif;font-size:0.72rem;color:var(--gold);white-space:nowrap}
+
+/* NPC cards */
+.npc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin:6px 0 16px}
+.npc-card{
+  border:1px solid var(--line);border-top:2px solid var(--gold-deep);
+  background:var(--bg-card-2);padding:16px 18px;
+}
+.npc-name{font-family:"Cinzel",serif;font-size:0.8rem;font-weight:600;letter-spacing:0.08em;color:var(--gold);margin-bottom:3px}
+.npc-tag{font-family:"Cormorant Garamond",serif;font-style:italic;font-size:0.82rem;color:var(--ink-mute);margin-bottom:9px}
+.npc-card p{font-size:0.86rem;line-height:1.75;color:var(--ink-soft)}
+
+/* monster link */
+.mon-link{color:var(--gold);text-decoration:none;border-bottom:1px dotted var(--gold-deep);transition:color .2s,border-color .2s}
+.mon-link:hover{color:#f6efd2;border-color:var(--gold)}
+
+/* expansion list */
+.expand-list{list-style:none;margin:8px 0 4px}
+.expand-list li{
+  position:relative;padding:12px 0 12px 28px;
+  font-size:0.92rem;line-height:1.8;color:var(--ink-soft);
+  border-bottom:1px solid var(--line-soft);
+}
+.expand-list li:last-child{border-bottom:none}
+.expand-list li::before{
+  content:"";position:absolute;left:6px;top:21px;width:7px;height:7px;
+  border:1px solid var(--gold-dim);transform:rotate(45deg);
+}
+.expand-list strong{color:var(--ink);font-weight:500}
+
+/* footer */
+.guide-foot{margin-top:48px;text-align:center}
+.guide-foot .seal-rule{margin-bottom:14px}
+.guide-foot p{font-family:"Cormorant Garamond",serif;font-style:italic;font-size:0.95rem;color:var(--ink-mute)}
+</style>
+</head>
+<body>
+
+<div class="atmos" id="atmos"></div>
+
+<div id="topbar">
+  <nav class="breadcrumb">
+    <a href="/">Codex</a>
+    <span class="sep">◆</span>
+    <span class="cur">DM Guide</span>
+  </nav>
+  <div class="topbar-tag">Dungeon Master Only</div>
+</div>
+
+<div class="page">
+  <header class="page-head">
+    <div class="seal-rule"><div class="line"></div><div class="diamond"></div><div class="line"></div></div>
+    <span class="page-eyebrow">Porto Stellare · Opening Chapter</span>
+    <h1 class="page-title">The Silent Ship</h1>
+    <p class="page-sub">A Dungeon Master's guide to the first session — how to tell it, scene by scene.</p>
+  </header>
+
+  <!-- Lock -->
+  <div class="lock-panel" id="lock-panel">
+    <div class="lk-bl"></div><div class="lk-br"></div>
+    <div class="lock-glyph"><span>✦</span></div>
+    <div class="lock-title">For the Dungeon Master's Eyes Only</div>
+    <div class="lock-sub">หน้านี้มีเนื้อเรื่องและความลับของแคมเปญ — ผู้เล่นห้ามอ่าน ใส่รหัสเพื่อเปิดผนึก</div>
+    <button class="lock-btn" id="lock-open">Unseal the Guide</button>
+    <div class="lock-form" id="lock-form" hidden>
+      <input id="lock-code" class="lock-input" type="password" inputmode="numeric" maxlength="8" placeholder="····" autocomplete="off" />
+      <button class="lock-btn" id="lock-submit">Confirm</button>
+      <div class="lock-err" id="lock-err"></div>
+    </div>
+  </div>
+
+  <!-- Guide content (revealed after passcode) -->
+  <div id="guide"></div>
+</div>
+
+<template id="guide-content">
+<div class="thai">
+
+  <div class="meta-strip">
+    <div class="meta-cell"><span class="mc-k">Runtime</span><span class="mc-v">1–2 ชั่วโมง</span></div>
+    <div class="meta-cell"><span class="mc-k">Players</span><span class="mc-v">3–5 คน</span></div>
+    <div class="meta-cell"><span class="mc-k">Level</span><span class="mc-v">1–2</span></div>
+    <div class="meta-cell"><span class="mc-k">Setting</span><span class="mc-v">Stellamar Port</span></div>
+    <div class="meta-cell"><span class="mc-k">Tone</span><span class="mc-v">Mystery · Slow Dread</span></div>
+  </div>
+
+  <!-- ═══ How to narrate ═══ -->
+  <div class="section-head">
+    <div class="sh-num"><span>✦</span></div>
+    <span class="sh-label">วิธีเล่าเรื่องให้ผู้เล่นฟัง</span>
+    <div class="sh-line"></div>
+  </div>
+  <div class="guide-card">
+    <div class="gc-bl"></div><div class="gc-br"></div>
+    <p><strong>หลักของแคมเปญนี้:</strong> ความน่ากลัวมาจาก "สิ่งที่ไม่เห็น" ไม่ใช่มอนสเตอร์ อย่ารีบเฉลย อย่าอธิบายเกิน — ปริศนาทุกอย่างในเซสชันนี้ <em>ยังไม่ต้องมีคำตอบ</em> หน้าที่ของคุณคือทำให้ผู้เล่นตั้งคำถาม</p>
+    <p><strong>จังหวะการเล่า:</strong> เล่าช้าตอนบรรยายบรรยากาศ (กลิ่นเกลือ เสียงนกนางนวล หมอก) แล้วตัดจังหวะ "เร็วและสั้น" ตอนเกิดเหตุผิดปกติ — ความต่างของจังหวะคือสิ่งที่ทำให้ผู้เล่นขนลุก</p>
+    <p><strong>กฎ 3 ประโยค:</strong> บรรยายฉากไม่เกิน 3 ประโยคแล้วถามว่า "พวกเจ้าทำอะไร" เสมอ อย่าเล่ายาวจนผู้เล่นกลายเป็นคนดู</p>
+    <p><strong>เสียงและความเงียบ:</strong> เมืองนี้มีคำพังเพยว่า <em>"อย่าไว้ใจ Moonlit Bay ในคืนที่ทะเลเงียบเกินไป"</em> — ใช้ "ความเงียบ" เป็นสัญญาณอันตรายตลอดทั้งเซสชัน เมื่อไหร่ที่คุณบรรยายว่าเสียงรอบตัวหายไป ผู้เล่นจะเรียนรู้เองว่าต้องกลัว</p>
+    <div class="dm-tip">
+      <span class="tip-icon">✦</span>
+      <p>ตัวละครในไกด์นี้เป็น<strong>ชุดใหม่ทั้งหมด</strong> ไม่ผูกกับ NPC ในหน้า District Lore — เปลี่ยนชื่อได้ตามใจ สิ่งที่ห้ามเปลี่ยนคือ "บทบาท" ของแต่ละคน: คนปิดข่าว / พยาน / คนที่เคยเจอเรื่องแบบนี้มาก่อน</p>
+    </div>
+  </div>
+
+  <!-- ═══ Scene I ═══ -->
+  <div class="section-head">
+    <div class="sh-num"><span>I</span></div>
+    <span class="sh-label">เรือที่ไม่มีเสียง</span>
+    <div class="sh-line"></div>
+    <span class="sh-time">~20 นาที</span>
+  </div>
+  <div class="guide-card">
+    <div class="gc-bl"></div><div class="gc-br"></div>
+    <p>ผู้เล่นทุกคนอยู่บนเรือโดยสารที่กำลังเข้าเทียบ Stellamar Port — แต่ละคนมีเหตุผลของตัวเองที่มาเมืองนี้ (ให้ผู้เล่นแนะนำตัวละครกันบนดาดฟ้าเรือระหว่างรอเทียบท่า ถือเป็น session zero ในตัว)</p>
+    <div class="read-aloud">
+      <p>หมอกเช้ายังไม่จางจาก Moonlit Bay เมื่อเรือของพวกเจ้าลอดแนวกำแพงกันคลื่นเข้าสู่ Stellamar Port ประตูเมืองแห่งนี้เต็มไปด้วยเสียง — นกนางนวล โซ่เหล็ก เสียงตะโกนของกรรมกร และกลิ่นเกลือปนน้ำมันดิน</p>
+      <p>แล้วระฆังท่าเรือก็ดังขึ้น สามครั้ง... เว้น... สามครั้ง ทุกเสียงรอบตัวพวกเจ้าหยุดลงพร้อมกัน กะลาสีข้างตัวพึมพำเบาๆ ว่า "สัญญาณเรือไร้คนถือหางเสือ" — ที่ปากอ่าว เรือสินค้าลำหนึ่งกำลังลอยเข้าท่าอย่างช้าๆ ใบเรือขาดวิ่น ไร้เสียงใดๆ ทั้งลำ และไม่มีเงาคนสักคนบนดาดฟ้า</p>
+    </div>
+    <p><strong>สิ่งที่เกิดขึ้น:</strong> Harbor Watch รีบกั้นท่าที่เรือปริศนาเข้าเทียบ ผู้โดยสารถูกไล่ให้ไปขึ้นฝั่งท่าอื่น — แต่ผู้เล่นเห็นเหตุการณ์จากระยะใกล้พอที่จะ<em>อยากรู้</em></p>
+    <table class="check-table">
+      <tr><th>เช็ค</th><th>DC</th><th>สิ่งที่ได้</th></tr>
+      <tr><td>Perception</td><td class="dc">12</td><td>บนดาดฟ้าเรือมีร่างคนนอนนิ่งอย่างน้อย 3 ร่าง จัดวางเป็นระเบียบผิดปกติ — เหมือนนอนหลับ ไม่เหมือนล้มตาย</td></tr>
+      <tr><td>Insight</td><td class="dc">12</td><td>เจ้าหน้าที่ท่าเรือไม่ได้ตกใจ — พวกเขาทำเหมือน "รู้ขั้นตอน" ราวกับเคยเกิดมาก่อน</td></tr>
+      <tr><td>History / Sailor background</td><td class="dc">13</td><td>สัญญาณระฆังแบบนี้เก่ามาก เลิกใช้ไปหลายสิบปีแล้ว — คนตีระฆังต้องเป็นคนเก่าแก่ของท่า</td></tr>
+    </table>
+    <div class="dm-tip">
+      <span class="tip-icon">✦</span>
+      <p>อย่าให้ผู้เล่นขึ้นเรือมรณะได้ในซีนนี้ — Harbor Watch กันไว้แน่นหนา จุดประสงค์ของซีนคือ "เห็นแต่ห้ามแตะ" ยิ่งห้าม ผู้เล่นยิ่งอยากรู้</p>
+    </div>
+  </div>
+
+  <!-- ═══ Scene II ═══ -->
+  <div class="section-head">
+    <div class="sh-num"><span>II</span></div>
+    <span class="sh-label">ถนนโคมไฟและคำถาม</span>
+    <div class="sh-line"></div>
+    <span class="sh-time">~30–40 นาที</span>
+  </div>
+  <div class="guide-card">
+    <div class="gc-bl"></div><div class="gc-br"></div>
+    <p>ผู้เล่นขึ้นฝั่งที่ The Lantern Mile ถนนสายหลักของท่าเรือ — ซีนนี้เป็นซีนสืบสวนอิสระ ปล่อยให้ผู้เล่นเลือกเองว่าจะคุยกับใคร ไปที่ไหน ข้อมูลทุกชิ้นชี้กลับมาที่เรือลำเดียวกัน</p>
+    <div class="read-aloud">
+      <p>The Lantern Mile ยามสายคึกคักเหมือนไม่มีอะไรเกิดขึ้น พ่อค้าตะโกนขายของ โรงเตี๊ยมเปิดประตูรับลูกค้า แต่ถ้าสังเกตดีๆ จะเห็นว่าทุกวงสนทนาเงียบลงเมื่อมีคนแปลกหน้าเดินผ่าน และไม่มีใครมองไปทางท่าที่เรือลำนั้นจอดอยู่เลย — ราวกับทั้งถนนตกลงกันไว้ว่าจะไม่เห็นมัน</p>
+    </div>
+    <p><strong>แหล่งข้อมูลในซีนนี้</strong> (ผู้เล่นไม่จำเป็นต้องเจอครบ — สองในสามก็พอไปซีนถัดไป):</p>
+    <div class="npc-grid">
+      <div class="npc-card">
+        <div class="npc-name">Marshal Edrin Volk</div>
+        <div class="npc-tag">นายท่าคนใหม่ · คนปิดข่าว</div>
+        <p>เพิ่งรับตำแหน่งได้ 3 เดือน อยากให้ทุกอย่าง "เรียบร้อย" จะปฏิเสธว่าไม่มีอะไรผิดปกติ แต่ถ้าผู้เล่นกดดันเก่งๆ (Persuasion/Intimidation DC 14) เขาหลุดปากว่า <em>"นี่ไม่ใช่ลำแรก"</em></p>
+      </div>
+      <div class="npc-card">
+        <div class="npc-name">Pip</div>
+        <div class="npc-tag">เด็กรับจ้างท่าเรือ · พยาน</div>
+        <p>เห็นเรือเข้าอ่าวตั้งแต่ก่อนรุ่งสาง — <em>มันแล่นเข้ามาทั้งที่ไม่มีลม</em> และเห็นแสงสีเขียวจางๆ ใต้น้ำตามหลังเรือมา ขอค่าเล่าเป็นอาหารหนึ่งมื้อ ใครใจดีกับ Pip จะได้พันธมิตรตัวน้อยไปตลอดแคมเปญ</p>
+      </div>
+      <div class="npc-card">
+        <div class="npc-name">Widow Casca</div>
+        <div class="npc-tag">เจ้าของโรงเตี๊ยม Rustic Revels · คนที่เคยเจอมาก่อน</div>
+        <p>หญิงชราที่อยู่ท่านี้มา 40 ปี ถ้าผู้เล่นนั่งดื่มและฟัง เธอจะเล่าว่า <em>"ครั้งสุดท้ายที่ระฆังตีแบบนั้น คนหายไปทั้งหมู่บ้านประมงนอกอ่าว — และก่อนหน้านั้นทะเลก็เงียบแบบนี้แหละ"</em></p>
+      </div>
+    </div>
+    <div class="dm-tip">
+      <span class="tip-icon">✦</span>
+      <p>เทคนิคเล่า: ให้ NPC ทุกคน "พูดไม่จบประโยค" สักครั้ง — เหลือบมองรอบตัวก่อนเปลี่ยนเรื่อง ผู้เล่นจะรู้สึกเองว่าทั้งท่าเรือกลัวอะไรบางอย่างร่วมกัน</p>
+    </div>
+  </div>
+
+  <!-- ═══ Scene III ═══ -->
+  <div class="section-head">
+    <div class="sh-num"><span>III</span></div>
+    <span class="sh-label">คลังสินค้าหมายเลขเก้า</span>
+    <div class="sh-line"></div>
+    <span class="sh-time">~30 นาที</span>
+  </div>
+  <div class="guide-card">
+    <div class="gc-bl"></div><div class="gc-br"></div>
+    <p>ค่ำวันเดียวกัน — Marshal Volk (หรือคนกลางของเขา) มาหาผู้เล่นพร้อมงานจ้าง: <strong>เฝ้าคลังสินค้าหมายเลข 9 หนึ่งคืน ห้ามเปิดดูของข้างใน ค่าจ้างงามผิดปกติ</strong> ข้างในคือตู้สินค้าจากเรือมรณะ เหตุผลจริงคือเขาไม่กล้าใช้คนของตัวเอง</p>
+    <div class="read-aloud">
+      <p>คลังสินค้าหมายเลข 9 ตั้งอยู่สุดแถวริมน้ำ ห่างจากคลังอื่นอย่างจงใจ ข้างในมีตู้สินค้าไม้เพียงตู้เดียววางอยู่กลางโถง ตีตราด้วยสัญลักษณ์ที่พวกเจ้าไม่เคยเห็น — เส้นโค้งซ้อนกันเหมือนคลื่น หรือเหมือนตัวอักษรของภาษาที่ไม่ได้ถูกเขียนให้มือมนุษย์</p>
+      <p>เมื่อความมืดสนิทลง เสียงท่าเรือค่อยๆ เงียบ... เงียบ... จนพวกเจ้าได้ยินเสียงเดียวที่เหลืออยู่ — เสียงน้ำหยดช้าๆ จากใต้ตู้สินค้า ทั้งที่ข้างในไม่ควรมีอะไรเปียก</p>
+    </div>
+    <p><strong>เหตุการณ์กลางดึก</strong> — เลือกตามสไตล์โต๊ะของคุณ:</p>
+    <table class="check-table">
+      <tr><th>สาย</th><th>เหตุการณ์</th><th>เหมาะกับ</th></tr>
+      <tr><td class="dc">A · ต่อสู้</td><td>โจร 2–3 คน (<a class="mon-link" href="/bestiary/detail?m=thug" target="_blank">Thug</a> ×1 + <a class="mon-link" href="/bestiary/detail?m=bandit" target="_blank">Bandit</a> ×2) บุกเข้ามาขโมยตู้ — พวกมันถูกจ้างมา และคนจ้าง "ไม่ได้บอกว่าข้างในคืออะไร" ปล่อยให้ผู้เล่นสอบปากคำคนที่รอดได้</td><td>โต๊ะที่อยากได้ฉากแอ็คชั่น</td></tr>
+      <tr><td class="dc">B · สยองขวัญ</td><td>ตีสาม — เสียงน้ำหยดหยุด แล้วมีเสียง<em>เคาะจากด้านในตู้</em> สามครั้ง... เว้น... สามครั้ง (จังหวะเดียวกับระฆังเช้านี้) ถ้าผู้เล่นเปิดตู้: ข้างในว่างเปล่า มีแต่น้ำทะเลขังอยู่ก้นตู้ และรอยมือเปียกๆ บนผนังด้านใน — <em>ด้านในเท่านั้น</em></td><td>โต๊ะที่ชอบบรรยากาศ</td></tr>
+      <tr><td class="dc">A+B</td><td>เริ่มด้วยโจรบุก แล้วระหว่างต่อสู้ ตู้ก็เริ่มเคาะ... โจรหนีกันแตกตื่น ทิ้งคำถามไว้ให้ทั้งสองฝ่าย</td><td>ครบรสใน 30 นาที</td></tr>
+    </table>
+    <div class="dm-tip">
+      <span class="tip-icon">✦</span>
+      <p>ไม่ว่าสายไหน <strong>ห้ามเฉลยว่าในตู้คือ/เคยมีอะไร</strong> — ความว่างเปล่าน่ากลัวกว่ามอนสเตอร์ทุกตัวใน Bestiary และมันคือสิ่งที่ทำให้แคมเปญต่อยอดได้</p>
+    </div>
+  </div>
+
+  <!-- ═══ Scene IV ═══ -->
+  <div class="section-head">
+    <div class="sh-num"><span>IV</span></div>
+    <span class="sh-label">คืนที่ทะเลเงียบ</span>
+    <div class="sh-line"></div>
+    <span class="sh-time">~15 นาที · ฉากปิด</span>
+  </div>
+  <div class="guide-card">
+    <div class="gc-bl"></div><div class="gc-br"></div>
+    <p>รุ่งสางหลังเหตุการณ์ในคลัง — ผู้เล่นรายงาน Volk / เก็บค่าจ้าง / ปะติดปะต่อข้อมูล จากนั้นปิดเซสชันด้วยฉากนี้บนท่าเรือหรือหน้าต่างโรงเตี๊ยม</p>
+    <div class="read-aloud">
+      <p>คืนนั้นพวกเจ้าสังเกตว่าบางอย่างหายไป — เสียง ทะเลทั้งอ่าวนิ่งราวกระจกสีดำ ไม่มีคลื่นกระทบฝั่ง ไม่มีลม แม้แต่นกก็เงียบ</p>
+      <p>แล้วพวกเจ้าก็เห็นมัน — แสงเรืองสีเขียวจางๆ ใต้ผิวน้ำกลาง Moonlit Bay ลึกลงไปในที่ที่แผนที่ทุกฉบับบอกว่าคือก้นอ่าว มันไม่กะพริบ ไม่เคลื่อนไหว มันแค่... รอ</p>
+      <p>และที่ประภาคาร Moonlit Bay Sentinel ปลายแหลม — ไฟดวงที่ควรหมุนนำทางเรือ หยุดนิ่ง ชี้ลงไปยังจุดแสงใต้น้ำนั้นพอดี</p>
+    </div>
+    <p><strong>จบเซสชันตรงนี้</strong> — อย่าตอบคำถามใดๆ ทิ้งไว้แค่นี้: เรือไร้คนเป็น, ตู้เปล่าที่เคาะได้, ทะเลที่เงียบเกินไป, และแสงที่รออยู่ข้างใต้</p>
+  </div>
+
+  <!-- ═══ Expansion ═══ -->
+  <div class="section-head">
+    <div class="sh-num"><span>✦</span></div>
+    <span class="sh-label">เส้นทางต่อยอดแคมเปญ</span>
+    <div class="sh-line"></div>
+  </div>
+  <div class="guide-card">
+    <div class="gc-bl"></div><div class="gc-br"></div>
+    <p>ทุกปริศนาที่เปิดไว้ในเซสชันนี้ออกแบบให้ขยายเป็นแคมเปญยาวได้ โดยไม่ล็อกคำตอบไว้ก่อน:</p>
+    <ul class="expand-list">
+      <li><strong>ประภาคารร้าง</strong> — เซสชันถัดไปเริ่มได้ทันที: ผู้ดูแลประภาคารหายตัว เหลือสมุดบันทึกที่จดทุกคืนที่ "ทะเลเงียบ" — และความถี่กำลังเพิ่มขึ้น ใช้เป็นนาฬิกานับถอยหลังของเนื้อเรื่องหลัก</li>
+      <li><strong>สิ่งที่อยู่ใต้อ่าว</strong> — แสงใต้น้ำคือประตูสู่ส่วนลึกใต้เมือง (ดู The Hollow Below ในหน้า District Lore) จะพาผู้เล่นดำดิ่งลงไปเมื่อถึงเลเวล 3–4</li>
+      <li><strong>"นี่ไม่ใช่ลำแรก"</strong> — คำหลุดปากของ Volk เปิดเส้นสืบสวน: เรือลำก่อนๆ หายไปไหน ใครเซ็นรับสินค้า เส้นเงินจะลากผู้เล่นเข้าสู่การเมืองของ Golden Crescent</li>
+      <li><strong>ผู้โดยสารที่ไม่มีในบัญชี</strong> — เรือลำถัดไปที่เข้าท่ามีผู้โดยสารเกินบัญชีหนึ่งคน ไม่มีใครจำได้ว่าขึ้นมาตอนไหน — ช่องว่างสำหรับเสียบตัวร้ายหรือผู้ช่วยลึกลับของคุณเอง</li>
+      <li><strong>หมู่บ้านประมงที่หายไป</strong> — เรื่องเล่าของ Widow Casca เป็นเหตุการณ์จริงเมื่อ 40 ปีก่อน ซากหมู่บ้านยังอยู่นอกอ่าว — dungeon แรกขนาดย่อมสำหรับเลเวล 2</li>
+    </ul>
+  </div>
+
+  <div class="guide-foot">
+    <div class="seal-rule"><div class="line"></div><div class="diamond"></div><div class="line"></div></div>
+    <p>"อย่าไว้ใจ Moonlit Bay ในคืนที่ทะเลเงียบเกินไป"</p>
+  </div>
+
+</div>
+</template>
+
+<script>
+const PASSCODE = '7777';
+const UNLOCK_KEY = 'dmguide:unlocked:v1';
+
+// ── Ambient motes ──
+(function(){
+  const atmos = document.getElementById('atmos');
+  for (let i = 0; i < 14; i++) {
+    const m = document.createElement('div');
+    m.className = 'mote';
+    m.style.cssText = `left:${Math.random()*100}%;--dx:${(Math.random()-0.5)*80}px;animation-duration:${8+Math.random()*14}s;animation-delay:${Math.random()*-20}s;width:${1.5+Math.random()}px;height:${1.5+Math.random()}px`;
+    atmos.appendChild(m);
+  }
+})();
+
+function reveal() {
+  const tpl = document.getElementById('guide-content');
+  const guide = document.getElementById('guide');
+  guide.appendChild(tpl.content.cloneNode(true));
+  guide.classList.add('vis');
+  document.getElementById('lock-panel').style.display = 'none';
+}
+
+if (sessionStorage.getItem(UNLOCK_KEY) === '1') {
+  reveal();
+} else {
+  document.getElementById('lock-open').addEventListener('click', () => {
+    document.getElementById('lock-open').hidden = true;
+    document.getElementById('lock-form').hidden = false;
+    document.getElementById('lock-code').focus();
+  });
+
+  const trySubmit = () => {
+    const input = document.getElementById('lock-code');
+    if (input.value.trim() === PASSCODE) {
+      sessionStorage.setItem(UNLOCK_KEY, '1');
+      reveal();
+    } else {
+      document.getElementById('lock-err').textContent = 'The ward rejects this code';
+      input.value = '';
+      input.focus();
+      const panel = document.getElementById('lock-panel');
+      panel.classList.remove('shake');
+      void panel.offsetWidth;
+      panel.classList.add('shake');
+    }
+  };
+  document.getElementById('lock-submit').addEventListener('click', trySubmit);
+  document.getElementById('lock-code').addEventListener('keydown', e => {
+    if (e.key === 'Enter') trySubmit();
+  });
+}
+</script>
+</body>
+</html>

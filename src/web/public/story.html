@@ -1124,6 +1124,21 @@ body.th-active .roster-list-th{display:flex !important}
   .ci-progress,.ci-dots{display:none}
 }
 
+/* ----- Chapter session flag ----- */
+.chap-flag{
+  position:absolute;top:8px;right:10px;
+  background:rgba(7,7,14,.85);border:1px solid transparent;padding:5px 10px;cursor:pointer;
+  font-family:"Cinzel",serif;font-size:.48rem;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--ink-faint);opacity:0.55;
+  transition:opacity .2s,color .2s,border-color .2s,background .2s;z-index:5;
+  backdrop-filter:blur(3px);
+}
+.chap-flag:hover{opacity:1;color:var(--gold-dim);border-color:var(--gold-dim)}
+.chap-flag.active{opacity:1;color:var(--accent);border-color:var(--accent);background:rgba(7,7,14,.92)}
+.chapter.flagged>.chapter-inner{box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--accent) 55%,transparent),0 0 28px color-mix(in srgb,var(--accent) 18%,transparent)!important}
+.side-nav a.flagged-ch::after{content:"⚑";margin-left:6px;font-size:.7em;color:var(--gold)}
+@media print{.chap-flag{display:none!important}}
+
 /* ----- DM Notes (story chapters) ----- */
 .dm-note-wrap{margin:16px 0 4px;max-width:680px}
 .dm-note-toggle{
@@ -1899,10 +1914,10 @@ body.th-active .roster-list-th{display:flex !important}
       btnTh.classList.remove('active');
       document.documentElement.lang = 'en';
     }
-    try { localStorage.setItem('story-lang', lang); } catch(e) {}
+    try { localStorage.setItem('veil-lang', lang); } catch(e) {}
   }
   try {
-    const saved = localStorage.getItem('story-lang');
+    const saved = localStorage.getItem('veil-lang');
     if (saved === 'th') setLang('th');
   } catch(e){}
 
@@ -2247,6 +2262,34 @@ body.th-active .roster-list-th{display:flex !important}
     btn.addEventListener('click', function(){
       if(target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
       else window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  })();
+
+  // ── Chapter session flags ──────────────────────────────────────
+  (function(){
+    const FLAG_PREFIX = 'story:flag:';
+    const navLinks = document.querySelectorAll('.side-nav a[data-target]');
+    document.querySelectorAll('section.chapter[id]').forEach(function(ch){
+      const id = ch.id;
+      const flagged = (function(){ try{ return localStorage.getItem(FLAG_PREFIX + id) === '1'; }catch(e){ return false; } })();
+      const inner = ch.querySelector('.chapter-inner');
+      if(!inner) return;
+      const btn = document.createElement('button');
+      btn.className = 'chap-flag' + (flagged ? ' active' : '');
+      btn.setAttribute('aria-label', 'Toggle session focus for this chapter');
+      btn.title = 'Mark as current session chapter';
+      btn.textContent = '⚑ Focus';
+      ch.classList.toggle('flagged', flagged);
+      const navLink = document.querySelector('.side-nav a[data-target="' + id + '"]');
+      if(navLink) navLink.classList.toggle('flagged-ch', flagged);
+      inner.appendChild(btn);
+      btn.addEventListener('click', function(e){
+        e.stopPropagation();
+        const isActive = ch.classList.toggle('flagged');
+        btn.classList.toggle('active', isActive);
+        if(navLink) navLink.classList.toggle('flagged-ch', isActive);
+        try{ localStorage.setItem(FLAG_PREFIX + id, isActive ? '1' : '0'); }catch(e){}
+      });
     });
   })();
 

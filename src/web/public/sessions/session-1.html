@@ -564,6 +564,21 @@ body.th-active .dm-voice p{font-family:"Noto Serif Thai",serif;font-size:.95rem;
 #scroll-top.show{opacity:1;pointer-events:auto}
 #scroll-top:hover{color:var(--gold-bright);border-color:var(--gold)}
 /* ── DM Session Notes ── */
+/* ----- Chapter session flag ----- */
+.chap-flag{
+  position:absolute;top:8px;right:10px;
+  background:rgba(7,7,14,.85);border:1px solid transparent;padding:5px 10px;cursor:pointer;
+  font-family:"Cinzel",serif;font-size:.48rem;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--ink-faint);opacity:0.55;
+  transition:opacity .2s,color .2s,border-color .2s,background .2s;z-index:5;
+  backdrop-filter:blur(3px);
+}
+.chap-flag:hover{opacity:1;color:var(--gold-dim);border-color:var(--gold-dim)}
+.chap-flag.active{opacity:1;color:var(--accent);border-color:var(--accent);background:rgba(7,7,14,.92)}
+.chapter.flagged>.chapter-inner{box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--accent) 55%,transparent),0 0 28px color-mix(in srgb,var(--accent) 18%,transparent)!important}
+.side-nav a.flagged-ch::after{content:"⚑";margin-left:6px;font-size:.7em;color:var(--gold)}
+@media print{.chap-flag{display:none!important}}
+
 .dm-note-wrap{margin:12px 0 4px;max-width:740px}
 .dm-note-toggle{
   display:inline-flex;align-items:center;gap:8px;
@@ -1322,6 +1337,34 @@ function setLang(l){
         label.classList.add('show');
         setTimeout(() => label.classList.remove('show'), 1600);
       }, 600);
+    });
+  });
+})();
+
+// ── Chapter session flags ─────────────────────────────────────────
+(function(){
+  const FLAG_PREFIX = 'session-1:flag:';
+  const navLinks = document.querySelectorAll('.side-nav a[data-chapter]');
+  document.querySelectorAll('article.chapter[id]').forEach(function(ch){
+    const id = ch.id;
+    const flagged = (function(){ try{ return localStorage.getItem(FLAG_PREFIX + id) === '1'; }catch(e){ return false; } })();
+    const inner = ch.querySelector('.chapter-inner');
+    if(!inner) return;
+    const btn = document.createElement('button');
+    btn.className = 'chap-flag' + (flagged ? ' active' : '');
+    btn.setAttribute('aria-label', 'Toggle session focus for this chapter');
+    btn.title = 'Mark as current session chapter';
+    btn.textContent = '⚑ Focus';
+    ch.classList.toggle('flagged', flagged);
+    const navLink = document.querySelector('.side-nav a[data-chapter="' + id + '"]');
+    if(navLink) navLink.classList.toggle('flagged-ch', flagged);
+    inner.appendChild(btn);
+    btn.addEventListener('click', function(e){
+      e.stopPropagation();
+      const isActive = ch.classList.toggle('flagged');
+      btn.classList.toggle('active', isActive);
+      if(navLink) navLink.classList.toggle('flagged-ch', isActive);
+      try{ localStorage.setItem(FLAG_PREFIX + id, isActive ? '1' : '0'); }catch(e){}
     });
   });
 })();

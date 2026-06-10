@@ -1142,7 +1142,10 @@ body.th-active .roster-list-th{display:flex !important}
 .clear-flags-btn{display:none;margin-top:14px;width:100%;font-family:"Cinzel",serif;font-size:.44rem;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-faint);background:none;border:1px solid var(--line-soft);padding:5px 8px;cursor:pointer;transition:color .2s,border-color .2s}
 .clear-flags-btn:hover{color:var(--gold-dim);border-color:var(--gold-dim)}
 .clear-flags-btn.visible{display:block}
-@media print{.clear-flags-btn{display:none!important}}
+.side-nav-keys{margin-top:16px;font-family:"IBM Plex Mono",monospace;font-size:.48rem;letter-spacing:.06em;color:var(--ink-faint);opacity:.5;line-height:2}
+.side-nav-keys kbd{background:rgba(255,255,255,.06);border:1px solid var(--line-soft);padding:1px 4px;border-radius:2px;font-size:.9em}
+@media(max-width:860px){.side-nav-keys{display:none}}
+@media print{.clear-flags-btn,.side-nav-keys{display:none!important}}
 @media print{.chap-flag{display:none!important}}
 
 /* ----- DM Notes (story chapters) ----- */
@@ -1415,6 +1418,7 @@ body.th-active .roster-list-th{display:flex !important}
         <li><a href="#ch6" data-target="ch6"><span class="nav-text"><span class="nav-roman">VI</span><span class="nav-label">Borderland</span></span></a></li>
       </ul>
       <button class="clear-flags-btn" id="clear-flags-btn" title="Remove all session focus flags">Clear Flags</button>
+      <div class="side-nav-keys"><kbd>J</kbd>/<kbd>K</kbd> chapter · <kbd>F</kbd> flagged · <kbd>M</kbd> music</div>
     </nav>
 
     <!-- ============ MAIN CHRONICLE ============ -->
@@ -2272,6 +2276,9 @@ body.th-active .roster-list-th{display:flex !important}
       else window.scrollTo({ top: 0, behavior: 'smooth' });
     });
   })();
+
+  // ── Visit timestamp ─────────────────────────────────────────────
+  try { localStorage.setItem('story:visited', Date.now()); } catch(e) {}
 
   // ── Scroll position persistence ────────────────────────────────
   (function(){

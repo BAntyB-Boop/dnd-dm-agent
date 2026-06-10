@@ -185,6 +185,13 @@
     background: rgba(212,160,23,0.1);
     border-left-color: var(--gold);
   }
+  .sb-link.noted-lore::after {
+    content: "✎";
+    margin-left: auto;
+    font-size: 10px;
+    color: rgba(212,160,23,0.5);
+    flex-shrink: 0;
+  }
   .sb-dot {
     width: 9px; height: 9px; border-radius: 50%; flex: none;
     box-shadow: 0 0 5px currentColor;
@@ -208,6 +215,16 @@
     transition: color .2s;
   }
   .sb-util-link:hover { color: rgba(244,228,193,0.65); }
+  .sb-keys {
+    padding: 12px 20px 0;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 9px; letter-spacing: .05em;
+    color: rgba(244,228,193,0.2); line-height: 2;
+  }
+  .sb-keys kbd {
+    background: rgba(255,255,255,.05); border: 1px solid rgba(92,58,30,.5);
+    padding: 1px 4px; border-radius: 2px; font-size: .9em;
+  }
 
   /* ─── Main content ─── */
   #main {
@@ -1263,6 +1280,7 @@
       <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 4 3 6.5v13L9 17l6 2.5 6-2.5v-13L15 6.5 9 4Z"/><path d="M9 4v13M15 6.5v13"/></svg>
       Interactive Map
     </a>
+  <div class="sb-keys"><kbd>J</kbd>/<kbd>K</kbd> section</div>
   </div><!-- /sb-body -->
   </aside>
 
@@ -2242,6 +2260,7 @@ restoreDmNotesState();
 // ─── DM Session Notes ───
 (function(){
   const NOTE_PREFIX = 'porto-stellare:session-note:';
+  function sbLink(id){ return document.querySelector('#sidebar a.sb-link[href="#' + id + '"]'); }
   document.querySelectorAll('.district-section[id], .hollow-section[id]').forEach(section => {
     const id = section.id;
     const saved = (() => { try { return localStorage.getItem(NOTE_PREFIX + id) || ''; } catch(e){ return ''; } })();
@@ -2256,12 +2275,15 @@ restoreDmNotesState();
     else section.appendChild(wrap);
     const ta = wrap.querySelector('.dm-session-textarea');
     ta.value = saved;
+    const link = sbLink(id);
+    if(link) link.classList.toggle('noted-lore', saved.trim().length > 0);
     const savedLabel = wrap.querySelector('.dm-session-saved');
     let saveTimer;
     ta.addEventListener('input', () => {
       clearTimeout(saveTimer);
       saveTimer = setTimeout(() => {
         try { localStorage.setItem(NOTE_PREFIX + id, ta.value); } catch(e){}
+        if(link) link.classList.toggle('noted-lore', ta.value.trim().length > 0);
         savedLabel.classList.add('show');
         setTimeout(() => savedLabel.classList.remove('show'), 1800);
       }, 600);
@@ -2307,6 +2329,9 @@ window.addEventListener('scroll', () => {
   const docH = document.documentElement.scrollHeight - window.innerHeight;
   readProgress.style.width = (docH > 0 ? (window.scrollY / docH * 100) : 0) + '%';
 }, { passive: true });
+
+// Visit timestamp
+try { localStorage.setItem('lore:porto-stellare:visited', Date.now()); } catch(e) {}
 
 // Scroll position persistence
 (function(){

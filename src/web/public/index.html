@@ -452,6 +452,11 @@ h1.title{
   opacity:0.8;flex-shrink:0;transition:opacity .2s;
 }
 .cb-btn:hover .cb-flag-count{opacity:1;color:var(--gold)}
+.cb-visit-label{
+  font-family:"Cinzel",serif;font-size:0.4rem;letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--ink-faint);opacity:0.7;flex-shrink:0;transition:opacity .2s;
+}
+.cb-btn:hover .cb-visit-label{opacity:1;color:var(--ink-mute)}
 
 /* ============ FOOTER ============ */
 .colophon{
@@ -952,40 +957,93 @@ h1.title{
     });
   })();
 
-  // ── Chronicle button: flagged chapter count badges ───────────────
+  // ── Chronicle button: flagged chapter count + notes badges ─────
   (function(){
-    function countFlags(prefix){
+    function countMatching(prefix, test){
       var count = 0;
       try{
         for(var i = 0; i < localStorage.length; i++){
           var k = localStorage.key(i);
-          if(k && k.indexOf(prefix) === 0 && localStorage.getItem(k) === '1') count++;
+          if(k && k.indexOf(prefix) === 0 && test(localStorage.getItem(k))) count++;
         }
       }catch(e){}
       return count;
     }
-    var storyFlags   = countFlags('story:flag:');
-    var sessionFlags = countFlags('session-1:flag:');
-    if(storyFlags > 0){
-      var storyBtn = document.querySelector('.cb-btns a[href="/story"]');
-      if(storyBtn){
-        var badge = document.createElement('span');
-        badge.className = 'cb-flag-count';
-        badge.textContent = '⚑ ' + storyFlags;
-        badge.title = storyFlags + ' chapter' + (storyFlags > 1 ? 's' : '') + ' flagged';
-        storyBtn.insertBefore(badge, storyBtn.querySelector('.arr'));
+    var pairs = [
+      { href: '/story',              flagPfx: 'story:flag:',      notePfx: 'story:note:' },
+      { href: '/sessions/session-1', flagPfx: 'session-1:flag:',  notePfx: 'session-1:note:' }
+    ];
+    pairs.forEach(function(p){
+      var btn = document.querySelector('.cb-btns a[href="' + p.href + '"]');
+      if(!btn) return;
+      var arr = btn.querySelector('.arr');
+      var flags = countMatching(p.flagPfx, function(v){ return v === '1'; });
+      var notes = countMatching(p.notePfx, function(v){ return v && v.trim().length > 0; });
+      if(notes > 0){
+        var nb = document.createElement('span');
+        nb.className = 'note-badge';
+        nb.textContent = '✎ ' + notes;
+        nb.title = notes + ' chapter note' + (notes > 1 ? 's' : '') + ' saved';
+        btn.insertBefore(nb, arr);
       }
-    }
-    if(sessionFlags > 0){
-      var sessionBtn = document.querySelector('.cb-btns a[href="/sessions/session-1"]');
-      if(sessionBtn){
-        var badge2 = document.createElement('span');
-        badge2.className = 'cb-flag-count';
-        badge2.textContent = '⚑ ' + sessionFlags;
-        badge2.title = sessionFlags + ' chapter' + (sessionFlags > 1 ? 's' : '') + ' flagged';
-        sessionBtn.insertBefore(badge2, sessionBtn.querySelector('.arr'));
+      if(flags > 0){
+        var fb = document.createElement('span');
+        fb.className = 'cb-flag-count';
+        fb.textContent = '⚑ ' + flags;
+        fb.title = flags + ' chapter' + (flags > 1 ? 's' : '') + ' flagged';
+        btn.insertBefore(fb, arr);
       }
-    }
+    });
+    // Lore page: flags stored as JSON object, notes as individual keys
+    (function(){
+      var loreBtn = document.querySelector('.cb-btns a[href="/lore/porto-stellare"]');
+      if(!loreBtn) return;
+      var arr = loreBtn.querySelector('.arr');
+      var loreFlags = 0;
+      try{
+        var fj = JSON.parse(localStorage.getItem('porto-stellare:session-flags') || '{}');
+        loreFlags = Object.values(fj).filter(Boolean).length;
+      }catch(e){}
+      var loreNotes = countMatching('porto-stellare:session-note:', function(v){ return v && v.trim().length > 0; });
+      if(loreNotes > 0){
+        var nb2 = document.createElement('span');
+        nb2.className = 'note-badge';
+        nb2.textContent = '✎ ' + loreNotes;
+        nb2.title = loreNotes + ' district note' + (loreNotes > 1 ? 's' : '') + ' saved';
+        loreBtn.insertBefore(nb2, arr);
+      }
+      if(loreFlags > 0){
+        var fb2 = document.createElement('span');
+        fb2.className = 'cb-flag-count';
+        fb2.textContent = '⚑ ' + loreFlags;
+        fb2.title = loreFlags + ' location' + (loreFlags > 1 ? 's' : '') + ' flagged';
+        loreBtn.insertBefore(fb2, arr);
+      }
+    })();
+  })();
+
+  // ── Chronicle button: recent visit labels ───────────────────────
+  (function(){
+    var now = Date.now(), DAY = 86400000;
+    var pages = [
+      { href: '/story',               key: 'story:visited' },
+      { href: '/sessions/session-1',  key: 'session-1:visited' },
+      { href: '/map/porto-stellare',  key: 'map:porto-stellare:visited' },
+      { href: '/lore/porto-stellare', key: 'lore:porto-stellare:visited' }
+    ];
+    pages.forEach(function(p){
+      var ts = 0;
+      try { ts = parseInt(localStorage.getItem(p.key) || '0', 10); } catch(e) {}
+      if(!ts || (now - ts) > 7 * DAY) return;
+      var btn = document.querySelector('.cb-btns a[href="' + p.href + '"]');
+      if(!btn) return;
+      var age = now - ts;
+      var label = age < 3600000 ? 'just now' : age < DAY ? 'today' : age < 2 * DAY ? 'yesterday' : Math.floor(age / DAY) + 'd ago';
+      var sp = document.createElement('span');
+      sp.className = 'cb-visit-label';
+      sp.textContent = label;
+      btn.insertBefore(sp, btn.querySelector('.arr'));
+    });
   })();
 
   // ── Scroll-to-top ────────────────────────────────────────────────

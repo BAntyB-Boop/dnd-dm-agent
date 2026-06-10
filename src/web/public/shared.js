@@ -36,18 +36,55 @@
 })();
 
 // Arrow keys — navigate prev/next folio when .folio-nav-link exists
+// Fades out BGM (if playing) before navigating, for a smoother transition.
 (function() {
   var prev = document.querySelector('.folio-nav-link.prev');
   var next = document.querySelector('.folio-nav-link.next');
   if (!prev && !next) return;
+  function navigateTo(href) {
+    var audio = document.getElementById('bg-audio');
+    if (audio && !audio.paused && !audio.muted && audio.volume > 0) {
+      var start = audio.volume;
+      var steps = 12, interval = 18; // ~216ms fade
+      var step = 0;
+      var fade = setInterval(function() {
+        step++;
+        audio.volume = Math.max(0, start * (1 - step / steps));
+        if (step >= steps) { clearInterval(fade); window.location.href = href; }
+      }, interval);
+    } else {
+      window.location.href = href;
+    }
+  }
   document.addEventListener('keydown', function(e) {
     if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
     if (e.shiftKey || e.ctrlKey || e.metaKey || e.altKey) return;
     var tag = (document.activeElement || {}).tagName || '';
     if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
     var link = e.key === 'ArrowLeft' ? prev : next;
-    if (link) { e.preventDefault(); window.location.href = link.href; }
+    if (link) { e.preventDefault(); navigateTo(link.href); }
   });
+  [prev, next].forEach(function(link) {
+    if (!link) return;
+    link.addEventListener('click', function(e) {
+      var audio = document.getElementById('bg-audio');
+      if (audio && !audio.paused && !audio.muted && audio.volume > 0) {
+        e.preventDefault();
+        navigateTo(link.href);
+      }
+    });
+  });
+})();
+
+// Folio keyboard hint — inject "← → navigate · M music" label into folio-nav
+(function() {
+  var nav = document.querySelector('.folio-nav');
+  if (!nav) return;
+  var hint = document.createElement('span');
+  hint.className = 'folio-nav-keys';
+  hint.setAttribute('aria-hidden', 'true');
+  hint.innerHTML = '<kbd>&#8592;</kbd><kbd>&#8594;</kbd> navigate &nbsp;&middot;&nbsp; <kbd>M</kbd> music';
+  nav.appendChild(hint);
 })();
 
 // Folio visit tracking — record timestamp on folio pages so the roster can show recent visits

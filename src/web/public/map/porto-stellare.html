@@ -594,6 +594,13 @@
     padding: 8px 8px 10px;
   }
   #legend.collapsed .leg-body { max-height: 0; opacity: 0; padding-top: 0; padding-bottom: 0; }
+  .leg-replay-btn {
+    display: block; width: 100%; margin-top: 8px;
+    font-family: var(--display); font-size: 9px; letter-spacing: .22em; text-transform: uppercase;
+    color: rgba(244,228,193,0.3); background: none; border: none; cursor: pointer;
+    padding: 6px 8px; text-align: left; transition: color .2s;
+  }
+  .leg-replay-btn:hover { color: rgba(244,228,193,0.65); }
   .leg-item {
     display: flex; align-items: center; gap: 10px;
     padding: 6px 8px;
@@ -1114,6 +1121,7 @@
       <span class="leg-toggle">▾</span>
     </div>
     <div class="leg-body" id="leg-body"></div>
+    <button class="leg-replay-btn" id="leg-replay-intro">&#9654; Replay Intro</button>
   </div>
 
   <!-- Intro veil -->
@@ -1667,6 +1675,7 @@ atlasPrev.addEventListener('click', () => goAtlasPage(atlasPage - 1));
 atlasNext.addEventListener('click', () => goAtlasPage(atlasPage + 1));
 
 function enterCity(){
+  try { localStorage.setItem('map:porto-stellare:intro-seen', '1'); localStorage.setItem('map:porto-stellare:visited', Date.now()); } catch(e) {}
   veil.classList.add("gone");
   phaseAtlas.classList.remove("in");
   const hashId = window.location.hash.slice(1);
@@ -1679,6 +1688,10 @@ function enterCity(){
 }
 document.getElementById('atlas-enter').addEventListener('click', enterCity);
 document.getElementById('atlas-skip').addEventListener('click', enterCity);
+document.getElementById('leg-replay-intro').addEventListener('click', () => {
+  try { localStorage.removeItem('map:porto-stellare:intro-seen'); } catch(e) {}
+  window.location.reload();
+});
 
 // keyboard: arrow keys navigate atlas/modal, Escape skips/closes
 document.addEventListener("keydown", e => {
@@ -1717,11 +1730,18 @@ window.addEventListener("load", () => {
     veil.classList.add("gone");
     setTimeout(() => openDistrict(deepLinkId), 700);
   } else {
-    // After title anim (~2.2s): fade title → show atlas
-    setTimeout(() => {
-      phaseTitle.classList.add("out");
-      setTimeout(() => phaseAtlas.classList.add("in"), 400);
-    }, 2200);
+    let introSeen = false;
+    try { introSeen = localStorage.getItem('map:porto-stellare:intro-seen') === '1'; } catch(e) {}
+    if(introSeen){
+      // returning visitor: skip straight into city
+      setTimeout(() => enterCity(), 350);
+    } else {
+      // first visit: play full intro (title → atlas → enter)
+      setTimeout(() => {
+        phaseTitle.classList.add("out");
+        setTimeout(() => phaseAtlas.classList.add("in"), 400);
+      }, 2200);
+    }
   }
 });
 

@@ -112,6 +112,7 @@ h1, h2, h3, h4 {
   border-top: 1px solid var(--line, #2a2a35);
   max-width: 1280px;
   margin: 0 auto;
+  position: relative;
 }
 .folio-nav-link {
   display: inline-flex;
@@ -165,6 +166,22 @@ h1, h2, h3, h4 {
   .folio-nav-link .fn-num { display: none; }
   .folio-nav-link .fn-name { font-size: 0.58rem; }
 }
+.folio-nav-keys {
+  position: absolute;
+  left: 50%; transform: translateX(-50%);
+  pointer-events: none;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.46rem; letter-spacing: 0.06em;
+  color: var(--ink-faint, #4a4636); opacity: 0.6;
+  white-space: nowrap;
+}
+.folio-nav-keys kbd {
+  background: rgba(255,255,255,.05);
+  border: 1px solid var(--line, #2a2a35);
+  padding: 1px 4px; border-radius: 2px; font-size: 0.9em;
+}
+@media (max-width: 480px) { .folio-nav-keys { display: none; } }
+@media print { .folio-nav-keys { display: none !important; } }
 
 /* ----- Scroll-to-top button ----- */
 #scroll-top {

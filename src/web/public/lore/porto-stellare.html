@@ -1280,7 +1280,7 @@
       <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 4 3 6.5v13L9 17l6 2.5 6-2.5v-13L15 6.5 9 4Z"/><path d="M9 4v13M15 6.5v13"/></svg>
       Interactive Map
     </a>
-  <div class="sb-keys"><kbd>J</kbd>/<kbd>K</kbd> section</div>
+  <div class="sb-keys"><kbd>J</kbd>/<kbd>K</kbd> section · <kbd>F</kbd> flagged</div>
   </div><!-- /sb-body -->
   </aside>
 
@@ -2446,6 +2446,25 @@ try { localStorage.setItem('lore:porto-stellare:visited', Date.now()); } catch(e
     var idx = currentIdx();
     var next = (e.key === 'j' || e.key === 'J') ? Math.min(idx + 1, sections.length - 1) : Math.max(idx - 1, 0);
     if(next !== idx) sections[next].scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+  // F — jump to next flagged district (from qref session flags)
+  document.addEventListener('keydown', function(e){
+    if(e.key !== 'f' && e.key !== 'F') return;
+    if(e.ctrlKey || e.metaKey || e.altKey) return;
+    var tag = (document.activeElement || {}).tagName || '';
+    if(tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+    var flaggedIds = [];
+    try {
+      var fj = JSON.parse(localStorage.getItem('porto-stellare:session-flags') || '{}');
+      flaggedIds = Object.keys(fj).filter(function(k){ return fj[k]; });
+    } catch(ex) {}
+    if(!flaggedIds.length) return;
+    var flagSections = flaggedIds.map(function(id){ return document.getElementById(id); }).filter(Boolean);
+    if(!flagSections.length) return;
+    var midY = window.scrollY + window.innerHeight / 2;
+    var past = flagSections.filter(function(s){ return s.getBoundingClientRect().top + window.scrollY > midY + 40; });
+    var target = past.length ? past[0] : flagSections[0];
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
 })();
 

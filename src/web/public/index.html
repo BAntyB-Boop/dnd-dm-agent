@@ -445,6 +445,10 @@ h1.title{
   color:var(--gold-dim);border:1px solid var(--gold-deep);padding:3px 7px;
   opacity:0.75;pointer-events:none;flex-shrink:0;
 }
+.recent-tag{
+  font-family:"Cinzel",serif;font-size:0.4rem;letter-spacing:0.24em;text-transform:uppercase;
+  color:var(--gold-dim);opacity:0.6;margin-left:6px;pointer-events:none;
+}
 /* ---- Flag count on chronicle buttons ---- */
 .cb-flag-count{
   font-family:"Cinzel",serif;font-size:0.42rem;letter-spacing:0.18em;text-transform:uppercase;
@@ -952,6 +956,10 @@ h1.title{
           const label = age < 3600000 ? 'just now' : age < DAY ? 'today' : 'yesterday';
           vol.title = 'Last opened: ' + label;
           vol.style.color = 'var(--gold-dim)';
+          const tag = document.createElement('span');
+          tag.className = 'recent-tag';
+          tag.textContent = label;
+          vol.insertAdjacentElement('afterend', tag);
         }
       }
     });

@@ -386,6 +386,31 @@
     margin-top: 8px;
   }
 
+  /* ─── Section artwork (atlas plates) ─── */
+  .district-art {
+    position: relative;
+    margin: 0 0 26px;
+    border: 1px solid rgba(92,58,30,0.45);
+    border-radius: 3px;
+    overflow: hidden;
+    background: rgba(20,12,4,0.5);
+    box-shadow: 0 6px 24px rgba(0,0,0,0.35);
+  }
+  .district-art img { display: block; width: 100%; height: auto; }
+  .district-art.crop-left img,
+  .district-art.crop-right img { width: 200%; }
+  .district-art.crop-right img { margin-left: -100%; }
+  .district-art .art-cap {
+    position: absolute; right: 10px; bottom: 10px;
+    font-family: var(--display);
+    font-size: 8.5px; letter-spacing: .22em; text-transform: uppercase;
+    color: rgba(244,228,193,0.78);
+    background: rgba(10,6,2,0.72);
+    border: 1px solid rgba(212,160,23,0.25);
+    padding: 3px 8px; border-radius: 2px;
+    backdrop-filter: blur(3px);
+  }
+
   /* overview card */
   .overview-card {
     padding: 22px 26px;
@@ -689,6 +714,43 @@
   }
   #scroll-top.show { opacity: 1; pointer-events: auto; }
   #scroll-top:hover { color: var(--gold-bright); border-color: var(--gold); }
+
+  /* ─── Music control (continues homepage BGM) ─── */
+  .music-ctrl {
+    position: fixed; top: 68px; right: 18px; z-index: 86;
+    display: inline-flex; align-items: center; gap: 10px;
+    border: 1px solid rgba(212,160,23,0.3);
+    background: rgba(10,6,2,0.88); backdrop-filter: blur(6px);
+    padding: 6px 11px; transition: border-color .2s;
+  }
+  .music-ctrl:hover { border-color: var(--gold); }
+  .music-btn {
+    background: none; border: none; cursor: pointer;
+    color: var(--gold); padding: 0; display: flex; align-items: center;
+    transition: color .2s, transform .15s;
+  }
+  .music-btn:hover { color: var(--gold-bright); transform: scale(1.12); }
+  .music-btn svg { width: 14px; height: 14px; }
+  .music-vol {
+    -webkit-appearance: none; appearance: none;
+    width: 64px; height: 2px;
+    background: linear-gradient(to right, var(--gold) var(--fill,30%), rgba(212,160,23,0.25) var(--fill,30%));
+    outline: none; cursor: pointer; border-radius: 2px;
+  }
+  .music-vol::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 10px; height: 10px; border-radius: 50%;
+    background: var(--gold); cursor: pointer; box-shadow: 0 0 6px rgba(212,160,23,0.6);
+  }
+  .music-vol::-moz-range-thumb {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--gold); cursor: pointer; border: none;
+  }
+  .music-ctrl.pending .music-btn { animation: music-pulse 1.8s ease-in-out infinite; }
+  @keyframes music-pulse {
+    0%,100% { color: var(--gold); }
+    50% { color: var(--gold-bright); filter: drop-shadow(0 0 6px rgba(212,160,23,0.8)); }
+  }
+  @media (max-width: 600px) { .music-vol { width: 48px; } }
 
   /* sb-body collapse */
   #sb-body {
@@ -1166,7 +1228,7 @@
   /* ─── Print ─── */
   @media print {
     body { background: #fff; color: #1a0f07; }
-    #topbar, #sidebar, #read-progress, #scroll-top,
+    #topbar, #sidebar, #read-progress, #scroll-top, .music-ctrl, #bg-audio,
     #mob-jump-btn, #mob-jump-drawer, .view-on-map, .dm-session-notes { display: none !important; }
     .layout { display: block; padding-top: 0; }
     #main { padding: 12px; }
@@ -1215,6 +1277,24 @@
     <a class="topbar-link" id="topbar-map-link" href="/map/porto-stellare">&#8592; Back to Map</a>
   </div>
 </nav>
+
+<audio id="bg-audio" src="/assets/codex-of-stars.mp3" loop preload="auto"></audio>
+
+<!-- Music control (continues homepage BGM) -->
+<div class="music-ctrl" id="music-ctrl">
+  <button class="music-btn" id="music-btn" aria-label="Toggle music">
+    <svg id="icon-sound" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+      <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+      <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+    </svg>
+    <svg id="icon-mute" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+      <line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/>
+    </svg>
+  </button>
+  <input type="range" class="music-vol" id="music-vol" min="0" max="1" step="0.05" value="0.3" aria-label="Volume">
+</div>
 
 <div class="layout">
 
@@ -1292,6 +1372,10 @@
       <div class="label">District Lore Compendium</div>
       <h1>Porto Stellare</h1>
       <div class="subtitle">The City of Reflections · Republic of Wealth</div>
+      <figure class="district-art" style="margin-top:22px">
+        <img src="/map/assets/atlas/atlas-p01.jpg" alt="Porto Stellare — the city where the sea reflects the stars" />
+        <figcaption class="art-cap">Atlas · Cover Plate</figcaption>
+      </figure>
       <p>เมืองที่ทะเลสะท้อนแสงดาว Porto Stellare สร้างอยู่บนหน้าผาสูงชันเหนือ Moonlit Bay — เมืองที่ภูมิศาสตร์กำหนดชะตากรรม ระดับที่อยู่อาศัยของคุณบอกว่าคุณเป็นใคร ยิ่งสูงยิ่งมีอำนาจ ยิ่งต่ำยิ่งถูกลืม แต่ความจริงที่ลึกที่สุดของเมืองนี้อยู่ใต้พื้น ไม่ใช่บนยอดเขา</p>
       <div class="city-stats">
         <div class="city-stat">
@@ -1319,6 +1403,10 @@
         <h2>Governance &amp; Power</h2>
         <div class="sh-rule"></div>
       </div>
+      <figure class="district-art">
+        <img src="/map/assets/atlas/atlas-p03.jpg" alt="The Architecture of Inequality — elevation dictates power in Porto Stellare" loading="lazy" />
+        <figcaption class="art-cap">Atlas p.3 — Architecture of Inequality</figcaption>
+      </figure>
       <p class="prose">Porto Stellare ปกครองโดย City Council ที่ประกอบด้วยตัวแทนจาก Guild ใหญ่และตระกูลที่ร่ำรวยที่สุด ไม่มีกษัตริย์ มีเพียงสัญญา บัญชี และอำนาจที่ซื้อได้ ระบบนี้เปิดโอกาสให้ทุกคนมีอำนาจในทางทฤษฎี แต่ในทางปฏิบัติ เงินเท่านั้นที่พูดได้</p>
       <p class="prose">City Watch ทำหน้าที่รักษาความสงบ แต่ในความเป็นจริง City Watch ปกป้องผลประโยชน์ของชนชั้นสูง การประท้วงในย่านแรงงานถูกปราบอย่างรุนแรง ขณะที่อาชญากรรมที่เกิดใน Aurora Promenade ถูกทำให้เงียบ Porto Stellare อยู่ภายใต้ยุคที่ไม่สงบ — ความเหลื่อมล้ำสูงขึ้นทุกปี และสิ่งที่ซ่อนอยู่ใต้เมืองเก่าเริ่มตื่นขึ้น</p>
       <p class="prose">เศรษฐกิจของเมืองพึ่งพาการค้าทางทะเลผ่าน Stellamar Port, อุตสาหกรรมหนักใน Iron Quarters, และอุตสาหกรรมการท่องเที่ยวที่ Aurora Promenade เลี้ยงไว้ ทุกอย่างที่คนชนชั้นบนสูบ มาจากด้านล่าง — แต่คนด้านล่างไม่มีวันได้รับส่วนแบ่งที่ยุติธรรม</p>
@@ -1549,6 +1637,11 @@
         </div>
       </div>
 
+      <figure class="district-art crop-left">
+        <img src="/map/assets/atlas/atlas-p06.jpg" alt="Atlas plate — Verdant Terraces district map" loading="lazy" />
+        <figcaption class="art-cap">Atlas p.6 — Verdant Terraces</figcaption>
+      </figure>
+
       <div class="overview-card">
         <p>เขตตอนบนของ Porto Stellare บนหน้าผาฝั่งตะวันตก เต็มไปด้วยคฤหาสน์หรู สวนพฤกษศาสตร์ และที่พักของตระกูลเก่าแก่ ถูกออกแบบมาเพื่อแยกความมั่งคั่งออกจากส่วนอื่นของเมือง ต่างจาก Aurora Promenade ที่โชว์ความมั่งคั่งอย่างเปิดเผย Verdant Terraces ถูกสร้างให้ปิดและโดดเดี่ยว</p>
       </div>
@@ -1611,6 +1704,11 @@
           <div class="atlas-badge">Atlas p.8</div>
         </div>
       </div>
+
+      <figure class="district-art">
+        <img src="/map/assets/atlas/atlas-p08.jpg" alt="Atlas plate — Silver Steps, the heartbeat of the city" loading="lazy" />
+        <figcaption class="art-cap">Atlas p.8 — Silver Steps</figcaption>
+      </figure>
 
       <div class="overview-card">
         <p>เขตที่มีประชากรมากที่สุดของเมือง หัวใจที่เชื่อม Porto Stellare ทั้งหมดเข้าด้วยกัน เต็มไปด้วยตลาด โรงเตี๊ยม บ้านพัก และ Workshop นับไม่ถ้วน เชื่อมต่อกับทุก district ผ่านบันได gondola และ tram ถ้าคุณอยากไปที่ไหนใน Porto Stellare คุณต้องผ่านที่นี่</p>
@@ -1678,6 +1776,11 @@
         </div>
       </div>
 
+      <figure class="district-art crop-left">
+        <img src="/map/assets/atlas/atlas-p07.jpg" alt="Atlas plate — Golden Crescent district map" loading="lazy" />
+        <figcaption class="art-cap">Atlas p.7 — Golden Crescent</figcaption>
+      </figure>
+
       <div class="overview-card">
         <p>ศูนย์กลางเศรษฐกิจและการเมืองของ Porto Stellare ที่ซึ่งสงครามเริ่มต้นก่อนที่ดาบจะถูกชักออก เต็มไปด้วยธนาคาร Guild Halls สภาเมือง และโรงละคร เงินและอำนาจไหลเวียนที่นี่ก่อนที่จะไปถึงที่อื่น ถ้าอยากรู้ว่าใครมีอำนาจจริง มาดูที่ Golden Crescent</p>
       </div>
@@ -1741,6 +1844,11 @@
           <div class="atlas-badge">Atlas p.6</div>
         </div>
       </div>
+
+      <figure class="district-art crop-right">
+        <img src="/map/assets/atlas/atlas-p06.jpg" alt="Atlas plate — White Cliff Ward district map" loading="lazy" />
+        <figcaption class="art-cap">Atlas p.6 — White Cliff Ward</figcaption>
+      </figure>
 
       <div class="overview-card">
         <p>เขตพักอาศัยและการศึกษา ถือเป็นหนึ่งในเขตที่ปลอดภัยที่สุดของเมือง อย่างน้อยผู้คนก็เชื่อเช่นนั้น เต็มไปด้วยมหาวิทยาลัย ห้องสมุด อาคารราชการ และที่พักของนักวิชาการ ความรู้ที่ผิดสามารถกลายเป็นอาวุธที่อันตรายที่สุดในเมืองนี้</p>
@@ -1806,6 +1914,11 @@
         </div>
       </div>
 
+      <figure class="district-art crop-right">
+        <img src="/map/assets/atlas/atlas-p07.jpg" alt="Atlas plate — Aurora Promenade district map" loading="lazy" />
+        <figcaption class="art-cap">Atlas p.7 — Aurora Promenade</figcaption>
+      </figure>
+
       <div class="overview-card">
         <p>เขตริมน้ำอันหรูหราที่ปรากฏอยู่ในโปสเตอร์ท่องเที่ยวแทบทั้งหมดของ Porto Stellare รีสอร์ท คาสิโน โรงแรม ชายหาด ร้านอาหาร — ทุกอย่างถูกออกแบบมาเพื่อให้ดูสวยงามและน่าลืม สิ่งที่เกิดในความมืดของ Aurora ไม่มีวันถูกรายงาน</p>
       </div>
@@ -1870,6 +1983,11 @@
         </div>
       </div>
 
+      <figure class="district-art">
+        <img src="/map/assets/atlas/atlas-p10.jpg" alt="Atlas plate — Iron Quarters, the engine room" loading="lazy" />
+        <figcaption class="art-cap">Atlas p.10 — Iron Quarters</figcaption>
+      </figure>
+
       <div class="overview-card">
         <p>เขตอุตสาหกรรมและแรงงานหลักของ Porto Stellare ความมั่งคั่งของเมืองถูกสร้างขึ้นที่นี่ เต็มไปด้วยโรงตีเหล็ก อู่ต่อเรือ โรงงาน และผู้คนที่พยายามหาเงินเพื่ออยู่รอด แทบทุกอย่างที่คนในเมืองครอบครองเคยผ่านที่นี่มาก่อน แต่คนที่สร้างมันไม่เคยได้ส่วนแบ่งที่ยุติธรรม</p>
       </div>
@@ -1933,6 +2051,11 @@
           <div class="atlas-badge">Atlas p.11</div>
         </div>
       </div>
+
+      <figure class="district-art">
+        <img src="/map/assets/atlas/atlas-p11.jpg" alt="Atlas plate — Old Crown, the stagnant anchor" loading="lazy" />
+        <figcaption class="art-cap">Atlas p.11 — Old Crown</figcaption>
+      </figure>
 
       <div class="overview-card">
         <p>ส่วนที่เก่าแก่ที่สุดของ Porto Stellare สร้างอยู่บนคาบสมุทรหินซึ่งยื่นออกไปยัง Moonlit Bay แม้ Porto Stellare จะถูกสร้างใหม่หลายครั้ง Old Crown แทบไม่เปลี่ยนแปลง หลายส่วนดูเหมือนจะเก่าแก่กว่าตัวเมืองเสียอีก ทุกสิ่งที่เก่าพอจะจำได้มักวนกลับมาที่นี่</p>
@@ -1999,6 +2122,11 @@
         </div>
       </div>
 
+      <figure class="district-art">
+        <img src="/map/assets/atlas/atlas-p09.jpg" alt="Atlas plate — Stellamar Port, the gateway" loading="lazy" />
+        <figcaption class="art-cap">Atlas p.9 — Stellamar Port</figcaption>
+      </figure>
+
       <div class="overview-card">
         <p>ประตูหลักของ Porto Stellare ผู้คนที่เดินทางมายังเมืองเป็นครั้งแรกมักเห็น Stellamar ก่อนเสมอ เต็มไปด้วยท่าเรือ ตลาด คลังสินค้า และผู้คนจากทั่วทุกมุมโลก สินค้าส่วนใหญ่ที่เข้าสู่ Porto Stellare มักผ่าน Stellamar ก่อน — รวมถึงสิ่งที่ไม่ควรผ่านด้วย</p>
       </div>
@@ -2063,6 +2191,11 @@
           <div class="hollow-alias">The Forgotten Mirror · The Undercity · What Was Before</div>
         </div>
       </div>
+
+      <figure class="district-art" style="border-color:rgba(90,58,122,0.5)">
+        <img src="/map/assets/atlas/atlas-p12.jpg" alt="Atlas plate — The Hollow Below, the forgotten mirror" loading="lazy" />
+        <figcaption class="art-cap">Atlas p.12 — The Hollow Below</figcaption>
+      </figure>
 
       <div class="hollow-overview">
         <p>Porto Stellare ไม่ได้ถูกสร้างบนก้อนหิน — มันถูกสร้างบนหลังคาของบางอย่าง ใต้เมืองทั้งหมดมีโครงข่ายอุโมงค์และห้องโถงที่เก่าแก่กว่า Porto Stellare มาก บางส่วนดูเหมือนซากปรักหักพังของเมืองอีกเมืองหนึ่งที่สร้างในแบบเดียวกัน แต่กลับหัวอยู่ข้างล่าง ทุกอย่างที่เมืองพยายามซ่อน ในที่สุดก็ตกลงมาที่นี่</p>
@@ -2493,6 +2626,137 @@ try { localStorage.setItem('lore:porto-stellare:visited', Date.now()); } catch(e
       a.textContent = tag.textContent;
       tag.replaceWith(a);
     }
+  });
+})();
+
+// ── Music player — continues homepage BGM (shared volume/mute/position) ──
+(function(){
+  const audio     = document.getElementById('bg-audio');
+  const btn       = document.getElementById('music-btn');
+  const ctrl      = document.getElementById('music-ctrl');
+  const iconSound = document.getElementById('icon-sound');
+  const iconMute  = document.getElementById('icon-mute');
+  const volSlider = document.getElementById('music-vol');
+  if (!audio || !btn) return;
+
+  const POS_KEY = 'bgm:codex:pos';
+
+  function updateSlider(){
+    volSlider.style.setProperty('--fill', Math.round(parseFloat(volSlider.value) * 100) + '%');
+  }
+
+  try {
+    const sv = localStorage.getItem('index-music-vol');
+    const sm = localStorage.getItem('index-music-mute');
+    if (sv !== null){ audio.volume = parseFloat(sv); volSlider.value = sv; }
+    else audio.volume = 0.3;
+    if (sm === 'true'){ audio.muted = true; iconSound.style.display = 'none'; iconMute.style.display = ''; }
+  } catch(e){ audio.volume = 0.3; }
+  updateSlider();
+
+  // Resume from where the previous page left off
+  try {
+    const ps = JSON.parse(localStorage.getItem(POS_KEY) || 'null');
+    if (ps && isFinite(ps.t) && Date.now() - ps.at < 30 * 60 * 1000){
+      const seek = () => { try { audio.currentTime = ps.t; } catch(e){} };
+      if (audio.readyState >= 1) seek();
+      else audio.addEventListener('loadedmetadata', seek, { once: true });
+    }
+  } catch(e){}
+
+  // Keep position saved so the next page continues seamlessly
+  let lastPosSave = 0;
+  function savePos(){
+    try { localStorage.setItem(POS_KEY, JSON.stringify({ t: audio.currentTime, at: Date.now() })); } catch(e){}
+  }
+  audio.addEventListener('timeupdate', () => {
+    const now = Date.now();
+    if (now - lastPosSave < 2000) return;
+    lastPosSave = now; savePos();
+  });
+  window.addEventListener('pagehide', savePos);
+
+  let started = false;
+  const triggerEvents = ['click','scroll','touchstart','keydown','mousedown','pointermove'];
+
+  function onPlaying(){
+    if (started) return;
+    started = true;
+    ctrl.classList.remove('pending');
+    triggerEvents.forEach(ev => document.removeEventListener(ev, tryStart));
+    // gentle fade-in so the hand-off between pages feels continuous
+    const target = audio.volume;
+    if (target > 0){
+      audio.volume = 0;
+      let s = 0; const N = 14;
+      const iv = setInterval(() => {
+        s++;
+        audio.volume = Math.min(target, target * s / N);
+        if (s >= N) clearInterval(iv);
+      }, 30);
+    }
+  }
+  audio.addEventListener('playing', onPlaying);
+
+  function tryStart(){ if (!started) audio.play().catch(()=>{}); }
+
+  audio.play().then(onPlaying).catch(() => {
+    ctrl.classList.add('pending');
+    triggerEvents.forEach(ev => document.addEventListener(ev, tryStart, { passive: true }));
+  });
+
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden && !started) tryStart();
+  });
+
+  btn.addEventListener('click', function(){
+    if (!started){ tryStart(); return; }
+    audio.muted = !audio.muted;
+    iconSound.style.display = audio.muted ? 'none' : '';
+    iconMute.style.display  = audio.muted ? ''     : 'none';
+    try { localStorage.setItem('index-music-mute', audio.muted); } catch(e){}
+  });
+
+  volSlider.addEventListener('input', function(){
+    audio.volume = parseFloat(this.value);
+    updateSlider();
+    if (!started) tryStart();
+    if (audio.muted && audio.volume > 0){
+      audio.muted = false;
+      iconSound.style.display = ''; iconMute.style.display = 'none';
+      try { localStorage.setItem('index-music-mute', false); } catch(e){}
+    }
+  });
+  volSlider.addEventListener('change', function(){
+    try { localStorage.setItem('index-music-vol', audio.volume); } catch(e){}
+  });
+
+  // M key — toggle mute
+  document.addEventListener('keydown', function(e){
+    if (e.key !== 'm' && e.key !== 'M') return;
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+    const tag = (document.activeElement || {}).tagName || '';
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+    btn.click();
+  });
+
+  // Fade out before leaving via internal links (position already saved on pagehide)
+  document.addEventListener('click', function(e){
+    if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    const a = e.target.closest('a[href]');
+    if (!a || a.target === '_blank' || a.hasAttribute('download')) return;
+    const href = a.getAttribute('href');
+    if (!href || href.charAt(0) === '#' || a.origin !== location.origin) return;
+    if (audio.paused || audio.muted || audio.volume <= 0) return;
+    e.preventDefault();
+    savePos();
+    const dest = a.href, start = audio.volume, steps = 12;
+    let step = 0;
+    const iv = setInterval(function(){
+      step++;
+      audio.volume = Math.max(0, start * (1 - step / steps));
+      if (step >= steps){ clearInterval(iv); location.href = dest; }
+    }, 18);
   });
 })();
 </script>

@@ -1086,6 +1086,27 @@ h1.title{
     } catch(e){ audio.volume = 0.3; }
     updateSlider();
 
+    // Cross-page continuity — resume from where the previous page left off
+    const POS_KEY = 'bgm:codex:pos';
+    try {
+      const ps = JSON.parse(localStorage.getItem(POS_KEY) || 'null');
+      if (ps && isFinite(ps.t) && Date.now() - ps.at < 30 * 60 * 1000){
+        const seek = () => { try { audio.currentTime = ps.t; } catch(e){} };
+        if (audio.readyState >= 1) seek();
+        else audio.addEventListener('loadedmetadata', seek, { once: true });
+      }
+    } catch(e){}
+    let lastPosSave = 0;
+    function savePos(){
+      try { localStorage.setItem(POS_KEY, JSON.stringify({ t: audio.currentTime, at: Date.now() })); } catch(e){}
+    }
+    audio.addEventListener('timeupdate', () => {
+      const now = Date.now();
+      if (now - lastPosSave < 2000) return;
+      lastPosSave = now; savePos();
+    });
+    window.addEventListener('pagehide', savePos);
+
     let started = false;
     const triggerEvents = ['click','scroll','touchstart','keydown','mousedown','pointermove'];
 
@@ -1094,6 +1115,17 @@ h1.title{
       started = true;
       ctrl.classList.remove('pending');
       triggerEvents.forEach(ev => document.removeEventListener(ev, tryStart));
+      // gentle fade-in so the hand-off between pages feels continuous
+      const target = audio.volume;
+      if (target > 0){
+        audio.volume = 0;
+        let s = 0; const N = 14;
+        const iv = setInterval(() => {
+          s++;
+          audio.volume = Math.min(target, target * s / N);
+          if (s >= N) clearInterval(iv);
+        }, 30);
+      }
     }
     audio.addEventListener('playing', onPlaying);
 
@@ -1128,6 +1160,25 @@ h1.title{
     });
     volSlider.addEventListener('change', function(){
       try { localStorage.setItem('index-music-vol', audio.volume); } catch(e){}
+    });
+
+    // Fade out before leaving via internal links (position already saved on pagehide)
+    document.addEventListener('click', function(e){
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      const a = e.target.closest('a[href]');
+      if (!a || a.target === '_blank' || a.hasAttribute('download')) return;
+      const href = a.getAttribute('href');
+      if (!href || href.charAt(0) === '#' || a.origin !== location.origin) return;
+      if (audio.paused || audio.muted || audio.volume <= 0) return;
+      e.preventDefault();
+      savePos();
+      const dest = a.href, start = audio.volume, steps = 12;
+      let step = 0;
+      const iv = setInterval(function(){
+        step++;
+        audio.volume = Math.max(0, start * (1 - step / steps));
+        if (step >= steps){ clearInterval(iv); location.href = dest; }
+      }, 18);
     });
   })();
 </script>

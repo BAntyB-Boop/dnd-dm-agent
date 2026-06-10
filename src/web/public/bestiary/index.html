@@ -130,23 +130,47 @@ h1.page-title{
 /* ── Monster card ── */
 .m-card{
   position:relative;text-decoration:none;color:inherit;
-  display:flex;flex-direction:column;padding:16px 18px 14px;
+  display:flex;flex-direction:column;
   background:linear-gradient(180deg,var(--bg-card),var(--bg-card-2));
   border:1px solid var(--line);overflow:hidden;cursor:pointer;isolation:isolate;
   transition:transform 0.3s cubic-bezier(.2,.7,.2,1),border-color 0.3s,box-shadow 0.3s;
 }
-.m-card::before,.m-card::after,.m-card .cc-bl,.m-card .cc-br{
+
+/* thumbnail */
+.m-thumb{
+  position:relative;aspect-ratio:4/3;overflow:hidden;
+  background:radial-gradient(ellipse at 50% 40%,#1c1c25 0%,var(--bg-paper) 80%);
+  border-bottom:1px solid var(--line-soft);
+}
+.m-thumb img{
+  width:100%;height:100%;object-fit:cover;object-position:center 20%;
+  filter:sepia(0.18) brightness(0.88) contrast(1.05);
+  transition:transform 0.5s ease,filter 0.3s;
+}
+.m-thumb::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(to bottom,rgba(7,7,10,0.2) 0%,transparent 30%,transparent 65%,rgba(7,7,10,0.55) 100%);
+}
+.m-card:hover .m-thumb img{transform:scale(1.06);filter:sepia(0.05) brightness(1) contrast(1.05)}
+.m-thumb.no-img img{display:none}
+.m-thumb.no-img::before{
+  content:"✦";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  color:var(--gold-deep);font-size:28px;
+}
+
+.m-body{display:flex;flex-direction:column;flex:1;padding:13px 16px 12px}
+.m-card::before,.m-card .cc-tr,.m-card .cc-bl,.m-card .cc-br{
   content:"";position:absolute;width:7px;height:7px;
   border:1px solid var(--gold-deep);background:var(--bg-deep);transform:rotate(45deg);
   z-index:7;pointer-events:none;transition:border-color 0.3s;
 }
 .m-card::before{top:-3.5px;left:-3.5px}
-.m-card::after{top:-3.5px;right:-3.5px}
+.m-card .cc-tr{top:-3.5px;right:-3.5px}
 .m-card .cc-bl{bottom:-3.5px;left:-3.5px}
 .m-card .cc-br{bottom:-3.5px;right:-3.5px}
 
 .m-card:hover{transform:translateY(-3px);border-color:var(--gold-dim);box-shadow:0 8px 32px rgba(201,164,92,0.12)}
-.m-card:hover::before,.m-card:hover::after,.m-card:hover .cc-bl,.m-card:hover .cc-br{border-color:var(--gold-dim)}
+.m-card:hover::before,.m-card:hover .cc-tr,.m-card:hover .cc-bl,.m-card:hover .cc-br{border-color:var(--gold-dim)}
 
 /* shimmer on hover */
 .m-card::after{
@@ -155,10 +179,9 @@ h1.page-title{
   transform:translateX(-100%);transition:transform 0.5s ease;z-index:1;
 }
 .m-card:hover::after{transform:translateX(100%)}
-.m-card .cc-br{content:"";z-index:8}
 
 .m-name{font-family:"Cinzel",serif;font-size:0.82rem;font-weight:600;letter-spacing:0.06em;color:var(--ink);line-height:1.2;margin-bottom:8px;position:relative;z-index:2}
-.m-meta{display:flex;align-items:center;justify-content:space-between;position:relative;z-index:2}
+.m-meta{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:auto;position:relative;z-index:2}
 .m-type-line{font-family:"Cormorant Garamond",serif;font-style:italic;font-size:0.8rem;color:var(--ink-mute);text-transform:capitalize}
 .m-cr{
   font-family:"Cinzel",serif;font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;
@@ -256,18 +279,14 @@ h1.page-title{
 <div id="btt" title="Back to top">↑</div>
 
 <script>
-const API_BASE = 'https://www.dnd5eapi.co/api/2014';
-const CACHE_KEY = 'monsters:list:v1';
+const API_ORIGIN = 'https://www.dnd5eapi.co';
+const CACHE_KEY = 'monsters:list:v2';
 
 function crLabel(cr) {
   if (cr === 0.125) return '1/8';
   if (cr === 0.25)  return '1/4';
   if (cr === 0.5)   return '1/2';
   return String(cr);
-}
-
-function crSort(cr) {
-  return cr;
 }
 
 // ── Ambient motes ──
@@ -290,6 +309,7 @@ btt.addEventListener('click', () => scrollTo({top:0,behavior:'smooth'}));
 let allMonsters = [];
 
 async function loadMonsters() {
+  localStorage.removeItem('monsters:list:v1');
   const cached = localStorage.getItem(CACHE_KEY);
   if (cached) {
     try {
@@ -299,10 +319,14 @@ async function loadMonsters() {
     } catch {}
   }
   try {
-    const res = await fetch(`${API_BASE}/monsters?limit=500`);
+    const res = await fetch(`${API_ORIGIN}/graphql`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query: '{ monsters(limit: 500) { index name size type challenge_rating image } }' }),
+    });
     if (!res.ok) throw new Error(res.statusText);
     const data = await res.json();
-    allMonsters = data.results ?? [];
+    allMonsters = data.data?.monsters ?? [];
     localStorage.setItem(CACHE_KEY, JSON.stringify(allMonsters));
     renderGrid(allMonsters);
   } catch (e) {
@@ -317,8 +341,28 @@ function buildCard(m) {
   a.className = 'm-card';
   a.href = `/bestiary/detail?m=${m.index}`;
 
+  const tr = document.createElement('span'); tr.className = 'cc-tr';
   const bl = document.createElement('span'); bl.className = 'cc-bl';
   const br = document.createElement('span'); br.className = 'cc-br';
+  a.appendChild(tr); a.appendChild(bl); a.appendChild(br);
+
+  const thumb = document.createElement('div');
+  thumb.className = 'm-thumb';
+  if (m.image) {
+    const img = document.createElement('img');
+    img.src = `${API_ORIGIN}${m.image}`;
+    img.alt = m.name;
+    img.loading = 'lazy';
+    img.decoding = 'async';
+    img.addEventListener('error', () => thumb.classList.add('no-img'));
+    thumb.appendChild(img);
+  } else {
+    thumb.classList.add('no-img');
+  }
+  a.appendChild(thumb);
+
+  const body = document.createElement('div');
+  body.className = 'm-body';
 
   const name = document.createElement('div');
   name.className = 'm-name';
@@ -329,7 +373,7 @@ function buildCard(m) {
 
   const typeLine = document.createElement('div');
   typeLine.className = 'm-type-line';
-  typeLine.textContent = m.type ?? '—';
+  typeLine.textContent = m.size ? `${m.size} ${m.type ?? ''}`.trim() : (m.type ?? '—');
 
   const cr = document.createElement('div');
   cr.className = 'm-cr';
@@ -337,14 +381,9 @@ function buildCard(m) {
 
   meta.appendChild(typeLine);
   meta.appendChild(cr);
-  a.appendChild(bl); a.appendChild(br);
-  a.appendChild(name);
-  a.appendChild(meta);
-
-  // size badge in type line
-  if (m.size) {
-    typeLine.textContent = `${m.size} ${m.type ?? ''}`.trim();
-  }
+  body.appendChild(name);
+  body.appendChild(meta);
+  a.appendChild(body);
 
   return a;
 }

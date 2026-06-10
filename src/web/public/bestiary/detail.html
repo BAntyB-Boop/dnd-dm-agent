@@ -220,6 +220,57 @@ body{
 #lang-toggle .lsep{width:1px;height:18px;background:var(--gold-deep);flex-shrink:0}
 .translating{opacity:0.5;pointer-events:none;transition:opacity .3s}
 
+/* ── Lock panel ── */
+.lock-panel{
+  position:relative;border:1px solid var(--gold-dim);
+  background:linear-gradient(180deg,rgba(201,164,92,0.05) 0%,transparent 50%),var(--bg-card);
+  padding:64px clamp(20px,5vw,48px);text-align:center;
+}
+.lock-panel::before,.lock-panel::after,.lock-panel .lk-bl,.lock-panel .lk-br{
+  content:"";position:absolute;width:10px;height:10px;
+  border:1px solid var(--gold-dim);background:var(--bg-deep);transform:rotate(45deg);pointer-events:none;
+}
+.lock-panel::before{top:-5px;left:-5px}
+.lock-panel::after{top:-5px;right:-5px}
+.lock-panel .lk-bl{bottom:-5px;left:-5px}
+.lock-panel .lk-br{bottom:-5px;right:-5px}
+
+.lock-glyph{
+  width:46px;height:46px;margin:0 auto 20px;
+  border:1px solid var(--gold-dim);transform:rotate(45deg);
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(201,164,92,0.06);
+}
+.lock-glyph span{transform:rotate(-45deg);color:var(--gold);font-size:18px}
+.lock-title{font-family:"Cinzel",serif;font-size:0.95rem;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink);margin-bottom:8px}
+.lock-sub{font-family:"Cormorant Garamond",serif;font-style:italic;font-size:1rem;color:var(--ink-mute);max-width:380px;margin:0 auto 28px}
+
+.lock-btn{
+  background:rgba(201,164,92,0.08);border:1px solid var(--gold-dim);color:var(--gold);
+  font-family:"Cinzel",serif;font-size:0.66rem;letter-spacing:0.26em;text-transform:uppercase;
+  padding:12px 28px;cursor:pointer;transition:background .2s,border-color .2s,color .2s;
+}
+.lock-btn:hover{background:rgba(201,164,92,0.16);border-color:var(--gold);color:#f6efd2}
+
+.lock-form{display:flex;flex-direction:column;align-items:center;gap:14px}
+.lock-input{
+  background:var(--bg-paper);border:1px solid var(--line);color:var(--ink);
+  font-family:"Cinzel",serif;font-size:1.1rem;letter-spacing:0.5em;text-align:center;
+  padding:10px 0 10px 0.5em;width:160px;outline:none;transition:border-color .2s;
+}
+.lock-input:focus{border-color:var(--gold-dim)}
+.lock-input::placeholder{color:var(--ink-faint);letter-spacing:0.3em}
+.lock-err{
+  font-family:"Cinzel",serif;font-size:0.6rem;letter-spacing:0.22em;text-transform:uppercase;
+  color:var(--blood);min-height:14px;
+}
+.lock-panel.shake{animation:lock-shake .4s ease}
+@keyframes lock-shake{
+  0%,100%{transform:translateX(0)}
+  20%{transform:translateX(-8px)}40%{transform:translateX(8px)}
+  60%{transform:translateX(-5px)}80%{transform:translateX(5px)}
+}
+
 /* ── CR badge ── */
 .cr-badge{
   display:inline-flex;align-items:center;gap:10px;
@@ -323,18 +374,88 @@ async function loadMonster(index) {
   render(data);
 }
 
+// ── Passcode lock ──
+const PASSCODE = '7777';
+const UNLOCK_KEY = 'bestiary:unlocked:v1';
+let monsterData = null;
+
 function render(d) {
+  monsterData = d;
   document.title = `${d.name} — Bestiary`;
   document.getElementById('bc-name').textContent = d.name;
+  document.getElementById('state').classList.remove('vis');
 
-  const stateEl = document.getElementById('state');
-  stateEl.classList.remove('vis');
+  if (sessionStorage.getItem(UNLOCK_KEY) === '1') {
+    reveal();
+  } else {
+    showLock();
+  }
+}
 
+function headerHTML(d) {
+  const metaParts = [d.size, d.type, d.subtype ? `(${d.subtype})` : '', d.alignment].filter(Boolean);
+  return `
+    <header class="mon-header">
+      <div class="seal-rule"><div class="line"></div><div class="diamond"></div><div class="line"></div></div>
+      <h1 class="mon-name">${escHtml(d.name)}</h1>
+      <div class="mon-meta-line">${escHtml(metaParts.join(' '))}</div>
+    </header>`;
+}
+
+function showLock() {
   const wrap = document.getElementById('monster');
-  wrap.innerHTML = buildHTML(d);
+  wrap.innerHTML = `
+    ${headerHTML(monsterData)}
+    <div class="lock-panel" id="lock-panel">
+      <div class="lk-bl"></div><div class="lk-br"></div>
+      <div class="lock-glyph"><span>✦</span></div>
+      <div class="lock-title">This Record Is Sealed</div>
+      <div class="lock-sub">The details of this creature are bound by an arcane ward. Only those who know the passcode may read further.</div>
+      <button class="lock-btn" id="lock-open">Unseal the Record</button>
+      <div class="lock-form" id="lock-form" hidden>
+        <input id="lock-code" class="lock-input" type="password" inputmode="numeric" maxlength="8" placeholder="····" autocomplete="off" />
+        <button class="lock-btn" id="lock-submit">Confirm</button>
+        <div class="lock-err" id="lock-err"></div>
+      </div>
+    </div>`;
   wrap.classList.add('vis');
 
-  loadWiki(d.name);
+  document.getElementById('lock-open').addEventListener('click', () => {
+    document.getElementById('lock-open').hidden = true;
+    document.getElementById('lock-form').hidden = false;
+    document.getElementById('lock-code').focus();
+  });
+
+  const trySubmit = () => {
+    const input = document.getElementById('lock-code');
+    if (input.value.trim() === PASSCODE) {
+      sessionStorage.setItem(UNLOCK_KEY, '1');
+      reveal();
+    } else {
+      document.getElementById('lock-err').textContent = 'The ward rejects this code';
+      input.value = '';
+      input.focus();
+      const panel = document.getElementById('lock-panel');
+      panel.classList.remove('shake');
+      void panel.offsetWidth;
+      panel.classList.add('shake');
+    }
+  };
+  document.getElementById('lock-submit').addEventListener('click', trySubmit);
+  document.getElementById('lock-code').addEventListener('keydown', e => {
+    if (e.key === 'Enter') trySubmit();
+  });
+}
+
+function reveal() {
+  const wrap = document.getElementById('monster');
+  wrap.innerHTML = buildHTML(monsterData);
+  wrap.classList.remove('vis');
+  void wrap.offsetWidth;
+  wrap.classList.add('vis');
+
+  loadWiki(monsterData.name);
+  if (currentLang === 'th') translatePage();
 }
 
 // ── Translation ──
@@ -528,9 +649,6 @@ function buildHTML(d) {
       ${items.map(entryBlock).join('')}`;
   }
 
-  // ── Meta line ──
-  const metaParts = [d.size, d.type, d.subtype ? `(${d.subtype})` : '', d.alignment].filter(Boolean);
-
   // ── CR / XP ──
   const xp = d.xp != null ? `${d.xp.toLocaleString()} XP` : '';
 
@@ -543,11 +661,7 @@ function buildHTML(d) {
     : '';
 
   return `
-    <header class="mon-header">
-      <div class="seal-rule"><div class="line"></div><div class="diamond"></div><div class="line"></div></div>
-      <h1 class="mon-name">${escHtml(d.name)}</h1>
-      <div class="mon-meta-line">${escHtml(metaParts.join(' '))}</div>
-    </header>
+    ${headerHTML(d)}
 
     ${imgHtml}
 

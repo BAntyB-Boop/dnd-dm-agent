@@ -289,8 +289,8 @@ export async function startWebServer(): Promise<void> {
     const { slug } = req.params as { slug: string };
     return reply.sendFile(`lore/${slug}.html`);
   });
-  app.get("/bestiary", (_req, reply) => reply.sendFile("monsters/index.html"));
-  app.get("/bestiary/detail", (_req, reply) => reply.sendFile("monsters/detail.html"));
+  app.get("/bestiary", (_req, reply) => reply.sendFile("bestiary/index.html"));
+  app.get("/bestiary/detail", (_req, reply) => reply.sendFile("bestiary/detail.html"));
 
   // ── Auth ──────────────────────────────────────────────────────────────
 

@@ -1,12 +1,4 @@
 {
   "cleanUrls": true,
-  "trailingSlash": false,
-  "rewrites": [
-    { "source": "/bestiary", "destination": "/monsters/index.html" },
-    { "source": "/bestiary/detail", "destination": "/monsters/detail.html" },
-    { "source": "/lore/:slug", "destination": "/lore/:slug.html" },
-    { "source": "/map/:slug", "destination": "/map/:slug.html" },
-    { "source": "/folio/:slug", "destination": "/folio/:slug.html" },
-    { "source": "/sessions/:slug", "destination": "/sessions/:slug.html" }
-  ]
+  "trailingSlash": false
 }

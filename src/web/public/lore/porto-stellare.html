@@ -2308,6 +2308,30 @@ window.addEventListener('scroll', () => {
   readProgress.style.width = (docH > 0 ? (window.scrollY / docH * 100) : 0) + '%';
 }, { passive: true });
 
+// Scroll position persistence
+(function(){
+  const SCROLL_KEY = 'lore:porto-stellare:scroll';
+  let scrollTimer;
+  window.addEventListener('scroll', () => {
+    if(window.scrollY < 200) return;
+    clearTimeout(scrollTimer);
+    scrollTimer = setTimeout(() => {
+      try{ localStorage.setItem(SCROLL_KEY, window.scrollY); }catch(e){}
+    }, 500);
+  }, { passive: true });
+  if(!location.hash){
+    try{
+      const saved = parseInt(localStorage.getItem(SCROLL_KEY) || '0', 10);
+      if(saved > 200) window.scrollTo(0, saved);
+    }catch(e){}
+  }
+  if(scrollTopBtn){
+    scrollTopBtn.addEventListener('click', () => {
+      try{ localStorage.removeItem(SCROLL_KEY); }catch(e){}
+    });
+  }
+})();
+
 // Sidebar active link on scroll (with sidebar auto-scroll + map link sync)
 (function(){
   const sidebar = document.getElementById('sidebar');
@@ -2377,6 +2401,27 @@ window.addEventListener('scroll', () => {
     const target = document.querySelector(location.hash);
     if(target) setTimeout(() => target.scrollIntoView({ behavior: 'smooth', block: 'start' }), 150);
   }
+})();
+
+// J/K keyboard section navigation
+(function(){
+  const sections = Array.from(document.querySelectorAll('.city-header[id], .gov-section[id], .qref-section[id], .district-section[id], .hollow-section[id]'));
+  if(!sections.length) return;
+  function currentIdx(){
+    var mid = window.scrollY + window.innerHeight * 0.4;
+    var best = 0;
+    sections.forEach(function(s, i){ if(s.offsetTop <= mid) best = i; });
+    return best;
+  }
+  document.addEventListener('keydown', function(e){
+    if(e.key !== 'j' && e.key !== 'J' && e.key !== 'k' && e.key !== 'K') return;
+    if(e.ctrlKey || e.metaKey || e.altKey) return;
+    var tag = (document.activeElement || {}).tagName || '';
+    if(tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+    var idx = currentIdx();
+    var next = (e.key === 'j' || e.key === 'J') ? Math.min(idx + 1, sections.length - 1) : Math.max(idx - 1, 0);
+    if(next !== idx) sections[next].scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
 })();
 
 // Thread tags → anchor links

@@ -371,25 +371,38 @@ async function translatePage() {
   let cached = {};
   try { cached = JSON.parse(localStorage.getItem(cacheKey) || '{}'); } catch {}
 
-  for (const el of els) {
-    if (!el.dataset.en) el.dataset.en = el.innerHTML;
-    const text = el.dataset.en.replace(/<[^>]+>/g, ' ').replace(/\s+/g,' ').trim();
-    if (!text) continue;
+  // save originals
+  els.forEach(el => { if (!el.dataset.en) el.dataset.en = el.innerHTML; });
 
-    if (cached[text]) { el.innerHTML = cached[text]; continue; }
+  // split into uncached vs cached
+  const toFetch = els.filter(el => {
+    const text = el.dataset.en.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
+    return text && !cached[text];
+  });
 
+  if (toFetch.length) {
+    const texts = toFetch.map(el => el.dataset.en.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim());
     try {
-      const res = await fetch(
-        `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=th&dt=t&q=${encodeURIComponent(text)}`
-      );
+      const res = await fetch('/api/translate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ texts, target: 'th' }),
+      });
       const data = await res.json();
-      const translated = data[0].map(s => s[0]).join('');
-      cached[text] = translated;
-      el.innerHTML = translated;
-    } catch { el.innerHTML = el.dataset.en; }
+      (data.results ?? []).forEach((translated, i) => {
+        const text = texts[i];
+        cached[text] = translated;
+      });
+      localStorage.setItem(cacheKey, JSON.stringify(cached));
+    } catch {}
   }
 
-  localStorage.setItem(cacheKey, JSON.stringify(cached));
+  // apply translations
+  els.forEach(el => {
+    const text = el.dataset.en.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
+    if (cached[text]) el.innerHTML = cached[text];
+  });
+
   page.classList.remove('translating');
 }
 

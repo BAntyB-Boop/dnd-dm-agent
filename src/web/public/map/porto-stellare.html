@@ -692,12 +692,13 @@
   }
   #home-btn svg { width: 13px; height: 13px; flex: none; }
 
-  /* DM Guide button — opens oneshot guide */
+  /* DM Guide button — hidden by default, revealed by entering code 7777 */
   #dm-guide-btn {
     position: fixed;
     top: 18px; right: 200px;
     z-index: 40;
-    display: flex; align-items: center; gap: 8px;
+    display: none;
+    align-items: center; gap: 8px;
     padding: 9px 16px;
     font-family: var(--display);
     font-size: 11px;
@@ -730,10 +731,117 @@
     transform: translateY(-1px);
   }
   #dm-guide-btn svg { width: 13px; height: 13px; flex: none; }
+  #dm-guide-btn.unlocked { display: flex; animation: dm-unlock-in .6s cubic-bezier(.3,.7,.2,1); }
+  @keyframes dm-unlock-in {
+    from { opacity: 0; transform: translateY(-8px) scale(.92); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
   @media (max-width: 640px) {
     #dm-guide-btn { right: 16px; top: 70px; }
     #dm-guide-btn .btn-text { display: none; }
   }
+
+  /* Code prompt — appears when user clicks the subtle key icon */
+  #dm-code-trigger {
+    position: fixed;
+    bottom: 18px; left: 18px;
+    z-index: 50;
+    width: 26px; height: 26px;
+    background: rgba(8,4,1,0.5);
+    border: 1px solid rgba(212,160,23,0.18);
+    border-radius: 50%;
+    color: rgba(244,228,193,0.18);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; line-height: 1;
+    transition: color .25s, border-color .25s, opacity .25s;
+    opacity: 0.5;
+  }
+  #dm-code-trigger:hover {
+    color: var(--gold);
+    border-color: rgba(212,160,23,0.5);
+    opacity: 1;
+  }
+  #dm-code-trigger.unlocked { display: none; }
+  #dm-code-trigger svg { width: 12px; height: 12px; }
+
+  #dm-code-overlay {
+    position: fixed; inset: 0; z-index: 999;
+    background:
+      radial-gradient(800px 500px at 50% 40%, rgba(20,10,4,0.55), rgba(0,0,0,0.92) 75%);
+    backdrop-filter: blur(6px);
+    display: none;
+    align-items: center; justify-content: center;
+    animation: dm-fade-in .3s ease;
+  }
+  #dm-code-overlay.open { display: flex; }
+  @keyframes dm-fade-in { from { opacity: 0; } to { opacity: 1; } }
+  .dm-code-card {
+    width: min(90vw, 380px);
+    padding: 36px 30px 26px;
+    background: linear-gradient(180deg, #15151c, #0e0e16);
+    border: 1px solid rgba(212,160,23,0.4);
+    border-radius: 3px;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.7), 0 0 60px rgba(212,160,23,0.08);
+    text-align: center;
+  }
+  .dm-code-title {
+    font-family: var(--display, 'Cinzel', serif);
+    font-size: 16px; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--gold-bright, #f6efd2);
+    margin-bottom: 6px;
+  }
+  .dm-code-sub {
+    font-size: 12.5px; font-style: italic;
+    color: rgba(244,228,193,0.5);
+    margin-bottom: 22px;
+  }
+  #dm-code-input {
+    width: 100%;
+    padding: 12px 14px;
+    background: rgba(0,0,0,0.45);
+    border: 1px solid rgba(212,160,23,0.32);
+    border-radius: 2px;
+    color: var(--gold-bright, #f6efd2);
+    font-family: var(--display, 'Cinzel', serif);
+    font-size: 20px; letter-spacing: .4em; text-align: center;
+    outline: none;
+    -webkit-text-security: disc;
+    text-security: disc;
+    transition: border-color .2s, box-shadow .2s;
+  }
+  #dm-code-input:focus { border-color: var(--gold, #d4a017); box-shadow: 0 0 0 3px rgba(212,160,23,0.12); }
+  #dm-code-overlay.error #dm-code-input {
+    border-color: rgba(200,60,40,.7);
+    box-shadow: 0 0 0 3px rgba(200,60,40,0.15);
+    animation: dm-shake .42s ease;
+  }
+  @keyframes dm-shake {
+    10%,90% { transform: translateX(-2px) }
+    20%,80% { transform: translateX(4px) }
+    30%,50%,70% { transform: translateX(-6px) }
+    40%,60% { transform: translateX(6px) }
+  }
+  .dm-code-actions {
+    display: flex; gap: 10px; margin-top: 16px;
+  }
+  .dm-code-btn {
+    flex: 1; padding: 10px;
+    background: linear-gradient(180deg, rgba(201,164,92,0.18), rgba(201,164,92,0.05));
+    border: 1px solid var(--gold-dim, #8a6f3a);
+    color: var(--gold-bright, #f6efd2);
+    font-family: var(--display, 'Cinzel', serif);
+    font-size: 10.5px; letter-spacing: .26em; text-transform: uppercase;
+    cursor: pointer; border-radius: 2px;
+    transition: background .2s, border-color .2s;
+  }
+  .dm-code-btn:hover { border-color: var(--gold, #d4a017); background: linear-gradient(180deg, rgba(201,164,92,0.3), rgba(201,164,92,0.1)); }
+  .dm-code-btn.secondary {
+    background: transparent;
+    border-color: rgba(244,228,193,0.2);
+    color: rgba(244,228,193,0.5);
+  }
+  .dm-code-btn.secondary:hover { color: rgba(244,228,193,0.85); border-color: rgba(244,228,193,0.4); }
 
   /* ---------- Music control (continues homepage BGM) ---------- */
   .music-ctrl {
@@ -1308,6 +1416,28 @@
     <span class="btn-text">DM Guide</span>
   </a>
 
+  <!-- Hidden DM code unlock — only DM knows this is here -->
+  <button id="dm-code-trigger" aria-label="DM unlock" title="DM">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+      <circle cx="12" cy="16" r="1"/>
+      <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+      <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+    </svg>
+  </button>
+
+  <!-- DM Code Overlay -->
+  <div id="dm-code-overlay" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="dm-code-card">
+      <div class="dm-code-title">DM Access</div>
+      <div class="dm-code-sub">กรุณาใส่รหัสเพื่อปลดล็อก DM Guide</div>
+      <input id="dm-code-input" type="text" inputmode="numeric" maxlength="4" placeholder="● ● ● ●" autocomplete="off" />
+      <div class="dm-code-actions">
+        <button class="dm-code-btn secondary" id="dm-code-cancel">ยกเลิก</button>
+        <button class="dm-code-btn" id="dm-code-submit">Unlock</button>
+      </div>
+    </div>
+  </div>
+
   <audio id="bg-audio" src="/assets/codex-of-stars.mp3" loop preload="auto"></audio>
 
   <!-- Music control (continues homepage BGM) -->
@@ -1645,6 +1775,81 @@ const DISTRICTS = [
 ];
 
 const STARHILL_TIP = "<b>Starhill</b>จุดที่สูงที่สุดของเมือง · Observatory · Ancient Tower · Archives — ข่าวลือกล่าวว่า Starhill อาจมีอยู่ก่อนที่เมืองจะถูกสร้าง";
+
+// ── DM Code Unlock (reveals DM Guide button when 7777 is entered) ──
+(function initDmUnlock() {
+  const DM_CODE = '7777';
+  const DM_UNLOCK_KEY = 'map:porto-stellare:dm-unlocked';
+  const dmBtn = document.getElementById('dm-guide-btn');
+  const trigger = document.getElementById('dm-code-trigger');
+  const overlay = document.getElementById('dm-code-overlay');
+  const input = document.getElementById('dm-code-input');
+  const submit = document.getElementById('dm-code-submit');
+  const cancel = document.getElementById('dm-code-cancel');
+
+  // Check unlock state from localStorage
+  let unlocked = false;
+  try { unlocked = localStorage.getItem(DM_UNLOCK_KEY) === '1'; } catch (e) {}
+  if (unlocked) {
+    dmBtn.classList.add('unlocked');
+    trigger.classList.add('unlocked');
+  }
+
+  function openPrompt() {
+    overlay.classList.add('open');
+    overlay.setAttribute('aria-hidden', 'false');
+    setTimeout(() => input.focus(), 100);
+  }
+  function closePrompt() {
+    overlay.classList.remove('open');
+    overlay.classList.remove('error');
+    overlay.setAttribute('aria-hidden', 'true');
+    input.value = '';
+  }
+  function attempt() {
+    if (input.value.trim() === DM_CODE) {
+      try { localStorage.setItem(DM_UNLOCK_KEY, '1'); } catch (e) {}
+      dmBtn.classList.add('unlocked');
+      trigger.classList.add('unlocked');
+      closePrompt();
+    } else {
+      overlay.classList.add('error');
+      setTimeout(() => overlay.classList.remove('error'), 500);
+      input.value = '';
+      input.focus();
+    }
+  }
+
+  trigger.addEventListener('click', openPrompt);
+  submit.addEventListener('click', attempt);
+  cancel.addEventListener('click', closePrompt);
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') attempt();
+    else if (e.key === 'Escape') closePrompt();
+  });
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) closePrompt(); });
+
+  // Hidden keystroke combo "7777" anywhere on page (for DMs who know)
+  let buf = '';
+  let bufTimer = null;
+  document.addEventListener('keydown', (e) => {
+    if (unlocked || overlay.classList.contains('open')) return;
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key >= '0' && e.key <= '9') {
+      buf += e.key;
+      if (buf.length > 4) buf = buf.slice(-4);
+      if (buf === DM_CODE) {
+        unlocked = true;
+        try { localStorage.setItem(DM_UNLOCK_KEY, '1'); } catch (er) {}
+        dmBtn.classList.add('unlocked');
+        trigger.classList.add('unlocked');
+        buf = '';
+      }
+      clearTimeout(bufTimer);
+      bufTimer = setTimeout(() => { buf = ''; }, 3000);
+    }
+  });
+})();
 
 // ---- helpers ----
 function centroid(points){

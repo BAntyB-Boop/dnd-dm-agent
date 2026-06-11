@@ -357,19 +357,55 @@
     color: #4a2f17;
     text-wrap: pretty;
   }
-  .p-locations { list-style: none; display: flex; flex-direction: column; gap: 7px; }
-  .p-locations li {
+  .p-locations { list-style: none; display: flex; flex-direction: column; gap: 8px; padding: 0; margin: 0 0 12px; }
+  /* fallback for simple string entries */
+  .p-locations .p-loc-simple {
     position: relative;
     padding-left: 20px;
-    font-size: 15.5px;
+    font-size: 15px;
     line-height: 1.4;
     color: #4a2f17;
   }
-  .p-locations li::before {
+  .p-locations .p-loc-simple::before {
     content: "❖";
     position: absolute; left: 0; top: 1px;
     color: var(--gold);
     font-size: 11px;
+  }
+  /* structured location entry */
+  .p-loc {
+    display: grid; grid-template-columns: 26px 1fr;
+    gap: 10px; align-items: start;
+    padding: 8px 10px;
+    background: rgba(212,160,23,0.05);
+    border: 1px solid rgba(212,160,23,0.18);
+    border-radius: 2px;
+    transition: background .2s, border-color .2s;
+  }
+  .p-loc:hover {
+    background: rgba(212,160,23,0.1);
+    border-color: rgba(212,160,23,0.35);
+  }
+  .pl-icon {
+    font-size: 17px; line-height: 1.2;
+    text-align: center;
+  }
+  .pl-body { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+  .pl-head { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+  .pl-name {
+    font-family: var(--display);
+    font-size: 12.5px; font-weight: 600;
+    letter-spacing: .04em;
+    color: #2a1808;
+  }
+  .pl-type {
+    font-family: var(--display);
+    font-size: 8.5px; letter-spacing: .22em; text-transform: uppercase;
+    color: rgba(92,58,30,0.65);
+  }
+  .pl-desc {
+    font-size: 13px; line-height: 1.55;
+    color: rgba(74,47,23,0.78);
   }
   .p-detail-hero {
     margin: 20px 0 6px;
@@ -1516,7 +1552,12 @@ const DISTRICTS = [
     stats: { w:5, s:5, d:1 },
     points: "7.9,39.5 9.8,29.9 17.1,23.9 25.6,23.9 26.9,37.1 18.3,43.1 9.2,44.3",
     overview: "เขตตอนบนของ Porto Stellare บนหน้าผาฝั่งตะวันตก เต็มไปด้วยคฤหาสน์หรู สวนพฤกษศาสตร์ และที่พักของตระกูลเก่าแก่ ถูกออกแบบมาเพื่อแยกความมั่งคั่งออกจากส่วนอื่นของเมือง ต่างจาก Aurora Promenade ที่โชว์ความมั่งคั่งอย่างเปิดเผย Verdant Terraces ถูกสร้างให้ปิดและโดดเดี่ยว",
-    locations: ["Starhill — Observatory &amp; Ancient Tower", "Ivory Gardens — botanical garden across the cliff terraces", "Crescent Villas — old noble residences", "West Skywalk — cliff walkway overlooking all of Moonlit Bay"],
+    locations: [
+      { icon: "🔭", name: "Starhill", type: "หอดูดาว", desc: "หอสังเกตการณ์โบราณบนยอดเขา · ปิดตายปัจจุบัน · ศูนย์กลางเรื่อง" },
+      { icon: "🌿", name: "Ivory Gardens", type: "สวนพฤกษศาสตร์", desc: "สวนหรูริมหน้าผา · เปิดให้สาธารณะ · นิยมในหมู่ขุนนาง" },
+      { icon: "🏰", name: "Crescent Villas", type: "คฤหาสน์ขุนนาง", desc: "ที่พักของตระกูลเก่าแก่ · เข้าได้ต้องมีคำเชิญ" },
+      { icon: "🌉", name: "West Skywalk", type: "ทางเชื่อม / จุดชม", desc: "ทางเดินบนหน้าผามองเห็น Moonlit Bay ทั้งอ่าว · เปิดสาธารณะ" }
+    ],
     quote: "เงินหลับใหลอยู่ใน Golden Crescent แต่ความมั่งคั่งอาศัยอยู่ใน Verdant",
     detail: null,
     atlasPage: 6,
@@ -1549,7 +1590,16 @@ const DISTRICTS = [
     stats: { w:3, s:3, d:2 },
     points: "26.9,27.5 37.8,25.1 40.9,39.5 34.2,47.9 26.9,43.1",
     overview: "เขตที่มีประชากรมากที่สุดของเมือง หัวใจที่เชื่อม Porto Stellare ทั้งหมดเข้าด้วยกัน เต็มไปด้วยตลาด โรงเตี๊ยม บ้านพัก และ Workshop นับไม่ถ้วน เชื่อมต่อกับทุก district ผ่านบันได gondola และ tram",
-    locations: ["Seven Steps Market", "Lantern Square", "Silver Plaza", "Craftsman's Row", "West Skywalk connector", "Canal Network — to Stellamar Port", "Industrial Tram stop — from Iron Quarters", "Gondola stations"],
+    locations: [
+      { icon: "🛒", name: "Seven Steps Market", type: "ตลาดกลาง", desc: "ตลาดใหญ่ที่สุดของย่าน · ของขายราคาปานกลาง · พบ NPC ทั่วไป" },
+      { icon: "🍻", name: "Lantern Square", type: "จัตุรัส / Tavern", desc: "ใจกลางย่าน มี The Lantern Tavern ของ Maren Sollis · ที่หาข้อมูล" },
+      { icon: "🏛", name: "Silver Plaza", type: "จัตุรัสประชุม", desc: "ลานกว้างที่คนงานมารวมตัวประท้วง · City Watch ลาดตระเวน" },
+      { icon: "🔨", name: "Craftsman's Row", type: "ถนนช่างฝีมือ", desc: "Workshop ของช่างเงิน ช่างหนัง ช่างทอง · ซื้อ/ซ่อมของได้" },
+      { icon: "🌉", name: "West Skywalk", type: "ทางเชื่อม", desc: "สะพานลอยไป Verdant Terraces" },
+      { icon: "🚣", name: "Canal Network", type: "คลอง / ทางน้ำ", desc: "คลองเชื่อมไป Stellamar Port · เร็วกว่าเดิน · 1 gp/เที่ยว" },
+      { icon: "🚊", name: "Industrial Tram Stop", type: "สถานีรถราง", desc: "รถรางจาก Iron Quarters · ขนคนงานเข้าออก" },
+      { icon: "🚡", name: "Gondola Stations", type: "สถานีกระเช้า", desc: "กระเช้าขึ้น Aurora / Golden Crescent · 1 gp/เที่ยว" }
+    ],
     quote: "หาก Aurora คือหน้าตาของเมือง Silver Steps คือหัวใจของเมือง",
     detail: { img: "assets/district-silver-steps.png", title: "Silver Steps", sub: "The Connective Spine" },
     atmosphere: { img: "assets/lantern-square.png", cap: "Lantern Square at dusk" },
@@ -1583,7 +1633,14 @@ const DISTRICTS = [
     stats: { w:5, s:4, d:2 },
     points: "43,28 52,24 60,28 60,44 50,48 43,42",
     overview: "ศูนย์กลางเศรษฐกิจและการเมืองของ Porto Stellare ที่ซึ่งสงครามเริ่มต้นก่อนที่ดาบจะถูกชักออก เต็มไปด้วยธนาคาร Guild Halls สภาเมือง และโรงละคร เงินและอำนาจไหลเวียนที่นี่ก่อนที่จะไปถึงที่อื่น",
-    locations: ["City Council Hall", "Major Banks", "Guild Halls", "Merchant Houses", "Grand Theater"],
+    locations: [
+      { icon: "🏛", name: "City Council Hall", type: "ที่ทำการสภา", desc: "ศูนย์กลางการปกครอง · ที่ Councilor Vira ทำงาน · ยามเฝ้าตลอด" },
+      { icon: "🏦", name: "Bank of the Sun", type: "ธนาคารใหญ่", desc: "ธนาคารหลักของเมือง · แลกเงิน/ฝากของมีค่า · ค่าธรรมเนียม 2-5%" },
+      { icon: "🛡", name: "Guild Halls", type: "สำนักงาน Guild", desc: "Merchant Guild, Mason Guild, Mage Guild · รับงานได้ที่นี่" },
+      { icon: "🏬", name: "Merchant Houses", type: "บ้านพ่อค้าใหญ่", desc: "ที่ Hadren Moss เคยทำงาน · บ้านปิดล็อกหลังเขาหาย" },
+      { icon: "🎭", name: "Grand Theater", type: "โรงละครหลวง", desc: "การแสดงระดับชาติ · ตั๋ว 15-50 gp · ที่นัดพบของชนชั้นสูง" },
+      { icon: "🔥", name: "Burned Ministry Building", type: "ซากอาคารราชการ", desc: "ถูกไฟไหม้จากใต้ดิน 4 วันก่อน · มีโซ่กั้น · ยามเฝ้าตลอด" }
+    ],
     quote: "สงครามจำนวนมากเริ่มต้นที่นี่ ก่อนที่ดาบจะถูกชักออกจากฝัก",
     detail: null,
     atlasPage: 7,
@@ -1616,7 +1673,14 @@ const DISTRICTS = [
     stats: { w:4, s:5, d:1 },
     points: "62.2,23.9 75.6,16.8 82.0,24.5 81.0,35.0 72.0,37.1 63.4,34.7",
     overview: "เขตพักอาศัยและการศึกษา ถือเป็นหนึ่งในเขตที่ปลอดภัยที่สุดของเมือง อย่างน้อยผู้คนก็เชื่อเช่นนั้น เต็มไปด้วยมหาวิทยาลัย ห้องสมุด อาคารราชการ และที่พักของนักวิชาการ",
-    locations: ["Porto Stellare University", "Grand Library", "Scholar Residences", "Government Administrative Buildings", "Lantern Steps — descends to Silver Steps"],
+    locations: [
+      { icon: "🎓", name: "Porto Stellare University", type: "มหาวิทยาลัย", desc: "สถาบันการศึกษาหลัก · นักศึกษา 400+ คน · บางอาคารปิด" },
+      { icon: "📚", name: "Grand Library", type: "ห้องสมุดใหญ่", desc: "ห้องสมุดเก่าแก่ 600 ปี · บางส่วน sealed 3 เดือน · Elwen ทำงานที่นี่" },
+      { icon: "🏠", name: "Scholar Residences", type: "ที่พักนักวิชาการ", desc: "บ้านนักวิจัย/อาจารย์ · เงียบสงบ · Elwen ซ่อนตัวอยู่ที่นี่" },
+      { icon: "🏛", name: "Government Buildings", type: "อาคารราชการ", desc: "สำนักงานกรมต่างๆ · ที่ออกเอกสารและบันทึก" },
+      { icon: "🪜", name: "Lantern Steps", type: "บันไดเชื่อม", desc: "บันไดหินลง Silver Steps · 200 ขั้น · เป็นทางเดินเงียบยามค่ำ" },
+      { icon: "📖", name: "Scholar's Rest Inn", type: "โรงเตี๊ยม", desc: "8 gp/คืน · ห้องเงียบสำหรับอ่านหนังสือ · ร้านน้ำชาชั้นล่าง" }
+    ],
     quote: "ที่ปลอดภัยที่สุดของเมือง — อย่างน้อยผู้คนก็เชื่อเช่นนั้น",
     detail: null,
     atlasPage: 6,
@@ -1649,7 +1713,15 @@ const DISTRICTS = [
     stats: { w:4, s:4, d:2 },
     points: "56.1,37.1 72.0,37.1 83.0,39.5 81.7,50.3 68.3,51.5 57.3,47.9",
     overview: "เขตริมน้ำอันหรูหราที่ปรากฏอยู่ในโปสเตอร์ท่องเที่ยวแทบทั้งหมดของ Porto Stellare รีสอร์ท คาสิโน โรงแรม ชายหาด ร้านอาหาร — ทุกอย่างถูกออกแบบมาเพื่อให้ดูสวยงาม นี่คือ Porto Stellare ที่คนภายนอกคิดว่าพวกเขารู้จัก",
-    locations: ["Grand Casino", "Luxury Resorts", "Aurora Beach", "Rooftop Restaurants", "The Promenade Walk"],
+    locations: [
+      { icon: "🎰", name: "Oswin's Grand Casino", type: "คาสิโน", desc: "คาสิโนใหญ่ที่สุด · ขั้นต่ำ 5 gp · ห้องส่วนตัว 1000+ gp · Oswin Crale เจ้าของ" },
+      { icon: "🏨", name: "Lustralis Hotel", type: "โรงแรมหรู", desc: "60 gp/คืน · spa รวม · ที่นักท่องเที่ยวรวยพัก" },
+      { icon: "🏖", name: "Aurora Beach", type: "ชายหาด", desc: "ทรายทอง · เปิดสาธารณะแต่คนจนหายาก · พระอาทิตย์ตกสวยที่สุดของเมือง" },
+      { icon: "🍽", name: "Rooftop Restaurants", type: "ภัตตาคารหรู", desc: "ภัตตาคารบนชั้นดาดฟ้า · เมนูละ 30-200 gp · ต้องจอง" },
+      { icon: "🚶", name: "The Promenade Walk", type: "ทางเดินริมหาด", desc: "ทางเดินยาว 2 กม. · ร้านขายของหรู · นักท่องเที่ยวเดินตลอดวัน" },
+      { icon: "🌙", name: "Club Obscura", type: "Club ลึกลับ", desc: "Invitation only · 50 gp/คืน · ไม่มีป้าย · สมาชิกหายไป 2 คน" },
+      { icon: "🛥", name: "Luxury Liner Dock", type: "ท่าเรือสำราญ", desc: "ทางเข้าเมืองของคนรวย · 50 gp/หัว · ไม่มีตรวจสินค้า" }
+    ],
     quote: "นี่คือ Porto Stellare ที่คนภายนอกคิดว่าพวกเขารู้จัก",
     detail: null,
     atlasPage: 7,
@@ -1682,7 +1754,15 @@ const DISTRICTS = [
     stats: { w:1, s:2, d:3 },
     points: "8.5,45.5 23.2,44.3 22.6,67.0 18.3,73.0 9.2,71.8 7.9,56.3",
     overview: "เขตอุตสาหกรรมและแรงงานหลักของ Porto Stellare ความมั่งคั่งของเมืองถูกสร้างขึ้นที่นี่ เต็มไปด้วยโรงตีเหล็ก อู่ต่อเรือ โรงงาน และผู้คนที่พยายามหาเงินเพื่ออยู่รอด แทบทุกอย่างที่คนในเมืองครอบครองเคยผ่านที่นี่มาก่อน",
-    locations: ["Black Forge Row — largest smithing street in the city", "South Drydock — main shipyard", "Smoke Market — large cheap market", "Worker Blocks — dense labor housing", "The Foundries"],
+    locations: [
+      { icon: "🔨", name: "Black Forge Row", type: "ถนนช่างตี", desc: "ถนนช่างเหล็กที่ใหญ่ที่สุด · ของถูกกว่าที่อื่น 20% · เสียงดังตลอดวัน" },
+      { icon: "⚓", name: "South Drydock", type: "อู่ต่อเรือ", desc: "อู่ต่อเรือหลัก · รับจ้างทำงาน 5 gp/วัน · อันตรายแต่ไม่จำเป็นต้องผ่านการตรวจ" },
+      { icon: "🛒", name: "Smoke Market", type: "ตลาดราคาถูก", desc: "ตลาดของคนงาน · ของถูก 40-60% เทียบกับย่านบน · กิน 1 gp/มื้อ" },
+      { icon: "🏚", name: "Worker Blocks", type: "ตึกแถวคนงาน", desc: "ที่พักหนาแน่น · 1 gp/คืน · ของหายบ่อย · เด็กหายจากที่นี่" },
+      { icon: "🏭", name: "The Foundries", type: "โรงหลอม", desc: "โรงหลอมเหล็กใหญ่ 3 แห่ง · 1 แห่งระเบิดเมื่อสัปดาห์ก่อน · ปิดบางจุด" },
+      { icon: "🕳", name: "Old Sewer Access", type: "ท่อระบายน้ำเก่า", desc: "ทางเข้าใต้ดิน · เด็กหายไปทางนี้ · เชื่อมไปยัง Hollow Below" },
+      { icon: "✊", name: "Brynn's Meeting Hall", type: "ห้องประชุมคนงาน", desc: "ที่ Brynn Ashford รวบรวมแรงงาน · ตำแหน่งเปลี่ยนทุกสัปดาห์" }
+    ],
     quote: "จาก Verdant พวกเขามองลงมาเห็นควัน จาก Iron เรามองขึ้นไปเห็นดวงดาว",
     detail: null,
     atlasPage: 10,
@@ -1715,7 +1795,14 @@ const DISTRICTS = [
     stats: { w:2, s:1, d:4 },
     points: "25.0,58 33,57 35,68 30,74 25,73 23.5,63",
     overview: "ส่วนที่เก่าแก่ที่สุดของ Porto Stellare สร้างอยู่บนคาบสมุทรหินซึ่งยื่นออกไปยัง Moonlit Bay แม้ Porto Stellare จะถูกสร้างใหม่หลายครั้ง Old Crown แทบไม่เปลี่ยนแปลง หลายส่วนดูเหมือนจะเก่าแก่กว่าตัวเมืองเสียอีก",
-    locations: ["Crown Cathedral — largest cathedral in Porto Stellare", "Founder Plaza — believed to be the city's origin point", "The Ancient Walls", "Archive Basilica", "The Lower Vaults — partially unexplored underground network"],
+    locations: [
+      { icon: "⛪", name: "Crown Cathedral", type: "อาสนวิหารใหญ่", desc: "อาสนวิหารใหญ่ที่สุดของเมือง · เปิด 06:00-18:00 · Father Aldous ทำหน้าที่ที่นี่" },
+      { icon: "🏛", name: "Founder Plaza", type: "จัตุรัสประวัติศาสตร์", desc: "เชื่อกันว่าเป็นจุดกำเนิดเมือง · มีรูปปั้นผู้ก่อตั้ง · นกหายจากที่นี่" },
+      { icon: "🧱", name: "The Ancient Walls", type: "กำแพงเก่าแก่", desc: "กำแพงหินอายุ 800+ ปี · มีสัญลักษณ์โบราณสลักไว้ · บางส่วนพังลง" },
+      { icon: "📜", name: "Archive Basilica", type: "หอจดหมายเหตุ", desc: "Archivist Tenne ดูแล · เก็บบันทึกเมือง 600 ปี · บางหน้าถูกลบไป" },
+      { icon: "🕳", name: "The Lower Vaults", type: "ห้องใต้ดินโบราณ", desc: "เครือข่ายอุโมงค์ใต้โบสถ์ · ไม่เคยสำรวจครบ · กุญแจอยู่กับ Father Aldous" },
+      { icon: "🕯", name: "Small Chapel of the Quiet", type: "สำนักเล็ก", desc: "พระชั้นรองทำพิธีลึกลับที่นี่ · ตำแหน่งเปลี่ยนทุกสัปดาห์ · Crown Cathedral พยายามปิด" }
+    ],
     quote: "อย่าถามว่าอะไรอยู่ใต้ Old Crown ถ้ายังไม่พร้อมฟังคำตอบ",
     detail: null,
     atlasPage: 11,
@@ -1748,7 +1835,18 @@ const DISTRICTS = [
     stats: { w:3, s:2, d:4 },
     points: "34.2,45.5 43.9,47.9 45.2,62.3 38,66 34,55",
     overview: "ประตูหลักของ Porto Stellare ผู้คนที่เดินทางมายังเมืองเป็นครั้งแรกมักเห็น Stellamar ก่อนเสมอ เต็มไปด้วยท่าเรือ ตลาด คลังสินค้า และผู้คนจากทั่วทุกมุมโลก สินค้าส่วนใหญ่ที่เข้าสู่ Porto Stellare มักผ่าน Stellamar ก่อน",
-    locations: ["The Grand Harbor", "Connective Canals", "Iron Dockyards", "The Lantern Mile — main harbor street", "Rustic Revels Inn", "Moonlit Bay Sentinel — lighthouse", "Harbor Watch", "East Shipyards", "Salt Row Market"],
+    locations: [
+      { icon: "⚓", name: "The Grand Harbor", type: "ท่าเรือหลัก", desc: "ท่าเรือใหญ่ที่สุด · ค่าผ่านประตู 2 gp · ตรวจสินค้าทั่วไป · Harbormaster Vel ดูแล" },
+      { icon: "🚣", name: "Connective Canals", type: "คลองเชื่อมเมือง", desc: "คลองเชื่อมไป Silver Steps · กลางคลองมีศพลอยมาแล้ว 3 ครั้ง" },
+      { icon: "🛳", name: "Iron Dockyards", type: "อู่ต่อเรือเหล็ก", desc: "อู่หลักของกองเรือพาณิชย์ · รับซ่อม/ต่อเรือ · งานหนัก 6 gp/วัน" },
+      { icon: "🛣", name: "The Lantern Mile", type: "ถนนท่าเรือหลัก", desc: "ถนนยาวริมท่าเรือ · ร้านอาหาร โรงเตี๊ยม โกดัง · เปิดตลอด 24 ชม." },
+      { icon: "🛏", name: "Rustic Revels Inn", type: "โรงเตี๊ยมท่าเรือ", desc: "5 gp/คืน · เตียงรวม · ห้องเดี่ยว 10 gp · เก็บของให้ฟรี" },
+      { icon: "🗼", name: "Moonlit Bay Sentinel", type: "ประภาคาร", desc: "ประภาคารเก่าแก่ · ผู้เฝ้าไม่ส่งสัญญาณ 3 คืน · เห็นแสงประหลาดใต้น้ำ" },
+      { icon: "🛡", name: "Harbor Watch HQ", type: "สำนักงานยาม", desc: "สำนักงาน Harbor Watch · ตรวจค้นเรือ · เจ้าหน้าที่บางคนรับสินบน" },
+      { icon: "🛳", name: "East Shipyards", type: "อู่ต่อเรือตะวันออก", desc: "อู่เล็ก เน้นเรือสำเภา · เงียบกว่าทางใต้ · บางทีมีเรือลึกลับเทียบท่า" },
+      { icon: "🛒", name: "Salt Row Market", type: "ตลาดท่าเรือ", desc: "ขายของจากเรือ · มีของเถื่อนปะปน · ของถูก 30-50% แต่เสี่ยง" },
+      { icon: "👻", name: "Pier 7 — Ghost Ship", type: "เรือลึกลับ", desc: "เรือเข้าท่าพร้อมลูกเรือตายหมด สินค้าครบ · ไม่มีคนเข้าใกล้" }
+    ],
     quote: "อย่าไว้ใจ Moonlit Bay ในคืนที่ทะเลเงียบเกินไป",
     detail: { img: "assets/district-stellamar-port.jpg", title: "Stellamar Port", sub: "The Harbor District" },
     atlasPage: 9,
@@ -1989,7 +2087,18 @@ let _switchTimer = null;
 function pips(n, cls){ return Array.from({length:5}, (_,i) => `<div class="p-pip${i<n?' '+cls:''}"></div>`).join(""); }
 function buildPanel(d){
   const accentGlow = tintColor(d.color, 0.85);
-  const locs = d.locations.map(l => `<li>${l}</li>`).join("");
+  const locs = d.locations.map(l => {
+    // backward compat: old string format
+    if (typeof l === 'string') return `<li class="p-loc-simple">${l}</li>`;
+    return `
+      <li class="p-loc">
+        <span class="pl-icon">${l.icon}</span>
+        <div class="pl-body">
+          <div class="pl-head"><span class="pl-name">${l.name}</span><span class="pl-type">${l.type}</span></div>
+          <div class="pl-desc">${l.desc}</div>
+        </div>
+      </li>`;
+  }).join("");
   const detailHero = d.detail ? `
     <figure class="p-detail-hero">
       <img src="${d.detail.img}" alt="${d.detail.title} — ${d.detail.sub}" loading="lazy" />

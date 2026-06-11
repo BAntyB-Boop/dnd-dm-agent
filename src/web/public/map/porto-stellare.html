@@ -359,24 +359,203 @@
     color: #4a2f17;
     text-wrap: pretty;
   }
-  .p-locations { list-style: none; display: flex; flex-direction: column; gap: 7px; }
-  .p-locations li {
+  .p-locations { list-style: none; display: flex; flex-direction: column; gap: 8px; padding: 0; margin: 0 0 12px; }
+  /* fallback for simple string entries */
+  .p-locations .p-loc-simple {
     position: relative;
     padding-left: 20px;
-    font-size: 15.5px;
+    font-size: 15px;
     line-height: 1.4;
     color: #4a2f17;
   }
-  .p-locations li::before {
+  .p-locations .p-loc-simple::before {
     content: "❖";
     position: absolute; left: 0; top: 1px;
     color: var(--gold);
     font-size: 11px;
   }
+  /* structured location entry */
+  .p-loc {
+    display: grid; grid-template-columns: 26px 1fr;
+    gap: 10px; align-items: start;
+    padding: 8px 10px;
+    background: rgba(212,160,23,0.05);
+    border: 1px solid rgba(212,160,23,0.18);
+    border-radius: 2px;
+    transition: background .2s, border-color .2s;
+  }
+  .p-loc:hover {
+    background: rgba(212,160,23,0.1);
+    border-color: rgba(212,160,23,0.35);
+  }
+  .pl-icon {
+    font-size: 17px; line-height: 1.2;
+    text-align: center;
+  }
+  .pl-body { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+  .pl-head { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+  .pl-name {
+    font-family: var(--display);
+    font-size: 12.5px; font-weight: 600;
+    letter-spacing: .04em;
+    color: #2a1808;
+  }
+  .pl-type {
+    font-family: var(--display);
+    font-size: 8.5px; letter-spacing: .22em; text-transform: uppercase;
+    color: rgba(92,58,30,0.65);
+  }
+  .pl-desc {
+    font-size: 13px; line-height: 1.55;
+    color: rgba(74,47,23,0.78);
+  }
+  .p-detail-hero {
+    margin: 20px 0 6px;
+    border: 1px solid rgba(212,160,23,0.4);
+    border-radius: 3px;
+    overflow: hidden;
+    box-shadow: 0 10px 28px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(212,160,23,0.1);
+    background: rgba(20,12,4,0.5);
+    position: relative;
+    cursor: zoom-in;
+    transition: border-color .25s, box-shadow .25s, transform .25s;
+  }
+  .p-detail-hero:hover {
+    border-color: var(--gold, #d4a017);
+    box-shadow: 0 14px 36px rgba(0,0,0,0.5), 0 0 24px rgba(212,160,23,0.18), inset 0 0 0 1px rgba(212,160,23,0.2);
+    transform: translateY(-2px);
+  }
+  .p-detail-hero img { width: 100%; display: block; transition: transform .35s ease; }
+  .p-detail-hero:hover img { transform: scale(1.02); }
+  .p-detail-hero::after {
+    content: "⊕";
+    position: absolute; top: 10px; right: 12px;
+    width: 28px; height: 28px;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(8,4,1,0.78);
+    border: 1px solid rgba(212,160,23,0.4);
+    border-radius: 50%;
+    color: var(--gold-bright, #f6efd2);
+    font-size: 16px; line-height: 1;
+    opacity: 0;
+    transition: opacity .25s;
+    pointer-events: none;
+  }
+  .p-detail-hero:hover::after { opacity: 1; }
+  .p-detail-hero figcaption {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    padding: 14px 16px 10px;
+    background: linear-gradient(180deg, transparent, rgba(8,4,1,0.92) 60%);
+    display: flex; flex-direction: column; gap: 2px;
+    text-align: left;
+  }
+  .p-detail-hero .dh-title {
+    font-family: var(--display);
+    font-size: 14px; letter-spacing: .08em;
+    color: var(--gold-bright, #f6efd2);
+    text-transform: uppercase;
+  }
+  .p-detail-hero .dh-sub {
+    font-family: var(--display);
+    font-size: 9.5px; letter-spacing: .26em;
+    color: rgba(244,228,193,0.55);
+    text-transform: uppercase;
+  }
   .p-thumb {
     margin-top: 16px;
     border: 1px solid rgba(92,58,30,0.5);
     box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+  }
+
+  /* Player Actions */
+  .p-actions {
+    list-style: none;
+    padding: 0; margin: 0 0 12px;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .p-action {
+    display: grid; grid-template-columns: 28px 1fr;
+    gap: 10px; align-items: start;
+    padding: 8px 10px;
+    background: rgba(20,12,4,0.45);
+    border: 1px solid rgba(92,58,30,0.3);
+    border-radius: 2px;
+    transition: border-color .2s, background .2s;
+  }
+  .p-action:hover {
+    background: rgba(30,18,6,0.65);
+    border-color: rgba(212,160,23,0.35);
+  }
+  .pa-icon {
+    font-size: 16px; line-height: 1.3;
+    text-align: center;
+  }
+  .pa-body { display: flex; flex-direction: column; gap: 2px; }
+  .pa-text {
+    font-family: var(--body, 'Crimson Text', serif);
+    font-size: 14px; line-height: 1.45;
+    color: rgba(244,228,193,0.78);
+  }
+  .pa-cost {
+    font-family: var(--display, 'Cinzel', serif);
+    font-size: 9.5px; letter-spacing: .12em;
+    color: rgba(212,160,23,0.7);
+  }
+
+  /* Quests */
+  .p-quests { display: flex; flex-direction: column; gap: 12px; margin-bottom: 12px; }
+  .p-quest {
+    padding: 12px 14px;
+    background: linear-gradient(135deg, rgba(212,160,23,0.07), rgba(20,12,4,0.5));
+    border: 1px solid rgba(212,160,23,0.28);
+    border-left: 3px solid var(--gold, #d4a017);
+    border-radius: 3px;
+  }
+  .pq-title {
+    font-family: var(--display, 'Cinzel', serif);
+    font-size: 13px; font-weight: 600;
+    letter-spacing: .05em;
+    color: var(--gold-bright, #f6efd2);
+    margin-bottom: 8px;
+  }
+  .pq-meta {
+    display: flex; flex-direction: column; gap: 3px;
+    margin-bottom: 8px;
+    padding-bottom: 8px;
+    border-bottom: 1px dashed rgba(212,160,23,0.18);
+  }
+  .pq-meta-row {
+    font-size: 12.5px;
+    color: rgba(244,228,193,0.62);
+  }
+  .pq-meta-row b {
+    font-family: var(--display, 'Cinzel', serif);
+    font-size: 9px; letter-spacing: .2em; text-transform: uppercase;
+    color: rgba(212,160,23,0.65);
+    font-weight: 500;
+    margin-right: 5px;
+  }
+  .pq-desc {
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: rgba(244,228,193,0.65);
+    margin-bottom: 8px;
+  }
+  .pq-monsters {
+    padding: 8px 10px;
+    background: rgba(140,30,10,0.12);
+    border-left: 2px solid rgba(200,60,40,0.45);
+    border-radius: 2px;
+    font-size: 12.5px;
+    line-height: 1.5;
+    color: rgba(244,228,193,0.62);
+  }
+  .pq-m-label {
+    display: block;
+    font-family: var(--display, 'Cinzel', serif);
+    font-size: 9px; letter-spacing: .22em; text-transform: uppercase;
+    color: rgba(220,80,60,0.7);
+    margin-bottom: 4px;
   }
   .p-thumb img { width: 100%; display: block; }
   .p-thumb figcaption {
@@ -550,6 +729,157 @@
     transform: translateY(-1px);
   }
   #home-btn svg { width: 13px; height: 13px; flex: none; }
+
+  /* DM Guide button — hidden by default, revealed by entering code 7777 */
+  #dm-guide-btn {
+    position: fixed;
+    top: 18px; right: 200px;
+    z-index: 40;
+    display: none;
+    align-items: center; gap: 8px;
+    padding: 9px 16px;
+    font-family: var(--display);
+    font-size: 11px;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: rgba(244,228,193,0.85);
+    background: linear-gradient(180deg, #2c1a0e, #1a0e06);
+    border: 1px solid rgba(212,160,23,0.45);
+    border-radius: 3px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(212,160,23,0.12);
+    text-decoration: none;
+    transition: color .2s, border-color .2s, box-shadow .2s, transform .2s;
+  }
+  #dm-guide-btn::before {
+    content: "";
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--gold-bright, #f0c040);
+    box-shadow: 0 0 8px rgba(240,192,64,0.7);
+    flex: none;
+    animation: dm-pulse 2.4s ease-in-out infinite;
+  }
+  @keyframes dm-pulse {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0.4; }
+  }
+  #dm-guide-btn:hover {
+    color: var(--gold-bright, #f0c040);
+    border-color: var(--gold-bright, #f0c040);
+    box-shadow: 0 8px 26px rgba(0,0,0,0.6), 0 0 14px rgba(212,160,23,0.3);
+    transform: translateY(-1px);
+  }
+  #dm-guide-btn svg { width: 13px; height: 13px; flex: none; }
+  #dm-guide-btn.unlocked { display: flex; animation: dm-unlock-in .6s cubic-bezier(.3,.7,.2,1); }
+  @keyframes dm-unlock-in {
+    from { opacity: 0; transform: translateY(-8px) scale(.92); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  @media (max-width: 640px) {
+    #dm-guide-btn { right: 16px; top: 70px; }
+    #dm-guide-btn .btn-text { display: none; }
+  }
+
+  /* Code prompt — appears when user clicks the subtle key icon */
+  #dm-code-trigger {
+    position: fixed;
+    bottom: 18px; left: 18px;
+    z-index: 50;
+    width: 26px; height: 26px;
+    background: rgba(8,4,1,0.5);
+    border: 1px solid rgba(212,160,23,0.18);
+    border-radius: 50%;
+    color: rgba(244,228,193,0.18);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; line-height: 1;
+    transition: color .25s, border-color .25s, opacity .25s;
+    opacity: 0.5;
+  }
+  #dm-code-trigger:hover {
+    color: var(--gold);
+    border-color: rgba(212,160,23,0.5);
+    opacity: 1;
+  }
+  #dm-code-trigger.unlocked { display: none; }
+  #dm-code-trigger svg { width: 12px; height: 12px; }
+
+  #dm-code-overlay {
+    position: fixed; inset: 0; z-index: 999;
+    background:
+      radial-gradient(800px 500px at 50% 40%, rgba(20,10,4,0.55), rgba(0,0,0,0.92) 75%);
+    backdrop-filter: blur(6px);
+    display: none;
+    align-items: center; justify-content: center;
+    animation: dm-fade-in .3s ease;
+  }
+  #dm-code-overlay.open { display: flex; }
+  @keyframes dm-fade-in { from { opacity: 0; } to { opacity: 1; } }
+  .dm-code-card {
+    width: min(90vw, 380px);
+    padding: 36px 30px 26px;
+    background: linear-gradient(180deg, #15151c, #0e0e16);
+    border: 1px solid rgba(212,160,23,0.4);
+    border-radius: 3px;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.7), 0 0 60px rgba(212,160,23,0.08);
+    text-align: center;
+  }
+  .dm-code-title {
+    font-family: var(--display, 'Cinzel', serif);
+    font-size: 16px; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--gold-bright, #f6efd2);
+    margin-bottom: 6px;
+  }
+  .dm-code-sub {
+    font-size: 12.5px; font-style: italic;
+    color: rgba(244,228,193,0.5);
+    margin-bottom: 22px;
+  }
+  #dm-code-input {
+    width: 100%;
+    padding: 12px 14px;
+    background: rgba(0,0,0,0.45);
+    border: 1px solid rgba(212,160,23,0.32);
+    border-radius: 2px;
+    color: var(--gold-bright, #f6efd2);
+    font-family: var(--display, 'Cinzel', serif);
+    font-size: 20px; letter-spacing: .4em; text-align: center;
+    outline: none;
+    -webkit-text-security: disc;
+    text-security: disc;
+    transition: border-color .2s, box-shadow .2s;
+  }
+  #dm-code-input:focus { border-color: var(--gold, #d4a017); box-shadow: 0 0 0 3px rgba(212,160,23,0.12); }
+  #dm-code-overlay.error #dm-code-input {
+    border-color: rgba(200,60,40,.7);
+    box-shadow: 0 0 0 3px rgba(200,60,40,0.15);
+    animation: dm-shake .42s ease;
+  }
+  @keyframes dm-shake {
+    10%,90% { transform: translateX(-2px) }
+    20%,80% { transform: translateX(4px) }
+    30%,50%,70% { transform: translateX(-6px) }
+    40%,60% { transform: translateX(6px) }
+  }
+  .dm-code-actions {
+    display: flex; gap: 10px; margin-top: 16px;
+  }
+  .dm-code-btn {
+    flex: 1; padding: 10px;
+    background: linear-gradient(180deg, rgba(201,164,92,0.18), rgba(201,164,92,0.05));
+    border: 1px solid var(--gold-dim, #8a6f3a);
+    color: var(--gold-bright, #f6efd2);
+    font-family: var(--display, 'Cinzel', serif);
+    font-size: 10.5px; letter-spacing: .26em; text-transform: uppercase;
+    cursor: pointer; border-radius: 2px;
+    transition: background .2s, border-color .2s;
+  }
+  .dm-code-btn:hover { border-color: var(--gold, #d4a017); background: linear-gradient(180deg, rgba(201,164,92,0.3), rgba(201,164,92,0.1)); }
+  .dm-code-btn.secondary {
+    background: transparent;
+    border-color: rgba(244,228,193,0.2);
+    color: rgba(244,228,193,0.5);
+  }
+  .dm-code-btn.secondary:hover { color: rgba(244,228,193,0.85); border-color: rgba(244,228,193,0.4); }
 
   /* ---------- Music control (continues homepage BGM) ---------- */
   .music-ctrl {
@@ -1119,6 +1449,33 @@
     <span class="btn-text">The Veiled Codex</span>
   </a>
 
+  <a id="dm-guide-btn" href="/oneshot/porto-arrival" title="One-Shot DM Guide — Arrival at Porto Stellare">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+    <span class="btn-text">DM Guide</span>
+  </a>
+
+  <!-- Hidden DM code unlock — only DM knows this is here -->
+  <button id="dm-code-trigger" aria-label="DM unlock" title="DM">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+      <circle cx="12" cy="16" r="1"/>
+      <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+      <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+    </svg>
+  </button>
+
+  <!-- DM Code Overlay -->
+  <div id="dm-code-overlay" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="dm-code-card">
+      <div class="dm-code-title">DM Access</div>
+      <div class="dm-code-sub">กรุณาใส่รหัสเพื่อปลดล็อก DM Guide</div>
+      <input id="dm-code-input" type="text" inputmode="numeric" maxlength="4" placeholder="● ● ● ●" autocomplete="off" />
+      <div class="dm-code-actions">
+        <button class="dm-code-btn secondary" id="dm-code-cancel">ยกเลิก</button>
+        <button class="dm-code-btn" id="dm-code-submit">Unlock</button>
+      </div>
+    </div>
+  </div>
+
   <audio id="bg-audio" src="/assets/codex-of-stars.mp3" loop preload="auto"></audio>
 
   <!-- Music control (continues homepage BGM) -->
@@ -1197,7 +1554,12 @@ const DISTRICTS = [
     stats: { w:5, s:5, d:1 },
     points: "7.9,39.5 9.8,29.9 17.1,23.9 25.6,23.9 26.9,37.1 18.3,43.1 9.2,44.3",
     overview: "เขตตอนบนของ Porto Stellare บนหน้าผาฝั่งตะวันตก เต็มไปด้วยคฤหาสน์หรู สวนพฤกษศาสตร์ และที่พักของตระกูลเก่าแก่ ถูกออกแบบมาเพื่อแยกความมั่งคั่งออกจากส่วนอื่นของเมือง ต่างจาก Aurora Promenade ที่โชว์ความมั่งคั่งอย่างเปิดเผย Verdant Terraces ถูกสร้างให้ปิดและโดดเดี่ยว",
-    locations: ["Starhill — Observatory &amp; Ancient Tower", "Ivory Gardens — botanical garden across the cliff terraces", "Crescent Villas — old noble residences", "West Skywalk — cliff walkway overlooking all of Moonlit Bay"],
+    locations: [
+      { icon: "🔭", name: "Starhill", type: "หอดูดาว", desc: "หอสังเกตการณ์โบราณบนยอดเขา · ปิดตายปัจจุบัน · ศูนย์กลางเรื่อง" },
+      { icon: "🌿", name: "Ivory Gardens", type: "สวนพฤกษศาสตร์", desc: "สวนหรูริมหน้าผา · เปิดให้สาธารณะ · นิยมในหมู่ขุนนาง" },
+      { icon: "🏰", name: "Crescent Villas", type: "คฤหาสน์ขุนนาง", desc: "ที่พักของตระกูลเก่าแก่ · เข้าได้ต้องมีคำเชิญ" },
+      { icon: "🌉", name: "West Skywalk", type: "ทางเชื่อม / จุดชม", desc: "ทางเดินบนหน้าผามองเห็น Moonlit Bay ทั้งอ่าว · เปิดสาธารณะ" }
+    ],
     quote: "เงินหลับใหลอยู่ใน Golden Crescent แต่ความมั่งคั่งอาศัยอยู่ใน Verdant",
     detail: null,
     atlasPage: 6,
@@ -1206,7 +1568,20 @@ const DISTRICTS = [
       { name: "Dorian Veth", role: "ทายาทขุนนางที่ถูกตัดออกจากมรดก กำลังขายความลับของตระกูลให้ Golden Crescent" }
     ],
     tension: "ตระกูลขุนนางหลายตระกูลกำลังขายทรัพย์สินอย่างเงียบๆ ราวกับรู้ว่าบางอย่างกำลังจะเกิดขึ้น — แต่ไม่มีใครยอมพูด",
-    hook: "หอดูดาว Starhill ถูกปิดกะทันหันโดยไม่มีคำอธิบาย นักดาราศาสตร์ประจำหอหายตัวพร้อมกัน"
+    hook: "หอดูดาว Starhill ถูกปิดกะทันหันโดยไม่มีคำอธิบาย นักดาราศาสตร์ประจำหอหายตัวพร้อมกัน",
+    playerActions: [
+      { icon: "🍷", text: "เข้างานเลี้ยงชนชั้นสูง", cost: "100 gp invitation หรือ Persuasion DC 16" },
+      { icon: "🔭", text: "พยายามเข้า Starhill (ปิดอยู่)", cost: "Investigation DC 14 หาทางลับ · Stealth DC 15" },
+      { icon: "🏛️", text: "ขอเข้าพบ Lady Corveth", cost: "Persuasion DC 15 หรือมีจดหมายแนะนำ" },
+      { icon: "💰", text: "ช็อปสินค้าหรู (ราคา 3-5x ปกติ)", cost: "เครื่องประดับ 200-2000 gp" },
+      { icon: "🛏️", text: "พักที่ Marble Vista Inn", cost: "40 gp / คืน · บริการเต็มรูปแบบ" },
+      { icon: "🎭", text: "ติดสินบนคนรับใช้เพื่อข่าวซุบซิบ", cost: "10-50 gp · Deception DC 12" }
+    ],
+    quests: [
+      { title: "The Astronomer's Disappearance", giver: "Lady Corveth Ansel", reward: "300 gp + เข้า Starhill ได้", desc: "ตามหา Dorian Veth ที่หายไปพร้อมบันทึก — สงสัยว่าเขาขายข้อมูลให้ Golden Crescent", monsters: "2× Spies (CR 1) ในคฤหาสน์ · ถ้าไล่ตาม Dorian หลบหนี: 1× Assassin (CR 8) ลอบฆ่ากลางคืน" },
+      { title: "Family Secrets", giver: "Dorian Veth (ลับๆ)", reward: "200 gp + ติดต่อขุนนาง", desc: "นำเอกสารโบราณจาก Archive Basilica มาให้เขา ห้ามให้ Lady Corveth รู้", monsters: "2× Cultists (CR 1/8) เฝ้า archive ใน Old Crown · 1× Specter (CR 1) ถ้าเข้าโซนต้องห้าม" },
+      { title: "The Sealed Tower", giver: "ข่าวลือ (Insight DC 14)", reward: "ความรู้โบราณ + Spell Scroll", desc: "หาทางเข้า Starhill ก่อนวันเพ็ญถัดไป — ดูสิ่งที่นักดาราศาสตร์เห็นในกล้องโทรทรรศน์", monsters: "1× Animated Armor (CR 1) + 1× Mimic ปลอมเป็นกล้องโทรทรรศน์ · ห้องลับ: 1× Will-o'-Wisp (CR 2)" }
+    ]
   },
   {
     id: "silver",
@@ -1217,17 +1592,41 @@ const DISTRICTS = [
     stats: { w:3, s:3, d:2 },
     points: "26.9,27.5 37.8,25.1 40.9,39.5 34.2,47.9 26.9,43.1",
     overview: "เขตที่มีประชากรมากที่สุดของเมือง หัวใจที่เชื่อม Porto Stellare ทั้งหมดเข้าด้วยกัน เต็มไปด้วยตลาด โรงเตี๊ยม บ้านพัก และ Workshop นับไม่ถ้วน เชื่อมต่อกับทุก district ผ่านบันได gondola และ tram",
-    locations: ["Seven Steps Market", "Lantern Square", "Silver Plaza", "Craftsman's Row", "West Skywalk connector", "Canal Network — to Stellamar Port", "Industrial Tram stop — from Iron Quarters", "Gondola stations"],
+    locations: [
+      { icon: "🛒", name: "Seven Steps Market", type: "ตลาดกลาง", desc: "ตลาดใหญ่ที่สุดของย่าน · ของขายราคาปานกลาง · พบ NPC ทั่วไป" },
+      { icon: "🍻", name: "Lantern Square", type: "จัตุรัส / Tavern", desc: "ใจกลางย่าน มี The Lantern Tavern ของ Maren Sollis · ที่หาข้อมูล" },
+      { icon: "🏛", name: "Silver Plaza", type: "จัตุรัสประชุม", desc: "ลานกว้างที่คนงานมารวมตัวประท้วง · City Watch ลาดตระเวน" },
+      { icon: "🔨", name: "Craftsman's Row", type: "ถนนช่างฝีมือ", desc: "Workshop ของช่างเงิน ช่างหนัง ช่างทอง · ซื้อ/ซ่อมของได้" },
+      { icon: "🌉", name: "West Skywalk", type: "ทางเชื่อม", desc: "สะพานลอยไป Verdant Terraces" },
+      { icon: "🚣", name: "Canal Network", type: "คลอง / ทางน้ำ", desc: "คลองเชื่อมไป Stellamar Port · เร็วกว่าเดิน · 1 gp/เที่ยว" },
+      { icon: "🚊", name: "Industrial Tram Stop", type: "สถานีรถราง", desc: "รถรางจาก Iron Quarters · ขนคนงานเข้าออก" },
+      { icon: "🚡", name: "Gondola Stations", type: "สถานีกระเช้า", desc: "กระเช้าขึ้น Aurora / Golden Crescent · 1 gp/เที่ยว" }
+    ],
     quote: "หาก Aurora คือหน้าตาของเมือง Silver Steps คือหัวใจของเมือง",
     detail: { img: "assets/district-silver-steps.png", title: "Silver Steps", sub: "The Connective Spine" },
     atmosphere: { img: "assets/lantern-square.png", cap: "Lantern Square at dusk" },
     atlasPage: 8,
     npcs: [
       { name: "Maren Sollis", role: "เจ้าของ Lantern Square Tavern ที่ฟังทุกอย่างและพูดน้อย รู้ข่าวในเมืองมากที่สุด" },
-      { name: "Ser Aldric Thane", role: "กัปตัน City Watch ที่รู้ว่าคำสั่งจากบนไม่ถูกต้อง แต่ยังคงทำตาม" }
+      { name: "Ser Aldric Thane", role: "กัปตัน City Watch ที่รู้ว่าคำสั่งจากบนไม่ถูกต้อง แต่ยังคงทำตาม" },
+      { name: "Osric \"Two-Cups\" Fenn", role: "เจ้าของ The Lantern & Anchor Inn — อ้วน ร่าเริง พูดมาก รู้ข่าวลือทุกอย่าง แต่ขายข้อมูลได้ครึ่งเดียวก่อนจะกลัว มีรอยช้ำที่คอ ('ถูกเตือนแล้ว')" },
+      { name: "Cadet Wren", role: "ยาม City Watch อายุน้อย มือสั่น น้องสาวอยู่ใน Iron Quarters · ได้คำสั่งให้รายงานคนถามเรื่องเรือ — กำลังตัดสินใจว่าจงรักภักดีต่อใคร" }
     ],
     tension: "City Watch เริ่มบุกสลายการประชุมของคนงานอย่างรุนแรง ความโกรธสะสมอยู่ในทุก tavern ของ Silver Steps",
-    hook: "ศพในคลองที่ไม่มีบาดแผล — ครั้งที่สามในเดือนนี้ City Watch ปิดเรื่องทุกครั้ง"
+    hook: "ศพในคลองที่ไม่มีบาดแผล — ครั้งที่สามในเดือนนี้ City Watch ปิดเรื่องทุกครั้ง",
+    playerActions: [
+      { icon: "🍻", text: "ดื่มที่ Lantern Square Tavern (พบ Maren)", cost: "3 gp / รอบ" },
+      { icon: "💬", text: "จ้าง Maren Sollis หาข้อมูล", cost: "50 gp baseline (ราคาเพิ่มถ้าหัวข้อร้อน)" },
+      { icon: "🛏️", text: "พักที่ The Lantern & Anchor Inn", cost: "12 gp / คืน · ห้องเดี่ยว" },
+      { icon: "🛒", text: "ช็อปที่ Seven Steps Market", cost: "ราคา 1.5-2x ปกติ" },
+      { icon: "🕵️", text: "ตรวจสอบจุดที่พบศพในคลอง", cost: "Investigation DC 13 · Medicine DC 14" },
+      { icon: "🚊", text: "ใช้ tram/gondola ข้าม district", cost: "1 gp / เที่ยว" }
+    ],
+    quests: [
+      { title: "Bodies in the Canal", giver: "Maren Sollis", reward: "150 gp + ข้อมูลเครือข่าย Vira", desc: "หาความเชื่อมโยงของศพทั้งสาม — ทั้งหมดเคยทำงานในเอกสารบัญชีของกระทรวง", monsters: "1× Grick (CR 2) ซ่อนใต้น้ำคลอง — เป็นเหตุของศพไร้บาดแผล · เผชิญหน้าตอนคืนพระจันทร์เต็มดวง" },
+      { title: "Watch the Watch", giver: "จดหมายไม่ระบุชื่อ", reward: "250 gp (เงินสด)", desc: "บันทึกหลักฐานการคอร์รัปชั่นของ Ser Aldric และทีม City Watch ในย่านนี้", monsters: "เน้น Stealth ไม่บังคับสู้ · ถ้าโดนจับ: 4× Guard (CR 1/8) + 1× Veteran (CR 3) หัวหน้าทีม" },
+      { title: "Lost Shipment", giver: "พ่อค้าคาราวาน", reward: "100 gp + ส่วนแบ่ง 10%", desc: "ตามหาสินค้าที่หายระหว่างขนผ่าน Silver Steps — สงสัยว่าโดน City Watch ยึดเงียบ", monsters: "3× Thugs (CR 1/2) ยึดสินค้าในคลังร้าง · 1× Bandit Captain (CR 2) เป็นหัวหน้า" }
+    ]
   },
   {
     id: "golden",
@@ -1238,7 +1637,14 @@ const DISTRICTS = [
     stats: { w:5, s:4, d:2 },
     points: "43,28 52,24 60,28 60,44 50,48 43,42",
     overview: "ศูนย์กลางเศรษฐกิจและการเมืองของ Porto Stellare ที่ซึ่งสงครามเริ่มต้นก่อนที่ดาบจะถูกชักออก เต็มไปด้วยธนาคาร Guild Halls สภาเมือง และโรงละคร เงินและอำนาจไหลเวียนที่นี่ก่อนที่จะไปถึงที่อื่น",
-    locations: ["City Council Hall", "Major Banks", "Guild Halls", "Merchant Houses", "Grand Theater"],
+    locations: [
+      { icon: "🏛", name: "City Council Hall", type: "ที่ทำการสภา", desc: "ศูนย์กลางการปกครอง · ที่ Councilor Vira ทำงาน · ยามเฝ้าตลอด" },
+      { icon: "🏦", name: "Bank of the Sun", type: "ธนาคารใหญ่", desc: "ธนาคารหลักของเมือง · แลกเงิน/ฝากของมีค่า · ค่าธรรมเนียม 2-5%" },
+      { icon: "🛡", name: "Guild Halls", type: "สำนักงาน Guild", desc: "Merchant Guild, Mason Guild, Mage Guild · รับงานได้ที่นี่" },
+      { icon: "🏬", name: "Merchant Houses", type: "บ้านพ่อค้าใหญ่", desc: "ที่ Hadren Moss เคยทำงาน · บ้านปิดล็อกหลังเขาหาย" },
+      { icon: "🎭", name: "Grand Theater", type: "โรงละครหลวง", desc: "การแสดงระดับชาติ · ตั๋ว 15-50 gp · ที่นัดพบของชนชั้นสูง" },
+      { icon: "🔥", name: "Burned Ministry Building", type: "ซากอาคารราชการ", desc: "ถูกไฟไหม้จากใต้ดิน 4 วันก่อน · มีโซ่กั้น · ยามเฝ้าตลอด" }
+    ],
     quote: "สงครามจำนวนมากเริ่มต้นที่นี่ ก่อนที่ดาบจะถูกชักออกจากฝัก",
     detail: null,
     atlasPage: 7,
@@ -1247,7 +1653,20 @@ const DISTRICTS = [
       { name: "Councilor Vira Seln", role: "ใบหน้าของการปกครองที่ยุติธรรม แต่มีเส้นตรงถึง syndicate ใต้เมือง" }
     ],
     tension: "Guild ใหญ่แห่งหนึ่งเรียกหนี้คืนพร้อมกันทั่วเมืองโดยไม่มีการแจ้งเตือน ไม่มีใครรู้ว่าทำเพื่ออะไร",
-    hook: "อาคารกระทรวงแห่งหนึ่งถูกไฟไหม้ในคืนที่ไม่มีใครอยู่ ไฟเริ่มจากชั้นใต้ดินที่ควรจะปิดล็อคอยู่"
+    hook: "อาคารกระทรวงแห่งหนึ่งถูกไฟไหม้ในคืนที่ไม่มีใครอยู่ ไฟเริ่มจากชั้นใต้ดินที่ควรจะปิดล็อคอยู่",
+    playerActions: [
+      { icon: "🏦", text: "ฝาก/แลกเปลี่ยนทองที่ Bank of the Sun", cost: "ค่าธรรมเนียม 2-5%" },
+      { icon: "💸", text: "ขอกู้เงิน (ต้องมี collateral)", cost: "ดอกเบี้ย 15% / เดือน · Persuasion DC 14" },
+      { icon: "🔥", text: "ตรวจสอบอาคารกระทรวงที่ไหม้", cost: "Stealth DC 14 (มียามเฝ้า) · Investigation DC 15" },
+      { icon: "👔", text: "ขอเข้าพบ Councilor", cost: "ต้องมีคนแนะนำ + Persuasion DC 17" },
+      { icon: "🎟️", text: "ดูการแสดงที่ Grand Theater", cost: "15-50 gp / ที่นั่ง" },
+      { icon: "📜", text: "ติดสินบนเสมียนเพื่อบันทึก Council", cost: "100 gp + Deception DC 13" }
+    ],
+    quests: [
+      { title: "The Missing Accountant", giver: "ตัวแทน Guild (วงในแอบส่งสาส์น)", reward: "500 gp + กลับเข้า Guild ได้", desc: "ตามหา Hadren Moss และนำ ledger ของเขามาก่อน Vira จะหาเจอ", monsters: "2× Spies (CR 1) ตามรอย · 1× Assassin (CR 8) จาก Vira เมื่อใกล้พบ Hadren" },
+      { title: "Council Errand", giver: "Councilor Vira (ผ่านผู้ช่วย)", reward: "200 gp ทันที + 300 gp ถ้าสำเร็จ", desc: "ส่งจดหมายปิดผนึกไปยังบ้านพักใน Aurora — ห้ามเปิดดู ห้ามเปิดเผยตัว", monsters: "ไม่มีการต่อสู้บังคับ · ถ้าเปิดจดหมาย: 1× Cambion (CR 5) ปรากฏบังคับสัญญาเวทมนตร์" },
+      { title: "Bank Recovery", giver: "ผู้จัดการธนาคาร", reward: "300 gp + Letter of Credit", desc: "ค้นหา ledger ที่ถูกขโมยจากตู้นิรภัยใต้ดิน — ผู้ขโมยใช้กุญแจของกระทรวง", monsters: "1× Mimic ปลอมเป็นตู้เซฟใบหนึ่ง + 2× Gargoyles (CR 2) เฝ้า vault จริง" }
+    ]
   },
   {
     id: "whitecliff",
@@ -1258,7 +1677,14 @@ const DISTRICTS = [
     stats: { w:4, s:5, d:1 },
     points: "62.2,23.9 75.6,16.8 82.0,24.5 81.0,35.0 72.0,37.1 63.4,34.7",
     overview: "เขตพักอาศัยและการศึกษา ถือเป็นหนึ่งในเขตที่ปลอดภัยที่สุดของเมือง อย่างน้อยผู้คนก็เชื่อเช่นนั้น เต็มไปด้วยมหาวิทยาลัย ห้องสมุด อาคารราชการ และที่พักของนักวิชาการ",
-    locations: ["Porto Stellare University", "Grand Library", "Scholar Residences", "Government Administrative Buildings", "Lantern Steps — descends to Silver Steps"],
+    locations: [
+      { icon: "🎓", name: "Porto Stellare University", type: "มหาวิทยาลัย", desc: "สถาบันการศึกษาหลัก · นักศึกษา 400+ คน · บางอาคารปิด" },
+      { icon: "📚", name: "Grand Library", type: "ห้องสมุดใหญ่", desc: "ห้องสมุดเก่าแก่ 600 ปี · บางส่วน sealed 3 เดือน · Elwen ทำงานที่นี่" },
+      { icon: "🏠", name: "Scholar Residences", type: "ที่พักนักวิชาการ", desc: "บ้านนักวิจัย/อาจารย์ · เงียบสงบ · Elwen ซ่อนตัวอยู่ที่นี่" },
+      { icon: "🏛", name: "Government Buildings", type: "อาคารราชการ", desc: "สำนักงานกรมต่างๆ · ที่ออกเอกสารและบันทึก" },
+      { icon: "🪜", name: "Lantern Steps", type: "บันไดเชื่อม", desc: "บันไดหินลง Silver Steps · 200 ขั้น · เป็นทางเดินเงียบยามค่ำ" },
+      { icon: "📖", name: "Scholar's Rest Inn", type: "โรงเตี๊ยม", desc: "8 gp/คืน · ห้องเงียบสำหรับอ่านหนังสือ · ร้านน้ำชาชั้นล่าง" }
+    ],
     quote: "ที่ปลอดภัยที่สุดของเมือง — อย่างน้อยผู้คนก็เชื่อเช่นนั้น",
     detail: null,
     atlasPage: 6,
@@ -1267,7 +1693,20 @@ const DISTRICTS = [
       { name: "Cadet Silus", role: "นักศึกษาที่สังเกตว่ามีเจ้าหน้าที่นอกเครื่องแบบเฝ้า Grand Library ทุกคืน" }
     ],
     tension: "ส่วนหนึ่งของ Grand Library ถูกปิดตายมา 3 เดือนแล้ว อ้างว่า 'งานบูรณะ' แต่ไม่มีช่างคนใดเข้าออก",
-    hook: "นักศึกษา 2 คนที่พยายามเข้าไปในส่วนที่ปิดหายตัวไป ถูกบันทึกว่า 'ลาออกจากมหาวิทยาลัยด้วยความสมัครใจ'"
+    hook: "นักศึกษา 2 คนที่พยายามเข้าไปในส่วนที่ปิดหายตัวไป ถูกบันทึกว่า 'ลาออกจากมหาวิทยาลัยด้วยความสมัครใจ'",
+    playerActions: [
+      { icon: "📚", text: "ค้นคว้าใน University Library", cost: "Investigation DC 12 หา topic ทั่วไป · ฟรี" },
+      { icon: "🚪", text: "พยายามเข้าส่วนที่ปิดของ Grand Library", cost: "Stealth DC 14 + Sleight of Hand DC 15 · มียามนอกเครื่องแบบ" },
+      { icon: "👨‍🏫", text: "ตามหา Prof. Elwen", cost: "Persuasion DC 12 กับ Cadet Silus ก่อน" },
+      { icon: "✍️", text: "จ้างนักแปล/อาลักษณ์", cost: "15 gp / วัน · ภาษาเก่า +50%" },
+      { icon: "🛏️", text: "พักที่ Scholar's Rest Inn", cost: "8 gp / คืน · เงียบสงบ" },
+      { icon: "📖", text: "ซื้อหนังสือและแผนที่", cost: "5-50 gp · หนังสือเฉพาะทาง 100+ gp" }
+    ],
+    quests: [
+      { title: "Translate the Symbol", giver: "Prof. Elwen Dray", reward: "200 gp + ความรู้ภาษาโบราณ", desc: "หาตัวอย่างสัญลักษณ์เดียวกันจากที่อื่นในเมือง — เธอต้องการ 5 ตัวอย่างเพื่อยืนยัน pattern", monsters: "ไม่มีการต่อสู้ — skill challenge ล้วน (Investigation, Arcana, Perception) · ยกเว้นถ้าโดนตามถึงบ้าน Elwen: 2× Cultists ลอบเข้า" },
+      { title: "Find the Missing Students", giver: "Cadet Silus", reward: "100 gp + ติดต่อนักวิชาการ", desc: "ค้นหาที่อยู่ของเพื่อนนักศึกษา 2 คน — เริ่มจากบันทึกการเข้าออก Library ก่อนพวกเขา 'ลาออก'", monsters: "2× Bandits (CR 1/8) ที่เคยลักพานักศึกษา · 1× Cult Fanatic (CR 2) เป็นหัวหน้ากลุ่ม" },
+      { title: "Sealed Library Heist", giver: "นายหน้าตลาดมืด", reward: "600 gp + ตำราเวทย์ระดับ 2", desc: "ขโมยตำราต้องห้ามชื่อ 'Codex Vexus' จาก section ที่ปิด — งานยาก ต้องเตรียมตัวดี", monsters: "1× Flameskull (CR 4) เฝ้าโต๊ะอ่าน · 2× Specters (CR 1) เคลื่อนผ่านชั้นหนังสือ · 1× Animated Tome (custom CR 3)" }
+    ]
   },
   {
     id: "aurora",
@@ -1278,16 +1717,38 @@ const DISTRICTS = [
     stats: { w:4, s:4, d:2 },
     points: "56.1,37.1 72.0,37.1 83.0,39.5 81.7,50.3 68.3,51.5 57.3,47.9",
     overview: "เขตริมน้ำอันหรูหราที่ปรากฏอยู่ในโปสเตอร์ท่องเที่ยวแทบทั้งหมดของ Porto Stellare รีสอร์ท คาสิโน โรงแรม ชายหาด ร้านอาหาร — ทุกอย่างถูกออกแบบมาเพื่อให้ดูสวยงาม นี่คือ Porto Stellare ที่คนภายนอกคิดว่าพวกเขารู้จัก",
-    locations: ["Grand Casino", "Luxury Resorts", "Aurora Beach", "Rooftop Restaurants", "The Promenade Walk"],
+    locations: [
+      { icon: "🎰", name: "Oswin's Grand Casino", type: "คาสิโน", desc: "คาสิโนใหญ่ที่สุด · ขั้นต่ำ 5 gp · ห้องส่วนตัว 1000+ gp · Oswin Crale เจ้าของ" },
+      { icon: "🏨", name: "Lustralis Hotel", type: "โรงแรมหรู", desc: "60 gp/คืน · spa รวม · ที่นักท่องเที่ยวรวยพัก" },
+      { icon: "🏖", name: "Aurora Beach", type: "ชายหาด", desc: "ทรายทอง · เปิดสาธารณะแต่คนจนหายาก · พระอาทิตย์ตกสวยที่สุดของเมือง" },
+      { icon: "🍽", name: "Rooftop Restaurants", type: "ภัตตาคารหรู", desc: "ภัตตาคารบนชั้นดาดฟ้า · เมนูละ 30-200 gp · ต้องจอง" },
+      { icon: "🚶", name: "The Promenade Walk", type: "ทางเดินริมหาด", desc: "ทางเดินยาว 2 กม. · ร้านขายของหรู · นักท่องเที่ยวเดินตลอดวัน" },
+      { icon: "🌙", name: "Club Obscura", type: "Club ลึกลับ", desc: "Invitation only · 50 gp/คืน · ไม่มีป้าย · สมาชิกหายไป 2 คน" },
+      { icon: "🛥", name: "Luxury Liner Dock", type: "ท่าเรือสำราญ", desc: "ทางเข้าเมืองของคนรวย · 50 gp/หัว · ไม่มีตรวจสินค้า" }
+    ],
     quote: "นี่คือ Porto Stellare ที่คนภายนอกคิดว่าพวกเขารู้จัก",
     detail: null,
     atlasPage: 7,
     npcs: [
-      { name: "Seraphine Lux", role: "นักแสดงชื่อดังที่รับงานร้องเพลง แต่จริงๆ รับจ้างรายงานข้อมูลให้บางคน" },
-      { name: "Oswin Crale", role: "เจ้าของ Casino ที่ยิ้มตลอดเวลา ไม่มีใครรู้ว่าเขาเป็นหนี้ใครอยู่" }
+      { name: "Seraphine Lux", role: "นักแสดงชื่อดังที่รับงานร้องเพลง · แต่จริงๆ สะสมเอกสารเกี่ยวกับ Hollow Below มาหลายปี · ต้องการให้ Hollow ถูกควบคุม ไม่ใช่ปิดปิด" },
+      { name: "Oswin Crale", role: "เจ้าของ Casino ที่ยิ้มตลอดเวลา ไม่มีใครรู้ว่าเขาเป็นหนี้ใครอยู่" },
+      { name: "Madame Cerise", role: "หญิงวัยกลางคนชุดดำผ้าไหม Concierge ของท่าเทียบ Luxury Liner · ประเมินค่าทุกคน · รู้ทุก club ทุกสายสัมพันธ์ · ขายข้อมูลแพง (เริ่ม 50 gp)" }
     ],
     tension: "นักท่องเที่ยวร่ำรวยคนหนึ่งถูกพบตายในโรงแรม เมืองปิดข่าวทันที กลัวกระทบอุตสาหกรรมการท่องเที่ยว",
-    hook: "Club ใหม่เพิ่งเปิด รับสมาชิกโดย invitation เท่านั้น ไม่มีใครรู้ว่าใครเป็นเจ้าของ และสมาชิกไม่พูดถึงสิ่งที่เกิดขึ้นข้างใน"
+    hook: "Club ใหม่เพิ่งเปิด รับสมาชิกโดย invitation เท่านั้น ไม่มีใครรู้ว่าใครเป็นเจ้าของ และสมาชิกไม่พูดถึงสิ่งที่เกิดขึ้นข้างใน",
+    playerActions: [
+      { icon: "🎰", text: "เล่นพนันที่ Oswin's Grand Casino", cost: "ขั้นต่ำ 5 gp · ขั้นสูงสุด 1000 gp / โต๊ะ" },
+      { icon: "🎵", text: "ดู Seraphine Lux แสดง", cost: "25 gp ตั๋ว + ดื่ม 10 gp" },
+      { icon: "🍸", text: "เข้า Club Obscura (รับเฉพาะคำเชิญ)", cost: "50 gp + ต้องรู้ชื่อสมาชิก หรือ Persuasion DC 18" },
+      { icon: "🛏️", text: "พักที่ Lustralis Hotel", cost: "60 gp / คืน · spa รวม" },
+      { icon: "💄", text: "ซื้อสินค้าแฟชั่น/ของหายาก", cost: "50-500 gp" },
+      { icon: "🤝", text: "พบ Madame Cerise เพื่อสายสัมพันธ์", cost: "แนะนำฟรี + ค่าเชื่อมต่อ 30-200 gp" }
+    ],
+    quests: [
+      { title: "The Dead Tourist", giver: "Madame Cerise", reward: "800 gp (เร่งด่วน 48 ชม.)", desc: "หาสาเหตุการตายของขุนนางต่างเมือง ก่อนครอบครัวเขามาถึงและข่าวรั่ว — ห้องอาจมีเบาะแสที่ City Watch พลาดไป", monsters: "1× Vampire Spawn (CR 5) ผู้กระทำ — ซ่อนใน basement ของโรงแรม · เผชิญหน้าตอนกลางคืนเท่านั้น" },
+      { title: "Find the Club Member", giver: "ผู้สนับสนุนนิรนาม (เงินสด)", reward: "400 gp", desc: "ตามหาสมาชิก Club Obscura ที่หายเมื่อสัปดาห์ที่แล้ว — เริ่มจากคนรับใช้ของเขาที่ปฏิเสธจะพูด", monsters: "3× Cultists (CR 1/8) ใน basement · 1× Cult Fanatic (CR 2) เป็นผู้ทำพิธี · เหยื่อยังมีชีวิตอยู่" },
+      { title: "Bodyguard for the Night", giver: "ขุนนางต่างเมือง", reward: "100 gp / คืน + ทิป + ของรางวัล", desc: "อารักขาเขาในคืนที่จะเล่นพนันก้อนใหญ่ — มีคนขู่จะฆ่าเขามาก่อน", monsters: "2× Assassins (CR 8) เข้าโจมตีตอน 11 โมงคืน · 1× Cambion (CR 5) ถ้าผู้เล่นป้องกันสำเร็จ" }
+    ]
   },
   {
     id: "iron",
@@ -1298,16 +1759,38 @@ const DISTRICTS = [
     stats: { w:1, s:2, d:3 },
     points: "8.5,45.5 23.2,44.3 22.6,67.0 18.3,73.0 9.2,71.8 7.9,56.3",
     overview: "เขตอุตสาหกรรมและแรงงานหลักของ Porto Stellare ความมั่งคั่งของเมืองถูกสร้างขึ้นที่นี่ เต็มไปด้วยโรงตีเหล็ก อู่ต่อเรือ โรงงาน และผู้คนที่พยายามหาเงินเพื่ออยู่รอด แทบทุกอย่างที่คนในเมืองครอบครองเคยผ่านที่นี่มาก่อน",
-    locations: ["Black Forge Row — largest smithing street in the city", "South Drydock — main shipyard", "Smoke Market — large cheap market", "Worker Blocks — dense labor housing", "The Foundries"],
+    locations: [
+      { icon: "🔨", name: "Black Forge Row", type: "ถนนช่างตี", desc: "ถนนช่างเหล็กที่ใหญ่ที่สุด · ของถูกกว่าที่อื่น 20% · เสียงดังตลอดวัน" },
+      { icon: "⚓", name: "South Drydock", type: "อู่ต่อเรือ", desc: "อู่ต่อเรือหลัก · รับจ้างทำงาน 5 gp/วัน · อันตรายแต่ไม่จำเป็นต้องผ่านการตรวจ" },
+      { icon: "🛒", name: "Smoke Market", type: "ตลาดราคาถูก", desc: "ตลาดของคนงาน · ของถูก 40-60% เทียบกับย่านบน · กิน 1 gp/มื้อ" },
+      { icon: "🏚", name: "Worker Blocks", type: "ตึกแถวคนงาน", desc: "ที่พักหนาแน่น · 1 gp/คืน · ของหายบ่อย · เด็กหายจากที่นี่" },
+      { icon: "🏭", name: "The Foundries", type: "โรงหลอม", desc: "โรงหลอมเหล็กใหญ่ 3 แห่ง · 1 แห่งระเบิดเมื่อสัปดาห์ก่อน · ปิดบางจุด" },
+      { icon: "🕳", name: "Old Sewer Access", type: "ท่อระบายน้ำเก่า", desc: "ทางเข้าใต้ดิน · เด็กหายไปทางนี้ · เชื่อมไปยัง Hollow Below" },
+      { icon: "✊", name: "Brynn's Meeting Hall", type: "ห้องประชุมคนงาน", desc: "ที่ Brynn Ashford รวบรวมแรงงาน · ตำแหน่งเปลี่ยนทุกสัปดาห์" }
+    ],
     quote: "จาก Verdant พวกเขามองลงมาเห็นควัน จาก Iron เรามองขึ้นไปเห็นดวงดาว",
     detail: null,
     atlasPage: 10,
     npcs: [
       { name: "Brynn Ashford", role: "หัวหน้าแรงงานที่กำลังรวบรวมลายเซ็น ถ้าถูกจับจะโดนข้อหาก่อกบฏ" },
-      { name: "Foreman Greiss", role: "คนดูแลโรงงานที่รู้ว่าระเบิดเกิดจากอะไร — กลัวเกินกว่าจะพูด" }
+      { name: "Foreman Greiss", role: "คนดูแลโรงงานที่รู้ว่าระเบิดเกิดจากอะไร — กลัวเกินกว่าจะพูด" },
+      { name: "Mira", role: "แม่ของ Olan เด็กชาย 8 ขวบที่หายไป 3 วันก่อน · ถือรูปวาดลูกชายเดินหาคนช่วยทุกวัน · City Watch ไม่ช่วย เธอกล้าจ้างผู้เล่นด้วยเงินเก็บ 50 gp ของเธอ" }
     ],
     tension: "โรงงานระเบิดคร่าชีวิตคนงาน 11 คน ถูกประกาศว่าเป็นอุบัติเหตุ ทั้งที่คนงานรู้ว่าไม่ใช่ และมีคนพยายามปิดปากพยาน",
-    hook: "เด็กใน Iron Quarters หายไปหลายคนในช่วง 2 สัปดาห์ที่ผ่านมา City Watch บอกว่า 'ออกไปหางานที่อื่น' แต่ไม่มีครอบครัวไหนเชื่อ"
+    hook: "เด็กใน Iron Quarters หายไปหลายคนในช่วง 2 สัปดาห์ที่ผ่านมา City Watch บอกว่า 'ออกไปหางานที่อื่น' แต่ไม่มีครอบครัวไหนเชื่อ",
+    playerActions: [
+      { icon: "🔨", text: "รับงานวันละครั้งที่ท่า/โรงตี", cost: "ได้ 5-6 gp / วัน · CON Save DC 12 หรือเหนื่อย" },
+      { icon: "✊", text: "เข้าประชุมกลุ่มของ Brynn", cost: "ฟรี · เสี่ยง City Watch บุก (Stealth DC 14)" },
+      { icon: "🏚️", text: "นอนใน communal inn", cost: "1 gp / คืน · ของหายบ่อย · Sleight of Hand DC 13 ป้องกัน" },
+      { icon: "👶", text: "ช่วยตามหาเด็กที่หาย", cost: "ฟรี · ได้ความไว้วางใจของคนงาน" },
+      { icon: "💣", text: "ตรวจสอบจุดโรงงานระเบิด", cost: "Survival DC 13 · Investigation DC 14 · มียามเฝ้า" },
+      { icon: "🤐", text: "ติดสินบน Foreman Greiss", cost: "50 gp + Intimidation DC 14" }
+    ],
+    quests: [
+      { title: "Find My Son (Olan)", giver: "Mira (แม่ของ Olan)", reward: "50 gp (เธอเก็บมาตลอด) + ความไว้วางใจของย่าน", desc: "ตามรอยลูกชาย 8 ขวบที่หายไปในตรอกใกล้ท่อระบายน้ำเก่า — รอยเท้าสิ้นสุดที่นั่น", monsters: "2× Grimlocks (CR 1/4) ในอุโมงค์ · 1× Cloaker (CR 8) เป็น boss · เด็กยังมีชีวิตแต่ถูกสะกดจิต" },
+      { title: "Document the Explosion", giver: "Brynn Ashford", reward: "200 gp + เครือข่ายแรงงาน", desc: "รวบรวมหลักฐานว่าโรงงานระเบิดไม่ใช่อุบัติเหตุ — สัมภาษณ์คนงาน 4 คนก่อนพวกเขาถูกซื้อให้เงียบ", monsters: "1× Veteran (CR 3) นายหน้าโรงงาน + 4× Thugs (CR 1/2) ส่งมาเงียบพยาน" },
+      { title: "Protect the Organizer", giver: "Brynn เอง (ขอตรงๆ)", reward: "150 gp / สัปดาห์ + safehouse Iron Quarters", desc: "อารักขา Brynn 3 คืนติดต่อกัน — เธอจะจัดประชุมใหญ่และมีข่าวจะมีคนเข้าโจมตี", monsters: "คืนที่ 1: 4× Bandits (CR 1/8) ลองทดสอบ · คืนที่ 2: 2× Bandit Captains (CR 2) + 6× Bandits · คืนที่ 3: 1× Assassin (CR 8) ลอบเข้าเดี่ยว" }
+    ]
   },
   {
     id: "oldcrown",
@@ -1318,7 +1801,14 @@ const DISTRICTS = [
     stats: { w:2, s:1, d:4 },
     points: "25.0,58 33,57 35,68 30,74 25,73 23.5,63",
     overview: "ส่วนที่เก่าแก่ที่สุดของ Porto Stellare สร้างอยู่บนคาบสมุทรหินซึ่งยื่นออกไปยัง Moonlit Bay แม้ Porto Stellare จะถูกสร้างใหม่หลายครั้ง Old Crown แทบไม่เปลี่ยนแปลง หลายส่วนดูเหมือนจะเก่าแก่กว่าตัวเมืองเสียอีก",
-    locations: ["Crown Cathedral — largest cathedral in Porto Stellare", "Founder Plaza — believed to be the city's origin point", "The Ancient Walls", "Archive Basilica", "The Lower Vaults — partially unexplored underground network"],
+    locations: [
+      { icon: "⛪", name: "Crown Cathedral", type: "อาสนวิหารใหญ่", desc: "อาสนวิหารใหญ่ที่สุดของเมือง · เปิด 06:00-18:00 · Father Aldous ทำหน้าที่ที่นี่" },
+      { icon: "🏛", name: "Founder Plaza", type: "จัตุรัสประวัติศาสตร์", desc: "เชื่อกันว่าเป็นจุดกำเนิดเมือง · มีรูปปั้นผู้ก่อตั้ง · นกหายจากที่นี่" },
+      { icon: "🧱", name: "The Ancient Walls", type: "กำแพงเก่าแก่", desc: "กำแพงหินอายุ 800+ ปี · มีสัญลักษณ์โบราณสลักไว้ · บางส่วนพังลง" },
+      { icon: "📜", name: "Archive Basilica", type: "หอจดหมายเหตุ", desc: "Archivist Tenne ดูแล · เก็บบันทึกเมือง 600 ปี · บางหน้าถูกลบไป" },
+      { icon: "🕳", name: "The Lower Vaults", type: "ห้องใต้ดินโบราณ", desc: "เครือข่ายอุโมงค์ใต้โบสถ์ · ไม่เคยสำรวจครบ · กุญแจอยู่กับ Father Aldous" },
+      { icon: "🕯", name: "Small Chapel of the Quiet", type: "สำนักเล็ก", desc: "พระชั้นรองทำพิธีลึกลับที่นี่ · ตำแหน่งเปลี่ยนทุกสัปดาห์ · Crown Cathedral พยายามปิด" }
+    ],
     quote: "อย่าถามว่าอะไรอยู่ใต้ Old Crown ถ้ายังไม่พร้อมฟังคำตอบ",
     detail: null,
     atlasPage: 11,
@@ -1327,7 +1817,20 @@ const DISTRICTS = [
       { name: "Archivist Tenne", role: "ผู้ดูแล Archive Basilica ที่กำลังลบบันทึกบางอย่างออก — ถูกบังคับหรือสมัครใจ ไม่ชัด" }
     ],
     tension: "พระในสำนักเล็กๆ เริ่มทำพิธีในคืนที่เงียบผิดปกติ Crown Cathedral พยายามปิดปากพวกเขา แต่ทำไม่สำเร็จ",
-    hook: "หนูและนกกำลังออกจาก Old Crown ทีละน้อยมาหลายสัปดาห์แล้ว ชาวเมืองที่อยู่นานพอจำได้ว่าเคยเกิดแบบนี้มาก่อน"
+    hook: "หนูและนกกำลังออกจาก Old Crown ทีละน้อยมาหลายสัปดาห์แล้ว ชาวเมืองที่อยู่นานพอจำได้ว่าเคยเกิดแบบนี้มาก่อน",
+    playerActions: [
+      { icon: "⛪", text: "เข้า Crown Cathedral ในเวลาเปิด", cost: "ฟรี · 06:00-18:00 · Religion DC 10 เข้าใจพิธี" },
+      { icon: "🙏", text: "ขอเข้าพบ Father Aldous", cost: "Religion DC 12 · มาตอนเช้าตรู่เท่านั้น" },
+      { icon: "📜", text: "ขอเข้า Archive Basilica", cost: "Persuasion DC 14 กับ Tenne · ของขวัญ 50 gp ช่วย" },
+      { icon: "🐈", text: "ติดตามสัตว์ที่อพยพออก", cost: "Survival DC 12 เห็น pattern · Animal Handling DC 13" },
+      { icon: "🕯️", text: "เข้าร่วมพิธีในสำนักเล็ก", cost: "Religion DC 13 · เสี่ยงโดน Hollow สัมผัส (WIS Save DC 14)" },
+      { icon: "🚷", text: "พยายามเข้า Lower Vaults", cost: "ต้องมีกุญแจของ Aldous · Sleight of Hand DC 17 ขโมย" }
+    ],
+    quests: [
+      { title: "Why Are the Animals Fleeing?", giver: "Father Aldous", reward: "200 gp + audience สาธารณะของโบสถ์", desc: "เฝ้าสังเกตและรายงานทิศทางที่สัตว์อพยพ — Aldous ต้องการยืนยันสมมุติฐานของเขา", monsters: "ไม่มีการต่อสู้ในเวลากลางวัน · กลางคืน: 1× Specter (CR 1) ใต้สุสาน · WIS Save DC 13 ไม่ให้ฝันถูกครอบงำ" },
+      { title: "Lost Archives", giver: "Archivist Tenne (กระซิบ)", reward: "300 gp + สำเนาเอกสารโบราณ", desc: "ค้นหา 7 หน้าที่เขาถูกบังคับให้ตัดออกจาก archive — ซ่อนไว้ในห้องลับใต้ basilica", monsters: "2× Shadows (CR 1/2) ในห้องลับ · 1× Wraith (CR 5) ถ้าถือเอกสารผิดวิธี · ใช้ light spell ลดความเสียหายได้" },
+      { title: "The Pilgrim's Path", giver: "ผู้แสวงบุญต่างเมือง", reward: "100 gp + พรพิเศษ (advantage 1 ครั้ง)", desc: "พาเขาไปยังศาลเจ้าใต้ดินที่ปิดมานาน 200 ปี — เขาต้องทำพิธีก่อนตาย", monsters: "1× Will-o'-Wisp (CR 2) ในทางเข้า · 2× Ghouls (CR 1) เฝ้าศาล · ผู้แสวงบุญอาจเสียสติถ้าเห็น Hollow" }
+    ]
   },
   {
     id: "stellamar",
@@ -1338,7 +1841,18 @@ const DISTRICTS = [
     stats: { w:3, s:2, d:4 },
     points: "34.2,45.5 43.9,47.9 45.2,62.3 38,66 34,55",
     overview: "ประตูหลักของ Porto Stellare ผู้คนที่เดินทางมายังเมืองเป็นครั้งแรกมักเห็น Stellamar ก่อนเสมอ เต็มไปด้วยท่าเรือ ตลาด คลังสินค้า และผู้คนจากทั่วทุกมุมโลก สินค้าส่วนใหญ่ที่เข้าสู่ Porto Stellare มักผ่าน Stellamar ก่อน",
-    locations: ["The Grand Harbor", "Connective Canals", "Iron Dockyards", "The Lantern Mile — main harbor street", "Rustic Revels Inn", "Moonlit Bay Sentinel — lighthouse", "Harbor Watch", "East Shipyards", "Salt Row Market"],
+    locations: [
+      { icon: "⚓", name: "The Grand Harbor", type: "ท่าเรือหลัก", desc: "ท่าเรือใหญ่ที่สุด · ค่าผ่านประตู 2 gp · ตรวจสินค้าทั่วไป · Harbormaster Vel ดูแล" },
+      { icon: "🚣", name: "Connective Canals", type: "คลองเชื่อมเมือง", desc: "คลองเชื่อมไป Silver Steps · กลางคลองมีศพลอยมาแล้ว 3 ครั้ง" },
+      { icon: "🛳", name: "Iron Dockyards", type: "อู่ต่อเรือเหล็ก", desc: "อู่หลักของกองเรือพาณิชย์ · รับซ่อม/ต่อเรือ · งานหนัก 6 gp/วัน" },
+      { icon: "🛣", name: "The Lantern Mile", type: "ถนนท่าเรือหลัก", desc: "ถนนยาวริมท่าเรือ · ร้านอาหาร โรงเตี๊ยม โกดัง · เปิดตลอด 24 ชม." },
+      { icon: "🛏", name: "Rustic Revels Inn", type: "โรงเตี๊ยมท่าเรือ", desc: "5 gp/คืน · เตียงรวม · ห้องเดี่ยว 10 gp · เก็บของให้ฟรี" },
+      { icon: "🗼", name: "Moonlit Bay Sentinel", type: "ประภาคาร", desc: "ประภาคารเก่าแก่ · ผู้เฝ้าไม่ส่งสัญญาณ 3 คืน · เห็นแสงประหลาดใต้น้ำ" },
+      { icon: "🛡", name: "Harbor Watch HQ", type: "สำนักงานยาม", desc: "สำนักงาน Harbor Watch · ตรวจค้นเรือ · เจ้าหน้าที่บางคนรับสินบน" },
+      { icon: "🛳", name: "East Shipyards", type: "อู่ต่อเรือตะวันออก", desc: "อู่เล็ก เน้นเรือสำเภา · เงียบกว่าทางใต้ · บางทีมีเรือลึกลับเทียบท่า" },
+      { icon: "🛒", name: "Salt Row Market", type: "ตลาดท่าเรือ", desc: "ขายของจากเรือ · มีของเถื่อนปะปน · ของถูก 30-50% แต่เสี่ยง" },
+      { icon: "👻", name: "Pier 7 — Ghost Ship", type: "เรือลึกลับ", desc: "เรือเข้าท่าพร้อมลูกเรือตายหมด สินค้าครบ · ไม่มีคนเข้าใกล้" }
+    ],
     quote: "อย่าไว้ใจ Moonlit Bay ในคืนที่ทะเลเงียบเกินไป",
     detail: { img: "assets/district-stellamar-port.jpg", title: "Stellamar Port", sub: "The Harbor District" },
     atlasPage: 9,
@@ -1347,11 +1861,112 @@ const DISTRICTS = [
       { name: "Lira of the Docks", role: "ผู้ลี้ภัยจากทางเหนือที่พกแผลเป็นและความลับ ไม่ยอมบอกว่าหนีมาจากอะไร" }
     ],
     tension: "เรือลำหนึ่งเข้าท่าพร้อมลูกเรือทั้งหมดที่ตายแล้ว แต่สินค้าในระวางไม่ขาดแม้ชิ้นเดียว ท่าเรือปิดข่าว",
-    hook: "แสงแปลกๆ ใต้น้ำใน Moonlit Bay ปรากฏทุกคืนที่ทะเลเงียบ นักเดินเรือเก่าบอกว่าเห็นแบบนี้ครั้งสุดท้ายก่อนมีคนหายไปทั้งหมู่บ้าน"
+    hook: "แสงแปลกๆ ใต้น้ำใน Moonlit Bay ปรากฏทุกคืนที่ทะเลเงียบ นักเดินเรือเก่าบอกว่าเห็นแบบนี้ครั้งสุดท้ายก่อนมีคนหายไปทั้งหมู่บ้าน",
+    playerActions: [
+      { icon: "⛵", text: "จ้างเรือออกจากเมือง", cost: "50-500 gp ตามระยะทาง" },
+      { icon: "🚢", text: "รับจ้างทำงานท่าเรือ", cost: "5 gp / วัน · Athletics DC 12" },
+      { icon: "👁️", text: "ตรวจสอบเรือผี (ลูกเรือตาย)", cost: "ต้องให้ Vel เงี่ยใจ · Stealth DC 15 ขึ้นเรือ" },
+      { icon: "🗣️", text: "คุยกับ Lira ที่ pier 7", cost: "ฟรี · Persuasion DC 11 ให้เธอเชื่อใจ" },
+      { icon: "🎁", text: "ซื้อของเถื่อนที่ Salt Row Market", cost: "ราคาถูก 30-50% · เสี่ยงโดน City Watch (CON Save DC 12 แสดงสีหน้า)" },
+      { icon: "💰", text: "ติดสินบน Harbormaster Vel", cost: "200 gp + Persuasion DC 15 · เขารับเงินแต่อาจไม่ทำตาม" }
+    ],
+    quests: [
+      { title: "The Ghost Ship", giver: "Lira of the Docks", reward: "ความรู้เกี่ยวกับ Hollow + ความไว้วางใจของ Lira", desc: "ขึ้นเรือผีและหาว่าทำไมลูกเรือตายทั้งหมดแต่สินค้ายังครบ — มีสัญลักษณ์ที่ก้นเรือ", monsters: "4× Specters (CR 1) เป็นลูกเรือเดิม · 1× Hollow-touched Captain (custom CR 6 — Wight ปรับสถิติ พ่นเสียงเรียก) · ใต้เรือ: 2× Stirges (CR 1/8)" },
+      { title: "Smuggler's Cut", giver: "Harbormaster Vel", reward: "150 gp + access ท่าลับ", desc: "ส่งลังสินค้า 'unmarked' ไปยังบ้านพักใน Aurora — ห้ามถามว่าข้างในคืออะไร ห้ามเปิด", monsters: "ไม่มีการต่อสู้ถ้าส่งสะอาด · ถ้ามีคนสกัด: 3× Thugs (CR 1/2) ลอบเข้า · ถ้าเปิดลัง: 1× Mimic ที่จริงคืออวัยวะของบางสิ่ง" },
+      { title: "The Lighthouse Keeper", giver: "Harbor Watch", reward: "200 gp + เครื่องนำทาง", desc: "ผู้เฝ้าประภาคาร Moonlit Bay Sentinel ไม่ส่งสัญญาณมา 3 คืนแล้ว — ไปดูว่าเขายังมีชีวิตหรือไม่", monsters: "ภายในประภาคาร: 1× Sahuagin Priestess (CR 2) + 2× Sahuagin (CR 1/2) ที่บุกขึ้นมา · ผู้เฝ้ายังมีชีวิตแต่หลบซ่อนชั้นบนสุด" }
+    ]
   }
 ];
 
 const STARHILL_TIP = "<b>Starhill</b>จุดที่สูงที่สุดของเมือง · Observatory · Ancient Tower · Archives — ข่าวลือกล่าวว่า Starhill อาจมีอยู่ก่อนที่เมืองจะถูกสร้าง";
+
+// ── DM Code Unlock (shared with /lore/porto-stellare) ──
+(function initDmUnlock() {
+  const DM_CODE = '7777';
+  const SHARED_KEY = 'dm:porto-stellare:unlocked';
+  const LEGACY_KEY = 'map:porto-stellare:dm-unlocked';
+  const dmBtn = document.getElementById('dm-guide-btn');
+  const trigger = document.getElementById('dm-code-trigger');
+  const overlay = document.getElementById('dm-code-overlay');
+  const input = document.getElementById('dm-code-input');
+  const submit = document.getElementById('dm-code-submit');
+  const cancel = document.getElementById('dm-code-cancel');
+
+  function isUnlocked() {
+    try {
+      return localStorage.getItem(SHARED_KEY) === '1'
+          || localStorage.getItem(LEGACY_KEY) === '1';
+    } catch (e) { return false; }
+  }
+  function saveUnlock() {
+    try {
+      localStorage.setItem(SHARED_KEY, '1');
+      localStorage.setItem(LEGACY_KEY, '1');
+    } catch (e) {}
+  }
+
+  // Check unlock state
+  let unlocked = isUnlocked();
+  if (unlocked) {
+    dmBtn.classList.add('unlocked');
+    trigger.classList.add('unlocked');
+  }
+
+  function openPrompt() {
+    overlay.classList.add('open');
+    overlay.setAttribute('aria-hidden', 'false');
+    setTimeout(() => input.focus(), 100);
+  }
+  function closePrompt() {
+    overlay.classList.remove('open');
+    overlay.classList.remove('error');
+    overlay.setAttribute('aria-hidden', 'true');
+    input.value = '';
+  }
+  function attempt() {
+    if (input.value.trim() === DM_CODE) {
+      saveUnlock();
+      dmBtn.classList.add('unlocked');
+      trigger.classList.add('unlocked');
+      closePrompt();
+    } else {
+      overlay.classList.add('error');
+      setTimeout(() => overlay.classList.remove('error'), 500);
+      input.value = '';
+      input.focus();
+    }
+  }
+
+  trigger.addEventListener('click', openPrompt);
+  submit.addEventListener('click', attempt);
+  cancel.addEventListener('click', closePrompt);
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') attempt();
+    else if (e.key === 'Escape') closePrompt();
+  });
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) closePrompt(); });
+
+  // Hidden keystroke combo "7777" anywhere on page (for DMs who know)
+  let buf = '';
+  let bufTimer = null;
+  document.addEventListener('keydown', (e) => {
+    if (unlocked || overlay.classList.contains('open')) return;
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key >= '0' && e.key <= '9') {
+      buf += e.key;
+      if (buf.length > 4) buf = buf.slice(-4);
+      if (buf === DM_CODE) {
+        unlocked = true;
+        saveUnlock();
+        dmBtn.classList.add('unlocked');
+        trigger.classList.add('unlocked');
+        buf = '';
+      }
+      clearTimeout(bufTimer);
+      bufTimer = setTimeout(() => { buf = ''; }, 3000);
+    }
+  });
+})();
 
 // ---- helpers ----
 function centroid(points){
@@ -1491,7 +2106,46 @@ let _switchTimer = null;
 function pips(n, cls){ return Array.from({length:5}, (_,i) => `<div class="p-pip${i<n?' '+cls:''}"></div>`).join(""); }
 function buildPanel(d){
   const accentGlow = tintColor(d.color, 0.85);
-  const locs = d.locations.map(l => `<li>${l}</li>`).join("");
+  const locs = d.locations.map(l => {
+    // backward compat: old string format
+    if (typeof l === 'string') return `<li class="p-loc-simple">${l}</li>`;
+    return `
+      <li class="p-loc">
+        <span class="pl-icon">${l.icon}</span>
+        <div class="pl-body">
+          <div class="pl-head"><span class="pl-name">${l.name}</span><span class="pl-type">${l.type}</span></div>
+          <div class="pl-desc">${l.desc}</div>
+        </div>
+      </li>`;
+  }).join("");
+  const detailHero = d.detail ? `
+    <figure class="p-detail-hero">
+      <img src="${d.detail.img}" alt="${d.detail.title} — ${d.detail.sub}" loading="lazy" />
+      <figcaption><span class="dh-title">${d.detail.title}</span><span class="dh-sub">${d.detail.sub}</span></figcaption>
+    </figure>` : "";
+  const actionsHTML = d.playerActions && d.playerActions.length ? `
+    <div class="p-section-h">ผู้เล่นทำอะไรได้ที่นี่ · Player Actions</div>
+    <ul class="p-actions">
+      ${d.playerActions.map(a => `
+        <li class="p-action">
+          <span class="pa-icon">${a.icon}</span>
+          <div class="pa-body"><span class="pa-text">${a.text}</span><span class="pa-cost">${a.cost}</span></div>
+        </li>`).join("")}
+    </ul>` : "";
+  const questsHTML = d.quests && d.quests.length ? `
+    <div class="p-section-h">เควสที่นี่ · Available Quests</div>
+    <div class="p-quests">
+      ${d.quests.map(q => `
+        <div class="p-quest">
+          <div class="pq-title">${q.title}</div>
+          <div class="pq-meta">
+            <span class="pq-meta-row"><b>ผู้ให้:</b> ${q.giver}</span>
+            <span class="pq-meta-row"><b>รางวัล:</b> ${q.reward}</span>
+          </div>
+          <div class="pq-desc">${q.desc}</div>
+          ${q.monsters ? `<div class="pq-monsters"><span class="pq-m-label">⚔ ศัตรู / Encounters</span>${q.monsters}</div>` : ''}
+        </div>`).join("")}
+    </div>` : "";
   const thumb = d.atmosphere ? `
     <figure class="p-thumb">
       <img src="${d.atmosphere.img}" alt="${d.atmosphere.cap}" loading="lazy" />
@@ -1517,6 +2171,7 @@ function buildPanel(d){
       <div class="p-alias">${d.aliases}</div>
       <div class="p-type">${d.type}</div>
       ${statsBar}
+      ${detailHero}
       <hr class="rule" />
       <p class="p-overview">${d.overview}</p>
       ${thumb}
@@ -1529,6 +2184,8 @@ function buildPanel(d){
       <div class="p-tension">${d.tension}</div>
       <div class="p-section-h">Hook</div>
       <div class="p-hook">${d.hook}</div>
+      ${actionsHTML}
+      ${questsHTML}
       <div class="p-btns">
         <button class="p-btn-atlas" id="view-atlas-page">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="14" height="14"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 3v18"/></svg>
@@ -1560,6 +2217,10 @@ function openDistrict(id){
     closeBtn.addEventListener("click", closePanel);
     const va = panel.querySelector("#view-atlas-page");
     if(va) va.addEventListener("click", () => openAtlasModal(d.atlasPage));
+    const heroEl = panel.querySelector(".p-detail-hero");
+    if(heroEl && d.detail) {
+      heroEl.addEventListener("click", () => openImageModal(d.detail.img, d.detail.title, d.detail.sub));
+    }
     if(!wasOpen) setTimeout(() => closeBtn.focus(), 560);
     else setTimeout(() => closeBtn.focus(), 0);
     fadeHint();
@@ -1595,6 +2256,25 @@ function closeModal(){
 }
 let modalAtlasPage = 0;
 const ATLAS_TOTAL = 14;
+function openImageModal(src, title, sub){
+  modalAtlasPage = 0; // disable atlas keyboard navigation
+  modalCard.className = 'modal-card';
+  modalCard.innerHTML = `
+    <button class="m-close" aria-label="Close">✕</button>
+    <div class="frame" id="modal-frame">
+      <span class="corner tl"></span><span class="corner tr"></span>
+      <span class="corner bl"></span><span class="corner br"></span>
+      <img id="modal-atlas-img" src="${src}" alt="${title}" style="opacity:0;transition:opacity .35s" />
+    </div>
+    <div class="modal-cap"><div class="t">${title}</div><div class="s">${sub || ''}</div></div>`;
+  const mImg = modalCard.querySelector('#modal-atlas-img');
+  mImg.onload = () => { mImg.style.opacity = '1'; };
+  if(mImg.complete) mImg.style.opacity = '1';
+  modalCard.querySelector('.m-close').addEventListener('click', closeModal);
+  modal.classList.add("open");
+  modal.setAttribute("aria-hidden", "false");
+}
+
 function openAtlasModal(pageNum){
   modalAtlasPage = pageNum;
   const pad = String(pageNum).padStart(2, '0');

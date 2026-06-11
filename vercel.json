@@ -1,5 +1,8 @@
 {
-  "outputDirectory": ".",
+  "framework": null,
+  "outputDirectory": "src/web/public",
+  "buildCommand": ":",
+  "installCommand": ":",
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [

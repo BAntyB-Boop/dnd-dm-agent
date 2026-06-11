@@ -371,6 +371,35 @@
     color: var(--gold);
     font-size: 11px;
   }
+  .p-detail-hero {
+    margin: 20px 0 6px;
+    border: 1px solid rgba(212,160,23,0.4);
+    border-radius: 3px;
+    overflow: hidden;
+    box-shadow: 0 10px 28px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(212,160,23,0.1);
+    background: rgba(20,12,4,0.5);
+    position: relative;
+  }
+  .p-detail-hero img { width: 100%; display: block; }
+  .p-detail-hero figcaption {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    padding: 14px 16px 10px;
+    background: linear-gradient(180deg, transparent, rgba(8,4,1,0.92) 60%);
+    display: flex; flex-direction: column; gap: 2px;
+    text-align: left;
+  }
+  .p-detail-hero .dh-title {
+    font-family: var(--display);
+    font-size: 14px; letter-spacing: .08em;
+    color: var(--gold-bright, #f6efd2);
+    text-transform: uppercase;
+  }
+  .p-detail-hero .dh-sub {
+    font-family: var(--display);
+    font-size: 9.5px; letter-spacing: .26em;
+    color: rgba(244,228,193,0.55);
+    text-transform: uppercase;
+  }
   .p-thumb {
     margin-top: 16px;
     border: 1px solid rgba(92,58,30,0.5);
@@ -1538,6 +1567,11 @@ function pips(n, cls){ return Array.from({length:5}, (_,i) => `<div class="p-pip
 function buildPanel(d){
   const accentGlow = tintColor(d.color, 0.85);
   const locs = d.locations.map(l => `<li>${l}</li>`).join("");
+  const detailHero = d.detail ? `
+    <figure class="p-detail-hero">
+      <img src="${d.detail.img}" alt="${d.detail.title} — ${d.detail.sub}" loading="lazy" />
+      <figcaption><span class="dh-title">${d.detail.title}</span><span class="dh-sub">${d.detail.sub}</span></figcaption>
+    </figure>` : "";
   const thumb = d.atmosphere ? `
     <figure class="p-thumb">
       <img src="${d.atmosphere.img}" alt="${d.atmosphere.cap}" loading="lazy" />
@@ -1563,6 +1597,7 @@ function buildPanel(d){
       <div class="p-alias">${d.aliases}</div>
       <div class="p-type">${d.type}</div>
       ${statsBar}
+      ${detailHero}
       <hr class="rule" />
       <p class="p-overview">${d.overview}</p>
       ${thumb}

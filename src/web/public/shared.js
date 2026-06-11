@@ -1,5 +1,65 @@
 // shared.js — Veiled Codex shared interactive behaviours
 
+// DM passcode lock — one code + one unlock state shared by every sealed page
+// (bestiary detail, one-shot guide, map & lore DM buttons). Unlock once, open everywhere.
+window.VCLock = (function() {
+  var CODE = '7777';
+  var KEY = 'vc:dm-unlocked';
+  // keys from when each page kept its own unlock state — honoured and migrated
+  var LEGACY_KEYS = [
+    'dm:porto-stellare:unlocked',
+    'map:porto-stellare:dm-unlocked',
+    'oneshot:porto-arrival:dm-unlocked'
+  ];
+
+  function isUnlocked() {
+    try {
+      if (localStorage.getItem(KEY) === '1') return true;
+      for (var i = 0; i < LEGACY_KEYS.length; i++) {
+        if (localStorage.getItem(LEGACY_KEYS[i]) === '1') {
+          localStorage.setItem(KEY, '1');
+          return true;
+        }
+      }
+    } catch (e) {}
+    return false;
+  }
+
+  // Returns true and persists the unlock if the code is correct.
+  function attempt(code) {
+    if (String(code == null ? '' : code).trim() !== CODE) return false;
+    try { localStorage.setItem(KEY, '1'); } catch (e) {}
+    return true;
+  }
+
+  // Hidden "type the code anywhere" unlock (digits typed outside form fields).
+  // opts.skip: extra guard returning true while watching should pause.
+  // opts.onUnlock: called once when the typed buffer matches the code.
+  function watchKeys(opts) {
+    opts = opts || {};
+    var buf = '';
+    var timer = null;
+    document.addEventListener('keydown', function(e) {
+      if (isUnlocked()) return;
+      if (opts.skip && opts.skip()) return;
+      var tag = (e.target && e.target.tagName) || '';
+      if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+      if (e.key >= '0' && e.key <= '9') {
+        buf += e.key;
+        if (buf.length > CODE.length) buf = buf.slice(-CODE.length);
+        if (attempt(buf)) {
+          buf = '';
+          if (opts.onUnlock) opts.onUnlock();
+        }
+        clearTimeout(timer);
+        timer = setTimeout(function() { buf = ''; }, 3000);
+      }
+    });
+  }
+
+  return { isUnlocked: isUnlocked, attempt: attempt, watchKeys: watchKeys };
+})();
+
 // Live clock — only runs if #live-clock element exists on page
 (function() {
   const el = document.getElementById('live-clock');

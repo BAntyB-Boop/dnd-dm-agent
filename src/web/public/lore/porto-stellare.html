@@ -2499,12 +2499,10 @@
   </div>
 </div>
 
+<script src="/shared.js"></script>
 <script>
-// ── DM Code Unlock (shared with /map/porto-stellare) ──────────────
+// ── DM Code Unlock (shared state via VCLock in /shared.js) ────────
 (function initDmUnlock() {
-  const DM_CODE = '7777';
-  const SHARED_KEY = 'dm:porto-stellare:unlocked';
-  const LEGACY_KEY = 'map:porto-stellare:dm-unlocked';
   const dmLink = document.getElementById('dm-guide-topbar-link');
   const trigger = document.getElementById('dm-code-trigger');
   const overlay = document.getElementById('dm-code-overlay');
@@ -2512,24 +2510,12 @@
   const submit = document.getElementById('dm-code-submit');
   const cancel = document.getElementById('dm-code-cancel');
 
-  function isUnlocked() {
-    try {
-      return localStorage.getItem(SHARED_KEY) === '1'
-          || localStorage.getItem(LEGACY_KEY) === '1';
-    } catch (e) { return false; }
-  }
   function applyUnlock() {
     dmLink.classList.add('unlocked');
     trigger.classList.add('unlocked');
   }
-  function saveUnlock() {
-    try {
-      localStorage.setItem(SHARED_KEY, '1');
-      localStorage.setItem(LEGACY_KEY, '1'); // keep map's old key in sync too
-    } catch (e) {}
-  }
 
-  if (isUnlocked()) applyUnlock();
+  if (VCLock.isUnlocked()) applyUnlock();
 
   function openPrompt() {
     overlay.classList.add('open');
@@ -2543,8 +2529,7 @@
     input.value = '';
   }
   function attempt() {
-    if (input.value.trim() === DM_CODE) {
-      saveUnlock();
+    if (VCLock.attempt(input.value)) {
       applyUnlock();
       closePrompt();
     } else {
@@ -2564,23 +2549,10 @@
   });
   overlay.addEventListener('click', (e) => { if (e.target === overlay) closePrompt(); });
 
-  // Hidden keystroke "7777" anywhere on page
-  let buf = '';
-  let bufTimer = null;
-  document.addEventListener('keydown', (e) => {
-    if (isUnlocked() || overlay.classList.contains('open')) return;
-    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-    if (e.key >= '0' && e.key <= '9') {
-      buf += e.key;
-      if (buf.length > 4) buf = buf.slice(-4);
-      if (buf === DM_CODE) {
-        saveUnlock();
-        applyUnlock();
-        buf = '';
-      }
-      clearTimeout(bufTimer);
-      bufTimer = setTimeout(() => { buf = ''; }, 3000);
-    }
+  // Hidden keystroke — type the code anywhere on page
+  VCLock.watchKeys({
+    skip: () => overlay.classList.contains('open'),
+    onUnlock: applyUnlock
   });
 })();
 

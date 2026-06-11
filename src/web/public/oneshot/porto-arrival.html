@@ -1479,7 +1479,8 @@ body.dm-locked .progress-bar-wrap { filter: blur(8px); pointer-events: none; use
     <li><a class="toc-item" href="#sea-exploration"><span class="toc-num">8</span><span class="toc-icon">🌊</span><span class="toc-label">ออกทะเล</span></a></li>
     <li><a class="toc-item" href="#beats"><span class="toc-num">9</span><span class="toc-icon">⏳</span><span class="toc-label">Session Flow</span></a></li>
     <li><a class="toc-item" href="#choices"><span class="toc-num">10</span><span class="toc-icon">🔀</span><span class="toc-label">ทางแยกของผู้เล่น</span></a></li>
-    <li><a class="toc-item" href="#dm-notes"><span class="toc-num">11</span><span class="toc-icon">📓</span><span class="toc-label">บันทึก DM</span></a></li>
+    <li><a class="toc-item" href="#silent-ship"><span class="toc-num">11</span><span class="toc-icon">🚢</span><span class="toc-label">The Silent Ship</span></a></li>
+    <li><a class="toc-item" href="#dm-notes"><span class="toc-num">12</span><span class="toc-icon">📓</span><span class="toc-label">บันทึก DM</span></a></li>
   </ul>
 </nav>
 
@@ -3086,6 +3087,254 @@ body.dm-locked .progress-bar-wrap { filter: blur(8px); pointer-events: none; use
 
   <hr class="divider" />
 
+  <!-- ══ BONUS SCENARIO — THE SILENT SHIP ══ -->
+  <section class="section" id="silent-ship">
+    <div class="section-label">Bonus Scenario · Scripted Opening</div>
+    <div class="section-title">The Silent Ship — เรือที่ไม่มีเสียง</div>
+    <p class="section-sub">เซสชันเปิดแบบมีบท 4 ฉาก · 1–2 ชั่วโมง · ผู้เล่น 3–5 คน · Level 1–2 · Stellamar Port · Mystery / Slow Dread</p>
+
+    <div class="economy-trap" style="background: rgba(47,112,136,.08); border-left-color: rgba(47,112,136,.5)">
+      <div class="economy-trap-label" style="color: rgba(110,170,195,.7)">⚐ Scenario นี้คืออะไร</div>
+      <div class="economy-trap-text">
+        ทางเลือกสำหรับโต๊ะที่อยากได้เซสชันแรกแบบ "มีบทพร้อมเล่น" แทนการปล่อย sandbox ตามไกด์ด้านบน — ตัวละครใน scenario นี้เป็น<strong>ชุดใหม่ทั้งหมด</strong> ไม่ผูกกับ NPC หลักของไกด์ (Vel, Lira ฯลฯ) หรือหน้า District Lore เปลี่ยนชื่อได้ตามใจ สิ่งที่ห้ามเปลี่ยนคือ "บทบาท" ของแต่ละคน: คนปิดข่าว / พยาน / คนที่เคยเจอเรื่องแบบนี้มาก่อน
+      </div>
+    </div>
+
+    <div class="dm-note">
+      <button class="dm-note-toggle" onclick="toggleDmNote(this)">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        How to Run — วิธีเล่าเรื่องให้ผู้เล่นฟัง
+        <svg class="dm-note-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="dm-note-body">
+        <ul>
+          <li><strong>หลักของ scenario นี้:</strong> ความน่ากลัวมาจาก "สิ่งที่ไม่เห็น" ไม่ใช่มอนสเตอร์ อย่ารีบเฉลย อย่าอธิบายเกิน — ปริศนาทุกอย่างในเซสชันนี้ <em>ยังไม่ต้องมีคำตอบ</em> หน้าที่ของคุณคือทำให้ผู้เล่นตั้งคำถาม</li>
+          <li><strong>จังหวะการเล่า:</strong> เล่าช้าตอนบรรยายบรรยากาศ (กลิ่นเกลือ เสียงนกนางนวล หมอก) แล้วตัดจังหวะ "เร็วและสั้น" ตอนเกิดเหตุผิดปกติ — ความต่างของจังหวะคือสิ่งที่ทำให้ผู้เล่นขนลุก</li>
+          <li><strong>กฎ 3 ประโยค:</strong> บรรยายฉากไม่เกิน 3 ประโยคแล้วถามว่า "พวกเจ้าทำอะไร" เสมอ อย่าเล่ายาวจนผู้เล่นกลายเป็นคนดู</li>
+          <li><strong>เสียงและความเงียบ:</strong> เมืองนี้มีคำพังเพยว่า <em>"อย่าไว้ใจ Moonlit Bay ในคืนที่ทะเลเงียบเกินไป"</em> — ใช้ "ความเงียบ" เป็นสัญญาณอันตรายตลอดทั้งเซสชัน เมื่อไหร่ที่คุณบรรยายว่าเสียงรอบตัวหายไป ผู้เล่นจะเรียนรู้เองว่าต้องกลัว</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="encounter-list">
+
+      <!-- ── SCENE I ── -->
+      <div class="encounter-card" style="--e-color: #2f7088">
+        <div class="encounter-header">
+          <div class="encounter-dist-dot"></div>
+          <div>
+            <div class="encounter-loc">Scene I · ~20 นาที</div>
+            <div class="encounter-title">เรือที่ไม่มีเสียง</div>
+          </div>
+        </div>
+        <div class="encounter-body">
+          <div class="enc-scene">
+            ผู้เล่นทุกคนอยู่บนเรือโดยสารที่กำลังเข้าเทียบ Stellamar Port — แต่ละคนมีเหตุผลของตัวเองที่มาเมืองนี้ (ให้ผู้เล่นแนะนำตัวละครกันบนดาดฟ้าเรือระหว่างรอเทียบท่า ถือเป็น session zero ในตัว)
+          </div>
+          <div class="enc-read">
+            <span class="ra-label">Read Aloud</span>
+            หมอกเช้ายังไม่จางจาก Moonlit Bay เมื่อเรือของพวกเจ้าลอดแนวกำแพงกันคลื่นเข้าสู่ Stellamar Port ประตูเมืองแห่งนี้เต็มไปด้วยเสียง — นกนางนวล โซ่เหล็ก เสียงตะโกนของกรรมกร และกลิ่นเกลือปนน้ำมันดิน<br><br>
+            แล้วระฆังท่าเรือก็ดังขึ้น สามครั้ง... เว้น... สามครั้ง ทุกเสียงรอบตัวพวกเจ้าหยุดลงพร้อมกัน กะลาสีข้างตัวพึมพำเบาๆ ว่า "สัญญาณเรือไร้คนถือหางเสือ" — ที่ปากอ่าว เรือสินค้าลำหนึ่งกำลังลอยเข้าท่าอย่างช้าๆ ใบเรือขาดวิ่น ไร้เสียงใดๆ ทั้งลำ และไม่มีเงาคนสักคนบนดาดฟ้า
+          </div>
+          <div class="enc-scene">
+            <strong>สิ่งที่เกิดขึ้น:</strong> Harbor Watch รีบกั้นท่าที่เรือปริศนาเข้าเทียบ ผู้โดยสารถูกไล่ให้ไปขึ้นฝั่งท่าอื่น — แต่ผู้เล่นเห็นเหตุการณ์จากระยะใกล้พอที่จะ<em>อยากรู้</em>
+          </div>
+          <div>
+            <div class="skill-table-head">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              Skill Checks
+            </div>
+            <div class="skill-rows">
+              <div class="skill-row">
+                <div class="skill-name">Perception</div>
+                <div class="skill-dc">DC 12</div>
+                <div class="skill-result">บนดาดฟ้าเรือมีร่างคนนอนนิ่งอย่างน้อย 3 ร่าง จัดวางเป็นระเบียบผิดปกติ — เหมือนนอนหลับ ไม่เหมือนล้มตาย</div>
+              </div>
+              <div class="skill-row">
+                <div class="skill-name">Insight</div>
+                <div class="skill-dc">DC 12</div>
+                <div class="skill-result">เจ้าหน้าที่ท่าเรือไม่ได้ตกใจ — พวกเขาทำเหมือน "รู้ขั้นตอน" ราวกับเคยเกิดมาก่อน</div>
+              </div>
+              <div class="skill-row">
+                <div class="skill-name">History / Sailor</div>
+                <div class="skill-dc">DC 13</div>
+                <div class="skill-result">สัญญาณระฆังแบบนี้เก่ามาก เลิกใช้ไปหลายสิบปีแล้ว — คนตีระฆังต้องเป็นคนเก่าแก่ของท่า</div>
+              </div>
+            </div>
+          </div>
+          <div class="economy-trap" style="background: rgba(60,30,100,.08); border-left-color: rgba(120,80,180,.5)">
+            <div class="economy-trap-label" style="color: rgba(160,120,220,.65)">⚐ DM Tip</div>
+            <div class="economy-trap-text">อย่าให้ผู้เล่นขึ้นเรือมรณะได้ในซีนนี้ — Harbor Watch กันไว้แน่นหนา จุดประสงค์ของซีนคือ "เห็นแต่ห้ามแตะ" ยิ่งห้าม ผู้เล่นยิ่งอยากรู้</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SCENE II ── -->
+      <div class="encounter-card" style="--e-color: #d4a017">
+        <div class="encounter-header">
+          <div class="encounter-dist-dot"></div>
+          <div>
+            <div class="encounter-loc">Scene II · ~30–40 นาที</div>
+            <div class="encounter-title">ถนนโคมไฟและคำถาม</div>
+          </div>
+        </div>
+        <div class="encounter-body">
+          <div class="enc-scene">
+            ผู้เล่นขึ้นฝั่งที่ The Lantern Mile ถนนสายหลักของท่าเรือ — ซีนนี้เป็นซีนสืบสวนอิสระ ปล่อยให้ผู้เล่นเลือกเองว่าจะคุยกับใคร ไปที่ไหน ข้อมูลทุกชิ้นชี้กลับมาที่เรือลำเดียวกัน
+          </div>
+          <div class="enc-read">
+            <span class="ra-label">Read Aloud</span>
+            The Lantern Mile ยามสายคึกคักเหมือนไม่มีอะไรเกิดขึ้น พ่อค้าตะโกนขายของ โรงเตี๊ยมเปิดประตูรับลูกค้า แต่ถ้าสังเกตดีๆ จะเห็นว่าทุกวงสนทนาเงียบลงเมื่อมีคนแปลกหน้าเดินผ่าน และไม่มีใครมองไปทางท่าที่เรือลำนั้นจอดอยู่เลย — ราวกับทั้งถนนตกลงกันไว้ว่าจะไม่เห็นมัน
+          </div>
+          <div class="enc-scene">
+            <strong>แหล่งข้อมูลในซีนนี้</strong> (ผู้เล่นไม่จำเป็นต้องเจอครบ — สองในสามก็พอไปซีนถัดไป)
+          </div>
+          <div class="npc-grid">
+            <div class="npc-card" style="--n-color: #2f7088">
+              <div class="npc-head">
+                <div class="npc-name">Marshal Edrin Volk</div>
+                <div class="npc-role">นายท่าคนใหม่ · คนปิดข่าว</div>
+              </div>
+              <div class="npc-body">
+                <div class="npc-row">
+                  <div class="npc-row-label">บทบาทในฉาก</div>
+                  <div class="npc-row-text">เพิ่งรับตำแหน่งได้ 3 เดือน อยากให้ทุกอย่าง "เรียบร้อย" จะปฏิเสธว่าไม่มีอะไรผิดปกติ</div>
+                </div>
+                <div class="npc-secret" onclick="toggleSecret(this)">
+                  <div class="npc-secret-label">
+                    <svg class="npc-secret-toggle" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                    🔒 DM Only — Secret
+                  </div>
+                  <div class="npc-secret-text">ถ้าผู้เล่นกดดันเก่งๆ (Persuasion/Intimidation DC 14) เขาหลุดปากว่า <em>"นี่ไม่ใช่ลำแรก"</em></div>
+                </div>
+              </div>
+            </div>
+            <div class="npc-card" style="--n-color: #d4a017">
+              <div class="npc-head">
+                <div class="npc-name">Pip</div>
+                <div class="npc-role">เด็กรับจ้างท่าเรือ · พยาน</div>
+              </div>
+              <div class="npc-body">
+                <div class="npc-row">
+                  <div class="npc-row-label">บทบาทในฉาก</div>
+                  <div class="npc-row-text">เห็นเรือเข้าอ่าวตั้งแต่ก่อนรุ่งสาง — <em>มันแล่นเข้ามาทั้งที่ไม่มีลม</em> และเห็นแสงสีเขียวจางๆ ใต้น้ำตามหลังเรือมา ขอค่าเล่าเป็นอาหารหนึ่งมื้อ ใครใจดีกับ Pip จะได้พันธมิตรตัวน้อยไปตลอดแคมเปญ</div>
+                </div>
+              </div>
+            </div>
+            <div class="npc-card" style="--n-color: #8a4a63">
+              <div class="npc-head">
+                <div class="npc-name">Widow Casca</div>
+                <div class="npc-role">เจ้าของโรงเตี๊ยม Rustic Revels · คนที่เคยเจอมาก่อน</div>
+              </div>
+              <div class="npc-body">
+                <div class="npc-row">
+                  <div class="npc-row-label">บทบาทในฉาก</div>
+                  <div class="npc-row-text">หญิงชราที่อยู่ท่านี้มา 40 ปี ถ้าผู้เล่นนั่งดื่มและฟัง เธอจะเล่าว่า <em>"ครั้งสุดท้ายที่ระฆังตีแบบนั้น คนหายไปทั้งหมู่บ้านประมงนอกอ่าว — และก่อนหน้านั้นทะเลก็เงียบแบบนี้แหละ"</em></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="economy-trap" style="background: rgba(60,30,100,.08); border-left-color: rgba(120,80,180,.5)">
+            <div class="economy-trap-label" style="color: rgba(160,120,220,.65)">⚐ DM Tip</div>
+            <div class="economy-trap-text">เทคนิคเล่า: ให้ NPC ทุกคน "พูดไม่จบประโยค" สักครั้ง — เหลือบมองรอบตัวก่อนเปลี่ยนเรื่อง ผู้เล่นจะรู้สึกเองว่าทั้งท่าเรือกลัวอะไรบางอย่างร่วมกัน</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SCENE III ── -->
+      <div class="encounter-card" style="--e-color: #7a5aaa">
+        <div class="encounter-header">
+          <div class="encounter-dist-dot"></div>
+          <div>
+            <div class="encounter-loc">Scene III · ~30 นาที</div>
+            <div class="encounter-title">คลังสินค้าหมายเลขเก้า</div>
+          </div>
+        </div>
+        <div class="encounter-body">
+          <div class="enc-scene">
+            ค่ำวันเดียวกัน — Marshal Volk (หรือคนกลางของเขา) มาหาผู้เล่นพร้อมงานจ้าง: <strong>เฝ้าคลังสินค้าหมายเลข 9 หนึ่งคืน ห้ามเปิดดูของข้างใน ค่าจ้างงามผิดปกติ</strong> ข้างในคือตู้สินค้าจากเรือมรณะ เหตุผลจริงคือเขาไม่กล้าใช้คนของตัวเอง
+          </div>
+          <div class="enc-read">
+            <span class="ra-label">Read Aloud</span>
+            คลังสินค้าหมายเลข 9 ตั้งอยู่สุดแถวริมน้ำ ห่างจากคลังอื่นอย่างจงใจ ข้างในมีตู้สินค้าไม้เพียงตู้เดียววางอยู่กลางโถง ตีตราด้วยสัญลักษณ์ที่พวกเจ้าไม่เคยเห็น — เส้นโค้งซ้อนกันเหมือนคลื่น หรือเหมือนตัวอักษรของภาษาที่ไม่ได้ถูกเขียนให้มือมนุษย์<br><br>
+            เมื่อความมืดสนิทลง เสียงท่าเรือค่อยๆ เงียบ... เงียบ... จนพวกเจ้าได้ยินเสียงเดียวที่เหลืออยู่ — เสียงน้ำหยดช้าๆ จากใต้ตู้สินค้า ทั้งที่ข้างในไม่ควรมีอะไรเปียก
+          </div>
+          <div>
+            <div class="skill-table-head">เหตุการณ์กลางดึก — เลือกตามสไตล์โต๊ะของคุณ</div>
+            <div class="skill-rows">
+              <div class="skill-row">
+                <div class="skill-name">สาย A</div>
+                <div class="skill-dc">ต่อสู้</div>
+                <div class="skill-result">โจร 2–3 คน (<a href="/bestiary/detail?m=thug" target="_blank" style="color:var(--gold)">Thug</a> ×1 + <a href="/bestiary/detail?m=bandit" target="_blank" style="color:var(--gold)">Bandit</a> ×2) บุกเข้ามาขโมยตู้ — พวกมันถูกจ้างมา และคนจ้าง "ไม่ได้บอกว่าข้างในคืออะไร" ปล่อยให้ผู้เล่นสอบปากคำคนที่รอดได้ · <em>เหมาะกับโต๊ะที่อยากได้ฉากแอ็คชั่น</em></div>
+              </div>
+              <div class="skill-row">
+                <div class="skill-name">สาย B</div>
+                <div class="skill-dc">สยองขวัญ</div>
+                <div class="skill-result">ตีสาม — เสียงน้ำหยดหยุด แล้วมีเสียง<em>เคาะจากด้านในตู้</em> สามครั้ง... เว้น... สามครั้ง (จังหวะเดียวกับระฆังเช้านี้) ถ้าผู้เล่นเปิดตู้: ข้างในว่างเปล่า มีแต่น้ำทะเลขังอยู่ก้นตู้ และรอยมือเปียกๆ บนผนังด้านใน — <em>ด้านในเท่านั้น</em> · <em>เหมาะกับโต๊ะที่ชอบบรรยากาศ</em></div>
+              </div>
+              <div class="skill-row">
+                <div class="skill-name">สาย A+B</div>
+                <div class="skill-dc">ครบรส</div>
+                <div class="skill-result">เริ่มด้วยโจรบุก แล้วระหว่างต่อสู้ ตู้ก็เริ่มเคาะ... โจรหนีกันแตกตื่น ทิ้งคำถามไว้ให้ทั้งสองฝ่าย · <em>ครบรสใน 30 นาที</em></div>
+              </div>
+            </div>
+          </div>
+          <div class="economy-trap" style="background: rgba(60,30,100,.08); border-left-color: rgba(120,80,180,.5)">
+            <div class="economy-trap-label" style="color: rgba(160,120,220,.65)">⚐ DM Tip</div>
+            <div class="economy-trap-text">ไม่ว่าสายไหน <strong>ห้ามเฉลยว่าในตู้คือ/เคยมีอะไร</strong> — ความว่างเปล่าน่ากลัวกว่ามอนสเตอร์ทุกตัวใน Bestiary และมันคือสิ่งที่ทำให้แคมเปญต่อยอดได้</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SCENE IV ── -->
+      <div class="encounter-card" style="--e-color: #3a8a7a">
+        <div class="encounter-header">
+          <div class="encounter-dist-dot"></div>
+          <div>
+            <div class="encounter-loc">Scene IV · ~15 นาที · ฉากปิด</div>
+            <div class="encounter-title">คืนที่ทะเลเงียบ</div>
+          </div>
+        </div>
+        <div class="encounter-body">
+          <div class="enc-scene">
+            รุ่งสางหลังเหตุการณ์ในคลัง — ผู้เล่นรายงาน Volk / เก็บค่าจ้าง / ปะติดปะต่อข้อมูล จากนั้นปิดเซสชันด้วยฉากนี้บนท่าเรือหรือหน้าต่างโรงเตี๊ยม
+          </div>
+          <div class="enc-read">
+            <span class="ra-label">Read Aloud</span>
+            คืนนั้นพวกเจ้าสังเกตว่าบางอย่างหายไป — เสียง ทะเลทั้งอ่าวนิ่งราวกระจกสีดำ ไม่มีคลื่นกระทบฝั่ง ไม่มีลม แม้แต่นกก็เงียบ<br><br>
+            แล้วพวกเจ้าก็เห็นมัน — แสงเรืองสีเขียวจางๆ ใต้ผิวน้ำกลาง Moonlit Bay ลึกลงไปในที่ที่แผนที่ทุกฉบับบอกว่าคือก้นอ่าว มันไม่กะพริบ ไม่เคลื่อนไหว มันแค่... รอ<br><br>
+            และที่ประภาคาร Moonlit Bay Sentinel ปลายแหลม — ไฟดวงที่ควรหมุนนำทางเรือ หยุดนิ่ง ชี้ลงไปยังจุดแสงใต้น้ำนั้นพอดี
+          </div>
+          <div class="enc-scene">
+            <strong>จบเซสชันตรงนี้</strong> — อย่าตอบคำถามใดๆ ทิ้งไว้แค่นี้: เรือไร้คนเป็น, ตู้เปล่าที่เคาะได้, ทะเลที่เงียบเกินไป, และแสงที่รออยู่ข้างใต้
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="dm-note">
+      <button class="dm-note-toggle" onclick="toggleDmNote(this)">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
+        เส้นทางต่อยอดแคมเปญ — Expansion Hooks
+        <svg class="dm-note-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="dm-note-body">
+        <p>ทุกปริศนาที่เปิดไว้ในเซสชันนี้ออกแบบให้ขยายเป็นแคมเปญยาวได้ โดยไม่ล็อกคำตอบไว้ก่อน:</p>
+        <ul>
+          <li><strong>ประภาคารร้าง</strong> — เซสชันถัดไปเริ่มได้ทันที: ผู้ดูแลประภาคารหายตัว เหลือสมุดบันทึกที่จดทุกคืนที่ "ทะเลเงียบ" — และความถี่กำลังเพิ่มขึ้น ใช้เป็นนาฬิกานับถอยหลังของเนื้อเรื่องหลัก</li>
+          <li><strong>สิ่งที่อยู่ใต้อ่าว</strong> — แสงใต้น้ำคือประตูสู่ส่วนลึกใต้เมือง (ดู The Hollow Below ในหน้า District Lore) จะพาผู้เล่นดำดิ่งลงไปเมื่อถึงเลเวล 3–4</li>
+          <li><strong>"นี่ไม่ใช่ลำแรก"</strong> — คำหลุดปากของ Volk เปิดเส้นสืบสวน: เรือลำก่อนๆ หายไปไหน ใครเซ็นรับสินค้า เส้นเงินจะลากผู้เล่นเข้าสู่การเมืองของ Golden Crescent</li>
+          <li><strong>ผู้โดยสารที่ไม่มีในบัญชี</strong> — เรือลำถัดไปที่เข้าท่ามีผู้โดยสารเกินบัญชีหนึ่งคน ไม่มีใครจำได้ว่าขึ้นมาตอนไหน — ช่องว่างสำหรับเสียบตัวร้ายหรือผู้ช่วยลึกลับของคุณเอง</li>
+          <li><strong>หมู่บ้านประมงที่หายไป</strong> — เรื่องเล่าของ Widow Casca เป็นเหตุการณ์จริงเมื่อ 40 ปีก่อน ซากหมู่บ้านยังอยู่นอกอ่าว — dungeon แรกขนาดย่อมสำหรับเลเวล 2</li>
+        </ul>
+        <p style="text-align:center; font-style:italic; margin-top:12px; color:var(--ink-mute)">"อย่าไว้ใจ Moonlit Bay ในคืนที่ทะเลเงียบเกินไป"</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
   <!-- ══ DM NOTES ══ -->
   <section class="section" id="dm-notes">
     <div class="section-label">DM Notes</div>
@@ -3189,29 +3438,23 @@ body.dm-locked .progress-bar-wrap { filter: blur(8px); pointer-events: none; use
   <button class="progress-reset" onclick="resetProgress()">Reset</button>
 </div>
 
+<script src="/shared.js"></script>
 <script>
-// ── DM Password Gate ──────────────────────────────────────────────
-const DM_CODE = '7777';
-const DM_UNLOCK_KEY = 'oneshot:porto-arrival:dm-unlocked';
-
+// ── DM Password Gate (shared state via VCLock in /shared.js) ──────
 (function initGate() {
   const gate = document.getElementById('dm-gate');
   const input = document.getElementById('dm-gate-input');
   const btn = document.getElementById('dm-gate-btn');
 
   // Already unlocked from previous session?
-  try {
-    if (localStorage.getItem(DM_UNLOCK_KEY) === '1') {
-      gate.classList.add('hidden');
-      document.body.classList.remove('dm-locked');
-      return;
-    }
-  } catch (e) {}
+  if (VCLock.isUnlocked()) {
+    gate.classList.add('hidden');
+    document.body.classList.remove('dm-locked');
+    return;
+  }
 
   function attempt() {
-    const val = (input.value || '').trim();
-    if (val === DM_CODE) {
-      try { localStorage.setItem(DM_UNLOCK_KEY, '1'); } catch (e) {}
+    if (VCLock.attempt(input.value)) {
       gate.style.transition = 'opacity .5s ease';
       gate.style.opacity = '0';
       setTimeout(() => {

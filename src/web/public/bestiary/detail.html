@@ -292,6 +292,7 @@ body{
   </div>
 </div>
 
+<script src="/shared.js"></script>
 <script>
 const API_BASE = 'https://www.dnd5eapi.co/api/2014';
 
@@ -357,9 +358,7 @@ async function loadMonster(index) {
   render(data);
 }
 
-// ── Passcode lock ──
-const PASSCODE = '7777';
-const UNLOCK_KEY = 'bestiary:unlocked:v1';
+// ── Passcode lock (shared state via VCLock in /shared.js) ──
 let monsterData = null;
 
 function render(d) {
@@ -368,7 +367,7 @@ function render(d) {
   document.getElementById('bc-name').textContent = d.name;
   document.getElementById('state').classList.remove('vis');
 
-  if (sessionStorage.getItem(UNLOCK_KEY) === '1') {
+  if (VCLock.isUnlocked()) {
     reveal();
   } else {
     showLock();
@@ -411,8 +410,7 @@ function showLock() {
 
   const trySubmit = () => {
     const input = document.getElementById('lock-code');
-    if (input.value.trim() === PASSCODE) {
-      sessionStorage.setItem(UNLOCK_KEY, '1');
+    if (VCLock.attempt(input.value)) {
       reveal();
     } else {
       document.getElementById('lock-err').textContent = 'The ward rejects this code';

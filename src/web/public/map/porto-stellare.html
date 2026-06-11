@@ -1543,6 +1543,7 @@
     </div>
   </div>
 
+<script src="/shared.js"></script>
 <script>
 const DISTRICTS = [
   {
@@ -1880,11 +1881,8 @@ const DISTRICTS = [
 
 const STARHILL_TIP = "<b>Starhill</b>จุดที่สูงที่สุดของเมือง · Observatory · Ancient Tower · Archives — ข่าวลือกล่าวว่า Starhill อาจมีอยู่ก่อนที่เมืองจะถูกสร้าง";
 
-// ── DM Code Unlock (shared with /lore/porto-stellare) ──
+// ── DM Code Unlock (shared state via VCLock in /shared.js) ──
 (function initDmUnlock() {
-  const DM_CODE = '7777';
-  const SHARED_KEY = 'dm:porto-stellare:unlocked';
-  const LEGACY_KEY = 'map:porto-stellare:dm-unlocked';
   const dmBtn = document.getElementById('dm-guide-btn');
   const trigger = document.getElementById('dm-code-trigger');
   const overlay = document.getElementById('dm-code-overlay');
@@ -1892,25 +1890,12 @@ const STARHILL_TIP = "<b>Starhill</b>จุดที่สูงที่สุ�
   const submit = document.getElementById('dm-code-submit');
   const cancel = document.getElementById('dm-code-cancel');
 
-  function isUnlocked() {
-    try {
-      return localStorage.getItem(SHARED_KEY) === '1'
-          || localStorage.getItem(LEGACY_KEY) === '1';
-    } catch (e) { return false; }
-  }
-  function saveUnlock() {
-    try {
-      localStorage.setItem(SHARED_KEY, '1');
-      localStorage.setItem(LEGACY_KEY, '1');
-    } catch (e) {}
-  }
-
-  // Check unlock state
-  let unlocked = isUnlocked();
-  if (unlocked) {
+  function applyUnlock() {
     dmBtn.classList.add('unlocked');
     trigger.classList.add('unlocked');
   }
+
+  if (VCLock.isUnlocked()) applyUnlock();
 
   function openPrompt() {
     overlay.classList.add('open');
@@ -1924,10 +1909,8 @@ const STARHILL_TIP = "<b>Starhill</b>จุดที่สูงที่สุ�
     input.value = '';
   }
   function attempt() {
-    if (input.value.trim() === DM_CODE) {
-      saveUnlock();
-      dmBtn.classList.add('unlocked');
-      trigger.classList.add('unlocked');
+    if (VCLock.attempt(input.value)) {
+      applyUnlock();
       closePrompt();
     } else {
       overlay.classList.add('error');
@@ -1946,25 +1929,10 @@ const STARHILL_TIP = "<b>Starhill</b>จุดที่สูงที่สุ�
   });
   overlay.addEventListener('click', (e) => { if (e.target === overlay) closePrompt(); });
 
-  // Hidden keystroke combo "7777" anywhere on page (for DMs who know)
-  let buf = '';
-  let bufTimer = null;
-  document.addEventListener('keydown', (e) => {
-    if (unlocked || overlay.classList.contains('open')) return;
-    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-    if (e.key >= '0' && e.key <= '9') {
-      buf += e.key;
-      if (buf.length > 4) buf = buf.slice(-4);
-      if (buf === DM_CODE) {
-        unlocked = true;
-        saveUnlock();
-        dmBtn.classList.add('unlocked');
-        trigger.classList.add('unlocked');
-        buf = '';
-      }
-      clearTimeout(bufTimer);
-      bufTimer = setTimeout(() => { buf = ''; }, 3000);
-    }
+  // Hidden keystroke — type the code anywhere on page (for DMs who know)
+  VCLock.watchKeys({
+    skip: () => overlay.classList.contains('open'),
+    onUnlock: applyUnlock
   });
 })();
 

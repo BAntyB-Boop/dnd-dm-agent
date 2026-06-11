@@ -1010,6 +1010,116 @@ body {
 }
 
 /* ══════════════════════════════════════════════
+   FLOATING TOC / QUICK NAV
+══════════════════════════════════════════════ */
+.toc-nav {
+  position: fixed;
+  top: 80px; right: 24px;
+  z-index: 90;
+  width: 230px;
+  max-height: calc(100vh - 180px);
+  padding: 18px 18px 16px;
+  background: linear-gradient(180deg, rgba(14,14,22,0.92), rgba(6,6,12,0.88));
+  border: 1px solid rgba(201,164,92,0.28);
+  border-radius: 3px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(201,164,92,0.08);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(201,164,92,0.3) transparent;
+  transition: transform .35s cubic-bezier(.3,.7,.2,1), opacity .25s;
+}
+.toc-nav::-webkit-scrollbar { width: 5px; }
+.toc-nav::-webkit-scrollbar-thumb { background: rgba(201,164,92,0.3); border-radius: 3px; }
+.toc-nav.collapsed { transform: translateX(calc(100% + 24px)); opacity: 0; pointer-events: none; }
+.toc-head {
+  display: flex; align-items: center; justify-content: space-between;
+  font-family: "Cinzel", serif;
+  font-size: 9.5px; letter-spacing: .32em; text-transform: uppercase;
+  color: var(--gold);
+  padding-bottom: 12px; margin-bottom: 12px;
+  border-bottom: 1px solid rgba(201,164,92,0.2);
+}
+.toc-close {
+  width: 22px; height: 22px;
+  background: none; border: 1px solid rgba(201,164,92,0.25);
+  color: rgba(232,226,207,0.55);
+  border-radius: 50%; cursor: pointer;
+  font-size: 11px; line-height: 1;
+  display: flex; align-items: center; justify-content: center;
+  transition: color .2s, border-color .2s;
+}
+.toc-close:hover { color: var(--gold-bright); border-color: var(--gold); }
+.toc-list {
+  list-style: none;
+  display: flex; flex-direction: column; gap: 2px;
+}
+.toc-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 7px 9px;
+  font-size: 12.5px;
+  color: rgba(232,226,207,.55);
+  text-decoration: none;
+  border-left: 2px solid transparent;
+  border-radius: 1px;
+  transition: color .2s, background .2s, border-color .2s, padding .2s;
+}
+.toc-item:hover {
+  color: var(--gold-bright);
+  background: rgba(201,164,92,0.06);
+  border-left-color: rgba(201,164,92,0.4);
+  padding-left: 12px;
+}
+.toc-item.active {
+  color: var(--gold-bright);
+  background: rgba(201,164,92,0.1);
+  border-left-color: var(--gold);
+}
+.toc-item .toc-icon {
+  font-size: 13px; flex: none;
+}
+.toc-item .toc-num {
+  font-family: "Cinzel Decorative", serif;
+  font-size: 10px; color: rgba(201,164,92,0.55);
+  flex: none; min-width: 16px;
+}
+.toc-item.active .toc-num { color: var(--gold-bright); }
+.toc-item .toc-label {
+  font-family: "Cinzel", serif;
+  font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase;
+  line-height: 1.3;
+}
+
+/* Toggle button (shown when collapsed or on mobile) */
+.toc-toggle {
+  position: fixed;
+  top: 80px; right: 24px;
+  z-index: 91;
+  width: 44px; height: 44px;
+  display: none; align-items: center; justify-content: center;
+  background: linear-gradient(180deg, var(--bg-card), var(--bg-paper));
+  border: 1px solid rgba(201,164,92,0.4);
+  border-radius: 3px;
+  color: var(--gold);
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  transition: color .2s, border-color .2s, transform .2s;
+}
+.toc-toggle:hover { color: var(--gold-bright); border-color: var(--gold); transform: translateY(-1px); }
+.toc-toggle.show { display: flex; }
+.toc-toggle svg { width: 18px; height: 18px; }
+
+@media (max-width: 1280px) {
+  .toc-nav { display: none; }
+  .toc-nav.mobile-open { display: block; }
+  .toc-toggle { display: flex; }
+  .toc-nav { top: 70px; right: 16px; width: 240px; }
+}
+@media (max-width: 720px) {
+  .toc-nav { top: 70px; left: 16px; right: 16px; width: auto; max-width: none; }
+}
+
+/* ══════════════════════════════════════════════
    DM PASSWORD GATE
 ══════════════════════════════════════════════ */
 .dm-gate {
@@ -1173,6 +1283,32 @@ body.dm-locked .progress-bar-wrap { filter: blur(8px); pointer-events: none; use
     <a class="dm-gate-back" href="/">← กลับไปหน้าหลัก</a>
   </div>
 </div>
+
+<!-- TOC Quick-Nav (shortcut jump) -->
+<nav class="toc-nav" id="toc-nav" aria-label="Quick navigation">
+  <div class="toc-head">
+    <span>Quick Nav · ทางลัด</span>
+    <button class="toc-close" id="toc-close" aria-label="Close navigation">✕</button>
+  </div>
+  <ul class="toc-list">
+    <li><a class="toc-item" href="#hero"><span class="toc-num">·</span><span class="toc-icon">✦</span><span class="toc-label">เริ่มต้น</span></a></li>
+    <li><a class="toc-item" href="#read-aloud"><span class="toc-num">1</span><span class="toc-icon">📜</span><span class="toc-label">บทบรรยายเปิด</span></a></li>
+    <li><a class="toc-item" href="#city-brief"><span class="toc-num">2</span><span class="toc-icon">🏙</span><span class="toc-label">เมืองสองหน้า</span></a></li>
+    <li><a class="toc-item" href="#entry-points"><span class="toc-num">3</span><span class="toc-icon">⚓</span><span class="toc-label">จุดเข้าเมือง</span></a></li>
+    <li><a class="toc-item" href="#first-impressions"><span class="toc-num">4</span><span class="toc-icon">👁</span><span class="toc-label">ประสาทสัมผัส</span></a></li>
+    <li><a class="toc-item" href="#economy"><span class="toc-num">5</span><span class="toc-icon">🪙</span><span class="toc-label">เศรษฐกิจ</span></a></li>
+    <li><a class="toc-item" href="#tensions"><span class="toc-num">6</span><span class="toc-icon">🔥</span><span class="toc-label">สิ่งที่เดือดอยู่</span></a></li>
+    <li><a class="toc-item" href="#encounters"><span class="toc-num">7</span><span class="toc-icon">🗺</span><span class="toc-label">เนื้อเรื่องทั้งหมด</span></a></li>
+    <li><a class="toc-item" href="#beats"><span class="toc-num">8</span><span class="toc-icon">⏳</span><span class="toc-label">Session Flow</span></a></li>
+    <li><a class="toc-item" href="#choices"><span class="toc-num">9</span><span class="toc-icon">🔀</span><span class="toc-label">ทางแยกของผู้เล่น</span></a></li>
+    <li><a class="toc-item" href="#dm-notes"><span class="toc-num">10</span><span class="toc-icon">📓</span><span class="toc-label">บันทึก DM</span></a></li>
+  </ul>
+</nav>
+
+<!-- TOC toggle (mobile / collapsed) -->
+<button class="toc-toggle" id="toc-toggle" aria-label="Open quick navigation">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+</button>
 
 <!-- Ambient layers -->
 <div class="shader-wallpaper"></div>
@@ -2834,6 +2970,69 @@ function toggleDmNote(btn) {
     requestAnimationFrame(tick);
   }
   requestAnimationFrame(tick);
+})();
+
+// ── TOC Quick Nav ─────────────────────────────────────────────────
+(function initTOC() {
+  const nav = document.getElementById('toc-nav');
+  const closeBtn = document.getElementById('toc-close');
+  const toggleBtn = document.getElementById('toc-toggle');
+  const items = nav.querySelectorAll('.toc-item');
+  const isMobile = () => window.innerWidth <= 1280;
+
+  // close button → hide nav, show toggle
+  function hideNav() {
+    nav.classList.add('collapsed');
+    nav.classList.remove('mobile-open');
+    toggleBtn.classList.add('show');
+    try { localStorage.setItem('oneshot:toc-hidden', '1'); } catch (e) {}
+  }
+  function showNav() {
+    nav.classList.remove('collapsed');
+    if (isMobile()) nav.classList.add('mobile-open');
+    toggleBtn.classList.toggle('show', isMobile());
+    try { localStorage.setItem('oneshot:toc-hidden', '0'); } catch (e) {}
+  }
+  closeBtn.addEventListener('click', hideNav);
+  toggleBtn.addEventListener('click', showNav);
+
+  // restore previous state
+  try {
+    if (localStorage.getItem('oneshot:toc-hidden') === '1') hideNav();
+    else if (isMobile()) toggleBtn.classList.add('show');
+  } catch (e) {}
+
+  // smooth scroll + close on mobile after click
+  items.forEach(item => {
+    item.addEventListener('click', (e) => {
+      e.preventDefault();
+      const id = item.getAttribute('href').slice(1);
+      const target = document.getElementById(id);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+      if (isMobile()) hideNav();
+    });
+  });
+
+  // highlight active section while scrolling
+  const sections = [...items].map(item => {
+    const id = item.getAttribute('href').slice(1);
+    return { id, el: document.getElementById(id), item };
+  }).filter(s => s.el);
+
+  function updateActive() {
+    const scrollY = window.scrollY + 80;
+    let active = sections[0];
+    for (const s of sections) {
+      if (s.el.offsetTop <= scrollY) active = s;
+      else break;
+    }
+    items.forEach(i => i.classList.remove('active'));
+    if (active) active.item.classList.add('active');
+  }
+  window.addEventListener('scroll', updateActive, { passive: true });
+  updateActive();
 })();
 
 // ── Read progress bar ─────────────────────────────────────────────

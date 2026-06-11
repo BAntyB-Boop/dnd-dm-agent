@@ -1874,10 +1874,11 @@ const DISTRICTS = [
 
 const STARHILL_TIP = "<b>Starhill</b>จุดที่สูงที่สุดของเมือง · Observatory · Ancient Tower · Archives — ข่าวลือกล่าวว่า Starhill อาจมีอยู่ก่อนที่เมืองจะถูกสร้าง";
 
-// ── DM Code Unlock (reveals DM Guide button when 7777 is entered) ──
+// ── DM Code Unlock (shared with /lore/porto-stellare) ──
 (function initDmUnlock() {
   const DM_CODE = '7777';
-  const DM_UNLOCK_KEY = 'map:porto-stellare:dm-unlocked';
+  const SHARED_KEY = 'dm:porto-stellare:unlocked';
+  const LEGACY_KEY = 'map:porto-stellare:dm-unlocked';
   const dmBtn = document.getElementById('dm-guide-btn');
   const trigger = document.getElementById('dm-code-trigger');
   const overlay = document.getElementById('dm-code-overlay');
@@ -1885,9 +1886,21 @@ const STARHILL_TIP = "<b>Starhill</b>จุดที่สูงที่สุ�
   const submit = document.getElementById('dm-code-submit');
   const cancel = document.getElementById('dm-code-cancel');
 
-  // Check unlock state from localStorage
-  let unlocked = false;
-  try { unlocked = localStorage.getItem(DM_UNLOCK_KEY) === '1'; } catch (e) {}
+  function isUnlocked() {
+    try {
+      return localStorage.getItem(SHARED_KEY) === '1'
+          || localStorage.getItem(LEGACY_KEY) === '1';
+    } catch (e) { return false; }
+  }
+  function saveUnlock() {
+    try {
+      localStorage.setItem(SHARED_KEY, '1');
+      localStorage.setItem(LEGACY_KEY, '1');
+    } catch (e) {}
+  }
+
+  // Check unlock state
+  let unlocked = isUnlocked();
   if (unlocked) {
     dmBtn.classList.add('unlocked');
     trigger.classList.add('unlocked');
@@ -1906,7 +1919,7 @@ const STARHILL_TIP = "<b>Starhill</b>จุดที่สูงที่สุ�
   }
   function attempt() {
     if (input.value.trim() === DM_CODE) {
-      try { localStorage.setItem(DM_UNLOCK_KEY, '1'); } catch (e) {}
+      saveUnlock();
       dmBtn.classList.add('unlocked');
       trigger.classList.add('unlocked');
       closePrompt();
@@ -1938,7 +1951,7 @@ const STARHILL_TIP = "<b>Starhill</b>จุดที่สูงที่สุ�
       if (buf.length > 4) buf = buf.slice(-4);
       if (buf === DM_CODE) {
         unlocked = true;
-        try { localStorage.setItem(DM_UNLOCK_KEY, '1'); } catch (er) {}
+        saveUnlock();
         dmBtn.classList.add('unlocked');
         trigger.classList.add('unlocked');
         buf = '';

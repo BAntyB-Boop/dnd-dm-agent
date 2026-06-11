@@ -1,0 +1,2113 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8" />
+<base href="/" />
+<title>The Veiled Codex — Arrival at Porto Stellare · One-Shot Guide</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Noto+Serif+Thai:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --bg-deep: #06060c;
+  --bg-paper: #0e0e16;
+  --bg-card: #15151c;
+  --bg-card-2: #1c1c25;
+  --line: #2a2a35;
+  --line-soft: #1d1d25;
+  --ink: #e8e2cf;
+  --ink-soft: #c9c2ad;
+  --ink-mute: #7a7461;
+  --ink-faint: #4a4636;
+  --gold: #c9a45c;
+  --gold-bright: #f6efd2;
+  --gold-dim: #8a6f3a;
+  --gold-deep: #5a4622;
+  --blood: #b01a1a;
+  --blood-dim: #7a1212;
+  --teal: #3a8a7a;
+  --purple: #7a5aaa;
+
+  /* district colors */
+  --c-verdant: #4a7c4e;
+  --c-silver: #8c97a3;
+  --c-golden: #d4a017;
+  --c-white: #7fa0b5;
+  --c-aurora: #c98a6d;
+  --c-iron: #7b6a59;
+  --c-old: #8a4a63;
+  --c-stellamar: #2f7088;
+  --c-hollow: #7a5aaa;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+html, body { background: var(--bg-deep); color: var(--ink); overflow-x: hidden; }
+
+body {
+  min-height: 100vh;
+  background:
+    radial-gradient(1400px 700px at 50% -8%, #141020 0%, transparent 60%),
+    radial-gradient(900px 500px at 50% 110%, #110b0b 0%, transparent 65%),
+    var(--bg-deep);
+  font-family: "Noto Serif Thai", "Cormorant Garamond", Georgia, serif;
+}
+
+/* ══════════════════════════════════════════════
+   PLASMA SHADER WALLPAPER
+══════════════════════════════════════════════ */
+.shader-wallpaper {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
+  --accent: var(--gold); --accent2: var(--gold-dim);
+  transition: filter 1.6s ease;
+}
+.shader-wallpaper::before {
+  content: ""; position: absolute; inset: -30%;
+  background:
+    radial-gradient(ellipse 50% 40% at 30% 30%, color-mix(in srgb, var(--accent) 24%, transparent), transparent 65%),
+    radial-gradient(ellipse 60% 50% at 70% 70%, color-mix(in srgb, var(--accent2) 22%, transparent), transparent 60%),
+    radial-gradient(ellipse 40% 30% at 50% 50%, color-mix(in srgb, var(--accent) 12%, transparent), transparent 55%);
+  filter: blur(60px) saturate(1.2); opacity: 0.65;
+  animation: plasma-1 38s ease-in-out infinite alternate;
+}
+.shader-wallpaper::after {
+  content: ""; position: absolute; inset: -30%;
+  background: conic-gradient(from var(--ang, 0deg) at 50% 50%,
+    transparent 0deg, color-mix(in srgb, var(--accent) 16%, transparent) 60deg,
+    transparent 120deg, color-mix(in srgb, var(--accent2) 14%, transparent) 200deg,
+    transparent 280deg, color-mix(in srgb, var(--accent) 16%, transparent) 340deg, transparent 360deg);
+  filter: blur(80px); opacity: 0.55;
+  animation: plasma-2 90s linear infinite;
+}
+@keyframes plasma-1 {
+  0%   { transform: translate(0,0) scale(1) }
+  50%  { transform: translate(2%,-3%) scale(1.08) }
+  100% { transform: translate(-1%,2%) scale(1.04) }
+}
+@keyframes plasma-2 { to { transform: rotate(360deg) } }
+
+/* ══════════════════════════════════════════════
+   GRAIN + COSMOS
+══════════════════════════════════════════════ */
+.grain {
+  position: fixed; inset: 0; pointer-events: none; z-index: 201; opacity: 0.07; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.7 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+.cosmos { position: fixed; inset: 0; pointer-events: none; z-index: 1; overflow: hidden; }
+.cosmos .star-layer { position: absolute; inset: -20%; background-repeat: repeat; animation: drift-y linear infinite; }
+.cosmos .l1 {
+  background-image:
+    radial-gradient(1px 1px at 5% 12%, rgba(255,245,208,.7), transparent 60%),
+    radial-gradient(1px 1px at 22% 38%, rgba(255,245,208,.5), transparent 60%),
+    radial-gradient(1.2px 1.2px at 38% 24%, rgba(255,245,208,.6), transparent 60%),
+    radial-gradient(1px 1px at 56% 70%, rgba(255,245,208,.55), transparent 60%),
+    radial-gradient(1.4px 1.4px at 72% 18%, rgba(255,245,208,.5), transparent 60%),
+    radial-gradient(1px 1px at 88% 52%, rgba(255,245,208,.6), transparent 60%);
+  background-size: 600px 600px; animation-duration: 240s; opacity: .85;
+}
+.cosmos .l2 {
+  background-image:
+    radial-gradient(1.6px 1.6px at 12% 60%, rgba(180,210,255,.55), transparent 60%),
+    radial-gradient(2px 2px at 44% 86%, rgba(255,220,180,.4), transparent 60%),
+    radial-gradient(1.4px 1.4px at 76% 32%, rgba(200,230,255,.5), transparent 60%);
+  background-size: 900px 900px; animation-duration: 420s; opacity: .65;
+}
+.cosmos .l3 {
+  background-image:
+    radial-gradient(2.4px 2.4px at 20% 88%, rgba(255,210,160,.5), transparent 60%),
+    radial-gradient(3px 3px at 62% 50%, rgba(200,220,255,.45), transparent 60%);
+  background-size: 1200px 1200px; animation-duration: 600s; opacity: .5;
+}
+@keyframes drift-y {
+  0%   { transform: translateY(0) }
+  100% { transform: translateY(20%) }
+}
+
+/* ══════════════════════════════════════════════
+   TOP BAR
+══════════════════════════════════════════════ */
+#topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  height: 54px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px;
+  background: linear-gradient(180deg, rgba(6,6,12,0.97), rgba(6,6,12,0.88));
+  border-bottom: 1px solid rgba(201,164,92,0.18);
+  backdrop-filter: blur(10px);
+}
+.breadcrumb {
+  display: flex; align-items: center; gap: 8px;
+  font-family: "Cinzel", serif;
+  font-size: 10.5px; letter-spacing: .24em; text-transform: uppercase;
+}
+.breadcrumb a { color: rgba(232,226,207,0.38); text-decoration: none; transition: color .2s; }
+.breadcrumb a:hover { color: var(--gold); }
+.breadcrumb .sep { color: rgba(201,164,92,0.3); }
+.breadcrumb .current { color: rgba(232,226,207,0.72); }
+.topbar-links {
+  display: flex; align-items: center; gap: 8px;
+}
+.topbar-link {
+  font-family: "Cinzel", serif;
+  font-size: 9.5px; letter-spacing: .22em; text-transform: uppercase;
+  color: rgba(232,226,207,0.38); text-decoration: none;
+  padding: 6px 12px; border: 1px solid transparent; border-radius: 2px;
+  transition: color .2s, border-color .2s;
+  display: flex; align-items: center; gap: 6px;
+}
+.topbar-link:hover { color: var(--gold-bright); border-color: rgba(201,164,92,0.3); }
+.topbar-link svg { flex: none; }
+
+/* ══════════════════════════════════════════════
+   LAYOUT
+══════════════════════════════════════════════ */
+.page-wrap {
+  position: relative; z-index: 10;
+  padding-top: 54px;
+  max-width: 920px;
+  margin: 0 auto;
+  padding-left: 28px; padding-right: 28px;
+  padding-bottom: 120px;
+}
+
+/* ══════════════════════════════════════════════
+   SECTION HELPERS
+══════════════════════════════════════════════ */
+.section { margin-bottom: 72px; scroll-margin-top: 70px; }
+.section-label {
+  font-family: "Cinzel", serif;
+  font-size: 9.5px; letter-spacing: .36em; text-transform: uppercase;
+  color: var(--gold-dim); margin-bottom: 6px;
+  display: flex; align-items: center; gap: 12px;
+}
+.section-label::after {
+  content: ""; flex: 1; height: 1px;
+  background: linear-gradient(90deg, rgba(201,164,92,.3), transparent);
+}
+.section-title {
+  font-family: "Cinzel Decorative", serif;
+  font-size: clamp(22px, 3vw, 34px);
+  color: var(--gold-bright);
+  letter-spacing: .04em; line-height: 1.15;
+  margin-bottom: 4px;
+  text-shadow: 0 0 40px rgba(201,164,92,.22);
+}
+.section-sub {
+  font-family: "Cormorant Garamond", serif;
+  font-style: italic; font-size: 14.5px;
+  color: var(--ink-mute); margin-bottom: 28px;
+}
+.prose {
+  font-size: 16px; line-height: 1.85;
+  color: rgba(232,226,207,.75);
+  margin-bottom: 16px;
+}
+.divider {
+  height: 1px; border: none; margin: 60px 0;
+  background: linear-gradient(90deg, transparent, rgba(201,164,92,.3) 20%, rgba(201,164,92,.3) 80%, transparent);
+  position: relative;
+}
+.divider::after {
+  content: "✦"; position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
+  color: rgba(201,164,92,.5); font-size: 13px;
+  background: var(--bg-deep); padding: 0 10px;
+}
+
+/* ══════════════════════════════════════════════
+   HERO SECTION
+══════════════════════════════════════════════ */
+.hero {
+  padding: 64px 0 52px;
+  text-align: center;
+  position: relative;
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: "Cinzel", serif;
+  font-size: 9.5px; letter-spacing: .3em; text-transform: uppercase;
+  color: rgba(201,164,92,.65);
+  border: 1px solid rgba(201,164,92,.25);
+  background: rgba(201,164,92,.05);
+  padding: 6px 16px; border-radius: 2px;
+  margin-bottom: 24px;
+}
+.hero-badge .badge-dot {
+  width: 6px; height: 6px; border-radius: 50%; background: var(--gold);
+  box-shadow: 0 0 8px var(--gold); flex: none;
+  animation: badge-pulse 2.4s ease-in-out infinite;
+}
+@keyframes badge-pulse {
+  0%,100% { opacity: 1; box-shadow: 0 0 8px var(--gold); }
+  50%      { opacity: .5; box-shadow: 0 0 4px var(--gold); }
+}
+.hero-eyebrow {
+  font-family: "Cinzel", serif;
+  font-size: 10px; letter-spacing: .38em; text-transform: uppercase;
+  color: var(--gold-dim); margin-bottom: 14px;
+}
+.hero-title {
+  font-family: "Cinzel Decorative", serif;
+  font-size: clamp(32px, 5.5vw, 62px);
+  color: var(--gold-bright);
+  letter-spacing: .03em; line-height: 1.1;
+  text-shadow: 0 0 60px rgba(201,164,92,.28), 0 2px 0 rgba(0,0,0,.8);
+  margin-bottom: 16px;
+}
+.hero-title em { color: var(--gold); font-style: normal; }
+.hero-thai {
+  font-size: clamp(14px, 2vw, 18px);
+  color: rgba(232,226,207,.55);
+  line-height: 1.7; margin-bottom: 10px;
+}
+.hero-english {
+  font-family: "Cormorant Garamond", serif;
+  font-style: italic; font-size: 14px;
+  color: rgba(232,226,207,.3); letter-spacing: .06em;
+}
+.hero-divider {
+  width: 120px; height: 1px; margin: 32px auto 0;
+  background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+}
+
+/* ══════════════════════════════════════════════
+   READ ALOUD BOX
+══════════════════════════════════════════════ */
+.read-aloud {
+  position: relative;
+  padding: 28px 32px 28px 36px;
+  background: linear-gradient(135deg, rgba(201,164,92,.07) 0%, rgba(201,164,92,.03) 60%, transparent 100%);
+  border: 1px solid rgba(201,164,92,.25);
+  border-left: 4px solid var(--gold);
+  border-radius: 2px;
+  margin-bottom: 20px;
+}
+.ra-eyebrow {
+  font-family: "Cinzel", serif;
+  font-size: 8.5px; letter-spacing: .38em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 16px;
+  display: flex; align-items: center; gap: 10px;
+}
+.ra-eyebrow svg { flex: none; }
+.ra-text {
+  font-family: "Cormorant Garamond", serif;
+  font-style: italic; font-size: 17px; line-height: 1.88;
+  color: rgba(246,239,210,.8);
+}
+.ra-text p { margin-bottom: 14px; }
+.ra-text p:last-child { margin-bottom: 0; }
+.ra-mood {
+  font-family: "Cinzel", serif;
+  font-style: normal; font-size: 9px; letter-spacing: .28em; text-transform: uppercase;
+  color: rgba(201,164,92,.5);
+}
+
+/* ══════════════════════════════════════════════
+   CITY IN BRIEF — 2-COLUMN CONTRAST
+══════════════════════════════════════════════ */
+.contrast-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 2px;
+  border: 1px solid var(--line); border-radius: 3px; overflow: hidden;
+  margin-bottom: 20px;
+}
+.contrast-col {
+  padding: 26px 28px;
+  position: relative;
+}
+.contrast-col.surface {
+  background: linear-gradient(160deg, rgba(201,164,92,.08), rgba(201,164,92,.03));
+}
+.contrast-col.truth {
+  background: linear-gradient(160deg, rgba(176,26,26,.08), rgba(80,10,10,.03));
+  border-left: 1px solid rgba(176,26,26,.2);
+}
+.contrast-head {
+  font-family: "Cinzel", serif;
+  font-size: 9.5px; letter-spacing: .32em; text-transform: uppercase;
+  margin-bottom: 18px; padding-bottom: 10px;
+  border-bottom: 1px solid;
+  display: flex; align-items: center; gap: 8px;
+}
+.contrast-col.surface .contrast-head {
+  color: rgba(201,164,92,.65); border-color: rgba(201,164,92,.2);
+}
+.contrast-col.truth .contrast-head {
+  color: rgba(220,80,60,.6); border-color: rgba(176,26,26,.2);
+}
+.contrast-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  margin-bottom: 13px;
+  font-size: 14.5px; line-height: 1.6;
+  color: rgba(232,226,207,.62);
+}
+.contrast-item::before {
+  content: ""; flex: none;
+  width: 5px; height: 5px; border-radius: 50%;
+  margin-top: 7px;
+}
+.contrast-col.surface .contrast-item::before { background: rgba(201,164,92,.6); }
+.contrast-col.truth .contrast-item::before { background: rgba(200,60,40,.6); }
+
+/* ══════════════════════════════════════════════
+   ENTRY POINTS
+══════════════════════════════════════════════ */
+.entry-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+  margin-bottom: 20px;
+}
+.entry-card {
+  background: var(--bg-card);
+  border: 1px solid var(--line); border-radius: 3px; overflow: hidden;
+}
+.entry-header {
+  padding: 16px 20px 14px;
+  border-bottom: 1px solid var(--line-soft);
+  display: flex; align-items: center; gap: 12px;
+}
+.entry-icon {
+  width: 38px; height: 38px; border-radius: 50%; flex: none;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px;
+}
+.entry-card.sea .entry-icon { background: rgba(47,112,136,.2); border: 1px solid rgba(47,112,136,.4); }
+.entry-card.road .entry-icon { background: rgba(122,90,58,.2); border: 1px solid rgba(139,94,60,.4); }
+.entry-title {
+  font-family: "Cinzel", serif;
+  font-size: 13.5px; letter-spacing: .06em;
+  color: var(--gold-bright); margin-bottom: 2px;
+}
+.entry-sub {
+  font-family: "Cinzel", serif;
+  font-size: 9px; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.entry-body { padding: 18px 20px 20px; }
+
+.entry-read {
+  padding: 12px 14px; margin-bottom: 16px;
+  background: rgba(201,164,92,.05);
+  border-left: 3px solid rgba(201,164,92,.4);
+  border-radius: 1px;
+  font-family: "Cormorant Garamond", serif;
+  font-style: italic; font-size: 14.5px; line-height: 1.7;
+  color: rgba(246,239,210,.7);
+}
+
+.entry-npc {
+  margin-bottom: 12px; padding-bottom: 12px;
+  border-bottom: 1px solid var(--line-soft);
+  display: flex; align-items: flex-start; gap: 8px;
+}
+.entry-npc-label {
+  font-family: "Cinzel", serif;
+  font-size: 8.5px; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--gold-dim); flex: none; padding-top: 3px;
+}
+.entry-npc-name {
+  font-family: "Cinzel", serif;
+  font-size: 12px; letter-spacing: .04em;
+  color: var(--gold-bright); margin-bottom: 3px;
+}
+.entry-npc-desc { font-size: 13.5px; line-height: 1.55; color: rgba(232,226,207,.55); }
+
+.entry-hook {
+  padding: 10px 14px;
+  background: rgba(80,40,120,.08);
+  border-left: 3px solid rgba(120,80,180,.4);
+  border-radius: 1px;
+}
+.entry-hook-label {
+  font-family: "Cinzel", serif;
+  font-size: 8px; letter-spacing: .28em; text-transform: uppercase;
+  color: rgba(150,110,200,.6); margin-bottom: 5px;
+}
+.entry-hook-text { font-size: 13.5px; line-height: 1.55; color: rgba(232,226,207,.58); }
+
+/* ══════════════════════════════════════════════
+   FIRST IMPRESSIONS GRID
+══════════════════════════════════════════════ */
+.impressions-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+  margin-bottom: 20px;
+}
+.impression-card {
+  padding: 18px 16px 16px;
+  background: var(--bg-card); border: 1px solid var(--line); border-radius: 3px;
+  position: relative; overflow: hidden;
+}
+.impression-card::before {
+  content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: var(--sense-color, var(--gold-dim));
+  opacity: .6;
+}
+.impression-sense {
+  font-family: "Cinzel", serif;
+  font-size: 8.5px; letter-spacing: .3em; text-transform: uppercase;
+  color: var(--sense-color, var(--gold-dim));
+  margin-bottom: 10px;
+  display: flex; align-items: center; gap: 7px;
+}
+.impression-sense .si { font-size: 14px; }
+.impression-text {
+  font-size: 14px; line-height: 1.65;
+  color: rgba(232,226,207,.65);
+}
+
+/* ══════════════════════════════════════════════
+   ACTIVE TENSIONS
+══════════════════════════════════════════════ */
+.tensions-list { display: flex; flex-direction: column; gap: 16px; margin-bottom: 20px; }
+.tension-card {
+  padding: 22px 24px;
+  background: var(--bg-card); border: 1px solid var(--line); border-radius: 3px;
+  position: relative; overflow: hidden;
+}
+.tension-card::before {
+  content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+  background: var(--t-color, var(--gold));
+}
+.tension-top {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 16px; margin-bottom: 14px;
+}
+.tension-title {
+  font-family: "Cinzel", serif;
+  font-size: 15px; letter-spacing: .06em;
+  color: var(--gold-bright); margin-bottom: 4px;
+}
+.tension-subtitle { font-size: 13px; color: var(--ink-mute); font-style: italic; }
+.tension-status {
+  flex: none;
+  font-family: "Cinzel", serif;
+  font-size: 8px; letter-spacing: .22em; text-transform: uppercase;
+  padding: 4px 10px; border-radius: 2px; border: 1px solid;
+  color: var(--t-color); border-color: var(--t-color);
+  background: color-mix(in srgb, var(--t-color) 10%, transparent);
+  white-space: nowrap;
+}
+.tension-signs {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px;
+}
+.tension-sign {
+  display: flex; align-items: flex-start; gap: 8px;
+  font-size: 13.5px; line-height: 1.5;
+  color: rgba(232,226,207,.58);
+  padding: 8px 10px;
+  background: rgba(0,0,0,.15); border-radius: 2px;
+}
+.tension-sign .ts-icon { flex: none; font-size: 13px; margin-top: 1px; }
+.tension-notice {
+  padding: 10px 14px;
+  background: color-mix(in srgb, var(--t-color) 6%, transparent);
+  border-top: 1px solid color-mix(in srgb, var(--t-color) 15%, transparent);
+  font-size: 13.5px; line-height: 1.55; color: rgba(232,226,207,.52);
+}
+.tension-notice strong {
+  font-family: "Cinzel", serif;
+  font-size: 8.5px; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--t-color); display: block; margin-bottom: 4px;
+}
+
+/* ══════════════════════════════════════════════
+   NPC CARDS
+══════════════════════════════════════════════ */
+.npc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px; }
+.npc-card {
+  background: var(--bg-card); border: 1px solid var(--line);
+  border-top: 3px solid var(--n-color, var(--gold-dim));
+  border-radius: 2px; overflow: hidden;
+}
+.npc-head {
+  padding: 16px 18px 12px;
+  border-bottom: 1px solid var(--line-soft);
+}
+.npc-name {
+  font-family: "Cinzel", serif;
+  font-size: 14px; letter-spacing: .05em;
+  color: var(--gold-bright); margin-bottom: 3px;
+}
+.npc-role {
+  font-size: 13px; color: var(--ink-mute); font-style: italic;
+}
+.npc-body { padding: 14px 18px 16px; display: flex; flex-direction: column; gap: 12px; }
+.npc-row {}
+.npc-row-label {
+  font-family: "Cinzel", serif;
+  font-size: 8px; letter-spacing: .28em; text-transform: uppercase;
+  color: rgba(201,164,92,.45); margin-bottom: 4px;
+}
+.npc-row-text { font-size: 13.5px; line-height: 1.55; color: rgba(232,226,207,.62); }
+.npc-secret {
+  padding: 8px 12px;
+  background: rgba(176,26,26,.07);
+  border-left: 2px solid rgba(176,26,26,.35);
+  border-radius: 1px;
+  cursor: pointer;
+}
+.npc-secret-label {
+  font-family: "Cinzel", serif;
+  font-size: 7.5px; letter-spacing: .28em; text-transform: uppercase;
+  color: rgba(200,60,40,.5); margin-bottom: 4px;
+  display: flex; align-items: center; gap: 6px;
+  user-select: none;
+}
+.npc-secret-label svg { flex: none; }
+.npc-secret-text {
+  font-size: 13px; line-height: 1.5; color: rgba(232,226,207,.52);
+  max-height: 0; overflow: hidden; transition: max-height .35s ease, opacity .3s ease;
+  opacity: 0;
+}
+.npc-secret.open .npc-secret-text { max-height: 120px; opacity: 1; }
+.npc-secret-toggle { transform: rotate(0deg); transition: transform .3s; }
+.npc-secret.open .npc-secret-toggle { transform: rotate(90deg); }
+
+/* ══════════════════════════════════════════════
+   SESSION BEATS — TIMELINE
+══════════════════════════════════════════════ */
+.beats-timeline { position: relative; margin-bottom: 20px; }
+.beats-spine {
+  position: absolute; left: 22px; top: 12px; bottom: 12px; width: 1px;
+  background: linear-gradient(180deg, var(--gold-dim), rgba(201,164,92,.15));
+  z-index: 0;
+}
+.beat {
+  display: grid; grid-template-columns: 46px 1fr;
+  gap: 20px; margin-bottom: 8px;
+  position: relative; z-index: 1;
+}
+.beat-num {
+  width: 46px; height: 46px; border-radius: 50%; flex: none;
+  display: flex; align-items: center; justify-content: center;
+  font-family: "Cinzel Decorative", serif;
+  font-size: 16px; font-weight: 700;
+  color: var(--gold); background: var(--bg-paper);
+  border: 2px solid rgba(201,164,92,.4);
+  box-shadow: 0 0 16px rgba(201,164,92,.15);
+  transition: border-color .3s, box-shadow .3s;
+  cursor: pointer;
+}
+.beat.done .beat-num {
+  border-color: rgba(60,160,100,.6);
+  color: rgba(100,210,130,.8);
+  box-shadow: 0 0 16px rgba(60,160,100,.2);
+}
+.beat-body {
+  padding: 14px 18px 16px;
+  background: var(--bg-card); border: 1px solid var(--line);
+  border-radius: 3px; flex: 1;
+  transition: border-color .25s;
+}
+.beat.done .beat-body { border-color: rgba(60,160,100,.25); }
+.beat-title {
+  font-family: "Cinzel", serif;
+  font-size: 13.5px; letter-spacing: .07em;
+  color: var(--gold-bright); margin-bottom: 3px;
+}
+.beat.done .beat-title { color: rgba(100,210,130,.8); }
+.beat-sub { font-size: 12px; color: var(--gold-dim); font-style: italic; margin-bottom: 8px; }
+.beat-desc { font-size: 13.5px; line-height: 1.6; color: rgba(232,226,207,.6); }
+.beat-check {
+  display: none; /* managed via JS class .done on .beat */
+}
+
+/* completion indicator */
+.beat.done .beat-body::after {
+  content: "✓"; float: right; margin-top: -2px;
+  font-family: "Cinzel", serif;
+  font-size: 11px; color: rgba(100,210,130,.65);
+  letter-spacing: .1em;
+}
+
+/* ══════════════════════════════════════════════
+   DM NOTES — COLLAPSIBLE
+══════════════════════════════════════════════ */
+.dm-notes-section { margin-bottom: 20px; }
+.dm-note {
+  margin-bottom: 10px;
+  border: 1px solid rgba(176,26,26,.22);
+  border-radius: 3px; overflow: hidden;
+}
+.dm-note-toggle {
+  width: 100%; padding: 13px 18px;
+  background: rgba(80,10,10,.25);
+  display: flex; align-items: center; gap: 10px;
+  cursor: pointer;
+  font-family: "Cinzel", serif;
+  font-size: 10.5px; letter-spacing: .22em; text-transform: uppercase;
+  color: rgba(220,80,60,.55);
+  border: none; text-align: left;
+  transition: background .2s, color .2s;
+}
+.dm-note-toggle:hover { background: rgba(120,20,20,.3); color: rgba(230,100,80,.75); }
+.dm-note-toggle svg { flex: none; }
+.dm-note-arrow { margin-left: auto; transition: transform .3s; }
+.dm-note-toggle.open .dm-note-arrow { transform: rotate(180deg); }
+.dm-note-body {
+  display: none; padding: 18px 20px;
+  background: rgba(10,0,0,.3);
+  border-top: 1px solid rgba(176,26,26,.15);
+}
+.dm-note-body.open { display: block; }
+.dm-note-body p {
+  font-size: 14.5px; line-height: 1.75; color: rgba(232,226,207,.6);
+  margin-bottom: 12px;
+}
+.dm-note-body p:last-child { margin-bottom: 0; }
+.dm-note-body ul {
+  list-style: none; display: flex; flex-direction: column; gap: 8px;
+  margin-bottom: 12px;
+}
+.dm-note-body ul li {
+  padding-left: 18px; position: relative;
+  font-size: 14px; line-height: 1.6; color: rgba(232,226,207,.6);
+}
+.dm-note-body ul li::before {
+  content: "❖"; position: absolute; left: 0; top: 2px;
+  color: rgba(201,164,92,.5); font-size: 9px;
+}
+.dm-note-body strong { color: rgba(232,226,207,.85); font-weight: 600; }
+
+/* ══════════════════════════════════════════════
+   PROGRESS TRACKER
+══════════════════════════════════════════════ */
+.progress-bar-wrap {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+  background: linear-gradient(0deg, rgba(6,6,12,0.97), rgba(6,6,12,0.88));
+  border-top: 1px solid rgba(201,164,92,.15);
+  backdrop-filter: blur(10px);
+  padding: 12px 24px;
+  display: flex; align-items: center; gap: 16px;
+}
+.progress-label {
+  font-family: "Cinzel", serif;
+  font-size: 9px; letter-spacing: .28em; text-transform: uppercase;
+  color: rgba(201,164,92,.4); flex: none;
+}
+.progress-beats { display: flex; gap: 6px; }
+.progress-pip {
+  width: 28px; height: 4px; border-radius: 2px;
+  background: rgba(201,164,92,.12);
+  transition: background .4s ease;
+  cursor: pointer;
+  position: relative;
+}
+.progress-pip.done { background: rgba(100,210,130,.55); }
+.progress-pip::after {
+  content: attr(data-label);
+  position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
+  font-family: "Cinzel", serif; font-size: 8px; letter-spacing: .15em; text-transform: uppercase;
+  color: rgba(201,164,92,.5); white-space: nowrap;
+  opacity: 0; transition: opacity .2s; pointer-events: none;
+}
+.progress-pip:hover::after { opacity: 1; }
+.progress-reset {
+  margin-left: auto; flex: none;
+  font-family: "Cinzel", serif; font-size: 8.5px; letter-spacing: .2em; text-transform: uppercase;
+  color: rgba(201,164,92,.3); background: none; border: 1px solid rgba(201,164,92,.15);
+  padding: 5px 12px; border-radius: 2px; cursor: pointer;
+  transition: color .2s, border-color .2s;
+}
+.progress-reset:hover { color: rgba(201,164,92,.7); border-color: rgba(201,164,92,.4); }
+.progress-count { font-family: "Cinzel", serif; font-size: 9px; letter-spacing: .16em; color: rgba(201,164,92,.4); }
+
+/* ══════════════════════════════════════════════
+   FLOATING MAP BUTTON
+══════════════════════════════════════════════ */
+.float-map {
+  position: fixed; bottom: 60px; right: 20px; z-index: 99;
+  display: flex; align-items: center; gap: 9px;
+  font-family: "Cinzel", serif; font-size: 9.5px; letter-spacing: .22em; text-transform: uppercase;
+  color: rgba(201,164,92,.65); text-decoration: none;
+  background: rgba(6,6,12,.9); border: 1px solid rgba(201,164,92,.3);
+  border-radius: 2px; padding: 10px 16px;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 8px 32px rgba(0,0,0,.6);
+  transition: color .2s, border-color .2s, box-shadow .2s;
+}
+.float-map:hover {
+  color: var(--gold-bright); border-color: var(--gold);
+  box-shadow: 0 8px 32px rgba(201,164,92,.15);
+}
+.float-map svg { flex: none; }
+
+/* ══════════════════════════════════════════════
+   ENCOUNTER CARDS
+══════════════════════════════════════════════ */
+.encounter-list { display: flex; flex-direction: column; gap: 24px; margin-bottom: 20px; }
+.encounter-card {
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--e-color, var(--gold-dim));
+  border-radius: 3px;
+  overflow: hidden;
+}
+.encounter-header {
+  padding: 16px 20px 14px;
+  background: color-mix(in srgb, var(--e-color, var(--gold-dim)) 6%, transparent);
+  border-bottom: 1px solid var(--line-soft);
+  display: flex; align-items: center; gap: 14px;
+}
+.encounter-dist-dot {
+  width: 12px; height: 12px; border-radius: 50%; flex: none;
+  background: var(--e-color); box-shadow: 0 0 8px var(--e-color);
+}
+.encounter-loc {
+  font-family: "Cinzel", serif;
+  font-size: 9px; letter-spacing: .3em; text-transform: uppercase;
+  color: var(--e-color); margin-bottom: 3px;
+}
+.encounter-title {
+  font-family: "Cinzel", serif;
+  font-size: 15px; letter-spacing: .05em;
+  color: var(--gold-bright);
+}
+.encounter-body { padding: 20px 22px; display: flex; flex-direction: column; gap: 16px; }
+
+.enc-scene {
+  font-size: 14.5px; line-height: 1.78;
+  color: rgba(232,226,207,.68);
+}
+.enc-read {
+  padding: 12px 16px;
+  background: rgba(201,164,92,.05);
+  border-left: 3px solid rgba(201,164,92,.35);
+  font-family: "Cormorant Garamond", serif;
+  font-style: italic; font-size: 15px; line-height: 1.75;
+  color: rgba(246,239,210,.72);
+}
+.enc-read .ra-label {
+  font-family: "Cinzel", serif; font-style: normal;
+  font-size: 8px; letter-spacing: .32em; text-transform: uppercase;
+  color: rgba(201,164,92,.55); display: block; margin-bottom: 8px;
+}
+
+/* Skill check table */
+.skill-table { width: 100%; border-collapse: collapse; }
+.skill-table-head {
+  font-family: "Cinzel", serif;
+  font-size: 8.5px; letter-spacing: .28em; text-transform: uppercase;
+  color: rgba(201,164,92,.45); margin-bottom: 8px;
+  display: flex; align-items: center; gap: 10px;
+}
+.skill-table-head svg { flex: none; }
+.skill-table-head::after {
+  content: ""; flex: 1; height: 1px;
+  background: rgba(201,164,92,.12);
+}
+.skill-rows { display: flex; flex-direction: column; gap: 6px; }
+.skill-row {
+  display: grid; grid-template-columns: 110px 48px 1fr;
+  gap: 10px; align-items: start;
+  padding: 8px 12px; border-radius: 2px;
+  background: rgba(0,0,0,.2);
+  font-size: 13.5px; line-height: 1.5;
+}
+.skill-name {
+  font-family: "Cinzel", serif;
+  font-size: 11px; letter-spacing: .06em;
+  color: var(--gold);
+}
+.skill-dc {
+  font-family: "Cinzel Decorative", serif;
+  font-size: 14px; color: var(--gold-bright);
+  text-align: center; padding-top: 1px;
+}
+.skill-result { color: rgba(232,226,207,.6); }
+.skill-result em { color: rgba(232,226,207,.85); font-style: normal; }
+.skill-row.fail { background: rgba(80,20,20,.15); }
+.skill-row.fail .skill-dc { color: rgba(200,80,60,.75); }
+
+/* Outcome branches */
+.outcome-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.outcome-card {
+  padding: 12px 14px; border-radius: 2px;
+  border: 1px solid;
+}
+.outcome-card.success {
+  background: rgba(40,100,60,.08);
+  border-color: rgba(60,160,100,.2);
+}
+.outcome-card.fail {
+  background: rgba(100,30,20,.08);
+  border-color: rgba(180,60,40,.2);
+}
+.outcome-label {
+  font-family: "Cinzel", serif;
+  font-size: 8px; letter-spacing: .28em; text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.outcome-card.success .outcome-label { color: rgba(80,200,120,.55); }
+.outcome-card.fail .outcome-label { color: rgba(200,80,60,.55); }
+.outcome-text { font-size: 13px; line-height: 1.55; color: rgba(232,226,207,.6); }
+
+/* Connection tags */
+.enc-connections { display: flex; flex-wrap: wrap; gap: 6px; }
+.enc-tag {
+  font-family: "Cinzel", serif;
+  font-size: 9px; letter-spacing: .16em; text-transform: uppercase;
+  padding: 3px 10px; border-radius: 2px; border: 1px solid;
+  color: var(--t-color); border-color: var(--t-color);
+  background: color-mix(in srgb, var(--t-color) 8%, transparent);
+}
+
+/* ══════════════════════════════════════════════
+   SCROLL PROGRESS
+══════════════════════════════════════════════ */
+#read-progress {
+  position: fixed; top: 54px; left: 0;
+  height: 2px; width: 0%; z-index: 101;
+  background: linear-gradient(90deg, var(--gold-dim), var(--gold));
+  pointer-events: none;
+  box-shadow: 0 0 6px rgba(201,164,92,.5);
+  transition: width .1s linear;
+}
+
+/* ══════════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════════ */
+@media (max-width: 720px) {
+  .page-wrap { padding-left: 18px; padding-right: 18px; }
+  .contrast-grid { grid-template-columns: 1fr; }
+  .entry-grid { grid-template-columns: 1fr; }
+  .impressions-grid { grid-template-columns: repeat(2, 1fr); }
+  .npc-grid { grid-template-columns: 1fr; }
+  .topbar-links .topbar-link:not(:last-child) { display: none; }
+}
+@media (max-width: 480px) {
+  .impressions-grid { grid-template-columns: 1fr; }
+  .progress-beats { gap: 4px; }
+  .progress-pip { width: 20px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Ambient layers -->
+<div class="shader-wallpaper"></div>
+<div class="cosmos">
+  <div class="star-layer l1"></div>
+  <div class="star-layer l2"></div>
+  <div class="star-layer l3"></div>
+</div>
+<div class="grain"></div>
+<div id="read-progress"></div>
+
+<!-- Top bar -->
+<nav id="topbar">
+  <div class="breadcrumb">
+    <a href="/">The Veiled Codex</a>
+    <span class="sep">›</span>
+    <a href="/oneshot/">One-Shot</a>
+    <span class="sep">›</span>
+    <span class="current">Porto Arrival</span>
+  </div>
+  <div class="topbar-links">
+    <a class="topbar-link" href="#encounters">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg>
+      Encounters
+    </a>
+    <a class="topbar-link" href="/lore/porto-stellare">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+      Lore
+    </a>
+    <a class="topbar-link" href="/map/porto-stellare">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 4 3 6.5v13L9 17l6 2.5 6-2.5v-13L15 6.5 9 4Z"/><path d="M9 4v13M15 6.5v13"/></svg>
+      Map
+    </a>
+  </div>
+</nav>
+
+<!-- Main content -->
+<div class="page-wrap">
+
+  <!-- ══ HERO ══ -->
+  <section class="hero" id="hero">
+    <div class="hero-badge">
+      <span class="badge-dot"></span>
+      One-Shot · City Arrival · DM Guide
+    </div>
+    <div class="hero-eyebrow">The Veiled Codex · Porto Stellare</div>
+    <h1 class="hero-title">Arrival at<br><em>Porto Stellare</em></h1>
+    <p class="hero-thai">เมื่อผู้เล่นก้าวสู่เมืองที่ทะเลสะท้อนแสงดาว<br>และทุกสิ่งที่งดงามซ่อนรอยร้าวไว้ใต้พื้น</p>
+    <p class="hero-english">When the city's beauty is only the surface of something far older</p>
+    <div class="hero-divider"></div>
+  </section>
+
+  <!-- ══ OPENING READ-ALOUD ══ -->
+  <section class="section" id="read-aloud">
+    <div class="section-label">Opening Narration</div>
+    <div class="section-title">บทบรรยายเปิดเรื่อง</div>
+    <p class="section-sub">Read Aloud — อ่านให้ผู้เล่นฟัง</p>
+
+    <div class="read-aloud">
+      <div class="ra-eyebrow">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M12 16v-4M12 8h.01"/></svg>
+        Read Aloud — ทางทะเล / By Sea
+      </div>
+      <div class="ra-text">
+        <p>เรือของพวกคุณเลี้ยวผ่านหัวแหลมหินสุดท้าย และเมืองก็ปรากฏขึ้น — <span class="ra-mood">slowly, like a painting being revealed</span></p>
+        <p>Porto Stellare ตั้งอยู่บนหน้าผาสูงชันเหนือ Moonlit Bay เหมือนเมืองที่ถูกแกะสลักออกจากหินผา แสงยามเย็นสีทองตกกระทบหลังคาหินอ่อนสีขาวและหน้าต่างกระจกนับร้อยบาน ทุกสิ่งสะท้อนแสง — ทะเลสะท้อนท้องฟ้า เมืองสะท้อนทะเล <span class="ra-mood">golden, impossible, achingly beautiful</span></p>
+        <p>ยิ่งมองขึ้นไป อาคารยิ่งสูงใหญ่ สีขาวกว่า สะอาดกว่า ในขณะที่ท่าเรือด้านล่างเต็มไปด้วยหลังคาสีน้ำตาลดำ กลิ่นน้ำมันเตา น้ำเค็ม และอะไรบางอย่างที่เผาอยู่ไกลๆ เรือข้างหน้าพวกคุณลำหนึ่งทอดสมออยู่เฉย — ไม่มีธงบอกตำแหน่ง ไม่มีคนออกมาบนดาดฟ้า <span class="ra-mood">still, wrong</span></p>
+        <p>เสียงของ Harbormaster ดังขึ้นจากท่าเทียบเรือ เสียงกร้านและเหนื่อย เขาโบกมือให้คุณเข้าจอด แต่สายตาของเขาไม่ได้มองที่เรือพวกคุณ — เขามองไปที่เรือลำนั้น เรือที่ไม่มีคนบนดาดฟ้า <span class="ra-mood">with something between dread and calculation</span></p>
+      </div>
+    </div>
+
+    <div class="read-aloud" style="--border-color:rgba(139,94,60,.5); border-left-color: rgba(139,94,60,.6); background: linear-gradient(135deg, rgba(139,94,60,.06) 0%, transparent 60%);">
+      <div class="ra-eyebrow" style="color: rgba(180,130,80,.7);">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Read Aloud — ทางบก / By Road
+      </div>
+      <div class="ra-text">
+        <p>ถนนหินโค้งขึ้นเนินและเมืองก็ปรากฏขึ้นเหนือเส้นขอบฟ้า — <span class="ra-mood">tier by tier, wealth made visible</span></p>
+        <p>Porto Stellare ไม่ใช่เมืองเดียว มันคือเมืองซ้อนเมือง แต่ละระดับเป็นโลกที่แยกจากกัน ด้านล่างสุดที่ประตูใต้ เสียงเหล็กกระทบเหล็ก กลิ่นถ่านและเหงื่อ คนงานเดินเซไม่ได้นอน ด้านบนไกลๆ อาคารสีขาวสูงตระหง่านในแดดยามเย็น สะอาดราวกับว่ามีคนเช็ดทุกวัน <span class="ra-mood">the distance between those two worlds is everything</span></p>
+        <p>ทหารยามสองคนที่ประตูใต้ขอดูกระเป๋าสัมภาระพวกคุณ หนึ่งในนั้นอายุน้อยกว่า มือของเขาสั่นเล็กน้อย เขามองไปที่ถนนด้านในก่อนจะเงยหน้าขึ้นมาถามชื่อพวกคุณ ด้านหลังเขา ถนนหลักเปลี่ยว คนที่เดินผ่านก้มหน้าและเดินเร็ว <span class="ra-mood">a city holding its breath</span></p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ══ CITY IN BRIEF ══ -->
+  <section class="section" id="city-brief">
+    <div class="section-label">City Overview</div>
+    <div class="section-title">เมืองสองหน้า</div>
+    <p class="section-sub">What the players see vs. what is actually happening</p>
+
+    <div class="contrast-grid">
+      <div class="contrast-col surface">
+        <div class="contrast-head">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+          ที่ผู้เล่นเห็น · Surface
+        </div>
+        <div class="contrast-item">เมืองสวยงามสร้างบนหน้าผาเหนืออ่าวสีเงิน หลังคาหินอ่อนสะท้อนแสงดาว</div>
+        <div class="contrast-item">Merchant Republic — ปกครองด้วย City Council ที่มาจากตัวแทน Guild ไม่มีกษัตริย์</div>
+        <div class="contrast-item">เศรษฐกิจรุ่งเรือง ท่าเรือคึกคัก Aurora Promenade เต็มไปด้วยนักท่องเที่ยว</div>
+        <div class="contrast-item">City Watch ลาดตระเวนทั่วเมือง ดูเป็นระเบียบ</div>
+        <div class="contrast-item">แต่ละ district มีบุคลิกชัดเจน ยิ่งสูงยิ่งร่ำรวย</div>
+        <div class="contrast-item">Stellamar Port ท่าเรือที่ใหญ่ที่สุดในภูมิภาค สินค้าเข้าออกทุกวัน</div>
+      </div>
+      <div class="contrast-col truth">
+        <div class="contrast-head">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3l18 18M10.5 10.677A2 2 0 1 0 13.323 13.5M13.584 8.415A2 2 0 0 0 10.77 10.77M21 12c0 5-4 9-9 9S3 17 3 12s4-9 9-9"/></svg>
+          ความจริงที่ซ่อนไว้ · Dark Truth
+        </div>
+        <div class="contrast-item">สิ่งใต้ดินใน Hollow Below กำลังทดสอบทางออก สัตว์หนี Old Crown ทุกสัปดาห์</div>
+        <div class="contrast-item">Councilor Vira สร้างเครือข่ายคอร์รัปชั่นเชื่อม Golden Crescent → Stellamar → Aurora</div>
+        <div class="contrast-item">เรือที่เข้าท่าพร้อมสินค้าครบ แต่ลูกเรือตายหมด — ความลับนี้ถูกซื้อไว้เงียบ</div>
+        <div class="contrast-item">City Watch ปราบประชุมคนงาน ปกป้องผลประโยชน์ชนชั้นสูง ไม่ใช่ประชาชน</div>
+        <div class="contrast-item">นักดาราศาสตร์ที่ Starhill หาย Library ถูกปิดตาย นักศึกษา "ลาออก" โดยไม่มีร่องรอย</div>
+        <div class="contrast-item">แสงใต้น้ำ Moonlit Bay ทุกคืนที่ทะเลเงียบ — ไม่มีใครพูดถึงมัน</div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ══ ENTRY POINTS ══ -->
+  <section class="section" id="entry-points">
+    <div class="section-label">Entry Points</div>
+    <div class="section-title">จุดเข้าเมือง</div>
+    <p class="section-sub">Where the session begins depending on how players arrive</p>
+
+    <div class="entry-grid">
+      <!-- By Sea -->
+      <div class="entry-card sea">
+        <div class="entry-header">
+          <div class="entry-icon">⚓</div>
+          <div>
+            <div class="entry-title">ทางทะเล</div>
+            <div class="entry-sub">By Sea — Stellamar Port</div>
+          </div>
+        </div>
+        <div class="entry-body">
+          <div class="entry-read">
+            เรือที่จอดข้างหน้าไม่มีคนออกมาต้อนรับ ไม่มีธงสัญญาณ ไม่มีเสียง เชือกผูกท่าพันรอบเสาอย่างเรียบร้อยราวกับมีคนเพิ่งผูก แต่ดาดฟ้าว่างเปล่า
+          </div>
+          <div class="entry-npc">
+            <div>
+              <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px">
+                <div class="entry-npc-label">NPC</div>
+                <div class="entry-npc-name">Harbormaster Vel</div>
+              </div>
+              <div class="entry-npc-desc">กร้าน เหนื่อย ดวงตาไม่นิ่ง — รีบให้ผ่านเพื่อเบี่ยงความสนใจจากเรือลำนั้น เขาถามว่าจะค้างคืนกี่คืน ราวกับอยากให้พวกคุณเดินต่อ</div>
+            </div>
+          </div>
+          <div class="entry-hook">
+            <div class="entry-hook-label">🪝 Immediate Hook</div>
+            <div class="entry-hook-text">Lira — หญิงสาวที่ท่าเรือ ฝันยามตื่น — กำลังมองเรือลำนั้นอยู่ เธอเห็นสัญลักษณ์บนลังสินค้าที่ถูกขนออกไปเงียบๆ เมื่อคืน สัญลักษณ์เดียวกับที่แกะสลักบนก้นทะเล</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- By Road -->
+      <div class="entry-card road">
+        <div class="entry-header">
+          <div class="entry-icon">🚪</div>
+          <div>
+            <div class="entry-title">ทางบก</div>
+            <div class="entry-sub">By Road — Southern Gate</div>
+          </div>
+        </div>
+        <div class="entry-body">
+          <div class="entry-read">
+            ประตูใต้เปิดอยู่แต่ทหารยามยืนเฝ้าสองคน ด้านหลังประตูถนน Iron Quarters เปลือยเปล่า ปกติควรจะมีแม่ค้า แต่วันนี้ร้านค้าส่วนใหญ่ปิด มีเพียงป้ายข้อความขีดถ่านบนผนัง "อย่าปล่อยลูกเดินคนเดียว"
+          </div>
+          <div class="entry-npc">
+            <div>
+              <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px">
+                <div class="entry-npc-label">NPC</div>
+                <div class="entry-npc-name">Cadet Wren (City Watch)</div>
+              </div>
+              <div class="entry-npc-desc">ยามอายุน้อย มือสั่นเล็กน้อย ขอดูหนังสือเดินทางอย่างระมัดระวัง — ถ้าพวกคุณถามว่าเมืองเป็นอะไร เขาจะพูดว่า "แค่ช่วงนี้มันแปลกๆ" แล้วเงียบ</div>
+            </div>
+          </div>
+          <div class="entry-hook">
+            <div class="entry-hook-label">🪝 Immediate Hook</div>
+            <div class="entry-hook-text">ผู้หญิงคนหนึ่งถือรูปวาดเด็กชาย เดินฝ่าฝูงชนไปหาพวกคุณ — "คุณมาจากนอกเมืองใช่ไหม? ช่วยตามหาลูกฉันได้ไหม? City Watch บอกว่ามันหนีออกไปเองแต่รอยเท้ามันสิ้นสุดที่ท่อน้ำเก่าในตรอก"</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ══ FIRST IMPRESSIONS ══ -->
+  <section class="section" id="first-impressions">
+    <div class="section-label">Sensory Details</div>
+    <div class="section-title">ความรู้สึกแรก</div>
+    <p class="section-sub">Six sensory anchors to ground the players in Porto Stellare</p>
+
+    <div class="impressions-grid">
+      <div class="impression-card" style="--sense-color: #d4a017">
+        <div class="impression-sense"><span class="si">👁</span> ที่เห็น · Sight</div>
+        <div class="impression-text">แสงทองยามเย็นตกกระทบหน้าต่างกระจกบนหน้าผา ดูราวกับเมืองกำลังลุกไหม้ ยิ่งสูงยิ่งสว่าง ยิ่งต่ำยิ่งมืด ร่มเงาของอาคารบนหน้าผาทอดยาวปกคลุม Iron Quarters ด้านล่างเกือบตลอดวัน</div>
+      </div>
+      <div class="impression-card" style="--sense-color: #4a9c6e">
+        <div class="impression-sense"><span class="si">👂</span> ที่ได้ยิน · Sound</div>
+        <div class="impression-text">เสียงค้อนเหล็กจากโรงงานด้านล่าง ดังต่อเนื่องไม่หยุด ปนกับเสียงนกนางนวลและระฆังจากเรือ แต่ทุกๆ ช่วงเวลา ดูเหมือนจะมีช่วงเงียบสั้นๆ ที่ผิดปกติ — ราวกับทุกอย่างกั้นใจรอฟังบางสิ่ง</div>
+      </div>
+      <div class="impression-card" style="--sense-color: #c98a6d">
+        <div class="impression-sense"><span class="si">👃</span> กลิ่น · Smell</div>
+        <div class="impression-text">เกลือทะเล ปลาเค็ม น้ำมันเตาจากโรงงาน แต่ถ้าลมมาจากทิศใต้ — จาก Old Crown — จะมีกลิ่นเผาสมุนไพรที่ไม่คุ้นเคย หนักและหวานในเวลาเดียวกัน ใครที่รู้จักพิธีกรรมโบราณจะรู้ทันทีว่านั่นไม่ใช่ธูปธรรมดา</div>
+      </div>
+      <div class="impression-card" style="--sense-color: #7fa0b5">
+        <div class="impression-sense"><span class="si">🖐</span> ที่สัมผัส · Touch</div>
+        <div class="impression-text">พื้นถนนหินโค้ง ลื่นเล็กน้อยเพราะฝนที่ผ่านมา ผนังอาคาร Iron Quarters มีความชื้นแม้แดดจ้า — ราวกับมีน้ำซึมออกมาจากด้านใน ถ้าเอามือแตะพื้นในซอยลึก พื้นสั่นเบาๆ แบบที่ไม่มีเหตุผล</div>
+      </div>
+      <div class="impression-card" style="--sense-color: #8a4a63">
+        <div class="impression-sense"><span class="si">🌡</span> บรรยากาศ · Atmosphere</div>
+        <div class="impression-text">ผู้คนเดินเร็วและก้มหน้า การสบตาสั้นกว่าปกติ ที่ Aurora Promenade ด้านบนเสียงดนตรีและหัวเราะ — แต่แค่หันมองลงมาจะเห็นถนนด้านล่างที่เงียบผิดปกติ เมืองนี้กำลังแบ่งตัวเองออกเป็นสองส่วน</div>
+      </div>
+      <div class="impression-card" style="--sense-color: #7a5aaa">
+        <div class="impression-sense"><span class="si">💬</span> ข่าวลือ · Rumor</div>
+        <div class="impression-text">"คนแก่บอกว่าครั้งสุดท้ายที่สัตว์หนีออกจาก Old Crown พร้อมกัน มันเกิดขึ้นสามร้อยปีก่อน ปีเดียวกับที่เมืองต้องอพยพทิ้งย่านใต้ดินทั้งหมด แต่ประวัติศาสตร์ทางการบอกว่าเป็นน้ำท่วม"</div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ══ ACTIVE TENSIONS ══ -->
+  <section class="section" id="tensions">
+    <div class="section-label">Active Tensions</div>
+    <div class="section-title">สิ่งที่เดือดอยู่</div>
+    <p class="section-sub">Three forces shaping the city on the day players arrive</p>
+
+    <div class="tensions-list">
+
+      <!-- I. The Hollow Wakes -->
+      <div class="tension-card" style="--t-color: #7a5aaa">
+        <div class="tension-top">
+          <div>
+            <div class="tension-title">I. The Hollow Wakes</div>
+            <div class="tension-subtitle">สิ่งโบราณใต้เมืองกำลังทดสอบทางออก</div>
+          </div>
+          <div class="tension-status">🔴 ESCALATING</div>
+        </div>
+        <div class="tension-signs">
+          <div class="tension-sign"><span class="ts-icon">🐦</span>สัตว์อพยพออกจาก Old Crown ทุกสัปดาห์ — นกและหนูออกไปก่อน สัปดาห์นี้แมวด้วย</div>
+          <div class="tension-sign"><span class="ts-icon">💡</span>แสงใต้น้ำ Moonlit Bay ทุกคืนที่ทะเลเงียบ — ลูกเรือเรียกมันว่า "The Dreaming"</div>
+          <div class="tension-sign"><span class="ts-icon">🔭</span>Starhill ปิดกะทันหัน นักดาราศาสตร์ที่เห็นบางสิ่งในกล้องโทรทรรศน์หายไป</div>
+          <div class="tension-sign"><span class="ts-icon">👦</span>เด็กหายใน Iron Quarters รอยเท้าสิ้นสุดที่ท่อน้ำเก่า — ท่อที่เชื่อมกับ Hollow Below</div>
+        </div>
+        <div class="tension-notice">
+          <strong>สิ่งที่ผู้เล่นอาจสังเกตเห็น</strong>
+          คืนแรกที่อยู่ในเมือง ถ้าใครนอนใกล้พื้นดิน (ห้องใต้ดิน ห้องชั้นล่าง) อาจฝันแปลกๆ — ภาพเขาวงกต เสียงกระซิบที่ไม่มีภาษา ตื่นมาพบรอยขีดบนพื้นที่ไม่มีใครทำ
+        </div>
+      </div>
+
+      <!-- II. The Corrupt Council -->
+      <div class="tension-card" style="--t-color: #d4a017">
+        <div class="tension-top">
+          <div>
+            <div class="tension-title">II. The Corrupt Council</div>
+            <div class="tension-subtitle">เครือข่ายคอร์รัปชั่นของ Councilor Vira กำลังสั่นคลอน</div>
+          </div>
+          <div class="tension-status">⚠️ VISIBLE CRACKS</div>
+        </div>
+        <div class="tension-signs">
+          <div class="tension-sign"><span class="ts-icon">🔥</span>อาคารกระทรวงใน Golden Crescent ไหม้จากชั้นใต้ดิน "ลัดวงจร" — บัญชีที่อยู่ในนั้นหายไปพร้อมไฟ</div>
+          <div class="tension-sign"><span class="ts-icon">💀</span>ศพที่สาม (ไม่มีบาดแผล) ลอยในคลอง Silver Steps — ทั้งสามเป็นพยานในคดีทุจริตท่าเรือ</div>
+          <div class="tension-sign"><span class="ts-icon">🏦</span>Guild ใหญ่ประกาศเรียกหนี้คืนพร้อมกัน — เพราะรู้ว่า Council กำลังใกล้ล้มละลาย</div>
+          <div class="tension-sign"><span class="ts-icon">🌙</span>Club ลึกลับ invite-only ที่ Aurora — สมาชิกที่ถามคำถามผิดประเด็นหายไป</div>
+        </div>
+        <div class="tension-notice">
+          <strong>สิ่งที่ผู้เล่นอาจสังเกตเห็น</strong>
+          ป้ายประกาศ City Council ที่ติดอยู่ตามถนนถูกฉีกครึ่ง มีรูปวาดล้อเลียนที่กำแพง Iron Quarters แต่ City Watch ทาสีทับทุกเช้า ทุกคนรู้แต่ไม่มีใครพูด
+        </div>
+      </div>
+
+      <!-- III. The Inequality Crisis -->
+      <div class="tension-card" style="--t-color: #b44a2a">
+        <div class="tension-top">
+          <div>
+            <div class="tension-title">III. The Inequality Crisis</div>
+            <div class="tension-subtitle">ความเหลื่อมล้ำถึงจุดที่คนด้านล่างพร้อมจะระเบิด</div>
+          </div>
+          <div class="tension-status">🟡 SIMMERING</div>
+        </div>
+        <div class="tension-signs">
+          <div class="tension-sign"><span class="ts-icon">💥</span>โรงงานใน Iron Quarters ระเบิด 11 ศพ — ถูกบันทึกว่า "อุบัติเหตุ" เจ้าของยังลอยนวล</div>
+          <div class="tension-sign"><span class="ts-icon">✊</span>Brynn Ashford รวบรวมคนงานอย่างเงียบๆ แต่ City Watch รู้แล้ว ครอบครัวเธอตกอยู่ในอันตราย</div>
+          <div class="tension-sign"><span class="ts-icon">📚</span>White Cliff Library ปิด — นักศึกษาที่ประท้วงเรื่องเอกสาร "หายออกไป" ทีละคน</div>
+          <div class="tension-sign"><span class="ts-icon">🏚</span>ครอบครัวใน Iron Quarters อพยพออกหลังจากเด็กหาย แต่ไปไม่ได้เพราะไม่มีเงินค่าผ่านทาง</div>
+        </div>
+        <div class="tension-notice">
+          <strong>สิ่งที่ผู้เล่นอาจสังเกตเห็น</strong>
+          ป้าย "ลูกหายตาม" ติดอยู่ทั่วกำแพง Iron Quarters ชื่อและหน้าตาต่างกัน แต่รูปแบบป้ายเหมือนกัน — ราวกับมีคนทำให้เป็นแบบเดียวกัน สัญลักษณ์บางอย่างที่มุมป้ายทุกใบ
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ══ KEY NPCs ══ -->
+  <section class="section" id="npcs">
+    <div class="section-label">Key NPCs · Session Start</div>
+    <div class="section-title">ตัวละครสำคัญ</div>
+    <p class="section-sub">Four NPCs most likely to encounter players in the first hour</p>
+
+    <div class="npc-grid">
+      <!-- Harbormaster Vel -->
+      <div class="npc-card" style="--n-color: #2f7088">
+        <div class="npc-head">
+          <div class="npc-name">Harbormaster Vel</div>
+          <div class="npc-role">หัวหน้าท่าเรือ · Stellamar Port</div>
+        </div>
+        <div class="npc-body">
+          <div class="npc-row">
+            <div class="npc-row-label">ต้องการจากผู้เล่น</div>
+            <div class="npc-row-text">ให้พวกคุณจ่ายค่าจอดเรือ ยืนยันเอกสาร และ<em>เดินหน้าต่อโดยเร็ว</em> อย่าถามเรื่องเรือลำที่จอดนิ่งข้างๆ</div>
+          </div>
+          <div class="npc-row">
+            <div class="npc-row-label">บุคลิก</div>
+            <div class="npc-row-text">เหนื่อย กร้าน ดวงตาไม่อยู่นิ่ง มีเหงื่อแม้อากาศเย็น มักสะกิดแหวนทองที่นิ้วโป้งซ้าย — ของขวัญจาก Councilor Vira</div>
+          </div>
+          <div class="npc-secret" onclick="toggleSecret(this)">
+            <div class="npc-secret-label">
+              <svg class="npc-secret-toggle" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+              🔒 DM Only — Secret
+            </div>
+            <div class="npc-secret-text">Councilor Vira จ่ายเงินให้ปล่อยล็อตสินค้าพิเศษผ่านโดยไม่ตรวจ สินค้าในเรือลำที่ตายนั้นคือล็อตหนึ่งในนั้น เขารู้ว่าสัญลักษณ์บนลังหมายความว่าอะไร — และกลัวมันจนนอนไม่หลับสามคืนแล้ว</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lira of the Docks -->
+      <div class="npc-card" style="--n-color: #4a8a7a">
+        <div class="npc-head">
+          <div class="npc-name">Lira of the Docks</div>
+          <div class="npc-role">คนท่าเรือ · Survivor</div>
+        </div>
+        <div class="npc-body">
+          <div class="npc-row">
+            <div class="npc-row-label">ต้องการจากผู้เล่น</div>
+            <div class="npc-row-text">ใครก็ได้ที่จะเชื่อเธอ — เธอเห็นสัญลักษณ์และรู้ว่ามันมาจากที่เดียวกับที่เมืองเหนือถูกทำลายเมื่อสองปีที่แล้ว แต่ทุกคนคิดว่าเธอบ้า</div>
+          </div>
+          <div class="npc-row">
+            <div class="npc-row-label">บุคลิก</div>
+            <div class="npc-row-text">เงียบแต่ตาไม่เคยหยุดสังเกต พูดน้อยแต่แม่น ตื่นตระหนกได้ง่ายถ้าเห็นสัญลักษณ์ มีรอยสักรูปสมอที่ข้อมือซ้ายทับรอยสักเก่า — รอยที่เธอพยายามลืม</div>
+          </div>
+          <div class="npc-secret" onclick="toggleSecret(this)">
+            <div class="npc-secret-label">
+              <svg class="npc-secret-toggle" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+              🔒 DM Only — Secret
+            </div>
+            <div class="npc-secret-text">เธอหนีมาจากเมืองทางเหนือที่สัญลักษณ์เดียวกันนี้ปรากฏก่อนเมืองนั้นจะ "หายไปจากข้างใน" เธอรู้วิธีอ่านสัญลักษณ์บางส่วน และรู้ว่าถ้าตีความถูกต้อง มันบอกว่า Hollow Below จะ "เปิด" ในอีก 3 คืน</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- City Watch Officer -->
+      <div class="npc-card" style="--n-color: #8c97a3">
+        <div class="npc-head">
+          <div class="npc-name">Cadet Wren</div>
+          <div class="npc-role">ทหารยามประตูใต้ · City Watch</div>
+        </div>
+        <div class="npc-body">
+          <div class="npc-row">
+            <div class="npc-row-label">ต้องการจากผู้เล่น</div>
+            <div class="npc-row-text">แค่ทำหน้าที่โดยไม่มีเรื่อง — เขายังใหม่ ยังไม่รู้ว่า City Watch ทำอะไร ยังเชื่อว่าตัวเองอยู่ที่นี่เพื่อปกป้องคน</div>
+          </div>
+          <div class="npc-row">
+            <div class="npc-row-label">บุคลิก</div>
+            <div class="npc-row-text">อายุประมาณ 18-19 ปี เครื่องแบบยังสะอาดอยู่ มือสั่นเล็กน้อยเวลาถือหอก มีภาพวาดเด็กหญิงอยู่ในกระเป๋า — น้องสาวที่ยังอยู่ใน Iron Quarters</div>
+          </div>
+          <div class="npc-secret" onclick="toggleSecret(this)">
+            <div class="npc-secret-label">
+              <svg class="npc-secret-toggle" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+              🔒 DM Only — Secret
+            </div>
+            <div class="npc-secret-text">เขาได้รับคำสั่งเมื่อเช้าว่า "ถ้าเห็นคนถามเรื่องเรือในท่า ให้รายงาน Ser Aldric ทันที" เขาไม่รู้ว่าทำไม แต่รู้ว่าน้องสาวในย่านที่เด็กหาย — และกำลังตัดสินใจว่าจะจงรักภักดีต่อใคร</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Innkeeper -->
+      <div class="npc-card" style="--n-color: #c98a6d">
+        <div class="npc-head">
+          <div class="npc-name">Osric "Two-Cups" Fenn</div>
+          <div class="npc-role">เจ้าของ The Lantern & Anchor · Silver Steps</div>
+        </div>
+        <div class="npc-body">
+          <div class="npc-row">
+            <div class="npc-row-label">ต้องการจากผู้เล่น</div>
+            <div class="npc-row-text">ลูกค้า — และคนที่จะฟัง เขารู้ข่าวลือทุกอย่างแต่ไม่มีใครเชื่อเพราะพูดมากเกินไป ชอบอ้างว่า "มีข้อมูล" แต่ขายข้อมูลได้ครึ่งเดียวเท่านั้นก่อนจะกลัว</div>
+          </div>
+          <div class="npc-row">
+            <div class="npc-row-label">บุคลิก</div>
+            <div class="npc-row-text">อ้วน ร่าเริง พูดเร็ว เติมแก้วของตัวเองอยู่เสมอ มีรอยช้ำที่คอที่บอกว่า "ถูกเตือนแล้วหนึ่งครั้ง" ทำทีเป็นไม่รู้เรื่อง</div>
+          </div>
+          <div class="npc-secret" onclick="toggleSecret(this)">
+            <div class="npc-secret-label">
+              <svg class="npc-secret-toggle" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+              🔒 DM Only — Secret
+            </div>
+            <div class="npc-secret-text">เขาเห็นคนที่ทำให้ศพในคลองหายบาดแผล — ไม่ใช่มนุษย์ ไม่ใช่เวทมนตร์ที่เขารู้จัก ศพที่สามในคลองคือคนที่เขารัก เขาบอกชื่อ Maren Sollis กับใครก็ได้ที่แสดงให้เขาเห็นว่าพวกเขาแข็งแกร่งพอ</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ══ ALL ENCOUNTERS ══ -->
+  <section class="section" id="encounters">
+    <div class="section-label">All Possible Stories</div>
+    <div class="section-title">เนื้อเรื่องทั้งหมดที่ผู้เล่นพบได้</div>
+    <p class="section-sub">Each location's encounter — skill checks, outcomes, and plot connections</p>
+
+    <div class="encounter-list">
+
+      <!-- ── STELLAMAR PORT ── -->
+      <div class="encounter-card" style="--e-color: #2f7088">
+        <div class="encounter-header">
+          <div class="encounter-dist-dot"></div>
+          <div>
+            <div class="encounter-loc">Stellamar Port · ท่าเรือ</div>
+            <div class="encounter-title">เรือผีและความลับของท่า</div>
+          </div>
+        </div>
+        <div class="encounter-body">
+          <div class="enc-read">
+            <span class="ra-label">Read Aloud</span>
+            เรือสำเภาลำหนึ่งทอดสมออยู่ที่ท่า 7 เชือกผูกแน่น ใบเรือพับเรียบร้อย แต่ดาดฟ้าว่างเปล่า สินค้าถูกขนลงบนฝั่งเรียบร้อยแล้ว — ลังไม้นับสิบใบวางเรียงกัน แต่ไม่มีคนเซ็นรับสินค้า ไม่มีชื่อผู้ส่ง ที่ก้นลังทุกใบมีตราประทับรูปหนึ่งที่คุณไม่เคยเห็น
+          </div>
+          <div class="enc-scene">
+            Harbormaster Vel อยู่บริเวณนี้และพยายามดึงความสนใจออกไปจากเรือ เขาจะตอบทุกคำถามเกี่ยวกับเรืออย่างคลุมเครือและรีบเปลี่ยนเรื่อง ถ้าผู้เล่นยืนกรานหรือพยายามขึ้นเรือ เขาจะอ้างว่า "เรืออยู่ระหว่าง quarantine กรุณาอย่าเข้าใกล้"
+          </div>
+          <div>
+            <div class="skill-table-head">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              Skill Checks
+            </div>
+            <div class="skill-rows">
+              <div class="skill-row">
+                <div class="skill-name">Insight</div>
+                <div class="skill-dc">DC 13</div>
+                <div class="skill-result">รู้ว่า Vel กำลังโกหกหรือซ่อนอะไร — เขาดูกลัวมากกว่าแค่ซ่อนข้อมูล เขากลัวว่าจะถูก<em>เชื่อมกับสิ่งนั้น</em></div>
+              </div>
+              <div class="skill-row">
+                <div class="skill-name">Perception</div>
+                <div class="skill-dc">DC 12</div>
+                <div class="skill-result">เห็น Lira ยืนอยู่ห่างๆ มองลังสินค้าอย่างไม่กล้าเข้าใกล้ ริมฝีปากเธอขยับราวกับอ่านอะไรอยู่เงียบๆ</div>
+              </div>
+              <div class="skill-row">
+                <div class="skill-name">Investigation</div>
+                <div class="skill-dc">DC 14</div>
+                <div class="skill-result">ตราประทับบนลังเป็นภาษาที่ไม่รู้จัก มีรูปแบบซ้ำๆ 7 อักขระ — <em>เหมือนกับรอยขีดที่พบใน Iron Quarters และ Old Crown ทุกประการ</em></div>
+              </div>
+              <div class="skill-row">
+                <div class="skill-name">Arcana</div>
+                <div class="skill-dc">DC 16</div>
+                <div class="skill-result">รู้สึกได้ถึง aura อ่อนๆ จากทิศทางเรือ ไม่ใช่เวทมนตร์ทั่วไป แต่เหมือนบางสิ่งที่มีอยู่มาก่อน<em>เวทมนตร์จะถูกคิดค้น</em> — เก่าและเงียบ</div>
+              </div>
+              <div class="skill-row">
+                <div class="skill-name">Persuasion</div>
+                <div class="skill-dc">DC 16</div>
+                <div class="skill-result">Vel รับว่ามีล็อตสินค้าพิเศษที่ผ่านการตรวจสอบพิเศษ แต่ไม่บอกว่าใครสั่ง ถ้า Roll ได้ 12–15: เขาบอกให้ไปถาม "หญิงที่ท่าเรือ" (Lira) แทน</div>
+              </div>
+              <div class="skill-row fail">
+                <div class="skill-name">Stealth</div>
+                <div class="skill-dc">DC 15</div>
+                <div class="skill-result">ถ้า Fail: ลูกน้อง Vel สังเกตเห็นผู้เล่นขึ้นเรือ — <em>ภายในคืนนั้น 2 คนจะมาพยายาม "เตือน" ให้หยุดสอบถาม</em></div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="skill-table-head">บนดาดฟ้าเรือ (ถ้าขึ้นไปได้)</div>
+            <div class="skill-rows">
+              <div class="skill-row">
+                <div class="skill-name">Medicine</div>
+                <div class="skill-dc">DC 12</div>
+                <div class="skill-result">ลูกเรือที่เสียชีวิตไม่มีบาดแผล ไม่มีร่องรอยพิษ ไม่มีการต่อสู้ ดูเหมือน<em>หัวใจหยุดทำงานพร้อมกัน</em> ในขณะที่ยังกำลังทำงานอยู่</div>
+              </div>
+              <div class="skill-row">
+                <div class="skill-name">Investigation</div>
+                <div class="skill-dc">13</div>
+                <div class="skill-result">ในห้องกัปตัน มีบันทึกสุดท้ายเขียนว่า "เสียงใต้น้ำเริ่มดังขึ้นคืนที่ 3 ทุกคนได้ยิน ไม่มีใครพูดถึงมัน เช้าวันที่ 4 ไม่มีใครลุกขึ้น เหลือแต่ฉัน" — บันทึกสิ้นสุดกลางประโยค</div>
+              </div>
+            </div>
+          </div>
+          <div class="outcome-grid">
+            <div class="outcome-card success">
+              <div class="outcome-label">✓ ถ้าผู้เล่นพบ Lira</div>
+              <div class="outcome-text">เธอบอกว่าสัญลักษณ์บนลังเป็น "ภาษาเรียก" — ใครก็ตามที่ส่งสินค้านี้มากำลังพยายามสื่อสารกับ Hollow Below หรือเชิญชวนบางสิ่งออกมา เธอรู้เพราะเมืองเหนือถูกทำลายด้วยวิธีเดียวกัน</div>
+            </div>
+            <div class="outcome-card fail">
+              <div class="outcome-label">✗ ถ้าผู้เล่นไม่สอบถามเพิ่ม</div>
+              <div class="outcome-text">ลังสินค้าจะถูกขนไปยัง Golden Crescent ก่อนรุ่งเช้า เส้นทางนี้ถูกปิดตาย — แต่ Lira จะตามมาบอกผู้เล่นในคืนนั้นเองถ้าพวกเขาค้างที่ Stellamar</div>
+            </div>
+          </div>
+          <div class="enc-connections">
+            <div class="enc-tag" style="--t-color: #7a5aaa">→ The Hollow Wakes</div>
+            <div class="enc-tag" style="--t-color: #d4a017">→ Corrupt Council</div>
+            <div class="enc-tag" style="--t-color: #4a8a7a">→ Lira of the Docks</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── IRON QUARTERS ── -->
+      <div class="encounter-card" style="--e-color: #7b6a59">
+        <div class="encounter-header">
+          <div class="encounter-dist-dot"></div>
+          <div>
+            <div class="encounter-loc">Iron Quarters · ย่านแรงงาน</div>
+            <div class="encounter-title">เด็กที่หายและรอยเท้าที่สิ้นสุด</div>
+          </div>
+        </div>
+        <div class="encounter-body">
+          <div class="enc-read">
+            <span class="ra-label">Read Aloud</span>
+            กำแพงอิฐของซอยนี้เต็มไปด้วยรูปวาดหน้าเด็ก — ชื่อ วันที่หาย และข้อความสั้นๆ ที่แม่แต่ละคนเขียนไว้ ส่วนใหญ่เขียนเมื่อสองสัปดาห์ที่ผ่านมา แต่บางรูปเก่ากว่านั้น ที่มุมล่างของรูปวาดทุกรูป มีสัญลักษณ์เล็กๆ รูปเดียวกัน เขียนด้วยมือเดียวกัน
+          </div>
+          <div class="enc-scene">
+            ผู้หญิงชื่อ Mira พบผู้เล่นและขอความช่วยเหลือตามหาลูกชาย Olan อายุ 8 ขวบ หายไปเมื่อ 3 วันก่อน รอยเท้าในซอยสิ้นสุดที่ท่อระบายน้ำเก่าที่ปิดแล้ว City Watch บอกว่า Olan "หนีออกไปเอง" แต่รองเท้าของเขายังอยู่ที่บ้าน
+          </div>
+          <div>
+            <div class="skill-table-head">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              Skill Checks
+            </div>
+            <div class="skill-rows">
+              <div class="skill-row">
+                <div class="skill-name">Survival</div>
+                <div class="skill-dc">DC 10</div>
+                <div class="skill-result">รอยเท้าเป็นของเด็กจริง แต่มีรอยขีดเป็นเส้นตรงยาวข้างๆ ราวกับเด็กถูกลาก — แต่ไม่มีรอยต้านทาน <em>เด็กเดินตามอะไรบางอย่างสมัครใจ</em></div>
+              </div>
+              <div class="skill-row">
+                <div class="skill-name">Investigation</div>
+                <div class="skill-dc">DC 13</div>
+                <div class="skill-result">ท่อระบายน้ำที่รอยเท้าสิ้นสุดมีฝาปิดเหล็กหนัก แต่ขอบถูกถูจนเป็นเงา — มีคนใช้มันบ่อยมาก ใต้ฝาปิดมีบันไดเหล็กเก่าลงไปในความมืด</div>
+              </div>
+              <div class="skill-row">
+                <div class="skill-name">Perception</div>
+                <div class="skill-dc">DC 12</div>
+                <div class="skill-result">ถ้าเปิดฝาท่อ: ได้ยินเสียงหัวใจเต้นช้าๆ หรืออาจเป็นเสียง pulse ของอะไรบางอย่างใต้ดิน สม่ำเสมอและช้ากว่าหัวใจมนุษย์ ไม่ใช่เสียงน้ำ</div>
+              </div>
+              <div class="skill-row">
+                <div class="skill-name">Arcana</div>
+                <div class="skill-dc">DC 15</div>
+                <div class="skill-result">สัญลักษณ์บนกำแพงป้ายเด็กหายมีรูปแบบที่น่ากลัว — มันไม่ใช่แค่ตราประทับ มันเป็น<em>ทิศทาง</em> ลูกศรที่ซ่อนอยู่ในรูปแบบ ทุกป้ายชี้ไปทิศทางเดียว: ใต้ดิน</div>
+              </div>
+              <div class="skill-row">
+                <div class="skill-name">Athletics</div>
+                <div class="skill-dc">DC 14</div>
+                <div class="skill-result">ลงไปในท่อได้โดยไม่ส่งเสียง — ด้านล่างเป็นอุโมงค์เก่าที่กว้างพอให้คนใหญ่เดินได้ มีรอยเท้าเด็กหลายชุดบนพื้นดิน ไม่มีรอยเท้ากลับขึ้นมา</div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="skill-table-head">ถ้าลงไปในอุโมงค์</div>
+            <div class="skill-rows">
+              <div class="skill-row">
+                <div class="skill-name">WIS Save</div>
+                <div class="skill-dc">DC 13</div>
+                <div class="skill-result">ยิ่งลึกเข้าไป จะเริ่มได้ยินเสียงเพลงหรือเสียงกระซิบที่ฟังดู<em>น่าฟัง</em> อย่างผิดปกติ — Fail: ต้องการเดินต่อเข้าไปและต้องได้รับการฉุดไว้จากสมาชิกกลุ่ม</div>
+              </div>
+              <div class="skill-row">
+                <div class="skill-name">Investigation</div>
+                <div class="skill-dc">DC 12</div>
+                <div class="skill-result">พบ Olan หมดสติแต่ยังมีชีวิตอยู่ ลึกเข้าไป 40 ฟุต นั่งอยู่กับเด็กอีก 2 คนที่ก็หมดสติเช่นกัน ที่ผนังรอบๆ มีสัญลักษณ์เดิมสลักไว้<em>จากด้านใน</em></div>
+              </div>
+            </div>
+          </div>
+          <div class="outcome-grid">
+            <div class="outcome-card success">
+              <div class="outcome-label">✓ ช่วยเด็กได้</div>
+              <div class="outcome-text">Mira บอกว่าเด็กที่หายก่อนหน้านี้ (เมื่อ 2 สัปดาห์ก่อน) ยังไม่กลับมา — พวกเขาลงลึกกว่านี้ Brynn Ashford ได้ยินเรื่องนี้และเสนอพาไปหาทางเข้า Hollow Below ผ่านโรงงานเก่า</div>
+            </div>
+            <div class="outcome-card fail">
+              <div class="outcome-label">✗ ไม่ลงไปในท่อ</div>
+              <div class="outcome-text">วันรุ่งขึ้นมีป้ายใหม่ติดบนกำแพง — ชื่อ Olan รูปเด็กคนอื่น หายอีกคืนเดียว Mira ตามผู้เล่นมาอีกครั้ง น้ำตาไหล</div>
+            </div>
+          </div>
+          <div class="enc-connections">
+            <div class="enc-tag" style="--t-color: #7a5aaa">→ The Hollow Wakes</div>
+            <div class="enc-tag" style="--t-color: #b44a2a">→ Inequality Crisis</div>
+            <div class="enc-tag" style="--t-color: #7b6a59">→ Brynn Ashford</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SILVER STEPS ── -->
+      <div class="encounter-card" style="--e-color: #8c97a3">
+        <div class="encounter-header">
+          <div class="encounter-dist-dot"></div>
+          <div>
+            <div class="encounter-loc">Silver Steps · ย่านกลาง</div>
+            <div class="encounter-title">ศพในคลองและนายหน้าข้อมูล</div>
+          </div>
+        </div>
+        <div class="encounter-body">
+          <div class="enc-read">
+            <span class="ra-label">Read Aloud</span>
+            คลองในย่าน Silver Steps สะท้อนแสงโคมไฟสีส้มยามค่ำ น้ำใสพอมองเห็นก้น แต่วันนี้มีเชือกกั้นข้ามสะพาน City Watch สองคนยืนเฝ้าและไม่ยอมให้ใครเข้าใกล้ ในน้ำ ใต้แสงโคมเห็นเงาสีซีดที่รู้ทันทีว่าคืออะไร
+          </div>
+          <div class="enc-scene">
+            ศพที่สาม ไม่มีบาดแผล ลอยอยู่ในคลอง Ser Aldric Thane หัวหน้า Watch ในย่านนี้กำลังออกรายงาน "หัวใจวาย" เหมือนสองศพก่อนหน้า ถ้าผู้เล่นมองหาข้อมูลเพิ่ม มีคนชื่อ Maren Sollis นั่งอยู่ในร้านน้ำชาใกล้ๆ มองดูเหตุการณ์โดยไม่พูดอะไร
+          </div>
+          <div>
+            <div class="skill-table-head">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              Skill Checks
+            </div>
+            <div class="skill-rows">
+              <div class="skill-row">
+                <div class="skill-name">Medicine</div>
+                <div class="skill-dc">DC 14</div>
+                <div class="skill-result">ศพไม่ใช่ "หัวใจวาย" ร่างกายมีสภาพเหมือนคนที่ถูก<em>ดึงชีวิตออกอย่างรวดเร็ว</em> เหมือนลูกเรือบนเรือผี แต่ไม่มีสัญญาณเวทมนตร์ทั่วไป</div>
+              </div>
+              <div class="skill-row">
+                <div class="skill-name">Perception</div>
+                <div class="skill-dc">DC 11</div>
+                <div class="skill-result">ที่ข้อมือศพมีรอยหมึกจางๆ — ไม่ใช่รอยสัก แต่ดูเหมือนมีคนเขียนอะไรไว้บนมือเขาก่อนที่เขาจะตาย ถ้า Arcana DC 13: อักขระเดิมอีกครั้ง</div>
+              </div>
+              <div class="skill-row">
+                <div class="skill-name">Insight</div>
+                <div class="skill-dc">DC 12</div>
+                <div class="skill-result">Ser Aldric รู้ว่าเกิดอะไรขึ้น แต่กำลังปกปิด สีหน้าเขาไม่ใช่คนที่ไม่รู้เรื่อง แต่เป็นคนที่<em>รู้มากเกินไปและกำลังเลือกเงียบ</em></div>
+              </div>
+              <div class="skill-row">
+                <div class="skill-name">Persuasion</div>
+                <div class="skill-dc">DC 15</div>
+                <div class="skill-result">Maren Sollis ยอมพูด — ทั้งสามศพเป็นพยานในคดีทุจริตท่าเรือที่เชื่อมกับ Councilor Vira เธอรู้ว่าใครสั่ง แต่ราคาคือ 50 gold หรือ "ข้อมูลที่ฉันหาเองไม่ได้"</div>
+              </div>
+              <div class="skill-row">
+                <div class="skill-name">Intimidation</div>
+                <div class="skill-dc">DC 18</div>
+                <div class="skill-result">Ser Aldric ยอมรับว่าเขาได้รับคำสั่งไม่ให้สืบสวน แต่บอกว่าครอบครัวเขาอยู่ใน Iron Quarters — ถ้าคุณช่วยปกป้องพวกเขา เขาจะเป็นพยานให้</div>
+              </div>
+            </div>
+          </div>
+          <div class="outcome-grid">
+            <div class="outcome-card success">
+              <div class="outcome-label">✓ ได้ข้อมูลจาก Maren</div>
+              <div class="outcome-text">เธอบอกว่าทั้งสามศพพบเอกสารบัญชีของ Hadren Moss ที่พิสูจน์ว่า Councilor Vira สั่งให้ปล่อยสินค้าที่มีสัญลักษณ์ผ่านท่าโดยไม่ตรวจ — บัญชีนั้นยังมีอยู่ที่ไหนสักแห่งใน Golden Crescent</div>
+            </div>
+            <div class="outcome-card fail">
+              <div class="outcome-label">✗ ถ้าไม่พูดกับ Maren</div>
+              <div class="outcome-text">คืนนั้น Maren จะเข้าหาผู้เล่นเองที่โรงเตี๊ยม เธอมีข้อมูลที่ต้องการแชร์ แต่ราคาสูงขึ้น 100 gold เพราะรู้ว่าสถานการณ์ยิ่งแย่ลง</div>
+            </div>
+          </div>
+          <div class="enc-connections">
+            <div class="enc-tag" style="--t-color: #d4a017">→ Corrupt Council</div>
+            <div class="enc-tag" style="--t-color: #8c97a3">→ Maren Sollis</div>
+            <div class="enc-tag" style="--t-color: #8c97a3">→ Ser Aldric</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── OLD CROWN ── -->
+      <div class="encounter-card" style="--e-color: #8a4a63">
+        <div class="encounter-header">
+          <div class="encounter-dist-dot"></div>
+          <div>
+            <div class="encounter-loc">Old Crown Peninsula · คาบสมุทรเก่า</div>
+            <div class="encounter-title">พระผู้รู้และกุญแจที่ห้ามมอบ</div>
+          </div>
+        </div>
+        <div class="encounter-body">
+          <div class="enc-read">
+            <span class="ra-label">Read Aloud</span>
+            โบสถ์ที่ Old Crown สร้างด้วยหินที่เก่ากว่าทุกอาคารในเมือง ผนังหนาพอให้เสียงกลองจากโรงงานกลายเป็นเสียงเงียบ บนบันไดโบสถ์ ฝูงนกพิราบที่ปกติเต็มไปหมดหายออกไปทั้งหมด มีเพียงพระรูปร่างผอมที่นั่งกวาดบันไดอยู่คนเดียว เขาแหงนมามองพวกคุณก่อนที่พวกคุณจะพูดอะไร
+          </div>
+          <div class="enc-scene">
+            Father Aldous รู้ว่าผู้เล่นจะมาหาเขา — ไม่แน่ใจว่าอย่างไร แต่เขารู้ เขาต้อนรับอย่างสุภาพแต่ไม่ยอมพาเข้าโบสถ์ชั้นล่าง อ้างว่า "ระหว่างทำความสะอาด" เขาจะพูดถึง Hollow Below อย่างอ้อมๆ แต่ไม่ยืนยันตรงๆ เว้นแต่ผู้เล่นจะแสดงให้เห็นว่ารู้แล้วว่ามันคืออะไร
+          </div>
+          <div>
+            <div class="skill-table-head">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              Skill Checks
+            </div>
+            <div class="skill-rows">
+              <div class="skill-row">
+                <div class="skill-name">Perception</div>
+                <div class="skill-dc">DC 13</div>
+                <div class="skill-result">บนเข็มขัดของ Father Aldous มีกุญแจขนาดใหญ่ที่ผิดปกติ เก่ามาก ทำจากโลหะที่ไม่รู้จัก ไม่เป็นสนิม แม้ดูอายุหลายร้อยปี</div>
+              </div>
+              <div class="skill-row">
+                <div class="skill-name">Insight</div>
+                <div class="skill-dc">14</div>
+                <div class="skill-result">เขาไม่ได้แค่รู้เรื่อง Hollow Below — เขา<em>รอ</em>บางสิ่งอยู่ และดูเหมือนว่าผู้เล่นอาจเป็นส่วนหนึ่งของแผนนั้น เขาดีใจที่พวกคุณมา แม้ว่าจะไม่แสดงออก</div>
+              </div>
+              <div class="skill-row">
+                <div class="skill-name">History/Religion</div>
+                <div class="skill-dc">DC 12</div>
+                <div class="skill-result">โบสถ์นี้เก่ากว่าเมืองราว 400 ปี สร้างทับสิ่งที่มีอยู่ก่อน ในประวัติศาสตร์เรียกว่า "บ้านยาม" — สร้างขึ้นเพื่อ<em>เฝ้าดูอะไรบางอย่าง</em> ไม่ใช่เพื่อนับถือเทพ</div>
+              </div>
+              <div class="skill-row">
+                <div class="skill-name">Persuasion</div>
+                <div class="skill-dc">DC 16</div>
+                <div class="skill-result">Father Aldous บอกว่า Hollow Below ไม่ใช่สิ่งชั่วร้าย มันเป็น<em>สิ่งที่มีอยู่ก่อนความชั่วร้าย</em> มันต้องการ "ผู้สืบทอด" และเขาได้เลือกแล้วว่าใครจะเป็น — เขาไม่บอกชื่อนั้น</div>
+              </div>
+              <div class="skill-row">
+                <div class="skill-name">Deception</div>
+                <div class="skill-dc">DC 15</div>
+                <div class="skill-result">ทำทีว่าเป็น "นักบวชจากทางเหนือ" ที่รู้จักสัญลักษณ์ Aldous จะพาลงไปชั้นล่างสุดเพื่อพิสูจน์ว่าคุณรู้จักมัน — แต่ใต้นั้นคุณจะพบว่าเขา<em>ไม่ได้วางแผนให้คุณกลับขึ้นมา</em></div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="skill-table-head">ใต้โบสถ์ — Lower Vaults (ถ้าลงได้)</div>
+            <div class="skill-rows">
+              <div class="skill-row">
+                <div class="skill-name">Perception</div>
+                <div class="skill-dc">DC 10</div>
+                <div class="skill-result">ประตูเหล็กหนาที่ปลายบันได มีรอยขีดข่วนจาก<em>ด้านใน</em> ประตูเปิดออก ไม่ใช่เข้า — สิ่งใน Hollow Below กำลังพยายามดันออกมาอยู่เป็นระยะ</div>
+              </div>
+              <div class="skill-row">
+                <div class="skill-name">WIS Save</div>
+                <div class="skill-dc">DC 15</div>
+                <div class="skill-result">ยืนอยู่หน้าประตูนี้มากกว่า 1 นาที: Fail หมายความว่าคุณ<em>เข้าใจ</em>ว่าสิ่งที่อยู่ข้างในต้องการอะไร และมันไม่น่ากลัว มันน่าดึงดูดอย่างผิดปกติ</div>
+              </div>
+            </div>
+          </div>
+          <div class="outcome-grid">
+            <div class="outcome-card success">
+              <div class="outcome-label">✓ ได้กุญแจ</div>
+              <div class="outcome-text">ถ้าผู้เล่นได้กุญแจ (ขโมย DC 16 Sleight of Hand, หรือ ชนะ Aldous ใน debate ทาง Religion DC 18) พวกเขาสามารถ seal ประตู Hollow Below ได้ แต่ Aldous จะไม่ยอมอยู่นิ่ง</div>
+            </div>
+            <div class="outcome-card fail">
+              <div class="outcome-label">✗ ออกมือเปล่า</div>
+              <div class="outcome-text">Aldous จะบอกว่า "คุณยังไม่พร้อม" แต่เขาจะปรากฏตัวในคืนที่ 2 ของ session พร้อมข้อเสนอ — เขาต้องการให้ผู้เล่น "เป็นพยาน" ในพิธีกรรมที่ใครสักคนต้องเป็นผู้เสียสละ</div>
+            </div>
+          </div>
+          <div class="enc-connections">
+            <div class="enc-tag" style="--t-color: #7a5aaa">→ The Hollow Wakes</div>
+            <div class="enc-tag" style="--t-color: #8a4a63">→ Lower Vaults Key</div>
+            <div class="enc-tag" style="--t-color: #4a7c4e">→ Lady Corveth / Verdant</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── WHITE CLIFF WARD ── -->
+      <div class="encounter-card" style="--e-color: #7fa0b5">
+        <div class="encounter-header">
+          <div class="encounter-dist-dot"></div>
+          <div>
+            <div class="encounter-loc">White Cliff Ward · ย่านวิชาการ</div>
+            <div class="encounter-title">ห้องสมุดที่ปิดตายและศาสตราจารย์ผู้กลัว</div>
+          </div>
+        </div>
+        <div class="encounter-body">
+          <div class="enc-read">
+            <span class="ra-label">Read Aloud</span>
+            Great Library ของ White Cliff Ward เป็นอาคารสี่ชั้นที่สูงที่สุดในย่านนี้ แต่ประตูทุกบานปิดตาย มีโซ่ใหม่และกุญแจใหม่คล้องอยู่ที่ประตูหลัก ป้ายขนาดใหญ่เขียนว่า "ปิดปรับปรุงชั่วคราว — กรุณาติดต่อ Archivist สาขาหลัก" แต่ที่ประตูข้างมีนักศึกษาคนหนึ่งนั่งอยู่คนเดียว กุมมือในตัก มองออกไปที่ไหนสักที่
+          </div>
+          <div class="enc-scene">
+            Prof. Elwen Dray ออกมาจาก Library หลายสัปดาห์แล้วตั้งแต่ถูกบอกให้หยุดงาน เธอพบเอกสารโบราณที่แปลออกมาแล้วไม่กล้าบอกใครว่ามันบอกอะไร นักศึกษาที่นั่งอยู่หน้าประตูรอเธอ — เธอวางแผนจะมาพบนักศึกษาคนนั้นในบ่ายวันนี้ แต่ยังไม่ปรากฏตัว
+          </div>
+          <div>
+            <div class="skill-table-head">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              Skill Checks
+            </div>
+            <div class="skill-rows">
+              <div class="skill-row">
+                <div class="skill-name">Investigation</div>
+                <div class="skill-dc">DC 13</div>
+                <div class="skill-result">หน้าต่างชั้นสองมีรอยที่แปลกประหลาด — อาคารถูกปิดจากภายนอก แต่บางส่วนของหน้าต่างมีรอยเดียวกับ Lower Vaults: <em>มีคนขีดสัญลักษณ์นั้นไว้ที่ผนังด้านใน</em></div>
+              </div>
+              <div class="skill-row">
+                <div class="skill-name">Persuasion</div>
+                <div class="skill-dc">DC 12</div>
+                <div class="skill-result">นักศึกษาที่นั่งรออยู่ (Cadet Silus) บอกว่า Elwen หายหลังจากพบเอกสาร เขารู้ที่อยู่ของเธอแต่ต้องการ "คนที่ไม่ใช่ City Watch" ไปตาม เพราะ Watch ตามหาเธออยู่ด้วย</div>
+              </div>
+              <div class="skill-row">
+                <div class="skill-name">Stealth</div>
+                <div class="skill-dc">DC 14</div>
+                <div class="skill-result">เข้า Library ผ่านหน้าต่างชั้นสองได้ ภายในสะอาดและเป็นระเบียบเกินไป — เหมือนถูกเก็บล้างอย่างรีบเร่ง โต๊ะ Elwen ว่างเปล่าแต่มีรอยหมึกแห้งที่พื้นเป็นรูปแบบที่รู้จักแล้ว</div>
+              </div>
+              <div class="skill-row">
+                <div class="skill-name">Arcana</div>
+                <div class="skill-dc">DC 11</div>
+                <div class="skill-result">หนังสือบางเล่มบนชั้นในห้อง Elwen มีบุ๊คมาร์คที่หน้าที่พูดถึง "ภาษาก่อนภาษา" หรือ Ur-speech — ภาษาที่เชื่อกันว่าเป็นต้นกำเนิดของเวทมนตร์ทั้งหมด ซึ่งก็คือสัญลักษณ์เดิมนั่นเอง</div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="skill-table-head">เมื่อพบ Prof. Elwen (ซ่อนตัวอยู่ในเกสต์เฮาส์ใกล้ Aurora)</div>
+            <div class="skill-rows">
+              <div class="skill-row">
+                <div class="skill-name">Insight</div>
+                <div class="skill-dc">DC 10</div>
+                <div class="skill-result">เธอกลัวจริงๆ ไม่ใช่แค่ระวังตัว ดวงตาของเธอตรวจสอบทางออกทุก 30 วินาที เธอ<em>ไม่นอนมา 2 คืนแล้ว</em></div>
+              </div>
+              <div class="skill-row">
+                <div class="skill-name">Persuasion</div>
+                <div class="skill-dc">DC 14</div>
+                <div class="skill-result">เธอแชร์การแปลเอกสาร: สัญลักษณ์คือ "เสียงเรียก" และ "ทิศทาง" ที่ Hollow Below ส่งออกมาเพื่อหาผู้รับ ใครก็ตามที่ตั้งใจอ่านและ "เข้าใจ" มันคือ<em>ผู้ถูกเลือก</em> และ Hollow จะตามหาพวกเขา</div>
+              </div>
+            </div>
+          </div>
+          <div class="outcome-grid">
+            <div class="outcome-card success">
+              <div class="outcome-label">✓ Elwen + Lira พบกัน</div>
+              <div class="outcome-text">ถ้าผู้เล่นนำทั้งสองมาพบกัน พวกเธอสามารถแปลสัญลักษณ์สมบูรณ์ได้ ผลคือ: Hollow Below จะ Resonate ใน 3 คืน ถ้าไม่มีใคร seal ประตูหรือ "ตอบรับ" เสียงเรียกโดยสมัครใจ</div>
+            </div>
+            <div class="outcome-card fail">
+              <div class="outcome-label">✗ Elwen ถูกจับ</div>
+              <div class="outcome-text">ถ้า City Watch พบเธอก่อน เธอจะ "หายตัว" — ข้อมูลนี้ยังหาได้แต่ต้องเข้าไปใน Library ที่ปิดตายโดยลำพัง และ Watch จะเฝ้าอยู่</div>
+            </div>
+          </div>
+          <div class="enc-connections">
+            <div class="enc-tag" style="--t-color: #7a5aaa">→ The Hollow Wakes</div>
+            <div class="enc-tag" style="--t-color: #4a8a7a">→ Lira of the Docks</div>
+            <div class="enc-tag" style="--t-color: #7fa0b5">→ Prof. Elwen Dray</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── GOLDEN CRESCENT ── -->
+      <div class="encounter-card" style="--e-color: #d4a017">
+        <div class="encounter-header">
+          <div class="encounter-dist-dot"></div>
+          <div>
+            <div class="encounter-loc">Golden Crescent · ย่านการเงิน</div>
+            <div class="encounter-title">อาคารที่ไหม้และบัญชีที่หายไป</div>
+          </div>
+        </div>
+        <div class="encounter-body">
+          <div class="enc-read">
+            <span class="ra-label">Read Aloud</span>
+            อาคารกระทรวงที่ปลายถนน Golden Crescent มีคราบเขม่าดำที่ผนังชั้นล่าง หน้าต่างชั้นใต้ดินแตก ช่างซ่อมกำลังทำงานอยู่แต่มีโซ่กั้นรอบอาคาร คนเดินผ่านไม่ขอดูสองครั้ง ราวกับว่าทุกคนเห็นพร้อมกันว่าควรแกล้งทำเป็นไม่สังเกต
+          </div>
+          <div class="enc-scene">
+            อาคารไหม้จากชั้นใต้ดินเมื่อ 4 คืนก่อน บัญชีของ Hadren Moss ที่พิสูจน์การทุจริตของ Councilor Vira ถูกเก็บอยู่ชั้นนั้น อย่างไรก็ตาม Hadren Moss รู้ล่วงหน้าและย้ายสำเนาออกไปก่อน สำเนานั้นซ่อนอยู่ที่ไหนสักแห่ง — Maren Sollis รู้ว่าที่ไหน
+          </div>
+          <div>
+            <div class="skill-table-head">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              Skill Checks
+            </div>
+            <div class="skill-rows">
+              <div class="skill-row">
+                <div class="skill-name">Investigation</div>
+                <div class="skill-dc">DC 15</div>
+                <div class="skill-result">รอยไฟไม่ใช่ไฟธรรมดา — มันเริ่มจากจุดเดียวใต้ห้องเก็บเอกสาร และ<em>มันไม่ลุกลามออกไป</em> ราวกับมีคนควบคุมให้ไหม้เฉพาะจุด เป็นงานฝีมือช่างเวทมนตร์หรือคนที่รู้จักอาคารอย่างดี</div>
+              </div>
+              <div class="skill-row">
+                <div class="skill-name">Persuasion</div>
+                <div class="skill-dc">DC 13</div>
+                <div class="skill-result">ช่างซ่อมคนหนึ่ง (ไม่ใช่คนของ Vira) บอกว่าไฟเริ่มจากด้านใน และเขาเห็น "คนออกมาทางหน้าต่างชั้นใต้ดินก่อนไฟจะดับ" — คนนั้นถือกล่องขนาดใหญ่</div>
+              </div>
+              <div class="skill-row">
+                <div class="skill-name">Stealth+Invest.</div>
+                <div class="skill-dc">DC 14/12</div>
+                <div class="skill-result">เข้าไปในซากอาคารได้ ใต้เถ้าถ่านมีชิ้นส่วนเอกสารที่รอดไฟ — ตัวเลขและชื่อ "Vel" และ "Cargo 7" ปรากฏซ้ำๆ พร้อมกับลายเซ็น Councilor Vira</div>
+              </div>
+            </div>
+          </div>
+          <div class="outcome-grid">
+            <div class="outcome-card success">
+              <div class="outcome-label">✓ พบสำเนาบัญชี</div>
+              <div class="outcome-text">ผ่าน Maren (ต้องได้ความไว้วางใจก่อน) หรือสืบเส้นทางกล่องไปยังบ้านพักของ Hadren Moss — บัญชีพิสูจน์ว่า Vira สั่งให้ปล่อย "Cargo 7" ซึ่งเป็นลังที่มีสัญลักษณ์ Hollow Below เข้าเมือง และจ่ายเงินให้ Vel</div>
+            </div>
+            <div class="outcome-card fail">
+              <div class="outcome-label">✗ Vira รู้ว่ามีคนสืบ</div>
+              <div class="outcome-text">ถ้าผู้เล่นถามเรื่องนี้อย่างเปิดเผย Councilor Vira จะส่งคนมา "เชิญ" พวกเขาไปพบที่ Golden Crescent เพื่อ "เสนองาน" — เธอจะพยายามจ้างผู้เล่นมาช่วยตามหา Hadren Moss แทน</div>
+            </div>
+          </div>
+          <div class="enc-connections">
+            <div class="enc-tag" style="--t-color: #d4a017">→ Corrupt Council</div>
+            <div class="enc-tag" style="--t-color: #2f7088">→ Stellamar / Vel</div>
+            <div class="enc-tag" style="--t-color: #8c97a3">→ Maren Sollis</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── AURORA PROMENADE ── -->
+      <div class="encounter-card" style="--e-color: #c98a6d">
+        <div class="encounter-header">
+          <div class="encounter-dist-dot"></div>
+          <div>
+            <div class="encounter-loc">Aurora Promenade · ย่านบันเทิง</div>
+            <div class="encounter-title">Club ลึกลับและสมาชิกที่หายไป</div>
+          </div>
+        </div>
+        <div class="encounter-body">
+          <div class="enc-read">
+            <span class="ra-label">Read Aloud</span>
+            Aurora Promenade เต็มไปด้วยแสงและเสียงดนตรี ร้านอาหาร โรงละคร ผู้คนที่แต่งตัวดีเดินชมวิวทะเล มองจากที่นี่ Porto Stellare ดูเหมือนเมืองที่มีความสุขที่สุดในโลก แต่ถ้าผู้เล่นสังเกต มีอาคารหนึ่งที่ประตูสีดำไม่มีป้าย ไม่มีเสียง และมีบอดี้การ์ดที่ไม่สบตาใคร
+          </div>
+          <div class="enc-scene">
+            Seraphine Lux เจ้าของ Club Obscura ไม่รับลูกค้าทั่วไป แต่ถ้าผู้เล่นมีชื่อเสียงเพียงพอหรือรู้ชื่อสมาชิก เธอจะออกมาพูดด้วยตัวเอง เธอรู้เรื่อง Councilor Vira แต่สนใจ Hollow Below มากกว่า เธอสะสมเอกสารที่เกี่ยวข้องมาหลายปีแล้ว
+          </div>
+          <div>
+            <div class="skill-table-head">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              Skill Checks
+            </div>
+            <div class="skill-rows">
+              <div class="skill-row">
+                <div class="skill-name">Persuasion</div>
+                <div class="skill-dc">DC 14</div>
+                <div class="skill-result">เข้า Club ได้โดยอ้างว่ารู้จักสมาชิก หรือใช้ชื่อ "Councilor Vira ส่งมา" (ซึ่งเป็นโกหก) — Seraphine จะออกมาตรวจสอบเอง Insight DC 14 จะบอกว่าเธอรู้ว่าคุณโกหก แต่ยังคุ้มค่าที่จะคุย</div>
+              </div>
+              <div class="skill-row">
+                <div class="skill-name">Insight</div>
+                <div class="skill-dc">DC 13</div>
+                <div class="skill-result">Seraphine ไม่ได้แค่ "รู้มาก" เธอ<em>ต้องการ</em>ให้ Hollow Below ถูกรักษาไว้ ไม่ใช่ปิดปิด เธอเชื่อว่ามันคือแหล่งพลังงานที่สามารถควบคุมได้ถ้ามีคนฉลาดพอ</div>
+              </div>
+              <div class="skill-row">
+                <div class="skill-name">Investigation</div>
+                <div class="skill-dc">DC 15</div>
+                <div class="skill-result">สมาชิก Club ที่หาย (2 คน) คือคนที่เริ่มตั้งคำถามว่า Seraphine กำลังทำอะไร — พวกเขาไม่ได้ถูกฆ่า พวกเขาถูก "ส่งต่อ" ให้ Father Aldous<em>เพื่อเป็นผู้เสียสละที่เหมาะสม</em></div>
+              </div>
+              <div class="skill-row">
+                <div class="skill-name">Arcana</div>
+                <div class="skill-dc">DC 16</div>
+                <div class="skill-result">คอลเลกชันเอกสารของ Seraphine มีชิ้นหนึ่งที่ไม่ควรมีใครรู้วิธีหาได้ — บันทึกการ "Resonance Event" ที่เกิดขึ้นครั้งเดียวก่อนหน้านี้ใน 800 ปี และผลของมัน เมืองที่เป็น "สถานที่" นั้น<em>ยังคงอยู่แต่ผู้คนในนั้นกลายเป็นส่วนหนึ่งของ Hollow</em></div>
+              </div>
+            </div>
+          </div>
+          <div class="outcome-grid">
+            <div class="outcome-card success">
+              <div class="outcome-label">✓ Seraphine เป็นพันธมิตร</div>
+              <div class="outcome-text">ถ้าผู้เล่นทำให้เธอเชื่อว่าการ seal Hollow คุ้มค่ากว่า (Persuasion DC 17) เธอจะให้เอกสารที่บอกวิธี seal อย่างถาวรโดยไม่ต้องใช้กุญแจของ Aldous — แต่ต้องการสมาชิกกลุ่มคนหนึ่งอยู่ข้างหน้าประตูระหว่างพิธี</div>
+            </div>
+            <div class="outcome-card fail">
+              <div class="outcome-label">✗ Seraphine เป็นศัตรู</div>
+              <div class="outcome-text">ถ้าผู้เล่นขู่หรือเปิดเผยแผนของเธอ เธอจะแจ้ง Father Aldous ทันที และ Aldous จะเร่งพิธีกรรมขึ้น — ระยะเวลาจาก 3 คืนเหลือ 1 คืน</div>
+            </div>
+          </div>
+          <div class="enc-connections">
+            <div class="enc-tag" style="--t-color: #7a5aaa">→ The Hollow Wakes</div>
+            <div class="enc-tag" style="--t-color: #8a4a63">→ Father Aldous</div>
+            <div class="enc-tag" style="--t-color: #d4a017">→ Corrupt Council (side)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── VERDANT TERRACES ── -->
+      <div class="encounter-card" style="--e-color: #4a7c4e">
+        <div class="encounter-header">
+          <div class="encounter-dist-dot"></div>
+          <div>
+            <div class="encounter-loc">Verdant Terraces · ย่านขุนนาง</div>
+            <div class="encounter-title">Starhill ที่ปิดและนักดาราศาสตร์ที่หาย</div>
+          </div>
+        </div>
+        <div class="encounter-body">
+          <div class="enc-read">
+            <span class="ra-label">Read Aloud</span>
+            Starhill Observatory ตั้งอยู่บนจุดสูงสุดของ Verdant Terraces หอสังเกตการณ์โดมทองแดงกลมขนาดใหญ่ที่เห็นได้จากทั่วเมือง แต่โดมที่ปกติหมุนเปิดทุกคืนนี้ปิดสนิท ประตูทางเข้ามีกุญแจใหม่ Lady Corveth เจ้าของที่ดินที่สร้าง Starhill ยืนอยู่บนระเบียงบ้านพักมองดูอาคารนั้นด้วยสีหน้าที่อ่านไม่ออก
+          </div>
+          <div class="enc-scene">
+            Dorian Veth นักดาราศาสตร์ประจำ Starhill หายไปพร้อมกับบันทึกการสังเกตการณ์ทั้งหมด 3 สัปดาห์ก่อนหน้า Lady Corveth กำลังขายทรัพย์สินอย่างเงียบๆ และวางแผนออกจากเมือง แต่ไม่บอกว่าทำไม
+          </div>
+          <div>
+            <div class="skill-table-head">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              Skill Checks
+            </div>
+            <div class="skill-rows">
+              <div class="skill-row">
+                <div class="skill-name">Persuasion</div>
+                <div class="skill-dc">DC 15</div>
+                <div class="skill-result">Lady Corveth ยอมรับว่า Dorian บอกเธอว่า "เส้นดาวในแผนที่ฟ้า Resonance Pattern ปรากฏขึ้น" ก่อนเขาจะหาย เธอไม่รู้ว่ามันหมายความว่าอะไรแต่เธอ<em>รู้ว่าเมืองนี้เคยเกิดเหตุการณ์นี้มาแล้ว</em> เพราะ Archivist Tenne บอกเธอ</div>
+              </div>
+              <div class="skill-row">
+                <div class="skill-name">Stealth+Invest.</div>
+                <div class="skill-dc">DC 14/13</div>
+                <div class="skill-result">เข้า Starhill ได้ บันทึกส่วนใหญ่ถูกเอาไป แต่บันทึกล่าสุดยังอยู่บนโต๊ะ — Dorian วาดแผนผัง "Resonance Node" ไว้ 8 จุดทั่วเมือง ทุกจุดตรงกับสถานที่ที่ผู้เล่นเคยไป: ท่าเรือ, Iron Quarters, Old Crown, Library</div>
+              </div>
+              <div class="skill-row">
+                <div class="skill-name">History</div>
+                <div class="skill-dc">DC 14</div>
+                <div class="skill-result">แผนผัง 8 จุดนี้ตรงกับตำแหน่ง 8 เสาหลักของเมืองเก่าที่สร้างก่อน Porto Stellare จะมีชื่อ — เสาหลักที่สร้างเพื่อ<em>กักขัง</em>บางสิ่ง ไม่ใช่สร้างเมือง</div>
+              </div>
+            </div>
+          </div>
+          <div class="outcome-grid">
+            <div class="outcome-card success">
+              <div class="outcome-label">✓ พบแผนผัง Resonance Nodes</div>
+              <div class="outcome-text">ผู้เล่นรู้ว่า Hollow Below ไม่ได้อยู่ที่จุดเดียว มันกระจายอยู่ใต้ทั้งเมือง แต่จุด "หัวใจ" ที่ Lower Vaults คือจุดที่ถ้า seal ได้จะหยุด Resonance ทั้งหมด — นี่คือข้อมูลที่สำคัญที่สุดใน session</div>
+            </div>
+            <div class="outcome-card fail">
+              <div class="outcome-label">✗ Lady Corveth ออกจากเมือง</div>
+              <div class="outcome-text">ถ้าผู้เล่นเสียเวลาที่อื่นนานเกิน Lady Corveth จะขายบ้านและออกไปในคืนนั้น ผู้เล่นสูญเสียเบาะแสสำคัญ แต่ยังหาได้จาก Archivist Tenne ที่ Old Crown ด้วย Investigation DC 17</div>
+            </div>
+          </div>
+          <div class="enc-connections">
+            <div class="enc-tag" style="--t-color: #7a5aaa">→ The Hollow Wakes</div>
+            <div class="enc-tag" style="--t-color: #4a7c4e">→ Resonance Nodes</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ══ SESSION BEATS ══ -->
+  <section class="section" id="beats">
+    <div class="section-label">Session Flow</div>
+    <div class="section-title">การไหลของ Session</div>
+    <p class="section-sub">Click each beat when completed · Progress saves automatically</p>
+
+    <div class="beats-timeline">
+      <div class="beats-spine"></div>
+
+      <div class="beat" id="beat-1" onclick="toggleBeat('beat-1', 1)">
+        <div class="beat-num">I</div>
+        <div class="beat-body">
+          <div class="beat-title">Arrival & First Contact</div>
+          <div class="beat-sub">~20–30 นาที · Tone-setting</div>
+          <div class="beat-desc">ผู้เล่นเข้าเมือง พบ NPC แรก (Vel หรือ Cadet Wren) และสังเกตเห็นสิ่งผิดปกติแรก — เรือลำลึกลับ หรือรอยเท้าของเด็กที่หาย ปล่อยให้ผู้เล่นตั้งคำถามแต่ยังไม่ตอบ เป้าหมายคือให้เมืองดู<em>งดงามแต่ผิดปกติ</em></div>
+        </div>
+      </div>
+
+      <div class="beat" id="beat-2" onclick="toggleBeat('beat-2', 2)">
+        <div class="beat-num">II</div>
+        <div class="beat-body">
+          <div class="beat-title">The City Opens Up</div>
+          <div class="beat-sub">~30–40 นาที · Exploration</div>
+          <div class="beat-desc">ผู้เล่นหาที่พักและเริ่มสำรวจ พบ Osric ที่ The Lantern & Anchor ได้ยินข่าวลือ 2-3 เรื่อง เลือกด้าย: ไปที่ท่าเรือ (พบ Lira), ไป Iron Quarters (พบแม่ที่ตามหาลูก), หรือ ไปที่ตลาด Silver Steps (เห็นป้ายเตือน) แต่ละเส้นทางนำไปสู่ hook ที่ต่างกัน</div>
+        </div>
+      </div>
+
+      <div class="beat" id="beat-3" onclick="toggleBeat('beat-3', 3)">
+        <div class="beat-num">III</div>
+        <div class="beat-body">
+          <div class="beat-title">First Investigation</div>
+          <div class="beat-sub">~40–50 นาที · Core</div>
+          <div class="beat-desc">ไม่ว่าจะเริ่ม hook ไหน ผู้เล่นจะเริ่มเห็นว่าปัญหาทุกอย่างเชื่อมกัน — สัญลักษณ์เดียวกันบนลังสินค้า บนรอยที่ Iron Quarters และบนเอกสารที่ White Cliff ตีพิมพ์ ตอนนี้ผู้เล่นรู้ว่า "มีอะไรใหญ่กว่านี้อยู่" แต่ยังไม่รู้ว่าคืออะไร</div>
+        </div>
+      </div>
+
+      <div class="beat" id="beat-4" onclick="toggleBeat('beat-4', 4)">
+        <div class="beat-num">IV</div>
+        <div class="beat-body">
+          <div class="beat-title">The Revelation</div>
+          <div class="beat-sub">~20–30 นาที · Turning Point</div>
+          <div class="beat-desc">ผู้เล่นพบ Lira หรือ Maren (หรือทั้งคู่) และเชื่อมข้อมูลได้ — The Hollow Below กำลังตื่น การคอร์รัปชั่นของ Councilor Vira เชื่อมกับการลักลอบนำของที่เกี่ยวข้องกับ Hollow เข้าเมือง และถ้าไม่มีใคร seal Vaults ใน 3 คืน Resonance จะเริ่ม NPC สำคัญตกอยู่ในอันตรายชัดเจน</div>
+        </div>
+      </div>
+
+      <div class="beat" id="beat-5" onclick="toggleBeat('beat-5', 5)">
+        <div class="beat-num">V</div>
+        <div class="beat-body">
+          <div class="beat-title">End of Session — The Choice</div>
+          <div class="beat-sub">~10–20 นาที · Cliffhanger</div>
+          <div class="beat-desc">ผู้เล่นต้องตัดสินใจว่าจะทำอะไรก่อน — ตามหาเด็กที่หาย (Iron Quarters), หยุด Council (Golden Crescent), ค้นหา Father Aldous และกุญแจ (Old Crown) หรือ ป้องกัน Lira จาก Vel ที่รู้ว่าเธอพูดมากเกินไป สิ้นสุดด้วยเหตุการณ์ที่บังคับให้เลือก</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ══ DM NOTES ══ -->
+  <section class="section" id="dm-notes">
+    <div class="section-label">DM Notes</div>
+    <div class="section-title">บันทึกของ DM</div>
+    <p class="section-sub">Pacing, red herrings, and escalation — click to expand</p>
+
+    <div class="dm-notes-section">
+
+      <div class="dm-note">
+        <button class="dm-note-toggle" onclick="toggleDmNote(this)">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Pacing Guide — การจัดจังหวะ Session
+          <svg class="dm-note-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="dm-note-body">
+          <p>Session นี้เหมาะกับเวลา <strong>3-4 ชั่วโมง</strong> ถ้ามีเวลาน้อยกว่า ตัด Beat II ให้สั้นลงโดยให้ Osric รวม hook หลายอย่างไว้ในบทสนทนาเดียว</p>
+          <ul>
+            <li><strong>Beat I-II</strong>: เน้น atmosphere ให้ผู้เล่นรู้สึกว่าเมืองสวยแต่ผิดปกติ อย่ารีบเปิดเผย threat โดยตรง</li>
+            <li><strong>Beat III</strong>: ถ้าผู้เล่นติดอยู่กับ hook เดียวมากกว่า 20 นาทีโดยไม่คืบหน้า ให้ Lira "บังเอิญ" ผ่านมาและเสนอข้อมูล</li>
+            <li><strong>Beat IV</strong>: นี่คือจุดที่ tone เปลี่ยน จาก investigation → urgency ให้ NPC แสดงความกลัวจริงๆ ไม่ใช่แค่เล่าเรื่อง</li>
+            <li><strong>Beat V</strong>: ไม่ต้องจบสะอาด One-shot จบด้วย cliffhanger ที่ดีกว่าจบแบบสะอาด</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="dm-note">
+        <button class="dm-note-toggle" onclick="toggleDmNote(this)">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><circle cx="12" cy="17" r=".5" fill="currentColor"/><circle cx="12" cy="12" r="10"/></svg>
+          Red Herrings — เส้นสายที่หลอก
+          <svg class="dm-note-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="dm-note-body">
+          <p>มี red herring บางส่วนที่อาจทำให้ผู้เล่นหลงทาง ใช้เพื่อสร้าง texture ของโลก แต่ต้องไม่ทำให้ติดอยู่นานเกิน 10 นาที:</p>
+          <ul>
+            <li><strong>Foreman Greiss</strong> (Iron Quarters) — ดูน่าสงสัย แต่จริงๆ แล้วแค่กลัวถูกตำหนิเรื่องอุบัติเหตุโรงงาน ไม่ได้เชื่อมกับ Hollow</li>
+            <li><strong>แสงใต้น้ำ</strong> — ผู้เล่นอาจคิดว่ามันคือ creature แต่จริงๆ มันคือ Resonance ที่ Hollow Below ส่งออกมา ไม่ใช่สิ่งมีชีวิตแยกต่างหาก</li>
+            <li><strong>Seraphine Lux</strong> (Aurora) — ดูลึกลับและน่าสงสัยมาก แต่เธอรู้เรื่อง Council ไม่ใช่ Hollow เธอเป็น side quest ไม่ใช่ main thread</li>
+            <li><strong>Archivist Tenne</strong> (Old Crown) — รู้ประวัติศาสตร์ แต่ข้อมูลของเขา 30% ผิดพลาดเพราะถูก Father Aldous แก้ไขเพื่อซ่อนความจริง</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="dm-note">
+        <button class="dm-note-toggle" onclick="toggleDmNote(this)">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          Escalation Triggers — จุดกระตุ้นความตึงเครียด
+          <svg class="dm-note-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="dm-note-body">
+          <p>ใช้ trigger เหล่านี้เมื่อต้องการดัน tempo ขึ้น หรือเมื่อผู้เล่นดูเงียบเกินไป:</p>
+          <ul>
+            <li><strong>Harbormaster Vel ส่งคนตาม</strong> — ถ้าผู้เล่นถามเรื่องเรือลำลึกลับมากเกินไป Vel จะส่งลูกน้อง 2 คนมา "เชิญ" ไปคุยในที่เปลี่ยว</li>
+            <li><strong>เสียงใต้พื้น</strong> — คืนแรก ระหว่างที่ผู้เล่นนอน ให้ทุกคน Perception check DC 12: ได้ยินเสียงขีดเบาๆ จากใต้พื้นห้อง ไม่สม่ำเสมอ ราวกับมีคนพยายามเขียนอะไร</li>
+            <li><strong>City Watch บุกตรวจ</strong> — ถ้าผู้เล่นอยู่ใน Iron Quarters นานเกิน 1 ชั่วโมง City Watch จะมาขอดูเอกสาร "ตรวจสอบประจำวัน" ที่จริงคือเฝ้าดูว่าพวกคุณพูดกับ Brynn Ashford หรือเปล่า</li>
+            <li><strong>Lira หายตัว</strong> — ถ้าผู้เล่นใช้เวลาใน session นานเกิน 3 ชั่วโมงโดยยังไม่พบ Lira ให้ Osric รายงานว่าเธอ "ถูกพาตัวไปโดย City Watch" เพื่อบังคับ urgency</li>
+          </ul>
+          <p>จุดสำคัญ: Hollow Below ยังไม่โจมตีใคร<strong>โดยตรง</strong>ใน session นี้ — มันแค่ทดสอบและสังเกต สิ่งที่ผู้เล่นเผชิญคือ<em>ผลกระทบ</em>ของมัน ไม่ใช่ตัวมันเอง</p>
+        </div>
+      </div>
+
+      <div class="dm-note">
+        <button class="dm-note-toggle" onclick="toggleDmNote(this)">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          Useful DM Rolls — การ Roll ที่ควรเตรียม
+          <svg class="dm-note-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="dm-note-body">
+          <ul>
+            <li><strong>Perception DC 14</strong>: เห็นสัญลักษณ์บนผนังตรอก Iron Quarters ที่ถูกทาสีทับแต่ยังมองเห็นรอย</li>
+            <li><strong>Arcana/History DC 12</strong>: รู้จักสัญลักษณ์ว่าไม่ตรงกับภาษาใดๆ ที่รู้จัก → ให้ Advantage ถ้าพบ Lira ก่อน</li>
+            <li><strong>Insight DC 13</strong>: รู้ว่า Harbormaster Vel กำลังโกหกหรือซ่อนอะไร</li>
+            <li><strong>Investigation DC 15</strong>: พบว่าเรือลำลึกลับมีสัญลักษณ์เดียวกับที่เคยเห็นบนเอกสาร White Cliff Library (ต้องไปที่ Library ก่อน)</li>
+            <li><strong>Survival DC 10</strong>: รู้ว่าสัตว์ที่อพยพออกจาก Old Crown วิ่งหนี<em>ออกจากใต้ดิน</em> ไม่ใช่จากผิวดิน</li>
+            <li><strong>Persuasion/Intimidation DC 16</strong>: Vel ยอมรับว่ามีล็อตสินค้าพิเศษ แต่ไม่บอกรายละเอียด (ถ้าต่ำกว่า DC แต่สูงกว่า 10: เขาบอกให้ไปถาม Lira แทน)</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</div><!-- /page-wrap -->
+
+<!-- Floating Map Button -->
+<a class="float-map" href="/map/porto-stellare">
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 4 3 6.5v13L9 17l6 2.5 6-2.5v-13L15 6.5 9 4Z"/><path d="M9 4v13M15 6.5v13"/></svg>
+  Interactive Map
+</a>
+
+<!-- Progress Tracker -->
+<div class="progress-bar-wrap">
+  <div class="progress-label">Session Progress</div>
+  <div class="progress-beats">
+    <div class="progress-pip" id="pip-1" data-label="Arrival" onclick="toggleBeat('beat-1',1)"></div>
+    <div class="progress-pip" id="pip-2" data-label="Explore" onclick="toggleBeat('beat-2',2)"></div>
+    <div class="progress-pip" id="pip-3" data-label="Investigate" onclick="toggleBeat('beat-3',3)"></div>
+    <div class="progress-pip" id="pip-4" data-label="Revelation" onclick="toggleBeat('beat-4',4)"></div>
+    <div class="progress-pip" id="pip-5" data-label="Choice" onclick="toggleBeat('beat-5',5)"></div>
+  </div>
+  <div class="progress-count" id="progress-count">0 / 5</div>
+  <button class="progress-reset" onclick="resetProgress()">Reset</button>
+</div>
+
+<script>
+// ── Progress tracker ──────────────────────────────────────────────
+const STORAGE_KEY = 'porto-arrival-beats';
+let beatsDone = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+
+function syncUI() {
+  for (let i = 1; i <= 5; i++) {
+    const beat = document.getElementById('beat-' + i);
+    const pip  = document.getElementById('pip-' + i);
+    const done = beatsDone.includes(i);
+    if (beat) beat.classList.toggle('done', done);
+    if (pip)  pip.classList.toggle('done', done);
+  }
+  document.getElementById('progress-count').textContent = beatsDone.length + ' / 5';
+}
+
+function toggleBeat(beatId, num) {
+  const idx = beatsDone.indexOf(num);
+  if (idx === -1) beatsDone.push(num);
+  else beatsDone.splice(idx, 1);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(beatsDone));
+  syncUI();
+}
+
+function resetProgress() {
+  beatsDone = [];
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(beatsDone));
+  syncUI();
+}
+
+// ── NPC secret toggle ─────────────────────────────────────────────
+function toggleSecret(el) {
+  el.classList.toggle('open');
+}
+
+// ── DM note toggle ────────────────────────────────────────────────
+function toggleDmNote(btn) {
+  btn.classList.toggle('open');
+  const body = btn.nextElementSibling;
+  body.classList.toggle('open');
+}
+
+// ── Plasma shader rotate ─────────────────────────────────────────
+(function() {
+  let ang = 0;
+  function tick() {
+    ang = (ang + 0.018) % 360;
+    document.querySelector('.shader-wallpaper').style.setProperty('--ang', ang + 'deg');
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+})();
+
+// ── Read progress bar ─────────────────────────────────────────────
+window.addEventListener('scroll', () => {
+  const doc = document.documentElement;
+  const pct = doc.scrollTop / (doc.scrollHeight - doc.clientHeight) * 100;
+  document.getElementById('read-progress').style.width = pct + '%';
+});
+
+// ── Init ──────────────────────────────────────────────────────────
+syncUI();
+</script>
+</body>
+</html>

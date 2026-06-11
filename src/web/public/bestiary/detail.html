@@ -207,18 +207,6 @@ body{
 .bg-source a{color:var(--gold-deep);text-decoration:none;transition:color .2s}
 .bg-source a:hover{color:var(--gold)}
 
-/* ── Lang toggle ── */
-#lang-toggle{
-  display:flex;align-items:center;border:1px solid var(--gold-deep);overflow:hidden;flex-shrink:0;
-}
-#lang-toggle button{
-  background:none;border:none;cursor:pointer;
-  font-family:"Cinzel",serif;font-size:0.58rem;letter-spacing:0.22em;text-transform:uppercase;
-  padding:6px 12px;color:var(--ink-mute);transition:background .2s,color .2s;
-}
-#lang-toggle button.active{background:rgba(201,164,92,0.12);color:var(--gold)}
-#lang-toggle .lsep{width:1px;height:18px;background:var(--gold-deep);flex-shrink:0}
-.translating{opacity:0.5;pointer-events:none;transition:opacity .3s}
 
 /* ── CR badge ── */
 .cr-badge{
@@ -243,11 +231,6 @@ body{
     <span class="sep">◆</span>
     <span class="cur" id="bc-name">…</span>
   </nav>
-  <div id="lang-toggle">
-    <button id="btn-en" class="active" onclick="setLang('en')">EN</button>
-    <div class="lsep"></div>
-    <button id="btn-th" onclick="setLang('th')">TH</button>
-  </div>
 </div>
 
 <div class="page">
@@ -335,75 +318,6 @@ function render(d) {
   wrap.classList.add('vis');
 
   loadWiki(d.name);
-}
-
-// ── Translation ──
-let currentLang = 'en';
-let translationCache = {};
-
-function setLang(lang) {
-  if (lang === currentLang) return;
-  currentLang = lang;
-  document.getElementById('btn-en').classList.toggle('active', lang === 'en');
-  document.getElementById('btn-th').classList.toggle('active', lang === 'th');
-  if (lang === 'th') translatePage();
-  else restoreEnglish();
-}
-
-function getTranslatables() {
-  return [...document.querySelectorAll('.entry-desc, .bg-text')];
-}
-
-function restoreEnglish() {
-  getTranslatables().forEach(el => {
-    if (el.dataset.en) el.innerHTML = el.dataset.en;
-  });
-}
-
-async function translatePage() {
-  const els = getTranslatables().filter(el => el.textContent.trim());
-  if (!els.length) return;
-
-  const page = document.getElementById('monster');
-  page.classList.add('translating');
-
-  const cacheKey = `monsters:trans:th:v1:${idx}`;
-  let cached = {};
-  try { cached = JSON.parse(localStorage.getItem(cacheKey) || '{}'); } catch {}
-
-  // save originals
-  els.forEach(el => { if (!el.dataset.en) el.dataset.en = el.innerHTML; });
-
-  // split into uncached vs cached
-  const toFetch = els.filter(el => {
-    const text = el.dataset.en.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
-    return text && !cached[text];
-  });
-
-  if (toFetch.length) {
-    const texts = toFetch.map(el => el.dataset.en.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim());
-    try {
-      const results = await Promise.all(texts.map(async (text) => {
-        if (!text?.trim()) return text;
-        const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=th&dt=t&q=${encodeURIComponent(text)}`;
-        const r = await fetch(url);
-        const data = await r.json();
-        return data[0].map(s => s[0]).join('');
-      }));
-      results.forEach((translated, i) => {
-        cached[texts[i]] = translated;
-      });
-      localStorage.setItem(cacheKey, JSON.stringify(cached));
-    } catch {}
-  }
-
-  // apply translations
-  els.forEach(el => {
-    const text = el.dataset.en.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
-    if (cached[text]) el.innerHTML = cached[text];
-  });
-
-  page.classList.remove('translating');
 }
 
 async function loadWiki(name) {

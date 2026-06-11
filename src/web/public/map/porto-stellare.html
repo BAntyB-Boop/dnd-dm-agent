@@ -428,6 +428,97 @@
     border: 1px solid rgba(92,58,30,0.5);
     box-shadow: 0 6px 16px rgba(0,0,0,0.25);
   }
+
+  /* Player Actions */
+  .p-actions {
+    list-style: none;
+    padding: 0; margin: 0 0 12px;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .p-action {
+    display: grid; grid-template-columns: 28px 1fr;
+    gap: 10px; align-items: start;
+    padding: 8px 10px;
+    background: rgba(20,12,4,0.45);
+    border: 1px solid rgba(92,58,30,0.3);
+    border-radius: 2px;
+    transition: border-color .2s, background .2s;
+  }
+  .p-action:hover {
+    background: rgba(30,18,6,0.65);
+    border-color: rgba(212,160,23,0.35);
+  }
+  .pa-icon {
+    font-size: 16px; line-height: 1.3;
+    text-align: center;
+  }
+  .pa-body { display: flex; flex-direction: column; gap: 2px; }
+  .pa-text {
+    font-family: var(--body, 'Crimson Text', serif);
+    font-size: 14px; line-height: 1.45;
+    color: rgba(244,228,193,0.78);
+  }
+  .pa-cost {
+    font-family: var(--display, 'Cinzel', serif);
+    font-size: 9.5px; letter-spacing: .12em;
+    color: rgba(212,160,23,0.7);
+  }
+
+  /* Quests */
+  .p-quests { display: flex; flex-direction: column; gap: 12px; margin-bottom: 12px; }
+  .p-quest {
+    padding: 12px 14px;
+    background: linear-gradient(135deg, rgba(212,160,23,0.07), rgba(20,12,4,0.5));
+    border: 1px solid rgba(212,160,23,0.28);
+    border-left: 3px solid var(--gold, #d4a017);
+    border-radius: 3px;
+  }
+  .pq-title {
+    font-family: var(--display, 'Cinzel', serif);
+    font-size: 13px; font-weight: 600;
+    letter-spacing: .05em;
+    color: var(--gold-bright, #f6efd2);
+    margin-bottom: 8px;
+  }
+  .pq-meta {
+    display: flex; flex-direction: column; gap: 3px;
+    margin-bottom: 8px;
+    padding-bottom: 8px;
+    border-bottom: 1px dashed rgba(212,160,23,0.18);
+  }
+  .pq-meta-row {
+    font-size: 12.5px;
+    color: rgba(244,228,193,0.62);
+  }
+  .pq-meta-row b {
+    font-family: var(--display, 'Cinzel', serif);
+    font-size: 9px; letter-spacing: .2em; text-transform: uppercase;
+    color: rgba(212,160,23,0.65);
+    font-weight: 500;
+    margin-right: 5px;
+  }
+  .pq-desc {
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: rgba(244,228,193,0.65);
+    margin-bottom: 8px;
+  }
+  .pq-monsters {
+    padding: 8px 10px;
+    background: rgba(140,30,10,0.12);
+    border-left: 2px solid rgba(200,60,40,0.45);
+    border-radius: 2px;
+    font-size: 12.5px;
+    line-height: 1.5;
+    color: rgba(244,228,193,0.62);
+  }
+  .pq-m-label {
+    display: block;
+    font-family: var(--display, 'Cinzel', serif);
+    font-size: 9px; letter-spacing: .22em; text-transform: uppercase;
+    color: rgba(220,80,60,0.7);
+    margin-bottom: 4px;
+  }
   .p-thumb img { width: 100%; display: block; }
   .p-thumb figcaption {
     font-family: var(--display);
@@ -1304,7 +1395,20 @@ const DISTRICTS = [
       { name: "Dorian Veth", role: "ทายาทขุนนางที่ถูกตัดออกจากมรดก กำลังขายความลับของตระกูลให้ Golden Crescent" }
     ],
     tension: "ตระกูลขุนนางหลายตระกูลกำลังขายทรัพย์สินอย่างเงียบๆ ราวกับรู้ว่าบางอย่างกำลังจะเกิดขึ้น — แต่ไม่มีใครยอมพูด",
-    hook: "หอดูดาว Starhill ถูกปิดกะทันหันโดยไม่มีคำอธิบาย นักดาราศาสตร์ประจำหอหายตัวพร้อมกัน"
+    hook: "หอดูดาว Starhill ถูกปิดกะทันหันโดยไม่มีคำอธิบาย นักดาราศาสตร์ประจำหอหายตัวพร้อมกัน",
+    playerActions: [
+      { icon: "🍷", text: "เข้างานเลี้ยงชนชั้นสูง", cost: "100 gp invitation หรือ Persuasion DC 16" },
+      { icon: "🔭", text: "พยายามเข้า Starhill (ปิดอยู่)", cost: "Investigation DC 14 หาทางลับ · Stealth DC 15" },
+      { icon: "🏛️", text: "ขอเข้าพบ Lady Corveth", cost: "Persuasion DC 15 หรือมีจดหมายแนะนำ" },
+      { icon: "💰", text: "ช็อปสินค้าหรู (ราคา 3-5x ปกติ)", cost: "เครื่องประดับ 200-2000 gp" },
+      { icon: "🛏️", text: "พักที่ Marble Vista Inn", cost: "40 gp / คืน · บริการเต็มรูปแบบ" },
+      { icon: "🎭", text: "ติดสินบนคนรับใช้เพื่อข่าวซุบซิบ", cost: "10-50 gp · Deception DC 12" }
+    ],
+    quests: [
+      { title: "The Astronomer's Disappearance", giver: "Lady Corveth Ansel", reward: "300 gp + เข้า Starhill ได้", desc: "ตามหา Dorian Veth ที่หายไปพร้อมบันทึก — สงสัยว่าเขาขายข้อมูลให้ Golden Crescent", monsters: "2× Spies (CR 1) ในคฤหาสน์ · ถ้าไล่ตาม Dorian หลบหนี: 1× Assassin (CR 8) ลอบฆ่ากลางคืน" },
+      { title: "Family Secrets", giver: "Dorian Veth (ลับๆ)", reward: "200 gp + ติดต่อขุนนาง", desc: "นำเอกสารโบราณจาก Archive Basilica มาให้เขา ห้ามให้ Lady Corveth รู้", monsters: "2× Cultists (CR 1/8) เฝ้า archive ใน Old Crown · 1× Specter (CR 1) ถ้าเข้าโซนต้องห้าม" },
+      { title: "The Sealed Tower", giver: "ข่าวลือ (Insight DC 14)", reward: "ความรู้โบราณ + Spell Scroll", desc: "หาทางเข้า Starhill ก่อนวันเพ็ญถัดไป — ดูสิ่งที่นักดาราศาสตร์เห็นในกล้องโทรทรรศน์", monsters: "1× Animated Armor (CR 1) + 1× Mimic ปลอมเป็นกล้องโทรทรรศน์ · ห้องลับ: 1× Will-o'-Wisp (CR 2)" }
+    ]
   },
   {
     id: "silver",
@@ -1325,7 +1429,20 @@ const DISTRICTS = [
       { name: "Ser Aldric Thane", role: "กัปตัน City Watch ที่รู้ว่าคำสั่งจากบนไม่ถูกต้อง แต่ยังคงทำตาม" }
     ],
     tension: "City Watch เริ่มบุกสลายการประชุมของคนงานอย่างรุนแรง ความโกรธสะสมอยู่ในทุก tavern ของ Silver Steps",
-    hook: "ศพในคลองที่ไม่มีบาดแผล — ครั้งที่สามในเดือนนี้ City Watch ปิดเรื่องทุกครั้ง"
+    hook: "ศพในคลองที่ไม่มีบาดแผล — ครั้งที่สามในเดือนนี้ City Watch ปิดเรื่องทุกครั้ง",
+    playerActions: [
+      { icon: "🍻", text: "ดื่มที่ Lantern Square Tavern (พบ Maren)", cost: "3 gp / รอบ" },
+      { icon: "💬", text: "จ้าง Maren Sollis หาข้อมูล", cost: "50 gp baseline (ราคาเพิ่มถ้าหัวข้อร้อน)" },
+      { icon: "🛏️", text: "พักที่ The Lantern & Anchor Inn", cost: "12 gp / คืน · ห้องเดี่ยว" },
+      { icon: "🛒", text: "ช็อปที่ Seven Steps Market", cost: "ราคา 1.5-2x ปกติ" },
+      { icon: "🕵️", text: "ตรวจสอบจุดที่พบศพในคลอง", cost: "Investigation DC 13 · Medicine DC 14" },
+      { icon: "🚊", text: "ใช้ tram/gondola ข้าม district", cost: "1 gp / เที่ยว" }
+    ],
+    quests: [
+      { title: "Bodies in the Canal", giver: "Maren Sollis", reward: "150 gp + ข้อมูลเครือข่าย Vira", desc: "หาความเชื่อมโยงของศพทั้งสาม — ทั้งหมดเคยทำงานในเอกสารบัญชีของกระทรวง", monsters: "1× Grick (CR 2) ซ่อนใต้น้ำคลอง — เป็นเหตุของศพไร้บาดแผล · เผชิญหน้าตอนคืนพระจันทร์เต็มดวง" },
+      { title: "Watch the Watch", giver: "จดหมายไม่ระบุชื่อ", reward: "250 gp (เงินสด)", desc: "บันทึกหลักฐานการคอร์รัปชั่นของ Ser Aldric และทีม City Watch ในย่านนี้", monsters: "เน้น Stealth ไม่บังคับสู้ · ถ้าโดนจับ: 4× Guard (CR 1/8) + 1× Veteran (CR 3) หัวหน้าทีม" },
+      { title: "Lost Shipment", giver: "พ่อค้าคาราวาน", reward: "100 gp + ส่วนแบ่ง 10%", desc: "ตามหาสินค้าที่หายระหว่างขนผ่าน Silver Steps — สงสัยว่าโดน City Watch ยึดเงียบ", monsters: "3× Thugs (CR 1/2) ยึดสินค้าในคลังร้าง · 1× Bandit Captain (CR 2) เป็นหัวหน้า" }
+    ]
   },
   {
     id: "golden",
@@ -1345,7 +1462,20 @@ const DISTRICTS = [
       { name: "Councilor Vira Seln", role: "ใบหน้าของการปกครองที่ยุติธรรม แต่มีเส้นตรงถึง syndicate ใต้เมือง" }
     ],
     tension: "Guild ใหญ่แห่งหนึ่งเรียกหนี้คืนพร้อมกันทั่วเมืองโดยไม่มีการแจ้งเตือน ไม่มีใครรู้ว่าทำเพื่ออะไร",
-    hook: "อาคารกระทรวงแห่งหนึ่งถูกไฟไหม้ในคืนที่ไม่มีใครอยู่ ไฟเริ่มจากชั้นใต้ดินที่ควรจะปิดล็อคอยู่"
+    hook: "อาคารกระทรวงแห่งหนึ่งถูกไฟไหม้ในคืนที่ไม่มีใครอยู่ ไฟเริ่มจากชั้นใต้ดินที่ควรจะปิดล็อคอยู่",
+    playerActions: [
+      { icon: "🏦", text: "ฝาก/แลกเปลี่ยนทองที่ Bank of the Sun", cost: "ค่าธรรมเนียม 2-5%" },
+      { icon: "💸", text: "ขอกู้เงิน (ต้องมี collateral)", cost: "ดอกเบี้ย 15% / เดือน · Persuasion DC 14" },
+      { icon: "🔥", text: "ตรวจสอบอาคารกระทรวงที่ไหม้", cost: "Stealth DC 14 (มียามเฝ้า) · Investigation DC 15" },
+      { icon: "👔", text: "ขอเข้าพบ Councilor", cost: "ต้องมีคนแนะนำ + Persuasion DC 17" },
+      { icon: "🎟️", text: "ดูการแสดงที่ Grand Theater", cost: "15-50 gp / ที่นั่ง" },
+      { icon: "📜", text: "ติดสินบนเสมียนเพื่อบันทึก Council", cost: "100 gp + Deception DC 13" }
+    ],
+    quests: [
+      { title: "The Missing Accountant", giver: "ตัวแทน Guild (วงในแอบส่งสาส์น)", reward: "500 gp + กลับเข้า Guild ได้", desc: "ตามหา Hadren Moss และนำ ledger ของเขามาก่อน Vira จะหาเจอ", monsters: "2× Spies (CR 1) ตามรอย · 1× Assassin (CR 8) จาก Vira เมื่อใกล้พบ Hadren" },
+      { title: "Council Errand", giver: "Councilor Vira (ผ่านผู้ช่วย)", reward: "200 gp ทันที + 300 gp ถ้าสำเร็จ", desc: "ส่งจดหมายปิดผนึกไปยังบ้านพักใน Aurora — ห้ามเปิดดู ห้ามเปิดเผยตัว", monsters: "ไม่มีการต่อสู้บังคับ · ถ้าเปิดจดหมาย: 1× Cambion (CR 5) ปรากฏบังคับสัญญาเวทมนตร์" },
+      { title: "Bank Recovery", giver: "ผู้จัดการธนาคาร", reward: "300 gp + Letter of Credit", desc: "ค้นหา ledger ที่ถูกขโมยจากตู้นิรภัยใต้ดิน — ผู้ขโมยใช้กุญแจของกระทรวง", monsters: "1× Mimic ปลอมเป็นตู้เซฟใบหนึ่ง + 2× Gargoyles (CR 2) เฝ้า vault จริง" }
+    ]
   },
   {
     id: "whitecliff",
@@ -1365,7 +1495,20 @@ const DISTRICTS = [
       { name: "Cadet Silus", role: "นักศึกษาที่สังเกตว่ามีเจ้าหน้าที่นอกเครื่องแบบเฝ้า Grand Library ทุกคืน" }
     ],
     tension: "ส่วนหนึ่งของ Grand Library ถูกปิดตายมา 3 เดือนแล้ว อ้างว่า 'งานบูรณะ' แต่ไม่มีช่างคนใดเข้าออก",
-    hook: "นักศึกษา 2 คนที่พยายามเข้าไปในส่วนที่ปิดหายตัวไป ถูกบันทึกว่า 'ลาออกจากมหาวิทยาลัยด้วยความสมัครใจ'"
+    hook: "นักศึกษา 2 คนที่พยายามเข้าไปในส่วนที่ปิดหายตัวไป ถูกบันทึกว่า 'ลาออกจากมหาวิทยาลัยด้วยความสมัครใจ'",
+    playerActions: [
+      { icon: "📚", text: "ค้นคว้าใน University Library", cost: "Investigation DC 12 หา topic ทั่วไป · ฟรี" },
+      { icon: "🚪", text: "พยายามเข้าส่วนที่ปิดของ Grand Library", cost: "Stealth DC 14 + Sleight of Hand DC 15 · มียามนอกเครื่องแบบ" },
+      { icon: "👨‍🏫", text: "ตามหา Prof. Elwen", cost: "Persuasion DC 12 กับ Cadet Silus ก่อน" },
+      { icon: "✍️", text: "จ้างนักแปล/อาลักษณ์", cost: "15 gp / วัน · ภาษาเก่า +50%" },
+      { icon: "🛏️", text: "พักที่ Scholar's Rest Inn", cost: "8 gp / คืน · เงียบสงบ" },
+      { icon: "📖", text: "ซื้อหนังสือและแผนที่", cost: "5-50 gp · หนังสือเฉพาะทาง 100+ gp" }
+    ],
+    quests: [
+      { title: "Translate the Symbol", giver: "Prof. Elwen Dray", reward: "200 gp + ความรู้ภาษาโบราณ", desc: "หาตัวอย่างสัญลักษณ์เดียวกันจากที่อื่นในเมือง — เธอต้องการ 5 ตัวอย่างเพื่อยืนยัน pattern", monsters: "ไม่มีการต่อสู้ — skill challenge ล้วน (Investigation, Arcana, Perception) · ยกเว้นถ้าโดนตามถึงบ้าน Elwen: 2× Cultists ลอบเข้า" },
+      { title: "Find the Missing Students", giver: "Cadet Silus", reward: "100 gp + ติดต่อนักวิชาการ", desc: "ค้นหาที่อยู่ของเพื่อนนักศึกษา 2 คน — เริ่มจากบันทึกการเข้าออก Library ก่อนพวกเขา 'ลาออก'", monsters: "2× Bandits (CR 1/8) ที่เคยลักพานักศึกษา · 1× Cult Fanatic (CR 2) เป็นหัวหน้ากลุ่ม" },
+      { title: "Sealed Library Heist", giver: "นายหน้าตลาดมืด", reward: "600 gp + ตำราเวทย์ระดับ 2", desc: "ขโมยตำราต้องห้ามชื่อ 'Codex Vexus' จาก section ที่ปิด — งานยาก ต้องเตรียมตัวดี", monsters: "1× Flameskull (CR 4) เฝ้าโต๊ะอ่าน · 2× Specters (CR 1) เคลื่อนผ่านชั้นหนังสือ · 1× Animated Tome (custom CR 3)" }
+    ]
   },
   {
     id: "aurora",
@@ -1385,7 +1528,20 @@ const DISTRICTS = [
       { name: "Oswin Crale", role: "เจ้าของ Casino ที่ยิ้มตลอดเวลา ไม่มีใครรู้ว่าเขาเป็นหนี้ใครอยู่" }
     ],
     tension: "นักท่องเที่ยวร่ำรวยคนหนึ่งถูกพบตายในโรงแรม เมืองปิดข่าวทันที กลัวกระทบอุตสาหกรรมการท่องเที่ยว",
-    hook: "Club ใหม่เพิ่งเปิด รับสมาชิกโดย invitation เท่านั้น ไม่มีใครรู้ว่าใครเป็นเจ้าของ และสมาชิกไม่พูดถึงสิ่งที่เกิดขึ้นข้างใน"
+    hook: "Club ใหม่เพิ่งเปิด รับสมาชิกโดย invitation เท่านั้น ไม่มีใครรู้ว่าใครเป็นเจ้าของ และสมาชิกไม่พูดถึงสิ่งที่เกิดขึ้นข้างใน",
+    playerActions: [
+      { icon: "🎰", text: "เล่นพนันที่ Oswin's Grand Casino", cost: "ขั้นต่ำ 5 gp · ขั้นสูงสุด 1000 gp / โต๊ะ" },
+      { icon: "🎵", text: "ดู Seraphine Lux แสดง", cost: "25 gp ตั๋ว + ดื่ม 10 gp" },
+      { icon: "🍸", text: "เข้า Club Obscura (รับเฉพาะคำเชิญ)", cost: "50 gp + ต้องรู้ชื่อสมาชิก หรือ Persuasion DC 18" },
+      { icon: "🛏️", text: "พักที่ Lustralis Hotel", cost: "60 gp / คืน · spa รวม" },
+      { icon: "💄", text: "ซื้อสินค้าแฟชั่น/ของหายาก", cost: "50-500 gp" },
+      { icon: "🤝", text: "พบ Madame Cerise เพื่อสายสัมพันธ์", cost: "แนะนำฟรี + ค่าเชื่อมต่อ 30-200 gp" }
+    ],
+    quests: [
+      { title: "The Dead Tourist", giver: "Madame Cerise", reward: "800 gp (เร่งด่วน 48 ชม.)", desc: "หาสาเหตุการตายของขุนนางต่างเมือง ก่อนครอบครัวเขามาถึงและข่าวรั่ว — ห้องอาจมีเบาะแสที่ City Watch พลาดไป", monsters: "1× Vampire Spawn (CR 5) ผู้กระทำ — ซ่อนใน basement ของโรงแรม · เผชิญหน้าตอนกลางคืนเท่านั้น" },
+      { title: "Find the Club Member", giver: "ผู้สนับสนุนนิรนาม (เงินสด)", reward: "400 gp", desc: "ตามหาสมาชิก Club Obscura ที่หายเมื่อสัปดาห์ที่แล้ว — เริ่มจากคนรับใช้ของเขาที่ปฏิเสธจะพูด", monsters: "3× Cultists (CR 1/8) ใน basement · 1× Cult Fanatic (CR 2) เป็นผู้ทำพิธี · เหยื่อยังมีชีวิตอยู่" },
+      { title: "Bodyguard for the Night", giver: "ขุนนางต่างเมือง", reward: "100 gp / คืน + ทิป + ของรางวัล", desc: "อารักขาเขาในคืนที่จะเล่นพนันก้อนใหญ่ — มีคนขู่จะฆ่าเขามาก่อน", monsters: "2× Assassins (CR 8) เข้าโจมตีตอน 11 โมงคืน · 1× Cambion (CR 5) ถ้าผู้เล่นป้องกันสำเร็จ" }
+    ]
   },
   {
     id: "iron",
@@ -1405,7 +1561,20 @@ const DISTRICTS = [
       { name: "Foreman Greiss", role: "คนดูแลโรงงานที่รู้ว่าระเบิดเกิดจากอะไร — กลัวเกินกว่าจะพูด" }
     ],
     tension: "โรงงานระเบิดคร่าชีวิตคนงาน 11 คน ถูกประกาศว่าเป็นอุบัติเหตุ ทั้งที่คนงานรู้ว่าไม่ใช่ และมีคนพยายามปิดปากพยาน",
-    hook: "เด็กใน Iron Quarters หายไปหลายคนในช่วง 2 สัปดาห์ที่ผ่านมา City Watch บอกว่า 'ออกไปหางานที่อื่น' แต่ไม่มีครอบครัวไหนเชื่อ"
+    hook: "เด็กใน Iron Quarters หายไปหลายคนในช่วง 2 สัปดาห์ที่ผ่านมา City Watch บอกว่า 'ออกไปหางานที่อื่น' แต่ไม่มีครอบครัวไหนเชื่อ",
+    playerActions: [
+      { icon: "🔨", text: "รับงานวันละครั้งที่ท่า/โรงตี", cost: "ได้ 5-6 gp / วัน · CON Save DC 12 หรือเหนื่อย" },
+      { icon: "✊", text: "เข้าประชุมกลุ่มของ Brynn", cost: "ฟรี · เสี่ยง City Watch บุก (Stealth DC 14)" },
+      { icon: "🏚️", text: "นอนใน communal inn", cost: "1 gp / คืน · ของหายบ่อย · Sleight of Hand DC 13 ป้องกัน" },
+      { icon: "👶", text: "ช่วยตามหาเด็กที่หาย", cost: "ฟรี · ได้ความไว้วางใจของคนงาน" },
+      { icon: "💣", text: "ตรวจสอบจุดโรงงานระเบิด", cost: "Survival DC 13 · Investigation DC 14 · มียามเฝ้า" },
+      { icon: "🤐", text: "ติดสินบน Foreman Greiss", cost: "50 gp + Intimidation DC 14" }
+    ],
+    quests: [
+      { title: "Find My Son (Olan)", giver: "Mira (แม่ของ Olan)", reward: "50 gp (เธอเก็บมาตลอด) + ความไว้วางใจของย่าน", desc: "ตามรอยลูกชาย 8 ขวบที่หายไปในตรอกใกล้ท่อระบายน้ำเก่า — รอยเท้าสิ้นสุดที่นั่น", monsters: "2× Grimlocks (CR 1/4) ในอุโมงค์ · 1× Cloaker (CR 8) เป็น boss · เด็กยังมีชีวิตแต่ถูกสะกดจิต" },
+      { title: "Document the Explosion", giver: "Brynn Ashford", reward: "200 gp + เครือข่ายแรงงาน", desc: "รวบรวมหลักฐานว่าโรงงานระเบิดไม่ใช่อุบัติเหตุ — สัมภาษณ์คนงาน 4 คนก่อนพวกเขาถูกซื้อให้เงียบ", monsters: "1× Veteran (CR 3) นายหน้าโรงงาน + 4× Thugs (CR 1/2) ส่งมาเงียบพยาน" },
+      { title: "Protect the Organizer", giver: "Brynn เอง (ขอตรงๆ)", reward: "150 gp / สัปดาห์ + safehouse Iron Quarters", desc: "อารักขา Brynn 3 คืนติดต่อกัน — เธอจะจัดประชุมใหญ่และมีข่าวจะมีคนเข้าโจมตี", monsters: "คืนที่ 1: 4× Bandits (CR 1/8) ลองทดสอบ · คืนที่ 2: 2× Bandit Captains (CR 2) + 6× Bandits · คืนที่ 3: 1× Assassin (CR 8) ลอบเข้าเดี่ยว" }
+    ]
   },
   {
     id: "oldcrown",
@@ -1425,7 +1594,20 @@ const DISTRICTS = [
       { name: "Archivist Tenne", role: "ผู้ดูแล Archive Basilica ที่กำลังลบบันทึกบางอย่างออก — ถูกบังคับหรือสมัครใจ ไม่ชัด" }
     ],
     tension: "พระในสำนักเล็กๆ เริ่มทำพิธีในคืนที่เงียบผิดปกติ Crown Cathedral พยายามปิดปากพวกเขา แต่ทำไม่สำเร็จ",
-    hook: "หนูและนกกำลังออกจาก Old Crown ทีละน้อยมาหลายสัปดาห์แล้ว ชาวเมืองที่อยู่นานพอจำได้ว่าเคยเกิดแบบนี้มาก่อน"
+    hook: "หนูและนกกำลังออกจาก Old Crown ทีละน้อยมาหลายสัปดาห์แล้ว ชาวเมืองที่อยู่นานพอจำได้ว่าเคยเกิดแบบนี้มาก่อน",
+    playerActions: [
+      { icon: "⛪", text: "เข้า Crown Cathedral ในเวลาเปิด", cost: "ฟรี · 06:00-18:00 · Religion DC 10 เข้าใจพิธี" },
+      { icon: "🙏", text: "ขอเข้าพบ Father Aldous", cost: "Religion DC 12 · มาตอนเช้าตรู่เท่านั้น" },
+      { icon: "📜", text: "ขอเข้า Archive Basilica", cost: "Persuasion DC 14 กับ Tenne · ของขวัญ 50 gp ช่วย" },
+      { icon: "🐈", text: "ติดตามสัตว์ที่อพยพออก", cost: "Survival DC 12 เห็น pattern · Animal Handling DC 13" },
+      { icon: "🕯️", text: "เข้าร่วมพิธีในสำนักเล็ก", cost: "Religion DC 13 · เสี่ยงโดน Hollow สัมผัส (WIS Save DC 14)" },
+      { icon: "🚷", text: "พยายามเข้า Lower Vaults", cost: "ต้องมีกุญแจของ Aldous · Sleight of Hand DC 17 ขโมย" }
+    ],
+    quests: [
+      { title: "Why Are the Animals Fleeing?", giver: "Father Aldous", reward: "200 gp + audience สาธารณะของโบสถ์", desc: "เฝ้าสังเกตและรายงานทิศทางที่สัตว์อพยพ — Aldous ต้องการยืนยันสมมุติฐานของเขา", monsters: "ไม่มีการต่อสู้ในเวลากลางวัน · กลางคืน: 1× Specter (CR 1) ใต้สุสาน · WIS Save DC 13 ไม่ให้ฝันถูกครอบงำ" },
+      { title: "Lost Archives", giver: "Archivist Tenne (กระซิบ)", reward: "300 gp + สำเนาเอกสารโบราณ", desc: "ค้นหา 7 หน้าที่เขาถูกบังคับให้ตัดออกจาก archive — ซ่อนไว้ในห้องลับใต้ basilica", monsters: "2× Shadows (CR 1/2) ในห้องลับ · 1× Wraith (CR 5) ถ้าถือเอกสารผิดวิธี · ใช้ light spell ลดความเสียหายได้" },
+      { title: "The Pilgrim's Path", giver: "ผู้แสวงบุญต่างเมือง", reward: "100 gp + พรพิเศษ (advantage 1 ครั้ง)", desc: "พาเขาไปยังศาลเจ้าใต้ดินที่ปิดมานาน 200 ปี — เขาต้องทำพิธีก่อนตาย", monsters: "1× Will-o'-Wisp (CR 2) ในทางเข้า · 2× Ghouls (CR 1) เฝ้าศาล · ผู้แสวงบุญอาจเสียสติถ้าเห็น Hollow" }
+    ]
   },
   {
     id: "stellamar",
@@ -1445,7 +1627,20 @@ const DISTRICTS = [
       { name: "Lira of the Docks", role: "ผู้ลี้ภัยจากทางเหนือที่พกแผลเป็นและความลับ ไม่ยอมบอกว่าหนีมาจากอะไร" }
     ],
     tension: "เรือลำหนึ่งเข้าท่าพร้อมลูกเรือทั้งหมดที่ตายแล้ว แต่สินค้าในระวางไม่ขาดแม้ชิ้นเดียว ท่าเรือปิดข่าว",
-    hook: "แสงแปลกๆ ใต้น้ำใน Moonlit Bay ปรากฏทุกคืนที่ทะเลเงียบ นักเดินเรือเก่าบอกว่าเห็นแบบนี้ครั้งสุดท้ายก่อนมีคนหายไปทั้งหมู่บ้าน"
+    hook: "แสงแปลกๆ ใต้น้ำใน Moonlit Bay ปรากฏทุกคืนที่ทะเลเงียบ นักเดินเรือเก่าบอกว่าเห็นแบบนี้ครั้งสุดท้ายก่อนมีคนหายไปทั้งหมู่บ้าน",
+    playerActions: [
+      { icon: "⛵", text: "จ้างเรือออกจากเมือง", cost: "50-500 gp ตามระยะทาง" },
+      { icon: "🚢", text: "รับจ้างทำงานท่าเรือ", cost: "5 gp / วัน · Athletics DC 12" },
+      { icon: "👁️", text: "ตรวจสอบเรือผี (ลูกเรือตาย)", cost: "ต้องให้ Vel เงี่ยใจ · Stealth DC 15 ขึ้นเรือ" },
+      { icon: "🗣️", text: "คุยกับ Lira ที่ pier 7", cost: "ฟรี · Persuasion DC 11 ให้เธอเชื่อใจ" },
+      { icon: "🎁", text: "ซื้อของเถื่อนที่ Salt Row Market", cost: "ราคาถูก 30-50% · เสี่ยงโดน City Watch (CON Save DC 12 แสดงสีหน้า)" },
+      { icon: "💰", text: "ติดสินบน Harbormaster Vel", cost: "200 gp + Persuasion DC 15 · เขารับเงินแต่อาจไม่ทำตาม" }
+    ],
+    quests: [
+      { title: "The Ghost Ship", giver: "Lira of the Docks", reward: "ความรู้เกี่ยวกับ Hollow + ความไว้วางใจของ Lira", desc: "ขึ้นเรือผีและหาว่าทำไมลูกเรือตายทั้งหมดแต่สินค้ายังครบ — มีสัญลักษณ์ที่ก้นเรือ", monsters: "4× Specters (CR 1) เป็นลูกเรือเดิม · 1× Hollow-touched Captain (custom CR 6 — Wight ปรับสถิติ พ่นเสียงเรียก) · ใต้เรือ: 2× Stirges (CR 1/8)" },
+      { title: "Smuggler's Cut", giver: "Harbormaster Vel", reward: "150 gp + access ท่าลับ", desc: "ส่งลังสินค้า 'unmarked' ไปยังบ้านพักใน Aurora — ห้ามถามว่าข้างในคืออะไร ห้ามเปิด", monsters: "ไม่มีการต่อสู้ถ้าส่งสะอาด · ถ้ามีคนสกัด: 3× Thugs (CR 1/2) ลอบเข้า · ถ้าเปิดลัง: 1× Mimic ที่จริงคืออวัยวะของบางสิ่ง" },
+      { title: "The Lighthouse Keeper", giver: "Harbor Watch", reward: "200 gp + เครื่องนำทาง", desc: "ผู้เฝ้าประภาคาร Moonlit Bay Sentinel ไม่ส่งสัญญาณมา 3 คืนแล้ว — ไปดูว่าเขายังมีชีวิตหรือไม่", monsters: "ภายในประภาคาร: 1× Sahuagin Priestess (CR 2) + 2× Sahuagin (CR 1/2) ที่บุกขึ้นมา · ผู้เฝ้ายังมีชีวิตแต่หลบซ่อนชั้นบนสุด" }
+    ]
   }
 ];
 
@@ -1595,6 +1790,29 @@ function buildPanel(d){
       <img src="${d.detail.img}" alt="${d.detail.title} — ${d.detail.sub}" loading="lazy" />
       <figcaption><span class="dh-title">${d.detail.title}</span><span class="dh-sub">${d.detail.sub}</span></figcaption>
     </figure>` : "";
+  const actionsHTML = d.playerActions && d.playerActions.length ? `
+    <div class="p-section-h">ผู้เล่นทำอะไรได้ที่นี่ · Player Actions</div>
+    <ul class="p-actions">
+      ${d.playerActions.map(a => `
+        <li class="p-action">
+          <span class="pa-icon">${a.icon}</span>
+          <div class="pa-body"><span class="pa-text">${a.text}</span><span class="pa-cost">${a.cost}</span></div>
+        </li>`).join("")}
+    </ul>` : "";
+  const questsHTML = d.quests && d.quests.length ? `
+    <div class="p-section-h">เควสที่นี่ · Available Quests</div>
+    <div class="p-quests">
+      ${d.quests.map(q => `
+        <div class="p-quest">
+          <div class="pq-title">${q.title}</div>
+          <div class="pq-meta">
+            <span class="pq-meta-row"><b>ผู้ให้:</b> ${q.giver}</span>
+            <span class="pq-meta-row"><b>รางวัล:</b> ${q.reward}</span>
+          </div>
+          <div class="pq-desc">${q.desc}</div>
+          ${q.monsters ? `<div class="pq-monsters"><span class="pq-m-label">⚔ ศัตรู / Encounters</span>${q.monsters}</div>` : ''}
+        </div>`).join("")}
+    </div>` : "";
   const thumb = d.atmosphere ? `
     <figure class="p-thumb">
       <img src="${d.atmosphere.img}" alt="${d.atmosphere.cap}" loading="lazy" />
@@ -1633,6 +1851,8 @@ function buildPanel(d){
       <div class="p-tension">${d.tension}</div>
       <div class="p-section-h">Hook</div>
       <div class="p-hook">${d.hook}</div>
+      ${actionsHTML}
+      ${questsHTML}
       <div class="p-btns">
         <button class="p-btn-atlas" id="view-atlas-page">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="14" height="14"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 3v18"/></svg>

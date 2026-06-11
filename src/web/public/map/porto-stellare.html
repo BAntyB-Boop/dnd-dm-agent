@@ -549,6 +549,49 @@
   }
   #home-btn svg { width: 13px; height: 13px; flex: none; }
 
+  /* DM Guide button — opens oneshot guide */
+  #dm-guide-btn {
+    position: fixed;
+    top: 18px; right: 200px;
+    z-index: 40;
+    display: flex; align-items: center; gap: 8px;
+    padding: 9px 16px;
+    font-family: var(--display);
+    font-size: 11px;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: rgba(244,228,193,0.85);
+    background: linear-gradient(180deg, #2c1a0e, #1a0e06);
+    border: 1px solid rgba(212,160,23,0.45);
+    border-radius: 3px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(212,160,23,0.12);
+    text-decoration: none;
+    transition: color .2s, border-color .2s, box-shadow .2s, transform .2s;
+  }
+  #dm-guide-btn::before {
+    content: "";
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--gold-bright, #f0c040);
+    box-shadow: 0 0 8px rgba(240,192,64,0.7);
+    flex: none;
+    animation: dm-pulse 2.4s ease-in-out infinite;
+  }
+  @keyframes dm-pulse {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0.4; }
+  }
+  #dm-guide-btn:hover {
+    color: var(--gold-bright, #f0c040);
+    border-color: var(--gold-bright, #f0c040);
+    box-shadow: 0 8px 26px rgba(0,0,0,0.6), 0 0 14px rgba(212,160,23,0.3);
+    transform: translateY(-1px);
+  }
+  #dm-guide-btn svg { width: 13px; height: 13px; flex: none; }
+  @media (max-width: 640px) {
+    #dm-guide-btn { right: 16px; top: 70px; }
+    #dm-guide-btn .btn-text { display: none; }
+  }
+
   /* ---------- Music control (continues homepage BGM) ---------- */
   .music-ctrl {
     position: fixed;
@@ -1115,6 +1158,11 @@
   <a id="home-btn" href="/">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12L12 3l9 9"/><path d="M9 21V12h6v9"/></svg>
     <span class="btn-text">The Veiled Codex</span>
+  </a>
+
+  <a id="dm-guide-btn" href="/oneshot/porto-arrival" title="One-Shot DM Guide — Arrival at Porto Stellare">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+    <span class="btn-text">DM Guide</span>
   </a>
 
   <audio id="bg-audio" src="/assets/codex-of-stars.mp3" loop preload="auto"></audio>

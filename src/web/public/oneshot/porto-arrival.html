@@ -729,6 +729,61 @@ body {
 .float-map svg { flex: none; }
 
 /* ══════════════════════════════════════════════
+   SCOPE BANNER (Session 1 = Stellamar only)
+══════════════════════════════════════════════ */
+.scope-banner {
+  margin: 0 0 32px;
+  padding: 22px 26px;
+  background: linear-gradient(135deg, rgba(47,112,136,0.16), rgba(20,12,4,0.55));
+  border: 1px solid rgba(47,112,136,0.55);
+  border-left: 4px solid #2f7088;
+  border-radius: 3px;
+  position: relative;
+  overflow: hidden;
+}
+.scope-banner::before {
+  content: "⚓";
+  position: absolute;
+  right: 18px; top: 50%; transform: translateY(-50%);
+  font-size: 90px;
+  opacity: 0.06;
+  pointer-events: none;
+}
+.scope-eyebrow {
+  font-family: "Cinzel", serif;
+  font-size: 9.5px; letter-spacing: .36em; text-transform: uppercase;
+  color: rgba(120,180,210,0.85); margin-bottom: 10px;
+}
+.scope-title {
+  font-family: "Cinzel Decorative", serif;
+  font-size: 22px; letter-spacing: .03em;
+  color: var(--gold-bright); margin-bottom: 10px;
+}
+.scope-text {
+  font-size: 14.5px; line-height: 1.78;
+  color: rgba(232,226,207,.7);
+  max-width: 720px;
+}
+.scope-text strong { color: var(--gold-bright); font-weight: 600; }
+.scope-rules {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  margin-top: 14px;
+}
+.scope-rule {
+  font-family: "Cinzel", serif;
+  font-size: 9px; letter-spacing: .22em; text-transform: uppercase;
+  padding: 4px 10px; border-radius: 2px;
+  background: rgba(47,112,136,0.18);
+  border: 1px solid rgba(47,112,136,0.4);
+  color: rgba(150,210,230,0.85);
+}
+.scope-rule.warn {
+  background: rgba(176,26,26,0.12);
+  border-color: rgba(176,26,26,0.4);
+  color: rgba(220,140,120,0.85);
+}
+
+/* ══════════════════════════════════════════════
    ENCOUNTER CARDS
 ══════════════════════════════════════════════ */
 .encounter-list { display: flex; flex-direction: column; gap: 24px; margin-bottom: 20px; }
@@ -1007,6 +1062,128 @@ body {
   .economy-grid { grid-template-columns: 1fr; }
   .choice-row { grid-template-columns: 1fr; gap: 4px; }
   .next-check { grid-template-columns: 1fr 40px 1fr; }
+}
+
+/* Locked encounter cards (out of session 1 scope) */
+.encounter-card.locked-future {
+  position: relative;
+  opacity: 0.45;
+  filter: saturate(0.55);
+  transition: opacity .3s, filter .3s;
+}
+.encounter-card.locked-future:hover { opacity: 0.85; filter: saturate(0.9); }
+.encounter-card.locked-future::before {
+  content: "🔒 Session 2+ · ยังไม่เปิดในรอบแรก";
+  position: absolute;
+  top: 12px; right: 14px;
+  z-index: 3;
+  font-family: "Cinzel", serif;
+  font-size: 9px; letter-spacing: .24em; text-transform: uppercase;
+  padding: 5px 11px;
+  background: rgba(8,4,1,0.92);
+  border: 1px solid rgba(176,26,26,0.45);
+  color: rgba(220,140,120,0.85);
+  border-radius: 2px;
+  pointer-events: none;
+}
+.encounter-card.locked-future::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(45deg, rgba(0,0,0,0) 0 14px, rgba(176,26,26,0.04) 14px 18px);
+  pointer-events: none;
+}
+
+/* ══════════════════════════════════════════════
+   SEA EXPLORATION
+══════════════════════════════════════════════ */
+.sea-intro {
+  padding: 18px 22px;
+  background: linear-gradient(135deg, rgba(47,112,136,0.1), transparent);
+  border-left: 3px solid #2f7088;
+  margin-bottom: 24px;
+  font-size: 14.5px; line-height: 1.78;
+  color: rgba(232,226,207,.72);
+}
+.sea-intro strong { color: rgba(150,210,230,0.95); }
+.sea-warning {
+  margin-top: 14px;
+  padding: 14px 18px;
+  background: rgba(80,40,100,0.12);
+  border-left: 3px solid rgba(140,80,200,0.55);
+  border-radius: 2px;
+}
+.sea-warning-label {
+  font-family: "Cinzel", serif;
+  font-size: 9px; letter-spacing: .3em; text-transform: uppercase;
+  color: rgba(180,130,240,0.7);
+  margin-bottom: 6px;
+}
+.sea-warning-text {
+  font-size: 14px; line-height: 1.65; font-style: italic;
+  color: rgba(232,226,207,.62);
+}
+
+.sea-encounters {
+  display: flex; flex-direction: column; gap: 12px;
+  margin-bottom: 20px;
+}
+.sea-encounter {
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-left: 3px solid #2f7088;
+  border-radius: 3px;
+  padding: 16px 20px;
+}
+.se-head {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 14px; margin-bottom: 10px;
+}
+.se-title {
+  font-family: "Cinzel", serif;
+  font-size: 13.5px; letter-spacing: .06em;
+  color: var(--gold-bright);
+}
+.se-cr {
+  font-family: "Cinzel", serif;
+  font-size: 9px; letter-spacing: .22em; text-transform: uppercase;
+  padding: 4px 10px; border-radius: 2px;
+  background: rgba(47,112,136,0.18);
+  border: 1px solid rgba(47,112,136,0.45);
+  color: rgba(150,210,230,0.85);
+  white-space: nowrap;
+}
+.se-trigger {
+  font-size: 13px; line-height: 1.6;
+  color: rgba(232,226,207,.6);
+  margin-bottom: 8px;
+}
+.se-monsters {
+  padding: 8px 12px;
+  background: rgba(140,30,10,0.1);
+  border-left: 2px solid rgba(200,60,40,0.45);
+  border-radius: 2px;
+  font-size: 13px; line-height: 1.55;
+  color: rgba(232,226,207,.62);
+}
+.se-monsters .sem-label {
+  font-family: "Cinzel", serif;
+  font-size: 8.5px; letter-spacing: .25em; text-transform: uppercase;
+  color: rgba(220,80,60,0.7);
+  display: block; margin-bottom: 4px;
+}
+.se-tactics {
+  margin-top: 8px;
+  padding: 7px 12px;
+  background: rgba(201,164,92,0.05);
+  border-left: 2px solid rgba(201,164,92,0.35);
+  font-size: 12.5px; line-height: 1.55;
+  color: rgba(232,226,207,.55);
+}
+.se-tactics b {
+  font-family: "Cinzel", serif;
+  font-size: 8.5px; letter-spacing: .22em; text-transform: uppercase;
+  color: rgba(201,164,92,.7);
+  display: block; margin-bottom: 3px;
 }
 
 /* ══════════════════════════════════════════════
@@ -1299,9 +1476,10 @@ body.dm-locked .progress-bar-wrap { filter: blur(8px); pointer-events: none; use
     <li><a class="toc-item" href="#economy"><span class="toc-num">5</span><span class="toc-icon">🪙</span><span class="toc-label">เศรษฐกิจ</span></a></li>
     <li><a class="toc-item" href="#tensions"><span class="toc-num">6</span><span class="toc-icon">🔥</span><span class="toc-label">สิ่งที่เดือดอยู่</span></a></li>
     <li><a class="toc-item" href="#encounters"><span class="toc-num">7</span><span class="toc-icon">🗺</span><span class="toc-label">เนื้อเรื่องทั้งหมด</span></a></li>
-    <li><a class="toc-item" href="#beats"><span class="toc-num">8</span><span class="toc-icon">⏳</span><span class="toc-label">Session Flow</span></a></li>
-    <li><a class="toc-item" href="#choices"><span class="toc-num">9</span><span class="toc-icon">🔀</span><span class="toc-label">ทางแยกของผู้เล่น</span></a></li>
-    <li><a class="toc-item" href="#dm-notes"><span class="toc-num">10</span><span class="toc-icon">📓</span><span class="toc-label">บันทึก DM</span></a></li>
+    <li><a class="toc-item" href="#sea-exploration"><span class="toc-num">8</span><span class="toc-icon">🌊</span><span class="toc-label">ออกทะเล</span></a></li>
+    <li><a class="toc-item" href="#beats"><span class="toc-num">9</span><span class="toc-icon">⏳</span><span class="toc-label">Session Flow</span></a></li>
+    <li><a class="toc-item" href="#choices"><span class="toc-num">10</span><span class="toc-icon">🔀</span><span class="toc-label">ทางแยกของผู้เล่น</span></a></li>
+    <li><a class="toc-item" href="#dm-notes"><span class="toc-num">11</span><span class="toc-icon">📓</span><span class="toc-label">บันทึก DM</span></a></li>
   </ul>
 </nav>
 
@@ -1360,6 +1538,21 @@ body.dm-locked .progress-bar-wrap { filter: blur(8px); pointer-events: none; use
     <p class="hero-english">When the city's beauty is only the surface of something far older</p>
     <div class="hero-divider"></div>
   </section>
+
+  <!-- ══ SCOPE BANNER ══ -->
+  <div class="scope-banner">
+    <div class="scope-eyebrow">⚓ Session 1 Scope — ขอบเขตของรอบแรก</div>
+    <div class="scope-title">เกิดและจบที่ Stellamar Port</div>
+    <p class="scope-text">
+      One-shot รอบแรก<strong> จำกัดเฉพาะย่าน Stellamar Port</strong> ผู้เล่นอาจได้ยินข่าวจากย่านอื่น แต่ <strong>ทั้ง quest, NPC, และ encounter ที่ใช้งานจริง อยู่ที่ Stellamar เท่านั้น</strong> ผู้เล่นออกทะเลได้ — แต่จะพบเพียง <strong>monster ทางทะเล</strong> ไม่สามารถขึ้นเกาะใหม่หรือไปยังเมืองอื่นได้ในรอบนี้
+    </p>
+    <div class="scope-rules">
+      <span class="scope-rule">✓ ย่านเดียว: Stellamar Port</span>
+      <span class="scope-rule">✓ Sea exploration เปิด — sea monsters เท่านั้น</span>
+      <span class="scope-rule warn">✗ ห้าม: ไปย่านอื่นใน Porto Stellare</span>
+      <span class="scope-rule warn">✗ ห้าม: ขึ้นเกาะใหม่ / ไปเมืองอื่น</span>
+    </div>
+  </div>
 
   <!-- ══ OPENING READ-ALOUD ══ -->
   <section class="section" id="read-aloud">
@@ -1952,7 +2145,7 @@ body.dm-locked .progress-bar-wrap { filter: blur(8px); pointer-events: none; use
       </div>
 
       <!-- ── IRON QUARTERS ── -->
-      <div class="encounter-card" style="--e-color: #7b6a59">
+      <div class="encounter-card locked-future" style="--e-color: #7b6a59">
         <div class="encounter-header">
           <div class="encounter-dist-dot"></div>
           <div>
@@ -2035,7 +2228,7 @@ body.dm-locked .progress-bar-wrap { filter: blur(8px); pointer-events: none; use
       </div>
 
       <!-- ── SILVER STEPS ── -->
-      <div class="encounter-card" style="--e-color: #8c97a3">
+      <div class="encounter-card locked-future" style="--e-color: #8c97a3">
         <div class="encounter-header">
           <div class="encounter-dist-dot"></div>
           <div>
@@ -2103,7 +2296,7 @@ body.dm-locked .progress-bar-wrap { filter: blur(8px); pointer-events: none; use
       </div>
 
       <!-- ── OLD CROWN ── -->
-      <div class="encounter-card" style="--e-color: #8a4a63">
+      <div class="encounter-card locked-future" style="--e-color: #8a4a63">
         <div class="encounter-header">
           <div class="encounter-dist-dot"></div>
           <div>
@@ -2186,7 +2379,7 @@ body.dm-locked .progress-bar-wrap { filter: blur(8px); pointer-events: none; use
       </div>
 
       <!-- ── WHITE CLIFF WARD ── -->
-      <div class="encounter-card" style="--e-color: #7fa0b5">
+      <div class="encounter-card locked-future" style="--e-color: #7fa0b5">
         <div class="encounter-header">
           <div class="encounter-dist-dot"></div>
           <div>
@@ -2264,7 +2457,7 @@ body.dm-locked .progress-bar-wrap { filter: blur(8px); pointer-events: none; use
       </div>
 
       <!-- ── GOLDEN CRESCENT ── -->
-      <div class="encounter-card" style="--e-color: #d4a017">
+      <div class="encounter-card locked-future" style="--e-color: #d4a017">
         <div class="encounter-header">
           <div class="encounter-dist-dot"></div>
           <div>
@@ -2322,7 +2515,7 @@ body.dm-locked .progress-bar-wrap { filter: blur(8px); pointer-events: none; use
       </div>
 
       <!-- ── AURORA PROMENADE ── -->
-      <div class="encounter-card" style="--e-color: #c98a6d">
+      <div class="encounter-card locked-future" style="--e-color: #c98a6d">
         <div class="encounter-header">
           <div class="encounter-dist-dot"></div>
           <div>
@@ -2385,7 +2578,7 @@ body.dm-locked .progress-bar-wrap { filter: blur(8px); pointer-events: none; use
       </div>
 
       <!-- ── VERDANT TERRACES ── -->
-      <div class="encounter-card" style="--e-color: #4a7c4e">
+      <div class="encounter-card locked-future" style="--e-color: #4a7c4e">
         <div class="encounter-header">
           <div class="encounter-dist-dot"></div>
           <div>
@@ -2441,6 +2634,126 @@ body.dm-locked .progress-bar-wrap { filter: blur(8px); pointer-events: none; use
         </div>
       </div>
 
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ══ SEA EXPLORATION ══ -->
+  <section class="section" id="sea-exploration">
+    <div class="section-label">Sea Exploration · ออกทะเล</div>
+    <div class="section-title">ถ้าผู้เล่นออกทะเล</div>
+    <p class="section-sub">Open ocean is reachable — but no island is.</p>
+
+    <div class="sea-intro">
+      ผู้เล่นสามารถ<strong>เช่าหรือขโมยเรือเล็ก</strong>ออกจาก Stellamar ได้ — Moonlit Bay เปิดสู่ทะเลเปิด แต่ไม่ว่าพวกเขาจะหันไปทางไหน <strong>ไม่มีเกาะใหม่</strong>ที่เข้าถึงได้ในรอบนี้ ทุกครั้งที่พวกเขาคิดว่าเห็นแผ่นดิน — ทะเลกลับเปลี่ยน กระแสน้ำผลักกลับ หรือลมหายไปจนใบเรือนิ่ง
+      <div class="sea-warning">
+        <div class="sea-warning-label">⚠ ตรรกะของโลก / In-world reasoning</div>
+        <div class="sea-warning-text">
+          Hollow Below ส่งคลื่น Resonance ผ่านน้ำทะเล — มันสร้าง "กำแพง" ที่บีบเรือเล็กให้วนกลับเข้าอ่าว เข็มทิศหมุน ดาวบนฟ้าดูเหมือนคนละชุด ลูกเรือเก่าเรียกมันว่า "The Pull" — มีอยู่จริงตั้งแต่ 800 ปีก่อน แต่แค่ 3 สัปดาห์ที่ผ่านมามันแรงขึ้นจนสังเกตได้
+        </div>
+      </div>
+    </div>
+
+    <div class="sea-encounters">
+
+      <div class="sea-encounter">
+        <div class="se-head">
+          <div class="se-title">⚓ A — Coastal Patrol / สำรวจชายฝั่ง</div>
+          <div class="se-cr">CR 1/4 – 1/2 · Easy</div>
+        </div>
+        <div class="se-trigger">ผู้เล่นออกห่างจากท่าประมาณ 1–2 ชั่วโมง — เริ่มเห็นเงาเคลื่อนใต้น้ำ คลื่นเบาผิดปกติ</div>
+        <div class="se-monsters">
+          <span class="sem-label">⚔ Monsters</span>
+          3× <b>Reef Sharks</b> (CR 1/2) ที่ฉีกตาข่ายชาวประมง · หรือ 4× <b>Merfolk Scouts</b> (CR 1/8) ที่เฝ้าดูแต่ไม่โจมตี — เว้นแต่ถูกยั่ว
+        </div>
+        <div class="se-tactics">
+          <b>Tactics</b> Sharks ใช้ pack tactics ไล่กระโดดขึ้นเรือ · Merfolk หนีถ้าโดน 1 ตัว
+        </div>
+      </div>
+
+      <div class="sea-encounter">
+        <div class="se-head">
+          <div class="se-title">🌊 B — The Pull / กระแสน้ำผลักกลับ</div>
+          <div class="se-cr">CR — · Skill Challenge</div>
+        </div>
+        <div class="se-trigger">เมื่อผู้เล่นพยายามไปทาง <em>ตะวันออก / ตะวันตก</em> นอกแนวอ่าว — เข็มทิศเริ่มหมุน ใบเรือนิ่ง</div>
+        <div class="se-monsters">
+          <span class="sem-label">⚔ Encounter (no combat)</span>
+          Survival DC 14 หา wind pocket · Athletics DC 13 พายฝืน · Arcana DC 15 รู้ว่าเป็น Resonance · Fail 3 ครั้ง: เรือถูกผลักกลับจุดเริ่ม + ผู้เล่นรู้สึก<em>ป่วยทางจิต</em> WIS Save DC 12 หรือ Disadvantage 1 ชั่วโมง
+        </div>
+        <div class="se-tactics">
+          <b>หมายเหตุ</b> นี่คือกลไกที่ทำให้ผู้เล่นรู้ว่า "ออกไปไม่ได้" โดยไม่ต้องบอกตรงๆ
+        </div>
+      </div>
+
+      <div class="sea-encounter">
+        <div class="se-head">
+          <div class="se-title">🦈 C — Hunter in the Deep</div>
+          <div class="se-cr">CR 2 · Medium</div>
+        </div>
+        <div class="se-trigger">ออกห่างเกิน 3 ชั่วโมง · ทะเลเงียบสนิทผิดปกติ — แล้วมีอะไรกระแทกท้องเรือ</div>
+        <div class="se-monsters">
+          <span class="sem-label">⚔ Monsters</span>
+          1× <b>Hunter Shark</b> (CR 2) · ตามด้วย 2× <b>Reef Sharks</b> (CR 1/2) เมื่อเลือดออก
+        </div>
+        <div class="se-tactics">
+          <b>Tactics</b> Hunter Shark ชนเรือเล็กจนคนล้มลงน้ำ · จากนั้นเปลี่ยน target เป็นคนที่อยู่ในน้ำ
+        </div>
+      </div>
+
+      <div class="sea-encounter">
+        <div class="se-head">
+          <div class="se-title">💡 D — The Underwater Lights / แสงประหลาด</div>
+          <div class="se-cr">CR 2 – 3 · Hard</div>
+        </div>
+        <div class="se-trigger">ออกทะเลตอนกลางคืนที่ทะเลเงียบ — แสงสีฟ้าอ่อนใต้น้ำเริ่มกระพริบ ใต้เรือมีรูปร่างคล้ายเสาหินตั้งใต้น้ำ</div>
+        <div class="se-monsters">
+          <span class="sem-label">⚔ Monsters</span>
+          1× <b>Sahuagin Priestess</b> (CR 2) — ทำพิธีบนเสาหินใต้น้ำ · 2× <b>Sahuagin</b> (CR 1/2) คุ้มกัน · พิธีนี้เป็นส่วนหนึ่งของ Resonance · ฆ่า Priestess = แสงดับ 1 คืน (รางวัล)
+        </div>
+        <div class="se-tactics">
+          <b>Tactics</b> Sahuagin โผล่ขึ้นด้านข้างเรือพร้อมกัน · Priestess ใช้ spell Sacred Flame จากใต้น้ำ · WIS Save DC 12 หรือเสีย action 1 turn เพราะเสียง "ร้อง" ใต้น้ำ
+        </div>
+      </div>
+
+      <div class="sea-encounter">
+        <div class="se-head">
+          <div class="se-title">⚱ E — Drowned Vessel / เรือลำที่หาย</div>
+          <div class="se-cr">CR 3 – 4 · Hard</div>
+        </div>
+        <div class="se-trigger">หากผู้เล่นตามแสงไปจนเจอ — พบเรือเก่าหักครึ่งจมอยู่ใต้น้ำตื้น มีกลิ่นไม่ใช่ปลา</div>
+        <div class="se-monsters">
+          <span class="sem-label">⚔ Monsters</span>
+          4× <b>Specters</b> (CR 1) — ลูกเรือที่จมที่นี่หลายปีก่อน · 1× <b>Wraith</b> (CR 5) ในห้องกัปตัน ถือบันทึก<em>เขียนสัญลักษณ์ Hollow</em>
+        </div>
+        <div class="se-tactics">
+          <b>Tactics</b> Specters ดึงคนลงน้ำ · Wraith ไม่เข้าโจมตี เว้นแต่บันทึกถูกแย่ง — ถ้าได้บันทึกมา = link ตรงกับ Lira's knowledge
+        </div>
+      </div>
+
+      <div class="sea-encounter">
+        <div class="se-head">
+          <div class="se-title">🐙 F — The Pull's Heart (เลือกใช้ตามจังหวะ)</div>
+          <div class="se-cr">CR 5 · Boss</div>
+        </div>
+        <div class="se-trigger">เฉพาะถ้าผู้เล่นยืนกรานออกไปไกลที่สุด — ใช้เมื่อ DM ต้องการ "ปิดประตู" ออกทะเลอย่างชัดเจน</div>
+        <div class="se-monsters">
+          <span class="sem-label">⚔ Boss Monster</span>
+          1× <b>Water Elemental</b> (CR 5) — รูปร่างของน้ำ แต่<em>มีรอยสัญลักษณ์ Hollow ฟุ้งอยู่ในเนื้อมัน</em> · ไม่ใช่ elemental ปกติ · พ่นคลื่นยักษ์ตีกลับเรือเข้าฝั่ง
+        </div>
+        <div class="se-tactics">
+          <b>Result</b> ไม่ว่าผู้เล่นจะชนะหรือถอยร่น — เรือถูกพัดกลับ Stellamar เสมอ · ใช้ตัวนี้สูงสุด 1 ครั้งใน session
+        </div>
+      </div>
+
+    </div>
+
+    <div class="sea-warning" style="background: rgba(60,30,100,.1); border-left-color: rgba(140,80,200,.55);">
+      <div class="sea-warning-label" style="color: rgba(180,130,240,.75);">🔒 ทำไมถึงไปเกาะไม่ได้</div>
+      <div class="sea-warning-text">
+        ทุกครั้งที่ผู้เล่นเห็นเกาะ — ใช้คำว่า "<em>เงาที่ขอบฟ้า</em>" ไม่ใช่ "เกาะ" · ถ้าพวกเขาไปถึง ก็จะพบว่ามันคือกลุ่มหินใต้น้ำ หรือซากเรือเก่า · เกาะจริงๆ มีอยู่ — แต่ <strong>เปิดใน Session 2+</strong> หลังจาก Hollow ถูก seal หรือล้มเหลว · ใช้ "The Pull" เป็นข้ออ้าง ผู้เล่นจะยอมรับเพราะมัน<em>มีอยู่ใน world logic</em> ไม่ใช่ railroading
+      </div>
     </div>
   </section>
 

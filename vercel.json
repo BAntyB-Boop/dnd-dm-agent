@@ -1,7 +1,8 @@
 {
+  "framework": null,
   "outputDirectory": "src/web/public",
-  "buildCommand": "echo 'static site — no build required'",
-  "installCommand": "echo 'no install required'",
+  "buildCommand": ":",
+  "installCommand": ":",
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [

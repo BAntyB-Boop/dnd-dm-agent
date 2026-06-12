@@ -1,0 +1,882 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8" />
+<base href="/" />
+<title>The Veiled Codex — Sea Ambush · Voice of the Bay</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Noto+Serif+Thai:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --bg-deep: #06060c;
+  --bg-paper: #0e0e16;
+  --bg-card: #15151c;
+  --bg-card-2: #1c1c25;
+  --line: #2a2a35;
+  --line-soft: #1d1d25;
+  --ink: #e8e2cf;
+  --ink-soft: #c9c2ad;
+  --ink-mute: #7a7461;
+  --gold: #c9a45c;
+  --gold-bright: #f6efd2;
+  --gold-dim: #8a6f3a;
+  --gold-deep: #5a4622;
+  --sea: #2f7088;
+  --blood: #b01a1a;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+html, body { background: var(--bg-deep); color: var(--ink); overflow-x: hidden; }
+body {
+  min-height: 100vh;
+  background:
+    radial-gradient(1400px 700px at 50% -8%, #0a1820 0%, transparent 60%),
+    radial-gradient(900px 500px at 50% 110%, #110b0b 0%, transparent 65%),
+    var(--bg-deep);
+  font-family: "Noto Serif Thai", "Cormorant Garamond", Georgia, serif;
+}
+
+/* Shader wallpaper — sea-tinted */
+.shader-wp { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.shader-wp::before {
+  content: ""; position: absolute; inset: -30%;
+  background:
+    radial-gradient(ellipse 50% 40% at 30% 30%, color-mix(in srgb, var(--sea) 22%, transparent), transparent 65%),
+    radial-gradient(ellipse 60% 50% at 70% 70%, color-mix(in srgb, var(--gold-dim) 18%, transparent), transparent 60%);
+  filter: blur(60px) saturate(1.2); opacity: 0.55;
+  animation: plasma 38s ease-in-out infinite alternate;
+}
+@keyframes plasma {
+  0%   { transform: translate(0,0) scale(1) }
+  50%  { transform: translate(2%,-3%) scale(1.08) }
+  100% { transform: translate(-1%,2%) scale(1.04) }
+}
+.grain {
+  position: fixed; inset: 0; pointer-events: none; z-index: 201; opacity: 0.07; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.7 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+
+/* Topbar */
+#topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  height: 54px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px;
+  background: linear-gradient(180deg, rgba(6,6,12,0.97), rgba(6,6,12,0.88));
+  border-bottom: 1px solid rgba(201,164,92,0.18);
+  backdrop-filter: blur(10px);
+}
+.breadcrumb {
+  display: flex; align-items: center; gap: 8px;
+  font-family: "Cinzel", serif;
+  font-size: 10.5px; letter-spacing: .24em; text-transform: uppercase;
+}
+.breadcrumb a { color: rgba(232,226,207,0.38); text-decoration: none; transition: color .2s; }
+.breadcrumb a:hover { color: var(--gold); }
+.breadcrumb .sep { color: rgba(201,164,92,0.3); }
+.breadcrumb .current { color: rgba(232,226,207,0.72); }
+.topbar-link {
+  font-family: "Cinzel", serif;
+  font-size: 9.5px; letter-spacing: .22em; text-transform: uppercase;
+  color: rgba(232,226,207,0.4); text-decoration: none;
+  padding: 6px 12px; border: 1px solid transparent; border-radius: 2px;
+  transition: color .2s, border-color .2s;
+}
+.topbar-link:hover { color: var(--gold-bright); border-color: rgba(201,164,92,0.3); }
+
+/* Page wrap */
+.wrap {
+  position: relative; z-index: 10;
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 90px 28px 80px;
+}
+
+/* Hero */
+.hero {
+  text-align: center;
+  padding: 30px 0 50px;
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: "Cinzel", serif;
+  font-size: 9.5px; letter-spacing: .3em; text-transform: uppercase;
+  color: rgba(150,210,230,.85);
+  border: 1px solid rgba(47,112,136,.55);
+  background: rgba(47,112,136,.1);
+  padding: 6px 16px; border-radius: 2px;
+  margin-bottom: 24px;
+}
+.hero-badge .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--sea); box-shadow: 0 0 8px var(--sea); }
+.hero-eyebrow {
+  font-family: "Cinzel", serif;
+  font-size: 10px; letter-spacing: .38em; text-transform: uppercase;
+  color: var(--gold-dim); margin-bottom: 14px;
+}
+.hero-title {
+  font-family: "Cinzel Decorative", serif;
+  font-size: clamp(32px, 5.5vw, 56px);
+  color: var(--gold-bright); letter-spacing: .03em; line-height: 1.1;
+  text-shadow: 0 0 60px rgba(201,164,92,.28);
+  margin-bottom: 14px;
+}
+.hero-title em { color: var(--gold); font-style: normal; }
+.hero-sub {
+  font-size: clamp(14px, 1.8vw, 17px);
+  color: rgba(232,226,207,.55);
+  line-height: 1.7;
+  max-width: 580px;
+  margin: 0 auto;
+}
+.hero-divider {
+  width: 120px; height: 1px; margin: 28px auto 0;
+  background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+}
+
+/* Quick facts strip */
+.quick-facts {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+  background: rgba(201,164,92,.2);
+  border: 1px solid rgba(201,164,92,.25);
+  margin-bottom: 36px;
+}
+.qf-cell {
+  padding: 14px 16px; background: var(--bg-card);
+  text-align: center;
+}
+.qf-label {
+  font-family: "Cinzel", serif;
+  font-size: 8.5px; letter-spacing: .26em; text-transform: uppercase;
+  color: var(--gold-dim); margin-bottom: 4px;
+}
+.qf-value {
+  font-family: "Cinzel", serif;
+  font-size: 13px; color: var(--gold-bright); letter-spacing: .04em;
+}
+@media (max-width: 640px) { .quick-facts { grid-template-columns: 1fr 1fr; } }
+
+/* Section */
+.section { margin-bottom: 56px; scroll-margin-top: 70px; }
+.section-label {
+  font-family: "Cinzel", serif;
+  font-size: 9.5px; letter-spacing: .36em; text-transform: uppercase;
+  color: var(--gold-dim); margin-bottom: 6px;
+  display: flex; align-items: center; gap: 12px;
+}
+.section-label::after { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, rgba(201,164,92,.3), transparent); }
+.section-title {
+  font-family: "Cinzel Decorative", serif;
+  font-size: clamp(20px, 3vw, 30px);
+  color: var(--gold-bright); letter-spacing: .04em; line-height: 1.15;
+  margin-bottom: 4px;
+}
+.section-sub {
+  font-family: "Cormorant Garamond", serif;
+  font-style: italic; font-size: 14px;
+  color: var(--ink-mute); margin-bottom: 24px;
+}
+
+/* Read-aloud */
+.read-aloud {
+  position: relative;
+  padding: 26px 32px;
+  background: linear-gradient(135deg, rgba(201,164,92,.07), transparent 60%);
+  border: 1px solid rgba(201,164,92,.25);
+  border-left: 4px solid var(--gold);
+  border-radius: 2px;
+  margin-bottom: 24px;
+}
+.ra-eyebrow {
+  font-family: "Cinzel", serif;
+  font-size: 8.5px; letter-spacing: .38em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 14px;
+  display: flex; align-items: center; gap: 10px;
+}
+.ra-text {
+  font-family: "Cormorant Garamond", serif;
+  font-style: italic; font-size: 16.5px; line-height: 1.85;
+  color: rgba(246,239,210,.78);
+}
+.ra-text p { margin-bottom: 14px; }
+.ra-text p:last-child { margin-bottom: 0; }
+.ra-text .mood {
+  font-family: "Cinzel", serif; font-style: normal;
+  font-size: 9px; letter-spacing: .26em; text-transform: uppercase;
+  color: rgba(201,164,92,.5);
+}
+
+/* Setup box */
+.setup {
+  padding: 18px 22px;
+  background: linear-gradient(135deg, rgba(47,112,136,.1), transparent);
+  border-left: 3px solid var(--sea);
+  border-radius: 2px;
+  margin-bottom: 24px;
+  font-size: 14.5px; line-height: 1.78;
+  color: rgba(232,226,207,.72);
+}
+.setup ul { padding-left: 20px; margin: 8px 0 0; }
+.setup li { margin-bottom: 6px; line-height: 1.6; }
+.setup li b {
+  font-family: "Cinzel", serif; font-weight: 500;
+  font-size: 9.5px; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--gold); margin-right: 6px;
+}
+
+/* Combat phases */
+.sub-h {
+  font-family: "Cinzel", serif;
+  font-size: 11px; letter-spacing: .26em; text-transform: uppercase;
+  color: rgba(244,228,193,.55);
+  margin: 26px 0 12px;
+}
+.phase {
+  position: relative;
+  padding: 16px 20px 18px 56px;
+  background: var(--bg-card); border: 1px solid var(--line);
+  border-left: 4px solid var(--gold-dim);
+  border-radius: 3px; margin-bottom: 12px;
+}
+.phase .ph-num {
+  position: absolute; left: 14px; top: 16px;
+  width: 30px; height: 30px; border-radius: 50%;
+  background: var(--bg-paper); border: 2px solid var(--gold);
+  color: var(--gold-bright);
+  display: flex; align-items: center; justify-content: center;
+  font-family: "Cinzel Decorative", serif; font-size: 13px;
+}
+.phase .ph-title {
+  font-family: "Cinzel", serif;
+  font-size: 13px; letter-spacing: .08em;
+  color: var(--gold-bright); margin-bottom: 4px;
+}
+.phase .ph-when {
+  font-size: 11px; color: var(--gold-dim); font-style: italic;
+  margin-bottom: 10px;
+}
+.phase p { font-size: 14px; line-height: 1.7; color: rgba(232,226,207,.65); margin-bottom: 8px; }
+.phase p:last-child { margin-bottom: 0; }
+.phase b {
+  font-family: "Cinzel", serif; font-weight: 500;
+  font-size: 10px; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--gold);
+}
+
+/* Stat block */
+.stat-block {
+  border: 1px solid rgba(176,26,26,.3);
+  border-radius: 3px;
+  margin-bottom: 14px;
+  overflow: hidden;
+  background: var(--bg-card);
+}
+.stat-toggle {
+  width: 100%; padding: 14px 18px;
+  background: linear-gradient(180deg, rgba(80,10,10,0.3), rgba(40,5,5,0.4));
+  border: none; cursor: pointer;
+  display: flex; align-items: center; gap: 12px;
+  text-align: left;
+  transition: background .2s;
+}
+.stat-toggle:hover { background: linear-gradient(180deg, rgba(110,20,20,.4), rgba(60,10,10,.5)); }
+.stat-icon {
+  width: 32px; height: 32px;
+  background: rgba(0,0,0,.3);
+  border: 1px solid rgba(176,26,26,.45);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; flex: none;
+}
+.stat-name {
+  flex: 1;
+  font-family: "Cinzel Decorative", serif;
+  font-size: 14px; letter-spacing: .04em;
+  color: var(--gold-bright);
+}
+.stat-cr {
+  font-family: "Cinzel", serif;
+  font-size: 9px; letter-spacing: .22em; text-transform: uppercase;
+  padding: 4px 10px; border-radius: 2px;
+  background: rgba(176,26,26,.18);
+  border: 1px solid rgba(220,80,60,.5);
+  color: rgba(232,140,120,.9);
+  white-space: nowrap;
+}
+.stat-arrow { width: 14px; height: 14px; flex: none; color: rgba(232,226,207,.5); transition: transform .3s; }
+.stat-toggle.open .stat-arrow { transform: rotate(180deg); }
+.stat-body { display: none; padding: 18px 22px 22px; background: rgba(8,4,1,0.4); border-top: 1px solid rgba(176,26,26,.15); }
+.stat-body.open { display: block; }
+
+.stat-core, .stat-abilities {
+  display: grid; gap: 1px;
+  background: rgba(201,164,92,.15);
+  border: 1px solid rgba(201,164,92,.25);
+  margin-bottom: 16px;
+}
+.stat-core { grid-template-columns: repeat(3, 1fr); }
+.stat-abilities { grid-template-columns: repeat(6, 1fr); }
+.scc, .sa {
+  padding: 9px 8px; background: var(--bg-paper);
+  text-align: center;
+}
+.scc-l, .sa-l {
+  font-family: "Cinzel", serif;
+  font-size: 8.5px; letter-spacing: .24em; text-transform: uppercase;
+  color: var(--gold-dim); margin-bottom: 3px;
+}
+.scc-v { font-family: "Cinzel", serif; font-size: 13.5px; color: var(--gold-bright); }
+.sa-v { font-family: "Cinzel", serif; font-size: 12.5px; color: var(--ink); }
+.sa-m { font-size: 10px; color: var(--ink-mute); margin-top: 2px; }
+@media (max-width: 540px) {
+  .stat-abilities { grid-template-columns: repeat(3, 1fr); }
+  .stat-core { grid-template-columns: 1fr; }
+}
+
+.stat-row { font-size: 13.5px; line-height: 1.55; color: rgba(232,226,207,.65); padding: 5px 0; border-bottom: 1px dashed rgba(201,164,92,.1); }
+.stat-row:last-child { border-bottom: none; }
+.stat-row b { font-family: "Cinzel", serif; font-weight: 500; font-size: 9.5px; letter-spacing: .22em; text-transform: uppercase; color: var(--gold); margin-right: 6px; }
+.stat-action { margin-top: 12px; padding: 10px 14px; background: rgba(201,164,92,.04); border-left: 2px solid rgba(201,164,92,.3); border-radius: 2px; }
+.stat-action-name { font-family: "Cinzel", serif; font-size: 11px; letter-spacing: .04em; color: var(--gold-bright); margin-bottom: 4px; }
+.stat-action-name em { font-style: italic; color: var(--gold-dim); font-family: "Cormorant Garamond", serif; font-size: 12px; font-weight: 400; margin-left: 4px; }
+.stat-action-desc { font-size: 13px; line-height: 1.6; color: rgba(232,226,207,.62); }
+.special { background: rgba(80,40,120,.08); border-left-color: rgba(120,80,180,.5); }
+.special .stat-action-name { color: rgba(200,160,255,.95); }
+.tactic-box { margin-top: 12px; padding: 10px 14px; background: rgba(80,40,120,.08); border-left: 2px solid rgba(120,80,180,.5); border-radius: 2px; }
+.tactic-label { font-family: "Cinzel", serif; font-size: 8.5px; letter-spacing: .28em; text-transform: uppercase; color: rgba(180,130,240,.7); margin-bottom: 5px; }
+.tactic-text { font-size: 13px; line-height: 1.65; color: rgba(232,226,207,.6); }
+.tactic-text strong { color: rgba(244,228,193,.85); font-weight: 600; }
+
+/* Hazards */
+.hazards { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 24px; }
+@media (max-width: 640px) { .hazards { grid-template-columns: 1fr; } }
+.hazard { padding: 12px 14px; background: rgba(176,90,30,.08); border-left: 3px solid rgba(220,140,60,.5); border-radius: 2px; }
+.hazard-name { font-family: "Cinzel", serif; font-size: 11px; letter-spacing: .06em; color: rgba(240,180,100,.9); margin-bottom: 5px; }
+.hazard-desc { font-size: 13px; line-height: 1.55; color: rgba(232,226,207,.6); }
+
+/* Difficulty matrix table */
+.diff-table {
+  width: 100%; border-collapse: collapse;
+  background: var(--bg-card); border: 1px solid var(--line);
+  border-radius: 3px; overflow: hidden;
+  font-size: 13px; margin-bottom: 16px;
+}
+.diff-table th, .diff-table td {
+  padding: 11px 12px; text-align: center;
+  border-bottom: 1px solid var(--line-soft);
+  border-right: 1px solid var(--line-soft);
+}
+.diff-table th:last-child, .diff-table td:last-child { border-right: none; }
+.diff-table tr:last-child td { border-bottom: none; }
+.diff-table thead th {
+  background: rgba(201,164,92,.08);
+  font-family: "Cinzel", serif;
+  font-size: 9.5px; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--gold);
+  border-bottom-color: var(--line);
+}
+.diff-table tbody tr:hover { background: rgba(201,164,92,.04); }
+.diff-table .lvl {
+  font-family: "Cinzel Decorative", serif;
+  color: var(--gold-bright);
+  font-size: 13.5px;
+}
+.diff-table .lvl-1 { background: rgba(80,180,120,.06); }
+.diff-table .lvl-4 { background: rgba(220,150,60,.04); }
+.diff-table .lvl-5 { background: rgba(220,80,60,.05); }
+.diff-table td { color: rgba(232,226,207,.7); }
+@media (max-width: 640px) {
+  .diff-table { font-size: 11.5px; }
+  .diff-table th, .diff-table td { padding: 8px 6px; }
+}
+
+.diff-notes {
+  padding: 16px 20px;
+  background: linear-gradient(135deg, rgba(80,180,120,.08), transparent);
+  border-left: 3px solid rgba(80,180,120,.5);
+  border-radius: 2px;
+}
+.diff-notes-label {
+  font-family: "Cinzel", serif;
+  font-size: 9px; letter-spacing: .28em; text-transform: uppercase;
+  color: rgba(140,210,160,.75); margin-bottom: 8px;
+}
+.diff-notes ul { padding-left: 20px; }
+.diff-notes li { font-size: 13.5px; line-height: 1.65; color: rgba(232,226,207,.65); margin-bottom: 5px; }
+.diff-notes li b { color: rgba(140,210,160,.85); font-family: "Cinzel", serif; font-size: 9.5px; letter-spacing: .22em; text-transform: uppercase; }
+
+/* Aftermath */
+.aftermath {
+  padding: 18px 22px;
+  background: linear-gradient(135deg, rgba(60,160,100,.08), transparent);
+  border-left: 3px solid rgba(80,180,120,.5);
+  border-radius: 2px;
+  margin-top: 16px;
+}
+.aftermath-label {
+  font-family: "Cinzel", serif;
+  font-size: 9.5px; letter-spacing: .3em; text-transform: uppercase;
+  color: rgba(140,210,160,.75); margin-bottom: 10px;
+}
+.aftermath ul { padding-left: 18px; margin: 6px 0 0; }
+.aftermath li { font-size: 14px; line-height: 1.65; color: rgba(232,226,207,.64); margin-bottom: 7px; }
+.aftermath li b { font-family: "Cinzel", serif; font-weight: 500; font-size: 9.5px; letter-spacing: .22em; text-transform: uppercase; color: var(--gold); }
+
+/* Floating back to DM Guide */
+.float-back {
+  position: fixed; bottom: 24px; right: 24px; z-index: 95;
+  display: flex; align-items: center; gap: 9px;
+  font-family: "Cinzel", serif;
+  font-size: 9.5px; letter-spacing: .22em; text-transform: uppercase;
+  color: rgba(201,164,92,.7); text-decoration: none;
+  background: rgba(6,6,12,.92); border: 1px solid rgba(201,164,92,.32);
+  border-radius: 2px; padding: 10px 16px;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 8px 28px rgba(0,0,0,.5);
+  transition: color .2s, border-color .2s;
+}
+.float-back:hover { color: var(--gold-bright); border-color: var(--gold); }
+.float-back svg { flex: none; }
+
+/* Hide content until DM unlocks (prevent spoiler flash on load) */
+body.dm-locked .wrap,
+body.dm-locked .float-back { display: none; }
+</style>
+</head>
+<body class="dm-locked">
+
+<script>
+// Pre-check unlock state immediately (before paint) to avoid spoiler flash
+(function() {
+  try {
+    if (localStorage.getItem('vc:dm-unlocked') === '1'
+        || localStorage.getItem('dm:porto-stellare:unlocked') === '1'
+        || localStorage.getItem('map:porto-stellare:dm-unlocked') === '1') {
+      document.body.classList.remove('dm-locked');
+    }
+  } catch (e) {}
+})();
+</script>
+
+<div class="shader-wp"></div>
+<div class="grain"></div>
+
+<nav id="topbar">
+  <div class="breadcrumb">
+    <a href="/">The Veiled Codex</a>
+    <span class="sep">›</span>
+    <a href="/oneshot">One-Shot</a>
+    <span class="sep">›</span>
+    <span class="current">Sea Ambush</span>
+  </div>
+  <a class="topbar-link" href="/oneshot/porto-arrival">← DM Guide</a>
+</nav>
+
+<div class="wrap">
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-badge">
+      <span class="dot"></span>
+      Combat Encounter · Pre-arrival · Stellamar
+    </div>
+    <div class="hero-eyebrow">Session 1 · Opening Combat</div>
+    <h1 class="hero-title">Voice of the <em>Bay</em></h1>
+    <p class="hero-sub">การโจมตีของเผ่า Sahuagin บนเรือสินค้าก่อนผู้เล่นเข้าเมือง · ปรับสเกลได้ตั้งแต่ Lvl 1 ถึง 5+</p>
+    <div class="hero-divider"></div>
+  </section>
+
+  <!-- Quick facts -->
+  <div class="quick-facts">
+    <div class="qf-cell"><div class="qf-label">Type</div><div class="qf-value">Combat + Hazard</div></div>
+    <div class="qf-cell"><div class="qf-label">Duration</div><div class="qf-value">30–60 นาที</div></div>
+    <div class="qf-cell"><div class="qf-label">Party Size</div><div class="qf-value">3–5 PCs</div></div>
+    <div class="qf-cell"><div class="qf-label">Levels</div><div class="qf-value">1–5+</div></div>
+  </div>
+
+  <!-- Read aloud -->
+  <section class="section" id="read-aloud">
+    <div class="section-label">Opening Narration</div>
+    <div class="section-title">บทบรรยายเปิดฉาก</div>
+    <p class="section-sub">Read Aloud — เริ่มทันทีเมื่อเรือผู้เล่นใกล้ Stellamar</p>
+
+    <div class="read-aloud">
+      <div class="ra-eyebrow">📜 Read Aloud</div>
+      <div class="ra-text">
+        <p>เรือลำของพวกคุณกำลังเลี้ยวผ่านหัวแหลมสุดท้าย — Porto Stellare ปรากฏข้างหน้า สูงตระหง่านบนหน้าผา ทองอร่าม</p>
+        <p>แต่ระหว่างพวกคุณกับเมือง — <span class="mood">เรือสินค้า 3 ลำ</span> · ลำหนึ่งกำลังจม · ลำหนึ่งกำลังไหม้ · ลำที่สามนิ่งสนิทใบเรือพับ ไม่มีคน เลือดในน้ำสีแดงเข้ม นกนางนวลวนรอบไม่มีตัวไหนกล้าลง</p>
+        <p>กัปตันเรือของพวกคุณตะโกน "เตรียมตัว!" — แต่สาย เสียง<em>ครีบเล็บ</em>กระทบกราบเรือดังขึ้นพร้อมกันจากหลายจุด · ใบหน้าเขียวเทาดวงตาไร้รูม่านโผล่ขึ้น</p>
+        <p>ไกลออกไป 60 ฟุต น้ำทะเลพลุ่งตัวขึ้นเป็นเสา — <em>ผู้หญิงคนหนึ่งยืนอยู่บนเสาหินที่ผุดจากใต้น้ำ ดวงตาสีขาวล้วน ถือตรีศูล</em> เธอเปิดปากร้องเพลงที่ฟังไม่ออก แต่หัวใจพวกคุณ<em>เต้นช้าลง</em>โดยไม่มีเหตุผล <span class="mood">— Roll for initiative.</span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Setup -->
+  <section class="section" id="setup">
+    <div class="section-label">Battlefield Setup</div>
+    <div class="section-title">สนามรบ</div>
+
+    <div class="setup">
+      <ul>
+        <li><b>เรือผู้เล่น</b> "Maravillas" — เรือสำเภา 60 ฟุต · ดาดฟ้าแบ่ง 3 โซน (หัว / กลาง / ท้าย)</li>
+        <li><b>NPC ลูกเรือ</b> Helmsman Tarn (หางเสือ) · Mate Ren (หัวเรือ) · Cook Bessa (ใต้ดาดฟ้า) — ไม่ใช่นักรบ แต่ช่วยปัดศัตรูได้ Athletics +2</li>
+        <li><b>เรือสินค้าอื่น</b> Lustralis (กำลังไหม้, มีผู้รอด) · Calandra (ลูกเรือตายหมด) · Vespera (กำลังจม)</li>
+        <li><b>ระยะถึง Stellamar</b> 800 ฟุต — เห็นชัด แต่ไกลเกินช่วย</li>
+        <li><b>เวลา</b> เย็น · พระอาทิตย์ใกล้ตก · แสงทองสะท้อนผิวน้ำ ทัศนวิสัยเต็ม</li>
+        <li><b>เป้าหมาย</b> เอาชีวิตรอด · ถ้าทำได้ ฆ่าหรือไล่ Priestess</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Combat Phases -->
+  <section class="section" id="phases">
+    <div class="section-label">Combat Flow</div>
+    <div class="section-title">3 จังหวะของการต่อสู้</div>
+
+    <div class="phase">
+      <div class="ph-num">1</div>
+      <div class="ph-title">การปีนขึ้นเรือ · Boarding</div>
+      <div class="ph-when">รอบ 1-2 · ก่อน Priestess เปิดตัว</div>
+      <p><b>เหตุการณ์</b> Sahuagin Warriors ปีนขึ้นมาพร้อมกันหลายจุด · Reef Sharks กัดท้องเรือใต้น้ำ</p>
+      <p><b>กลไก</b> ผู้เล่นเลือก — ปัด Sahuagin ตก (Athletics DC 12 · Fail = Warrior ขึ้นมา) หรือต่อสู้</p>
+      <p><b>Hull Damage Tracker</b> ทุก ๆ Shark Bite สำเร็จ = 1 ขีด · ครบ <em>กำหนดตามระดับ</em> = เรือเริ่มเอียง (DEX Save DC 11 ทุกคนทุกรอบ)</p>
+    </div>
+
+    <div class="phase">
+      <div class="ph-num">2</div>
+      <div class="ph-title">การปรากฏของ Priestess · Reveal</div>
+      <div class="ph-when">รอบ 3 · เมื่อ Sahuagin 1-2 ตัวล้ม</div>
+      <p><b>เหตุการณ์</b> เสาหินใต้น้ำผุดขึ้น · Priestess ยืนบนนั้น ห่าง 60 ฟุต · แสงสีฟ้าใต้น้ำกระจายเป็นวง</p>
+      <p><b>WIS Save DC 13</b> (Lvl 3+ เท่านั้น · ระดับต่ำกว่า: narrative อย่างเดียว) — Fail = Disadvantage 1 รอบ</p>
+      <p><b>Resonant Call</b> (Reaction) Sahuagin/Shark ทั้งหมดได้ Advantage 1 รอบเต็ม</p>
+    </div>
+
+    <div class="phase">
+      <div class="ph-num">3</div>
+      <div class="ph-title">จุดเปลี่ยน · Climax</div>
+      <div class="ph-when">รอบ 4+ · จนกว่า Priestess จะตาย หรือหนี</div>
+      <p><b>Lvl 1-2</b> Priestess ไม่เข้าต่อสู้ — เธอชี้ตรีศูล สาหุกินที่เหลือดำลงน้ำพร้อมเธอ · ทิ้ง <strong>Resonance Focus</strong> ไว้บนดาดฟ้า · จบศึก</p>
+      <p><b>Lvl 3+</b> Priestess ร่ายเวทย์: Sacred Flame, Hold Person, Spiritual Weapon · เมื่อ HP เหลือครึ่ง ดำลงน้ำ ส่ง <em>Giant Octopus tentacle</em> โจมตี 2 รอบป้องกัน</p>
+      <p><b>Voice of the Pull</b> (Recharge 5–6 · Lvl 4+) กรวย 30 ft · WIS Save DC 12 หรือ Restrained 1 รอบ + <em>เห็นภาพอุโมงค์ใต้ดิน (free lore reveal)</em></p>
+    </div>
+  </section>
+
+  <!-- Stat Blocks -->
+  <section class="section" id="stats">
+    <div class="section-label">Monster Stat Blocks</div>
+    <div class="section-title">ค่าสถานะมอนสเตอร์</div>
+    <p class="section-sub">กดเปิดเพื่อดูค่ารายละเอียด · ปรับ HP ตามตาราง difficulty ด้านล่าง</p>
+
+    <!-- Priestess -->
+    <div class="stat-block">
+      <button class="stat-toggle" onclick="toggleStat(this)">
+        <div class="stat-icon">🔱</div>
+        <div class="stat-name">Sahuagin Priestess · "Voice of the Bay"</div>
+        <div class="stat-cr">CR 2 · Boss</div>
+        <svg class="stat-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="stat-body">
+        <div class="stat-row"><b>Type</b> Medium humanoid (sahuagin), lawful evil</div>
+        <div class="stat-row"><b>Languages</b> Sahuagin · เข้าใจ Hollow Tongue (แปลไม่ได้)</div>
+        <div class="stat-core">
+          <div class="scc"><div class="scc-l">AC</div><div class="scc-v">12</div></div>
+          <div class="scc"><div class="scc-l">HP</div><div class="scc-v">33 (6d8+6)</div></div>
+          <div class="scc"><div class="scc-l">Speed</div><div class="scc-v">30 / Swim 40</div></div>
+        </div>
+        <div class="stat-abilities">
+          <div class="sa"><div class="sa-l">STR</div><div class="sa-v">13</div><div class="sa-m">+1</div></div>
+          <div class="sa"><div class="sa-l">DEX</div><div class="sa-v">11</div><div class="sa-m">+0</div></div>
+          <div class="sa"><div class="sa-l">CON</div><div class="sa-v">12</div><div class="sa-m">+1</div></div>
+          <div class="sa"><div class="sa-l">INT</div><div class="sa-v">12</div><div class="sa-m">+1</div></div>
+          <div class="sa"><div class="sa-l">WIS</div><div class="sa-v">13</div><div class="sa-m">+1</div></div>
+          <div class="sa"><div class="sa-l">CHA</div><div class="sa-v">12</div><div class="sa-m">+1</div></div>
+        </div>
+        <div class="stat-row"><b>Skills</b> Religion +3, Perception +5</div>
+        <div class="stat-row"><b>Senses</b> Darkvision 120 ft, passive Perception 15</div>
+        <div class="stat-row"><b>Challenge</b> 2 (450 XP) · <b>Prof</b> +2</div>
+        <div class="stat-row"><b>Blood Frenzy</b> Advantage บน melee เมื่อ target HP &lt; ครึ่ง</div>
+        <div class="stat-row"><b>Limited Amphibiousness</b> หายใจในน้ำได้ · บนบกต้องเปียกทุก 4 ชม.</div>
+        <div class="stat-row"><b>Shark Telepathy</b> สื่อสารกับฉลามใน 120 ft</div>
+
+        <div class="stat-action">
+          <div class="stat-action-name">Multiattack <em>(Action)</em></div>
+          <div class="stat-action-desc">2 ครั้ง: trident หรือ trident+bite</div>
+        </div>
+        <div class="stat-action">
+          <div class="stat-action-name">Trident <em>+3, reach 5/ranged 20-60 ft</em></div>
+          <div class="stat-action-desc">4 (1d6+1) piercing</div>
+        </div>
+        <div class="stat-action">
+          <div class="stat-action-name">Bite <em>+3, reach 5 ft</em></div>
+          <div class="stat-action-desc">3 (1d4+1) piercing</div>
+        </div>
+        <div class="stat-action">
+          <div class="stat-action-name">Spellcasting <em>(Wisdom, save DC 11, +3)</em></div>
+          <div class="stat-action-desc">
+            <strong style="color:rgba(244,228,193,.78)">Cantrip:</strong> Sacred Flame (2d8 radiant), Thaumaturgy<br>
+            <strong style="color:rgba(244,228,193,.78)">1st (4 slots):</strong> Cure Wounds, Hold Person, Inflict Wounds<br>
+            <strong style="color:rgba(244,228,193,.78)">2nd (2 slots):</strong> Spiritual Weapon, Hold Person (upcast)
+          </div>
+        </div>
+        <div class="stat-action special">
+          <div class="stat-action-name">Voice of the Pull <em>(Recharge 5–6)</em></div>
+          <div class="stat-action-desc">
+            กรวย 30 ft · WIS Save DC 12 · <em>Fail:</em> Restrained 1 รอบ + เห็นภาพอุโมงค์ใต้ดิน (free lore reveal สำหรับ DM ใช้กระตุ้น quest)
+          </div>
+        </div>
+        <div class="stat-action special">
+          <div class="stat-action-name">Resonant Call <em>(1/Encounter, Reaction)</em></div>
+          <div class="stat-action-desc">
+            เมื่อพันธมิตรตาย — Sahuagin + Reef Shark ทั้งหมดใน 60 ft ได้ Advantage บน attack 1 รอบ
+          </div>
+        </div>
+        <div class="tactic-box">
+          <div class="tactic-label">Tactics</div>
+          <div class="tactic-text">
+            <strong>รอบ 3:</strong> ปรากฏตัว + Spiritual Weapon<br>
+            <strong>รอบ 4:</strong> Hold Person ใส่ DPS อันดับ 1 + Sacred Flame อันดับ 2<br>
+            <strong>รอบ 5+:</strong> Voice of the Pull หรือ Cure Wounds<br>
+            <strong>HP ≤ 50%:</strong> ดำลงน้ำ ส่ง octopus tentacle ป้องกัน 2 รอบ แล้วหนี
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sahuagin Warrior -->
+    <div class="stat-block">
+      <button class="stat-toggle" onclick="toggleStat(this)">
+        <div class="stat-icon">🐟</div>
+        <div class="stat-name">Sahuagin Warrior · จำนวนตามเลเวล</div>
+        <div class="stat-cr">CR 1/2 · Minion</div>
+        <svg class="stat-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="stat-body">
+        <div class="stat-row"><b>Type</b> Medium humanoid (sahuagin), lawful evil</div>
+        <div class="stat-core">
+          <div class="scc"><div class="scc-l">AC</div><div class="scc-v">12</div></div>
+          <div class="scc"><div class="scc-l">HP</div><div class="scc-v">22 (4d8+4)</div></div>
+          <div class="scc"><div class="scc-l">Speed</div><div class="scc-v">30 / Swim 40</div></div>
+        </div>
+        <div class="stat-abilities">
+          <div class="sa"><div class="sa-l">STR</div><div class="sa-v">13</div><div class="sa-m">+1</div></div>
+          <div class="sa"><div class="sa-l">DEX</div><div class="sa-v">11</div><div class="sa-m">+0</div></div>
+          <div class="sa"><div class="sa-l">CON</div><div class="sa-v">12</div><div class="sa-m">+1</div></div>
+          <div class="sa"><div class="sa-l">INT</div><div class="sa-v">12</div><div class="sa-m">+1</div></div>
+          <div class="sa"><div class="sa-l">WIS</div><div class="sa-v">13</div><div class="sa-m">+1</div></div>
+          <div class="sa"><div class="sa-l">CHA</div><div class="sa-v">9</div><div class="sa-m">-1</div></div>
+        </div>
+        <div class="stat-row"><b>Skills</b> Perception +5</div>
+        <div class="stat-row"><b>Senses</b> Darkvision 120 ft</div>
+        <div class="stat-row"><b>Blood Frenzy / Limited Amphibiousness / Shark Telepathy</b> (เหมือน Priestess)</div>
+        <div class="stat-action">
+          <div class="stat-action-name">Multiattack</div>
+          <div class="stat-action-desc">2 attacks: bite + claws · หรือ spear</div>
+        </div>
+        <div class="stat-action">
+          <div class="stat-action-name">Bite <em>+3, reach 5 ft</em></div>
+          <div class="stat-action-desc">3 (1d4+1) piercing</div>
+        </div>
+        <div class="stat-action">
+          <div class="stat-action-name">Claws <em>+3, reach 5 ft</em></div>
+          <div class="stat-action-desc">3 (1d4+1) slashing</div>
+        </div>
+        <div class="stat-action">
+          <div class="stat-action-name">Spear <em>+3, melee/ranged 20-60 ft</em></div>
+          <div class="stat-action-desc">4 (1d6+1) piercing (1d8+1 ถือ 2 มือ)</div>
+        </div>
+        <div class="tactic-box">
+          <div class="tactic-label">Tactics</div>
+          <div class="tactic-text">
+            ปีนขึ้นจาก 4 มุมพร้อมกัน · มุ่ง target HP ต่ำสุด (Blood Frenzy) · ถ้าตกน้ำ ฉลามมา assist
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reef Shark -->
+    <div class="stat-block">
+      <button class="stat-toggle" onclick="toggleStat(this)">
+        <div class="stat-icon">🦈</div>
+        <div class="stat-name">Reef Shark · จำนวนตามเลเวล</div>
+        <div class="stat-cr">CR 1/2 · Hull Hazard</div>
+        <svg class="stat-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="stat-body">
+        <div class="stat-row"><b>Type</b> Medium beast, unaligned</div>
+        <div class="stat-core">
+          <div class="scc"><div class="scc-l">AC</div><div class="scc-v">12</div></div>
+          <div class="scc"><div class="scc-l">HP</div><div class="scc-v">22 (4d8+4)</div></div>
+          <div class="scc"><div class="scc-l">Speed</div><div class="scc-v">Swim 40</div></div>
+        </div>
+        <div class="stat-abilities">
+          <div class="sa"><div class="sa-l">STR</div><div class="sa-v">14</div><div class="sa-m">+2</div></div>
+          <div class="sa"><div class="sa-l">DEX</div><div class="sa-v">13</div><div class="sa-m">+1</div></div>
+          <div class="sa"><div class="sa-l">CON</div><div class="sa-v">13</div><div class="sa-m">+1</div></div>
+          <div class="sa"><div class="sa-l">INT</div><div class="sa-v">1</div><div class="sa-m">-5</div></div>
+          <div class="sa"><div class="sa-l">WIS</div><div class="sa-v">10</div><div class="sa-m">+0</div></div>
+          <div class="sa"><div class="sa-l">CHA</div><div class="sa-v">4</div><div class="sa-m">-3</div></div>
+        </div>
+        <div class="stat-row"><b>Senses</b> Blindsight 30 ft</div>
+        <div class="stat-row"><b>Pack Tactics</b> Advantage บน attack เมื่อมีพันธมิตรติด target</div>
+        <div class="stat-row"><b>Water Breathing</b> หายใจในน้ำเท่านั้น</div>
+        <div class="stat-action">
+          <div class="stat-action-name">Bite <em>+4, reach 5 ft (ในน้ำ)</em></div>
+          <div class="stat-action-desc">6 (1d8+2) piercing</div>
+        </div>
+        <div class="tactic-box">
+          <div class="tactic-label">Tactics</div>
+          <div class="tactic-text">
+            กัดท้องเรือ (เพิ่ม Hull Damage) · มีคนตกน้ำ = สลับ target ทันที + Pack Tactics · ถ้า Priestess ตาย ฉลามหนี
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Hazards -->
+  <section class="section" id="hazards">
+    <div class="section-label">Environmental Hazards</div>
+    <div class="section-title">อันตรายในสนาม</div>
+
+    <div class="hazards">
+      <div class="hazard">
+        <div class="hazard-name">⚓ Slippery Deck</div>
+        <div class="hazard-desc">ดาดฟ้าเปียกเลือดน้ำทะเล · Acrobatics DC 11 ทุกครั้งที่ Dash/Disengage หรือล้ม (prone)</div>
+      </div>
+      <div class="hazard">
+        <div class="hazard-name">🔥 Burning Rigging</div>
+        <div class="hazard-desc">เถ้าจากเรือ Lustralis ลอยมา · ยืนใต้เสากระโดง 3 รอบ = 1d6 fire damage</div>
+      </div>
+      <div class="hazard">
+        <div class="hazard-name">🌊 Hull Breach</div>
+        <div class="hazard-desc">รอยกัดของฉลามครบกำหนด = เรือเอียง (DEX Save DC 11/รอบ) · ปิด: Investigation DC 13</div>
+      </div>
+      <div class="hazard">
+        <div class="hazard-name">💀 Overboard</div>
+        <div class="hazard-desc">ตกน้ำ: 1d6 bludgeoning · ในน้ำ disadvantage บน melee · ฉลามได้ advantage</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Difficulty Matrix -->
+  <section class="section" id="difficulty">
+    <div class="section-label">Difficulty Scaling</div>
+    <div class="section-title">การปรับสำหรับแต่ละ Level</div>
+    <p class="section-sub">ใช้เป็น guide — ปรับเพิ่มลดได้ตามจำนวน party</p>
+
+    <table class="diff-table">
+      <thead>
+        <tr>
+          <th>Level</th>
+          <th>Warriors</th>
+          <th>Sharks</th>
+          <th>Hull Breach</th>
+          <th>Priestess</th>
+          <th>XP Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="lvl-1">
+          <td class="lvl">Lvl 1</td>
+          <td>1 (HP 11)</td>
+          <td>1 (HP 11)</td>
+          <td>2 ครั้ง</td>
+          <td>Cinematic เท่านั้น<br><em>(ไม่สู้)</em></td>
+          <td>200 XP</td>
+        </tr>
+        <tr>
+          <td class="lvl">Lvl 2</td>
+          <td>2 (HP 15)</td>
+          <td>1 (HP 15)</td>
+          <td>2 ครั้ง</td>
+          <td>Cinematic + 1 attack<br><em>(หนีรอบ 4)</em></td>
+          <td>400 XP</td>
+        </tr>
+        <tr>
+          <td class="lvl">Lvl 3</td>
+          <td>3 (HP 22)</td>
+          <td>1 (HP 22)</td>
+          <td>3 ครั้ง</td>
+          <td>เข้าสู้ HP 22<br>หนีตอน HP 11</td>
+          <td>650 XP</td>
+        </tr>
+        <tr class="lvl-4">
+          <td class="lvl">Lvl 4</td>
+          <td>4 (HP 22)</td>
+          <td>2 (HP 22)</td>
+          <td>3 ครั้ง</td>
+          <td>เต็มสเปก HP 33<br>ใช้ Voice of the Pull</td>
+          <td>1,050 XP</td>
+        </tr>
+        <tr class="lvl-5">
+          <td class="lvl">Lvl 5+</td>
+          <td>5 (HP 22)</td>
+          <td>2 (HP 22)</td>
+          <td>3 ครั้ง</td>
+          <td>HP 45<br>Spiritual Weapon รอบ 1<br>+ Hold Person 2 เป้า</td>
+          <td>1,250 XP</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="diff-notes">
+      <div class="diff-notes-label">⚐ คำแนะนำสำหรับ DM</div>
+      <ul>
+        <li><b>Lvl 1-2</b> เน้น atmospheric · Priestess เป็น<em>คำสัญญาว่า session ต่อไปจะอันตรายกว่านี้</em> · ผู้เล่นรอด ≠ ฆ่าเธอ · เธอทิ้ง Resonance Focus ให้</li>
+        <li><b>Lvl 3</b> Priestess เข้าสู้แต่ไม่ใช้สเปลที่อันตรายเกินไป · เน้น mechanic แสงใต้น้ำ</li>
+        <li><b>Lvl 4+</b> สเปกเต็ม · ใช้ Voice of the Pull เป็น climax · Hold Person เลือก target ที่ damage สูงสุด</li>
+        <li><b>เพิ่ม-ลด PC</b> ถ้า party 3 คน: ลด Warrior 1 ตัว · party 6 คน: +1 Warrior + Reef Shark</li>
+        <li><b>Priestess หนีไม่ใช่ตาย</b> ใช้เธอเป็น recurring villain ใน session ต่อๆ ไปได้</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Aftermath -->
+  <section class="section" id="aftermath">
+    <div class="section-label">Aftermath</div>
+    <div class="section-title">ผลของการต่อสู้</div>
+
+    <div class="aftermath">
+      <div class="aftermath-label">✦ Outcome</div>
+      <ul>
+        <li><b>Loot</b> 80 gp · Trident +1 (เฉพาะถ้า Priestess ตาย/หนี) · ปลอกคอเขี้ยวทะเล ×4 (10 gp ใบ)</li>
+        <li><b>Resonance Focus (Key Item)</b> เครื่องประดับโลหะไม่รู้จัก สลักอักขระ 7 ตัว · เรืองแสงเมื่อใกล้น้ำ — <em>Lira ที่ Pier 7 จะตื่นเต้น · Elwen ที่ White Cliff จะขอแปล</em></li>
+        <li><b>Captain Marcos Roca</b> (เรือ Lustralis รอด) เสนอ 100 gp · จะเป็นพยานให้ Harbormaster Vel ยอมให้ผู้เล่นเข้าเมือง</li>
+        <li><b>Sahuagin Carvings</b> ผิวศพมีอักขระเดียวกัน · Insight DC 13: <em>"แกะหลังตาย — พิธีกรรม"</em></li>
+        <li><b>Story Consequence</b> Vel เห็น = <em>กลัวมากกว่าโล่งใจ</em> · Lira สังเกตและตามมาคืนแรก · ทะเลคืนนั้น "ไม่มีแสงใต้น้ำ" · เด็กที่หายใน Iron Quarters คนหนึ่งกลับมา — <em>แต่ดวงตาเปลี่ยน</em></li>
+      </ul>
+    </div>
+  </section>
+
+</div>
+
+<a class="float-back" href="/oneshot/porto-arrival">
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+  Full DM Guide
+</a>
+
+<script src="/shared.js"></script>
+<script>
+function toggleStat(btn) {
+  btn.classList.toggle('open');
+  btn.nextElementSibling.classList.toggle('open');
+}
+
+// VCLock overlay — when unlocked, remove dm-locked from body to reveal content
+VCLock.installOverlay({
+  title: 'DM Access',
+  sub: 'ใส่รหัสเพื่อเปิด Sea Ambush · เนื้อหา Spoiler'
+});
+// Also remove lock class when keystroke or click unlocks
+(function watchUnlock() {
+  function tick() {
+    if (window.VCLock && VCLock.isUnlocked()) {
+      document.body.classList.remove('dm-locked');
+    } else {
+      requestAnimationFrame(tick);
+    }
+  }
+  tick();
+})();
+</script>
+</body>
+</html>

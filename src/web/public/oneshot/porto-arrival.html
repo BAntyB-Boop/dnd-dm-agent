@@ -1829,283 +1829,33 @@ body.dm-locked .progress-bar-wrap { filter: blur(8px); pointer-events: none; use
 
   <hr class="divider" />
 
-  <!-- ══ OPENING ENCOUNTER ══ -->
+  <!-- ══ OPENING ENCOUNTER · LINK CARD ══ -->
   <section class="section" id="opening-encounter">
     <div class="section-label">⚔ Opening Encounter · Sea Ambush</div>
     <div class="section-title">การโจมตีก่อนเข้าเมือง</div>
-    <p class="section-sub">First combat of Session 1 — Sahuagin war party assaulting merchant ships</p>
-
-    <div class="read-aloud">
-      <div class="ra-eyebrow">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/></svg>
-        Read Aloud — เปิดฉาก
-      </div>
-      <div class="ra-text">
-        <p>เรือลำของพวกคุณกำลังจะเลี้ยวผ่านหัวแหลมสุดท้าย — Porto Stellare ปรากฏข้างหน้า สูงตระหง่านบนหน้าผา ทองอร่าม</p>
-        <p>แต่ระหว่างพวกคุณกับเมือง — <span class="ra-mood">เรือสินค้า 3 ลำ</span> ลำหนึ่งกำลังจม ลำหนึ่งกำลังไหม้ ลำที่สามนิ่งสนิทใบเรือพับ ไม่มีคน เลือดในน้ำสีแดงเข้ม นกนางนวลวนรอบไม่มีตัวไหนกล้าลง</p>
-        <p>กัปตันเรือของพวกคุณตะโกน "เตรียมตัว!" — แต่สาย เสียง <em>ครีบเล็บ</em>กระทบกราบเรือดังขึ้นจากใต้น้ำพร้อมกัน 4 จุด ใบหน้าเขียวเทาดวงตาไร้รูม่านโผล่ขึ้น</p>
-        <p>ไกลออกไป 60 ฟุต น้ำทะเลพลุ่งตัวขึ้นเป็นเสา — <em>ผู้หญิงคนหนึ่งยืนอยู่บนเสาหินที่ผุดจากใต้น้ำ ดวงตาสีขาวล้วน ถือตรีศูล</em> เธอเปิดปากร้องเพลงที่ฟังไม่ออก แต่หัวใจพวกคุณ<em>เต้นช้าลง</em> โดยไม่มีเหตุผล <span class="ra-mood">— Roll for initiative.</span></p>
-      </div>
-    </div>
-
-    <div class="enc-setup">
-      <strong style="color:var(--gold-bright)">Setup</strong>
-      <ul>
-        <li><b>เรือผู้เล่น</b>: "Maravillas" เรือสำเภาขนาด 60 ฟุต — ดาดฟ้าแบ่ง 3 โซน (หัว / กลาง / ท้าย)</li>
-        <li><b>NPC ลูกเรือ</b>: Helmsman Tarn (ที่หางเสือ), Mate Ren (ที่หัวเรือ), Cook Bessa (ใต้ดาดฟ้า) — ไม่ใช่นักรบ ช่วยได้แต่จะตื่นกลัว</li>
-        <li><b>เรือสินค้าอื่น</b>: 3 ลำ — Lustralis (กำลังไหม้), Calandra (ลูกเรือตายหมด), Vespera (กำลังจม)</li>
-        <li><b>ระยะทางสู่ Stellamar</b>: 800 ฟุต (มองเห็นชัด แต่ไกลเกินช่วย)</li>
-        <li><b>เวลา</b>: เย็น ใกล้พระอาทิตย์ตก แสงทองสะท้อนน้ำ</li>
-        <li><b>เป้าหมาย</b>: เอาชีวิตรอด + (ถ้าทำได้) ฆ่า Priestess เพื่อหยุดการสังหารเรือสินค้า</li>
-      </ul>
-    </div>
-
-    <div class="sub-section-h" style="font-family:'Cinzel',serif;font-size:11.5px;letter-spacing:.26em;text-transform:uppercase;color:rgba(244,228,193,.55);margin:26px 0 12px">Combat Phases · 3 จังหวะ</div>
-
-    <div class="combat-phase">
-      <div class="ph-num">1</div>
-      <div class="ph-title">การปีนขึ้นเรือ (Boarding)</div>
-      <div class="ph-when">รอบที่ 1-2 · ก่อน Priestess เปิดตัว</div>
-      <p><b>เหตุการณ์</b> 4× Sahuagin Warrior ปีนขึ้นมา 4 จุดของเรือ พร้อมๆ กัน · 2× Reef Shark กัดท้องเรือใต้น้ำ</p>
-      <p><b>กลไก</b> ผู้เล่นเลือก: ปัดสาหุกินตก (Athletics DC 12) หรือต่อสู้เมื่อขึ้นเรือ · ถ้าปัดได้ Sahuagin เสีย 1d6 falling + ต้องเสีย action เพื่อปีนใหม่</p>
-      <p><b>Hull Damage Tracker</b> ทุก ๆ ครั้งที่ Reef Shark กัด นับ 1 ขีด · ครบ 3 ขีด = เรือเริ่มจม (เอียง 10° ต่อรอบ · ทุกคนเสีย DEX Save DC 11 ไม่ล้ม) · ผู้เล่นปิดรูได้ Investigation DC 13 หรือใช้ของในห้องเก็บของ</p>
-    </div>
-
-    <div class="combat-phase">
-      <div class="ph-num">2</div>
-      <div class="ph-title">การปรากฏของ Priestess (Reveal)</div>
-      <div class="ph-when">รอบที่ 3 · ผู้เล่นล้ม Sahuagin แล้ว 1-2 ตัว</div>
-      <p><b>เหตุการณ์</b> เสาหินใต้น้ำที่ไม่เคยมีใครเห็นยกตัวขึ้น Priestess ยืนบนนั้น 60 ฟุตจากเรือ · แสงสีฟ้าใต้น้ำกระจายเป็นวงรอบเธอ</p>
-      <p><b>WIS Save DC 13</b> ทุกคนที่ได้ยินเสียงเธอ — Fail = disadvantage 1 รอบ (เสียงเรียกของ Hollow)</p>
-      <p><b>Resonant Call</b> (Reaction) — Sahuagin ที่เหลือทั้งหมดได้ <em>Advantage</em> ในการโจมตี 1 รอบเต็ม · Reef Shark เข้าสู่ Frenzy (โจมตี 2 ครั้งต่อรอบ)</p>
-    </div>
-
-    <div class="combat-phase">
-      <div class="ph-num">3</div>
-      <div class="ph-title">จุดเปลี่ยน (Climax)</div>
-      <div class="ph-when">รอบที่ 4-6 · จนถึงจุดที่ Priestess HP ครึ่งหนึ่ง</div>
-      <p><b>เหตุการณ์</b> Priestess ร่ายเวทย์: Hold Person (target ผู้เล่นที่อันตรายที่สุด), Spiritual Weapon (ตรีศูลโปร่ง), Sacred Flame</p>
-      <p><b>Voice of the Pull</b> (Recharge 5-6) — กรวย 30 ft · WIS Save DC 12 หรือ Restrained 1 รอบ · ผู้เล่นที่ Restrained จะ "เห็นภาพอุโมงค์ใต้ดิน" สั้นๆ — ข้อมูลเปิดเผยให้ผู้เล่นด้วยซ้ำ</p>
-      <p><b>เมื่อ HP เหลือครึ่ง</b> Priestess ดำลงน้ำ + ส่ง Giant Octopus tentacle 1 เส้นโผล่จากใต้น้ำ (โจมตี 2 รอบแล้วถอนตัว) · ถ้าผู้เล่นไม่ตามลงน้ำ เธอหนีไป (แต่เครื่องประดับของเธอตกลงบนเรือ — clue!)</p>
-    </div>
-
-    <div class="sub-section-h" style="font-family:'Cinzel',serif;font-size:11.5px;letter-spacing:.26em;text-transform:uppercase;color:rgba(244,228,193,.55);margin:26px 0 12px">Monster Stat Blocks · กดเพื่อเปิด</div>
-
-    <!-- Sahuagin Priestess -->
-    <div class="stat-block">
-      <button class="stat-toggle" onclick="toggleStat(this)">
-        <div class="stat-monster-icon">🔱</div>
-        <div class="stat-name">Sahuagin Priestess · "Voice of the Bay"</div>
-        <div class="stat-cr">CR 2 · Boss</div>
-        <svg class="stat-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-      </button>
-      <div class="stat-body">
-        <div class="stat-row"><b>Type</b> Medium humanoid (sahuagin), lawful evil</div>
-        <div class="stat-row"><b>Languages</b> Sahuagin · <em>understands but cannot translate the Hollow Tongue</em></div>
-        <div class="stat-core">
-          <div class="stat-core-cell"><div class="scc-label">AC</div><div class="scc-value">12 (natural)</div></div>
-          <div class="stat-core-cell"><div class="scc-label">HP</div><div class="scc-value">33 (6d8+6)</div></div>
-          <div class="stat-core-cell"><div class="scc-label">Speed</div><div class="scc-value">30ft / Swim 40ft</div></div>
+    <p class="section-sub">เปิด session ด้วย Sahuagin Priestess ambush · รายละเอียดเต็มอยู่ในหน้าแยก</p>
+    <a href="/oneshot/sea-ambush" style="display:block;text-decoration:none;color:inherit">
+      <div style="padding:24px 28px;background:linear-gradient(135deg,rgba(47,112,136,0.12),rgba(20,12,4,.5));border:1px solid rgba(47,112,136,.55);border-left:4px solid #2f7088;border-radius:3px;transition:border-color .2s,box-shadow .2s,transform .2s"
+           onmouseover="this.style.borderColor='#2f7088';this.style.boxShadow='0 12px 36px rgba(0,0,0,.5),0 0 24px rgba(47,112,136,.18)';this.style.transform='translateY(-2px)'"
+           onmouseout="this.style.borderColor='rgba(47,112,136,.55)';this.style.boxShadow='none';this.style.transform='none'">
+        <div style="font-family:'Cinzel',serif;font-size:9.5px;letter-spacing:.3em;text-transform:uppercase;color:rgba(150,210,230,.85);margin-bottom:8px">⚓ Combat Encounter</div>
+        <div style="font-family:'Cinzel Decorative',serif;font-size:22px;color:var(--gold-bright);margin-bottom:8px">Voice of the Bay — Sahuagin Ambush</div>
+        <div style="font-size:14.5px;line-height:1.7;color:rgba(232,226,207,.65);margin-bottom:14px">
+          Sahuagin Priestess และทีมโจมตีเรือสินค้าก่อนพวกคุณเข้าเมือง · มี stat blocks เต็ม, 3 combat phases, environmental hazards, และ difficulty scaling สำหรับ Lvl 1–5+
         </div>
-        <div class="stat-abilities">
-          <div class="stat-ability"><div class="sa-name">STR</div><div class="sa-score">13</div><div class="sa-mod">+1</div></div>
-          <div class="stat-ability"><div class="sa-name">DEX</div><div class="sa-score">11</div><div class="sa-mod">+0</div></div>
-          <div class="stat-ability"><div class="sa-name">CON</div><div class="sa-score">12</div><div class="sa-mod">+1</div></div>
-          <div class="stat-ability"><div class="sa-name">INT</div><div class="sa-score">12</div><div class="sa-mod">+1</div></div>
-          <div class="stat-ability"><div class="sa-name">WIS</div><div class="sa-score">13</div><div class="sa-mod">+1</div></div>
-          <div class="stat-ability"><div class="sa-name">CHA</div><div class="sa-score">12</div><div class="sa-mod">+1</div></div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px">
+          <span style="font-family:'Cinzel',serif;font-size:8.5px;letter-spacing:.22em;text-transform:uppercase;padding:4px 10px;border-radius:2px;background:rgba(47,112,136,.18);border:1px solid rgba(47,112,136,.45);color:rgba(150,210,230,.85)">Lvl 1–5+</span>
+          <span style="font-family:'Cinzel',serif;font-size:8.5px;letter-spacing:.22em;text-transform:uppercase;padding:4px 10px;border-radius:2px;background:rgba(176,26,26,.15);border:1px solid rgba(220,80,60,.4);color:rgba(232,140,120,.85)">3 Phases</span>
+          <span style="font-family:'Cinzel',serif;font-size:8.5px;letter-spacing:.22em;text-transform:uppercase;padding:4px 10px;border-radius:2px;background:rgba(201,164,92,.1);border:1px solid rgba(201,164,92,.35);color:rgba(201,164,92,.85)">Hull Hazards</span>
+          <span style="font-family:'Cinzel',serif;font-size:8.5px;letter-spacing:.22em;text-transform:uppercase;padding:4px 10px;border-radius:2px;background:rgba(80,40,120,.12);border:1px solid rgba(120,80,180,.45);color:rgba(180,130,240,.85)">Hollow Lore</span>
         </div>
-        <div class="stat-row"><b>Skills</b> Religion +3, Perception +5</div>
-        <div class="stat-row"><b>Senses</b> Darkvision 120 ft, passive Perception 15</div>
-        <div class="stat-row"><b>Challenge</b> 2 (450 XP) · <b>Proficiency</b> +2</div>
-        <div class="stat-row"><b>Blood Frenzy</b> Advantage บน melee attack roll เมื่อ target HP &lt; half</div>
-        <div class="stat-row"><b>Limited Amphibiousness</b> หายใจในน้ำได้ถาวร · บนบกต้องเปียก ทุก 4 ชม.</div>
-        <div class="stat-row"><b>Shark Telepathy</b> สื่อสารกับฉลามใน 120 ft โดยใช้ telepathy</div>
-
-        <div class="stat-action">
-          <div class="stat-action-name">Multiattack · <em>(Action)</em></div>
-          <div class="stat-action-desc">โจมตี 2 ครั้ง: ตรีศูล หรือ ตรีศูล + กัด</div>
-        </div>
-        <div class="stat-action">
-          <div class="stat-action-name">Trident · <em>(Melee Weapon Attack)</em></div>
-          <div class="stat-action-desc">+3 to hit, reach 5 ft (10 ft ขว้าง), 1 target · <em>Hit:</em> 4 (1d6+1) piercing</div>
-        </div>
-        <div class="stat-action">
-          <div class="stat-action-name">Bite · <em>(Melee Weapon Attack)</em></div>
-          <div class="stat-action-desc">+3 to hit, reach 5 ft, 1 target · <em>Hit:</em> 3 (1d4+1) piercing</div>
-        </div>
-        <div class="stat-action">
-          <div class="stat-action-name">Spellcasting · <em>(Wisdom, DC 11, +3 to hit)</em></div>
-          <div class="stat-action-desc">
-            <strong style="color:rgba(244,228,193,.78)">Cantrips (at will):</strong> Sacred Flame (2d8 radiant DC 11), Thaumaturgy<br>
-            <strong style="color:rgba(244,228,193,.78)">1st (4 slots):</strong> Cure Wounds (1d8+1), Hold Person, Inflict Wounds (3d10)<br>
-            <strong style="color:rgba(244,228,193,.78)">2nd (2 slots):</strong> Spiritual Weapon, Hold Person (upcast)
-          </div>
-        </div>
-        <div class="stat-action" style="border-left-color:rgba(140,80,200,.5);background:rgba(80,40,120,.08)">
-          <div class="stat-action-name" style="color:rgba(200,160,255,.95)">Voice of the Pull · <em>(Recharge 5–6)</em></div>
-          <div class="stat-action-desc">
-            Priestess พ่นเสียงเรียกของ Hollow Below เป็นกรวย 30 ft · ทุกสิ่งมีชีวิตในพื้นที่ Save DC 12 WIS · <em>Fail:</em> Restrained 1 รอบ + เห็นภาพอุโมงค์ใต้ดิน (ข้อมูลฟรีให้ผู้เล่น) · <em>Success:</em> ไม่มีผล
-          </div>
-        </div>
-        <div class="stat-action" style="border-left-color:rgba(140,80,200,.5);background:rgba(80,40,120,.08)">
-          <div class="stat-action-name" style="color:rgba(200,160,255,.95)">Resonant Call · <em>(1/Encounter, Reaction)</em></div>
-          <div class="stat-action-desc">
-            เมื่อ Sahuagin ตัวหนึ่งตาย — Priestess ใช้ reaction ส่ง resonance · ทุก Sahuagin และ Reef Shark ใน 60 ft ได้ Advantage บน attack roll 1 รอบ
-          </div>
-        </div>
-
-        <div class="tactic-box">
-          <div class="tactic-label">Tactics</div>
-          <div class="tactic-text">
-            <strong style="color:rgba(244,228,193,.85)">รอบ 3:</strong> ปรากฏตัว ร่าย <em>Spiritual Weapon</em><br>
-            <strong style="color:rgba(244,228,193,.85)">รอบ 4:</strong> <em>Hold Person</em> ใส่ caster/DPS อันดับ 1 + Sacred Flame อันดับ 2<br>
-            <strong style="color:rgba(244,228,193,.85)">รอบ 5+:</strong> Voice of the Pull (ถ้า recharge) หรือ Cure Wounds (ตัวเอง)<br>
-            <strong style="color:rgba(244,228,193,.85)">หนี:</strong> เมื่อ HP &lt; 50% — ดำลงน้ำ ส่ง octopus tentacle ป้องกัน (octopus ไม่ใช่ของจริง คือลูกเล่น — ใช้ stat ของ Giant Octopus 1 ตัวสำหรับ 2 รอบ)
-          </div>
+        <div style="font-family:'Cinzel',serif;font-size:10.5px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);display:flex;align-items:center;gap:12px">
+          เปิด Encounter Sheet
+          <span style="width:24px;height:1px;background:currentColor;position:relative"><span style="content:'';position:absolute;right:0;top:-3px;width:7px;height:7px;border-right:1px solid currentColor;border-top:1px solid currentColor;transform:rotate(45deg);display:block"></span></span>
         </div>
       </div>
-    </div>
-
-    <!-- Sahuagin Warrior -->
-    <div class="stat-block">
-      <button class="stat-toggle" onclick="toggleStat(this)">
-        <div class="stat-monster-icon">🐟</div>
-        <div class="stat-name">Sahuagin Warrior · ×4</div>
-        <div class="stat-cr">CR 1/2 · Minion</div>
-        <svg class="stat-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-      </button>
-      <div class="stat-body">
-        <div class="stat-row"><b>Type</b> Medium humanoid (sahuagin), lawful evil</div>
-        <div class="stat-core">
-          <div class="stat-core-cell"><div class="scc-label">AC</div><div class="scc-value">12 (natural)</div></div>
-          <div class="stat-core-cell"><div class="scc-label">HP</div><div class="scc-value">22 (4d8+4)</div></div>
-          <div class="stat-core-cell"><div class="scc-label">Speed</div><div class="scc-value">30ft / Swim 40ft</div></div>
-        </div>
-        <div class="stat-abilities">
-          <div class="stat-ability"><div class="sa-name">STR</div><div class="sa-score">13</div><div class="sa-mod">+1</div></div>
-          <div class="stat-ability"><div class="sa-name">DEX</div><div class="sa-score">11</div><div class="sa-mod">+0</div></div>
-          <div class="stat-ability"><div class="sa-name">CON</div><div class="sa-score">12</div><div class="sa-mod">+1</div></div>
-          <div class="stat-ability"><div class="sa-name">INT</div><div class="sa-score">12</div><div class="sa-mod">+1</div></div>
-          <div class="stat-ability"><div class="sa-name">WIS</div><div class="sa-score">13</div><div class="sa-mod">+1</div></div>
-          <div class="stat-ability"><div class="sa-name">CHA</div><div class="sa-score">9</div><div class="sa-mod">-1</div></div>
-        </div>
-        <div class="stat-row"><b>Skills</b> Perception +5</div>
-        <div class="stat-row"><b>Senses</b> Darkvision 120 ft</div>
-        <div class="stat-row"><b>Blood Frenzy / Limited Amphibiousness / Shark Telepathy</b> (เหมือน Priestess)</div>
-        <div class="stat-action">
-          <div class="stat-action-name">Multiattack</div>
-          <div class="stat-action-desc">2 attacks: bite + claws หรือ spear</div>
-        </div>
-        <div class="stat-action">
-          <div class="stat-action-name">Bite · <em>+3, reach 5 ft</em></div>
-          <div class="stat-action-desc">3 (1d4+1) piercing</div>
-        </div>
-        <div class="stat-action">
-          <div class="stat-action-name">Claws · <em>+3, reach 5 ft</em></div>
-          <div class="stat-action-desc">3 (1d4+1) slashing</div>
-        </div>
-        <div class="stat-action">
-          <div class="stat-action-name">Spear · <em>+3, reach 5 ft / range 20-60 ft</em></div>
-          <div class="stat-action-desc">4 (1d6+1) piercing (1d8+1 ถือ 2 มือ)</div>
-        </div>
-        <div class="tactic-box">
-          <div class="tactic-label">Tactics</div>
-          <div class="tactic-text">
-            ปีนขึ้นจาก 4 มุมเรือพร้อมกัน · มุ่งหา target HP ต่ำสุด (Blood Frenzy) · ถ้าตกน้ำ ฉลามจะมา assist · เห็น Priestess บาดเจ็บ จะวิ่งไปป้องกันแทน
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Reef Shark -->
-    <div class="stat-block">
-      <button class="stat-toggle" onclick="toggleStat(this)">
-        <div class="stat-monster-icon">🦈</div>
-        <div class="stat-name">Reef Shark · ×2</div>
-        <div class="stat-cr">CR 1/2 · Hazard</div>
-        <svg class="stat-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-      </button>
-      <div class="stat-body">
-        <div class="stat-row"><b>Type</b> Medium beast, unaligned</div>
-        <div class="stat-core">
-          <div class="stat-core-cell"><div class="scc-label">AC</div><div class="scc-value">12 (natural)</div></div>
-          <div class="stat-core-cell"><div class="scc-label">HP</div><div class="scc-value">22 (4d8+4)</div></div>
-          <div class="stat-core-cell"><div class="scc-label">Speed</div><div class="scc-value">— / Swim 40ft</div></div>
-        </div>
-        <div class="stat-abilities">
-          <div class="stat-ability"><div class="sa-name">STR</div><div class="sa-score">14</div><div class="sa-mod">+2</div></div>
-          <div class="stat-ability"><div class="sa-name">DEX</div><div class="sa-score">13</div><div class="sa-mod">+1</div></div>
-          <div class="stat-ability"><div class="sa-name">CON</div><div class="sa-score">13</div><div class="sa-mod">+1</div></div>
-          <div class="stat-ability"><div class="sa-name">INT</div><div class="sa-score">1</div><div class="sa-mod">-5</div></div>
-          <div class="stat-ability"><div class="sa-name">WIS</div><div class="sa-score">10</div><div class="sa-mod">+0</div></div>
-          <div class="stat-ability"><div class="sa-name">CHA</div><div class="sa-score">4</div><div class="sa-mod">-3</div></div>
-        </div>
-        <div class="stat-row"><b>Senses</b> Blindsight 30 ft, passive Perception 12</div>
-        <div class="stat-row"><b>Pack Tactics</b> Advantage บน attack ถ้ามีพันธมิตรอยู่ติดกับ target</div>
-        <div class="stat-row"><b>Water Breathing</b> หายใจในน้ำเท่านั้น</div>
-        <div class="stat-action">
-          <div class="stat-action-name">Bite · <em>+4, reach 5 ft (ในน้ำ)</em></div>
-          <div class="stat-action-desc">6 (1d8+2) piercing</div>
-        </div>
-        <div class="tactic-box">
-          <div class="tactic-label">Tactics</div>
-          <div class="tactic-text">
-            หลักๆ กัดท้องเรือ (เพิ่ม Hull Damage) · ถ้ามีคนตกน้ำ เปลี่ยน target ทันที + ใช้ Pack Tactics · ถ้า Priestess ตาย ฉลามจะหนี (สื่อสารผ่าน Shark Telepathy หาย)
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="sub-section-h" style="font-family:'Cinzel',serif;font-size:11.5px;letter-spacing:.26em;text-transform:uppercase;color:rgba(244,228,193,.55);margin:26px 0 12px">Environmental Hazards</div>
-    <div class="hazards-grid">
-      <div class="hazard">
-        <div class="hazard-name">⚓ Slippery Deck</div>
-        <div class="hazard-desc">ดาดฟ้าเปียกเลือดและน้ำทะเล · Acrobatics DC 11 ทุกครั้งที่ Dash / Disengage หรือล้ม (prone)</div>
-      </div>
-      <div class="hazard">
-        <div class="hazard-name">🔥 Burning Rigging</div>
-        <div class="hazard-desc">เถ้าถ่านจากเรือ Lustralis ลอยมาติด · ยืนใต้เสากระโดงระยะ 3 รอบ = 1d6 fire damage</div>
-      </div>
-      <div class="hazard">
-        <div class="hazard-name">🌊 Hull Breach</div>
-        <div class="hazard-desc">ครบ 3 รอยกัดของฉลาม = เรือเริ่มเอียง · DEX Save DC 11 ทุกคนทุกรอบ · ปิดรู: Investigation DC 13 + ใช้ผ้าใบกระสอบ</div>
-      </div>
-      <div class="hazard">
-        <div class="hazard-name">💀 Overboard</div>
-        <div class="hazard-desc">ตกน้ำ: 1d6 bludgeoning + ตัวเปียก · ในน้ำ disadvantage บน melee attack · ฉลามได้ advantage โจมตี</div>
-      </div>
-    </div>
-
-    <div class="sub-section-h" style="font-family:'Cinzel',serif;font-size:11.5px;letter-spacing:.26em;text-transform:uppercase;color:rgba(244,228,193,.55);margin:26px 0 12px">Difficulty Scaling</div>
-    <div class="difficulty-tiers">
-      <div class="diff-tier">
-        <div class="dt-level">Lvl 3 · Easy-Medium</div>
-        <div class="dt-tweak">ลด Sahuagin Warrior เหลือ 2 ตัว · Priestess HP 22 · ไม่ใช้ Voice of the Pull</div>
-      </div>
-      <div class="diff-tier">
-        <div class="dt-level">Lvl 4 · Medium-Hard</div>
-        <div class="dt-tweak">มาตรฐาน (4× Warrior + 2× Shark + Priestess 33 HP)</div>
-      </div>
-      <div class="diff-tier">
-        <div class="dt-level">Lvl 5+ · Hard</div>
-        <div class="dt-tweak">+1 Sahuagin Warrior · Priestess HP 45 · ร่าย Spiritual Weapon รอบ 1 + Hold Person 2 เป้าหมาย</div>
-      </div>
-    </div>
-
-    <div class="aftermath-box">
-      <div class="aftermath-label">✦ Aftermath · ผลของการต่อสู้</div>
-      <ul>
-        <li><b>Loot</b> 80 gp (เหรียญเงินจากเรือสินค้าหลายลำ) · Trident +1 ของ Priestess · 4× ปลอกคอเขี้ยวทะเล (10 gp ใบ)</li>
-        <li><b>Resonance Focus (Key Item)</b> เครื่องประดับโลหะไม่รู้จัก สลักอักขระ 7 ตัว · เรืองแสงเบาๆ เมื่ออยู่ใกล้น้ำ · <em>Lira จะเห็นและตื่นเต้น · Elwen จะขอแปล</em></li>
-        <li><b>Captain Marcos Roca</b> (เรือ Lustralis ที่รอด) เสนอ <em>100 gp</em> ขอบคุณ + จะเป็นพยานให้ผู้เล่นต่อ Harbormaster Vel</li>
-        <li><b>Sahuagin Carvings</b> ผิวศพ Sahuagin มีอักขระเดียวกัน · Insight DC 13: <em>"ถูกแกะหลังตาย — เป็นพิธีกรรม"</em></li>
-        <li><b>Story Consequence</b> Vel เห็นผู้เล่น + รู้ว่า Priestess ตาย — <em>เขากลัวมากกว่าโล่งใจ</em> · Lira สังเกตทันทีและจะตามมาในคืนแรก · ทะเลคืนนั้น "<em>ไม่มีแสงใต้น้ำ</em>" — เด็กคนหนึ่งใน Iron Quarters พบกลับมาเอง (เด็กยังไม่ตื่นเต็มที่ แต่ดวงตาเปลี่ยน)</li>
-      </ul>
-    </div>
+    </a>
   </section>
-
-  <hr class="divider" />
 
   <!-- ══ FIRST IMPRESSIONS ══ -->
   <section class="section" id="first-impressions">

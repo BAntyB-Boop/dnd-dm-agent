@@ -1291,103 +1291,7 @@
     to   { opacity: 1; transform: translateY(0) scale(1); }
   }
 
-  #dm-code-trigger {
-    position: fixed;
-    bottom: 18px; left: 18px;
-    z-index: 50;
-    width: 26px; height: 26px;
-    background: rgba(10,6,1,0.6);
-    border: 1px solid rgba(212,160,23,0.18);
-    border-radius: 50%;
-    color: rgba(244,228,193,0.18);
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    transition: color .25s, border-color .25s, opacity .25s;
-    opacity: 0.5;
-  }
-  #dm-code-trigger:hover {
-    color: var(--gold);
-    border-color: rgba(212,160,23,0.5);
-    opacity: 1;
-  }
-  #dm-code-trigger.unlocked { display: none; }
-  #dm-code-trigger svg { width: 12px; height: 12px; }
-
-  #dm-code-overlay {
-    position: fixed; inset: 0; z-index: 9999;
-    background: radial-gradient(800px 500px at 50% 40%, rgba(20,10,4,0.55), rgba(0,0,0,0.92) 75%);
-    backdrop-filter: blur(6px);
-    display: none;
-    align-items: center; justify-content: center;
-    animation: dm-fade-in .3s ease;
-  }
-  #dm-code-overlay.open { display: flex; }
-  @keyframes dm-fade-in { from { opacity: 0; } to { opacity: 1; } }
-  .dm-code-card {
-    width: min(90vw, 380px);
-    padding: 36px 30px 26px;
-    background: linear-gradient(180deg, #15151c, #0e0e16);
-    border: 1px solid rgba(212,160,23,0.4);
-    border-radius: 3px;
-    box-shadow: 0 30px 80px rgba(0,0,0,0.7), 0 0 60px rgba(212,160,23,0.08);
-    text-align: center;
-  }
-  .dm-code-title {
-    font-family: var(--display);
-    font-size: 16px; letter-spacing: .14em; text-transform: uppercase;
-    color: var(--gold-bright);
-    margin-bottom: 6px;
-  }
-  .dm-code-sub {
-    font-size: 12.5px; font-style: italic;
-    color: rgba(244,228,193,0.5);
-    margin-bottom: 22px;
-  }
-  #dm-code-input {
-    width: 100%;
-    padding: 12px 14px;
-    background: rgba(0,0,0,0.45);
-    border: 1px solid rgba(212,160,23,0.32);
-    border-radius: 2px;
-    color: var(--gold-bright);
-    font-family: var(--display);
-    font-size: 20px; letter-spacing: .4em; text-align: center;
-    outline: none;
-    -webkit-text-security: disc;
-    text-security: disc;
-    transition: border-color .2s, box-shadow .2s;
-  }
-  #dm-code-input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(212,160,23,0.12); }
-  #dm-code-overlay.error #dm-code-input {
-    border-color: rgba(200,60,40,.7);
-    box-shadow: 0 0 0 3px rgba(200,60,40,0.15);
-    animation: dm-shake .42s ease;
-  }
-  @keyframes dm-shake {
-    10%,90% { transform: translateX(-2px) }
-    20%,80% { transform: translateX(4px) }
-    30%,50%,70% { transform: translateX(-6px) }
-    40%,60% { transform: translateX(6px) }
-  }
-  .dm-code-actions { display: flex; gap: 10px; margin-top: 16px; }
-  .dm-code-btn {
-    flex: 1; padding: 10px;
-    background: linear-gradient(180deg, rgba(201,164,92,0.18), rgba(201,164,92,0.05));
-    border: 1px solid var(--gold-dim);
-    color: var(--gold-bright);
-    font-family: var(--display);
-    font-size: 10.5px; letter-spacing: .26em; text-transform: uppercase;
-    cursor: pointer; border-radius: 2px;
-    transition: background .2s, border-color .2s;
-  }
-  .dm-code-btn:hover { border-color: var(--gold); background: linear-gradient(180deg, rgba(201,164,92,0.3), rgba(201,164,92,0.1)); }
-  .dm-code-btn.secondary {
-    background: transparent;
-    border-color: rgba(244,228,193,0.2);
-    color: rgba(244,228,193,0.5);
-  }
-  .dm-code-btn.secondary:hover { color: rgba(244,228,193,0.85); border-color: rgba(244,228,193,0.4); }
-  @media print { #dm-code-trigger, #dm-code-overlay { display: none !important; } }
+  /* DM code prompt + trigger styles live in /shared.js (VCLock.installOverlay) */
 </style>
 </head>
 <body>
@@ -1419,27 +1323,7 @@
   </div>
 </nav>
 
-<!-- DM unlock trigger (subtle icon, bottom-left) -->
-<button id="dm-code-trigger" aria-label="DM unlock" title="DM">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-    <circle cx="12" cy="16" r="1"/>
-    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-  </svg>
-</button>
-
-<!-- DM Code Overlay -->
-<div id="dm-code-overlay" role="dialog" aria-modal="true" aria-hidden="true">
-  <div class="dm-code-card">
-    <div class="dm-code-title">DM Access</div>
-    <div class="dm-code-sub">กรุณาใส่รหัสเพื่อปลดล็อก DM Guide</div>
-    <input id="dm-code-input" type="text" inputmode="numeric" maxlength="4" placeholder="● ● ● ●" autocomplete="off" />
-    <div class="dm-code-actions">
-      <button class="dm-code-btn secondary" id="dm-code-cancel">ยกเลิก</button>
-      <button class="dm-code-btn" id="dm-code-submit">Unlock</button>
-    </div>
-  </div>
-</div>
+<!-- DM code trigger + overlay are injected by VCLock.installOverlay() -->
 
 <audio id="bg-audio" src="/assets/codex-of-stars.mp3" loop preload="auto"></audio>
 
@@ -2501,60 +2385,8 @@
 
 <script src="/shared.js"></script>
 <script>
-// ── DM Code Unlock (shared state via VCLock in /shared.js) ────────
-(function initDmUnlock() {
-  const dmLink = document.getElementById('dm-guide-topbar-link');
-  const trigger = document.getElementById('dm-code-trigger');
-  const overlay = document.getElementById('dm-code-overlay');
-  const input = document.getElementById('dm-code-input');
-  const submit = document.getElementById('dm-code-submit');
-  const cancel = document.getElementById('dm-code-cancel');
-
-  function applyUnlock() {
-    dmLink.classList.add('unlocked');
-    trigger.classList.add('unlocked');
-  }
-
-  if (VCLock.isUnlocked()) applyUnlock();
-
-  function openPrompt() {
-    overlay.classList.add('open');
-    overlay.setAttribute('aria-hidden', 'false');
-    setTimeout(() => input.focus(), 100);
-  }
-  function closePrompt() {
-    overlay.classList.remove('open');
-    overlay.classList.remove('error');
-    overlay.setAttribute('aria-hidden', 'true');
-    input.value = '';
-  }
-  function attempt() {
-    if (VCLock.attempt(input.value)) {
-      applyUnlock();
-      closePrompt();
-    } else {
-      overlay.classList.add('error');
-      setTimeout(() => overlay.classList.remove('error'), 500);
-      input.value = '';
-      input.focus();
-    }
-  }
-
-  trigger.addEventListener('click', openPrompt);
-  submit.addEventListener('click', attempt);
-  cancel.addEventListener('click', closePrompt);
-  input.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') attempt();
-    else if (e.key === 'Escape') closePrompt();
-  });
-  overlay.addEventListener('click', (e) => { if (e.target === overlay) closePrompt(); });
-
-  // Hidden keystroke — type the code anywhere on page
-  VCLock.watchKeys({
-    skip: () => overlay.classList.contains('open'),
-    onUnlock: applyUnlock
-  });
-})();
+// DM unlock — overlay, trigger, and key-watcher are mounted by shared.js
+VCLock.installOverlay({ reveals: ['#dm-guide-topbar-link'] });
 
 const DM_NOTES_KEY = 'porto-stellare:dm-notes-open';
 function saveDmNotesState(){

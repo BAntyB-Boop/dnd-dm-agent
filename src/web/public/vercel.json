@@ -9,6 +9,7 @@
     { "source": "/map/porto-stellare", "destination": "/map/porto-stellare.html" },
     { "source": "/lore/porto-stellare", "destination": "/lore/porto-stellare.html" },
     { "source": "/sessions/session-1", "destination": "/sessions/session-1.html" },
+    { "source": "/oneshot", "destination": "/oneshot/index.html" },
     { "source": "/oneshot/porto-arrival", "destination": "/oneshot/porto-arrival.html" },
     { "source": "/bestiary", "destination": "/bestiary/index.html" },
     { "source": "/bestiary/detail", "destination": "/bestiary/detail.html" },

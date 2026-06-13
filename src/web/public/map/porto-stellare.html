@@ -1365,7 +1365,7 @@
 
   <!-- DM code trigger + overlay are injected by VCLock.installOverlay() -->
 
-  <audio id="bg-audio" src="/assets/harbor-of-dawn.mp3" loop preload="auto"></audio>
+  <audio id="bg-audio" src="/assets/harbor-of-dawn.mp3" preload="auto"></audio>
 
   <!-- Music control (continues homepage BGM) -->
   <div class="music-ctrl" id="music-ctrl">
@@ -2228,7 +2228,7 @@ panel.addEventListener('touchend', e => {
   if(dy > 90) closePanel();
 }, { passive: true });
 
-// ── Music player — own map track (shared volume/mute; own resume position) ──
+// ── Music player — map playlist (shared volume/mute; own resume track + position) ──
 (function(){
   const audio     = document.getElementById('bg-audio');
   const btn       = document.getElementById('music-btn');
@@ -2238,7 +2238,20 @@ panel.addEventListener('touchend', e => {
   const volSlider = document.getElementById('music-vol');
   if (!audio || !btn) return;
 
-  const POS_KEY = 'bgm:harbor:pos';
+  const POS_KEY = 'bgm:map:pos';
+  // Playlist — tracks cycle in order, then loop back to the first.
+  const TRACKS = ['/assets/harbor-of-dawn.mp3', '/assets/bay-of-brass-sails.mp3'];
+  let trackIndex = 0;
+
+  function loadTrack(i, time){
+    trackIndex = ((i % TRACKS.length) + TRACKS.length) % TRACKS.length;
+    audio.src = TRACKS[trackIndex];
+    if (time && isFinite(time)){
+      const seek = () => { try { audio.currentTime = time; } catch(e){} };
+      if (audio.readyState >= 1) seek();
+      else audio.addEventListener('loadedmetadata', seek, { once: true });
+    }
+  }
 
   function updateSlider(){
     volSlider.style.setProperty('--fill', Math.round(parseFloat(volSlider.value) * 100) + '%');
@@ -2253,20 +2266,26 @@ panel.addEventListener('touchend', e => {
   } catch(e){ audio.volume = 0.3; }
   updateSlider();
 
-  // Resume from where the previous page left off
+  // Resume from the track + position the listener last left off on
+  let resumeI = 0, resumeT = 0;
   try {
     const ps = JSON.parse(localStorage.getItem(POS_KEY) || 'null');
     if (ps && isFinite(ps.t) && Date.now() - ps.at < 30 * 60 * 1000){
-      const seek = () => { try { audio.currentTime = ps.t; } catch(e){} };
-      if (audio.readyState >= 1) seek();
-      else audio.addEventListener('loadedmetadata', seek, { once: true });
+      resumeI = ps.i || 0; resumeT = ps.t;
     }
   } catch(e){}
+  loadTrack(resumeI, resumeT);
+
+  // Advance through the playlist; wrap back to the first track at the end.
+  audio.addEventListener('ended', () => {
+    loadTrack(trackIndex + 1, 0);
+    audio.play().catch(()=>{});
+  });
 
   // Keep position saved so the next page continues seamlessly
   let lastPosSave = 0;
   function savePos(){
-    try { localStorage.setItem(POS_KEY, JSON.stringify({ t: audio.currentTime, at: Date.now() })); } catch(e){}
+    try { localStorage.setItem(POS_KEY, JSON.stringify({ i: trackIndex, t: audio.currentTime, at: Date.now() })); } catch(e){}
   }
   audio.addEventListener('timeupdate', () => {
     const now = Date.now();

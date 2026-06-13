@@ -899,7 +899,7 @@ body.dm-locked .music-ctrl { display: none; }
   Full DM Guide
 </a>
 
-<audio id="bg-audio" src="/assets/stella-mara.mp3" loop preload="auto"></audio>
+<audio id="bg-audio" src="/assets/stella-mara.mp3" preload="auto"></audio>
 
 <!-- Music control -->
 <div class="music-ctrl" id="music-ctrl">
@@ -942,7 +942,7 @@ VCLock.installOverlay({
   tick();
 })();
 
-// ── Music player — "Voice of the Bay" theme (starts once the page is unlocked) ──
+// ── Music player — "Voice of the Bay" playlist (starts once the page is unlocked) ──
 (function(){
   const audio     = document.getElementById('bg-audio');
   const btn       = document.getElementById('music-btn');
@@ -951,6 +951,21 @@ VCLock.installOverlay({
   const iconMute  = document.getElementById('icon-mute');
   const volSlider = document.getElementById('music-vol');
   if (!audio || !btn) return;
+
+  // Playlist — the bay theme plays first, then the battle track; loops back after.
+  const TRACKS = ['/assets/stella-mara.mp3', '/assets/abyssal-hunt.mp3'];
+  let trackIndex = 0;
+
+  function loadTrack(i){
+    trackIndex = ((i % TRACKS.length) + TRACKS.length) % TRACKS.length;
+    audio.src = TRACKS[trackIndex];
+  }
+
+  // When a track ends, advance to the next; wrap back to the first at the end.
+  audio.addEventListener('ended', () => {
+    loadTrack(trackIndex + 1);
+    audio.play().catch(()=>{});
+  });
 
   function updateSlider(){
     volSlider.style.setProperty('--fill', Math.round(parseFloat(volSlider.value) * 100) + '%');

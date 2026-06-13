@@ -467,6 +467,15 @@
     box-shadow: 0 6px 16px rgba(0,0,0,0.25);
   }
 
+  /* DM-only sections — hidden from players, revealed after DM unlock */
+  .dm-only { display: none; }
+  body.unlocked .dm-only { display: block; }
+  .dm-only .p-section-h .dm-tag {
+    font-family: "Cinzel", serif; font-size: 9px; letter-spacing: .16em;
+    color: #c9a45c; border: 1px solid rgba(212,160,23,0.4);
+    border-radius: 2px; padding: 1px 6px; margin-left: 8px; vertical-align: middle;
+  }
+
   /* Player Actions */
   .p-actions {
     list-style: none;
@@ -1762,7 +1771,7 @@ const DISTRICTS = [
 const STARHILL_TIP = "<b>Starhill</b>จุดที่สูงที่สุดของเมือง · Observatory · Ancient Tower · Archives — ข่าวลือกล่าวว่า Starhill อาจมีอยู่ก่อนที่เมืองจะถูกสร้าง";
 
 // DM unlock — overlay, trigger, and key-watcher are mounted by shared.js
-VCLock.installOverlay({ reveals: ['#dm-guide-btn'] });
+VCLock.installOverlay({ reveals: ['#dm-guide-btn', 'body'] });
 
 // ---- helpers ----
 function centroid(points){
@@ -1920,14 +1929,16 @@ function buildPanel(d){
       <figcaption><span class="dh-title">${d.detail.title}</span><span class="dh-sub">${d.detail.sub}</span></figcaption>
     </figure>` : "";
   const actionsHTML = d.playerActions && d.playerActions.length ? `
-    <div class="p-section-h">ผู้เล่นทำอะไรได้ที่นี่ · Player Actions</div>
-    <ul class="p-actions">
-      ${d.playerActions.map(a => `
-        <li class="p-action">
-          <span class="pa-icon">${a.icon}</span>
-          <div class="pa-body"><span class="pa-text">${a.text}</span><span class="pa-cost">${a.cost}</span></div>
-        </li>`).join("")}
-    </ul>` : "";
+    <div class="dm-only">
+      <div class="p-section-h">ผู้เล่นทำอะไรได้ที่นี่ · Player Actions<span class="dm-tag">DM ONLY</span></div>
+      <ul class="p-actions">
+        ${d.playerActions.map(a => `
+          <li class="p-action">
+            <span class="pa-icon">${a.icon}</span>
+            <div class="pa-body"><span class="pa-text">${a.text}</span><span class="pa-cost">${a.cost}</span></div>
+          </li>`).join("")}
+      </ul>
+    </div>` : "";
   const questsHTML = d.quests && d.quests.length ? `
     <div class="p-section-h">เควสที่นี่ · Available Quests</div>
     <div class="p-quests">

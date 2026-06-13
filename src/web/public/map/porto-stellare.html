@@ -1356,7 +1356,7 @@
 
   <!-- DM code trigger + overlay are injected by VCLock.installOverlay() -->
 
-  <audio id="bg-audio" src="/assets/codex-of-stars.mp3" loop preload="auto"></audio>
+  <audio id="bg-audio" src="/assets/harbor-of-dawn.mp3" loop preload="auto"></audio>
 
   <!-- Music control (continues homepage BGM) -->
   <div class="music-ctrl" id="music-ctrl">
@@ -2217,7 +2217,7 @@ panel.addEventListener('touchend', e => {
   if(dy > 90) closePanel();
 }, { passive: true });
 
-// ── Music player — continues homepage BGM (shared volume/mute/position) ──
+// ── Music player — own map track (shared volume/mute; own resume position) ──
 (function(){
   const audio     = document.getElementById('bg-audio');
   const btn       = document.getElementById('music-btn');
@@ -2227,7 +2227,7 @@ panel.addEventListener('touchend', e => {
   const volSlider = document.getElementById('music-vol');
   if (!audio || !btn) return;
 
-  const POS_KEY = 'bgm:codex:pos';
+  const POS_KEY = 'bgm:harbor:pos';
 
   function updateSlider(){
     volSlider.style.setProperty('--fill', Math.round(parseFloat(volSlider.value) * 100) + '%');

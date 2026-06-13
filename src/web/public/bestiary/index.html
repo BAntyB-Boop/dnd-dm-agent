@@ -127,6 +127,29 @@ h1.page-title{
   animation:fade-up 0.8s ease-out 0.5s both;
 }
 
+/* ── Type section header ── */
+.type-head{
+  grid-column:1/-1;
+  display:flex;align-items:center;gap:14px;
+  margin:30px 0 2px;
+}
+.type-head:first-child{margin-top:0}
+.type-head .th-glyph{
+  width:8px;height:8px;flex-shrink:0;
+  border:1px solid var(--gold-dim);background:var(--bg-deep);transform:rotate(45deg);
+}
+.type-head .th-name{
+  font-family:"Cinzel",serif;font-size:0.8rem;font-weight:600;letter-spacing:0.26em;
+  text-transform:uppercase;color:var(--gold);white-space:nowrap;
+  background:linear-gradient(180deg,#f6efd2 0%,var(--gold) 70%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;
+}
+.type-head .th-count{
+  font-family:"Cinzel",serif;font-size:0.58rem;letter-spacing:0.18em;
+  text-transform:uppercase;color:var(--ink-mute);flex-shrink:0;
+}
+.type-head .th-line{flex:1;height:1px;background:linear-gradient(to right,var(--gold-deep) 0%,var(--line) 60%,transparent)}
+
 /* ── Monster card ── */
 .m-card{
   position:relative;text-decoration:none;color:inherit;
@@ -388,6 +411,30 @@ function buildCard(m) {
   return a;
 }
 
+// Canonical type order (matches the filter dropdown); unknown types sort last.
+const TYPE_ORDER = [
+  'aberration','beast','celestial','construct','dragon','elemental',
+  'fey','fiend','giant','humanoid','monstrosity','ooze','plant','undead',
+];
+
+function buildTypeHead(type, count) {
+  const head = document.createElement('div');
+  head.className = 'type-head';
+
+  const glyph = document.createElement('span'); glyph.className = 'th-glyph';
+  const name  = document.createElement('span'); name.className  = 'th-name';
+  name.textContent = type;
+  const count_ = document.createElement('span'); count_.className = 'th-count';
+  count_.textContent = `${count} ${count === 1 ? 'creature' : 'creatures'}`;
+  const line  = document.createElement('span'); line.className  = 'th-line';
+
+  head.appendChild(glyph);
+  head.appendChild(name);
+  head.appendChild(count_);
+  head.appendChild(line);
+  return head;
+}
+
 function renderGrid(monsters) {
   const grid = document.getElementById('monster-grid');
   const msg  = document.getElementById('loading-msg');
@@ -403,8 +450,28 @@ function renderGrid(monsters) {
     return;
   }
 
+  // Group by type.
+  const groups = new Map();
+  monsters.forEach(m => {
+    const type = (m.type || 'unknown').toLowerCase();
+    if (!groups.has(type)) groups.set(type, []);
+    groups.get(type).push(m);
+  });
+
+  const orderedTypes = [...groups.keys()].sort((a, b) => {
+    const ia = TYPE_ORDER.indexOf(a), ib = TYPE_ORDER.indexOf(b);
+    if (ia === -1 && ib === -1) return a.localeCompare(b);
+    if (ia === -1) return 1;
+    if (ib === -1) return -1;
+    return ia - ib;
+  });
+
   const frag = document.createDocumentFragment();
-  monsters.forEach(m => frag.appendChild(buildCard(m)));
+  orderedTypes.forEach(type => {
+    const members = groups.get(type);
+    frag.appendChild(buildTypeHead(type, members.length));
+    members.forEach(m => frag.appendChild(buildCard(m)));
+  });
   grid.appendChild(frag);
   updateStats(monsters.length);
 }

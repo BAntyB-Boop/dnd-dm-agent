@@ -899,7 +899,7 @@ body.dm-locked .music-ctrl { display: none; }
   Full DM Guide
 </a>
 
-<audio id="bg-audio" src="/assets/abyssal-hunt.mp3" preload="auto"></audio>
+<audio id="bg-audio" src="/assets/moonspire-harbor.mp3" preload="auto"></audio>
 
 <!-- Music control -->
 <div class="music-ctrl" id="music-ctrl">
@@ -952,9 +952,9 @@ VCLock.installOverlay({
   const volSlider = document.getElementById('music-vol');
   if (!audio || !btn) return;
 
-  // Playlist — the battle track plays first (combat opens session), then the
-  // bay theme follows for aftermath; loops back to battle when done.
-  const TRACKS = ['/assets/abyssal-hunt.mp3', '/assets/stella-mara.mp3'];
+  // Playlist — Moonspire Harbor plays first (combat opens session), then the
+  // bay theme follows for aftermath; loops back to Moonspire when done.
+  const TRACKS = ['/assets/moonspire-harbor.mp3', '/assets/stella-mara.mp3'];
   let trackIndex = 0;
 
   function loadTrack(i){

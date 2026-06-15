@@ -485,6 +485,260 @@ body.dm-locked .float-back { display: none; }
   50% { color: #8a5e22; filter: drop-shadow(0 0 5px rgba(212,160,23,0.8)); }
 }
 body.dm-locked .music-ctrl { display: none; }
+
+/* ─── NPC card (collapsible w/ portrait) ─── */
+.npc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 16px; }
+@media (max-width: 720px) { .npc-grid { grid-template-columns: 1fr; } }
+.npc-card {
+  position: relative;
+  background: var(--bg-card);
+  border: 1px solid rgba(201,164,92,.22);
+  border-radius: 3px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: border-color .25s, box-shadow .25s, transform .25s;
+}
+.npc-card:hover {
+  border-color: var(--gold);
+  box-shadow: 0 14px 32px rgba(0,0,0,.4), 0 0 24px rgba(201,164,92,.1);
+  transform: translateY(-2px);
+}
+.npc-card.open { border-color: var(--gold); box-shadow: 0 14px 32px rgba(0,0,0,.4), 0 0 24px rgba(201,164,92,.15); }
+.npc-portrait {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 9 / 12;
+  background: #0a0a14;
+  overflow: hidden;
+}
+.npc-portrait img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  filter: saturate(.85) brightness(.92);
+  transition: filter .3s, transform .4s;
+}
+.npc-card:hover .npc-portrait img,
+.npc-card.open .npc-portrait img { filter: saturate(1) brightness(1); transform: scale(1.02); }
+.npc-portrait::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0;
+  height: 60%;
+  background: linear-gradient(180deg, transparent, rgba(8,4,1,.95));
+  pointer-events: none;
+}
+.npc-surface {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  padding: 16px 18px 14px;
+  z-index: 2;
+}
+.npc-name {
+  font-family: "Cinzel Decorative", serif;
+  font-size: 17px; color: var(--gold-bright);
+  letter-spacing: .03em; line-height: 1.15;
+  margin-bottom: 4px;
+  text-shadow: 0 2px 8px rgba(0,0,0,.7);
+}
+.npc-role {
+  font-family: "Cinzel", serif;
+  font-size: 9.5px; letter-spacing: .26em; text-transform: uppercase;
+  color: rgba(232,226,207,.65);
+}
+.npc-tap {
+  position: absolute; right: 12px; top: 12px; z-index: 3;
+  width: 26px; height: 26px;
+  background: rgba(8,4,1,.7);
+  border: 1px solid rgba(201,164,92,.45);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--gold-bright);
+  font-size: 14px; line-height: 1;
+  backdrop-filter: blur(4px);
+  transition: transform .3s, background .2s;
+}
+.npc-card.open .npc-tap { transform: rotate(45deg); background: rgba(80,10,10,.5); }
+.npc-detail {
+  display: none;
+  padding: 18px 20px 22px;
+  background: rgba(8,4,1,.45);
+  border-top: 1px solid rgba(201,164,92,.18);
+  cursor: default;
+}
+.npc-card.open .npc-detail { display: block; animation: npc-fade .35s ease; }
+@keyframes npc-fade { from { opacity: 0; transform: translateY(-6px) } to { opacity: 1; transform: translateY(0) } }
+.npc-detail-row {
+  font-size: 13px; line-height: 1.65;
+  color: rgba(232,226,207,.65);
+  padding: 5px 0;
+  border-bottom: 1px dashed rgba(201,164,92,.1);
+}
+.npc-detail-row:last-of-type { border-bottom: none; }
+.npc-detail-row b {
+  font-family: "Cinzel", serif; font-weight: 500;
+  font-size: 9px; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--gold); margin-right: 6px;
+}
+.npc-stats {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+  margin: 10px 0;
+  background: rgba(201,164,92,.15);
+  border: 1px solid rgba(201,164,92,.25);
+}
+.npc-stat-cell { padding: 8px 6px; background: var(--bg-paper); text-align: center; }
+.npc-stat-l { font-family: "Cinzel", serif; font-size: 8px; letter-spacing: .2em; text-transform: uppercase; color: var(--gold-dim); margin-bottom: 2px; }
+.npc-stat-v { font-family: "Cinzel", serif; font-size: 12px; color: var(--gold-bright); }
+.npc-quote {
+  margin-top: 12px;
+  padding: 10px 14px;
+  background: rgba(201,164,92,.06);
+  border-left: 2px solid var(--gold);
+  font-style: italic;
+  font-size: 13px; line-height: 1.6;
+  color: rgba(246,239,210,.72);
+  font-family: "Cormorant Garamond", serif;
+}
+
+/* ─── Beat block (opening script, fully visible) ─── */
+.beat {
+  position: relative;
+  padding: 18px 22px 20px 56px;
+  background: var(--bg-card); border: 1px solid var(--line);
+  border-left: 4px solid var(--gold);
+  border-radius: 3px;
+  margin-bottom: 14px;
+}
+.beat .beat-num {
+  position: absolute; left: 14px; top: 18px;
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--bg-paper); border: 2px solid var(--gold);
+  color: var(--gold-bright);
+  display: flex; align-items: center; justify-content: center;
+  font-family: "Cinzel Decorative", serif; font-size: 14px;
+}
+.beat-head {
+  font-family: "Cinzel", serif;
+  font-size: 12px; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--gold-bright); margin-bottom: 4px;
+}
+.beat-when {
+  font-size: 11px; color: var(--gold-dim); font-style: italic;
+  margin-bottom: 12px;
+}
+.beat-narration {
+  font-family: "Cormorant Garamond", serif;
+  font-style: italic;
+  font-size: 15.5px; line-height: 1.85;
+  color: rgba(246,239,210,.78);
+}
+.beat-narration p { margin-bottom: 12px; }
+.beat-narration p:last-child { margin-bottom: 0; }
+.beat-narration em { color: var(--gold-bright); font-style: normal; }
+.beat-dm-cue {
+  margin-top: 14px;
+  padding: 10px 14px;
+  background: rgba(80,40,120,.08);
+  border-left: 2px solid rgba(120,80,180,.5);
+  border-radius: 2px;
+  font-family: "Cinzel", serif;
+  font-size: 12px; font-style: normal;
+  line-height: 1.6;
+  color: rgba(200,160,255,.85);
+}
+.beat-dm-cue b {
+  font-size: 8.5px; letter-spacing: .28em; text-transform: uppercase;
+  color: rgba(180,130,240,.9); display: block; margin-bottom: 4px;
+}
+
+/* ─── Reveal card (Hazards / Difficulty / Phase-mechanics wrappers) ─── */
+.reveal-card {
+  border: 1px solid rgba(201,164,92,.25);
+  border-radius: 3px;
+  margin-bottom: 14px;
+  overflow: hidden;
+  background: var(--bg-card);
+}
+.reveal-toggle {
+  width: 100%; padding: 14px 18px;
+  background: linear-gradient(180deg, rgba(201,164,92,.08), rgba(201,164,92,.02));
+  border: none; cursor: pointer;
+  display: flex; align-items: center; gap: 12px;
+  text-align: left;
+  transition: background .2s;
+}
+.reveal-toggle:hover { background: linear-gradient(180deg, rgba(201,164,92,.16), rgba(201,164,92,.04)); }
+.reveal-icon {
+  width: 32px; height: 32px;
+  background: rgba(0,0,0,.3);
+  border: 1px solid rgba(201,164,92,.4);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; flex: none;
+}
+.reveal-name {
+  flex: 1;
+  font-family: "Cinzel Decorative", serif;
+  font-size: 14px; letter-spacing: .04em;
+  color: var(--gold-bright);
+}
+.reveal-tag {
+  font-family: "Cinzel", serif;
+  font-size: 9px; letter-spacing: .22em; text-transform: uppercase;
+  padding: 4px 10px; border-radius: 2px;
+  background: rgba(201,164,92,.1);
+  border: 1px solid rgba(201,164,92,.35);
+  color: var(--gold);
+  white-space: nowrap;
+}
+.reveal-arrow { width: 14px; height: 14px; flex: none; color: rgba(232,226,207,.5); transition: transform .3s; }
+.reveal-toggle.open .reveal-arrow { transform: rotate(180deg); }
+.reveal-body { display: none; padding: 18px 22px 22px; background: rgba(8,4,1,.3); border-top: 1px solid rgba(201,164,92,.15); }
+.reveal-body.open { display: block; }
+
+/* Story narrative for combat phases (visible, no card) */
+.phase-story {
+  margin-bottom: 8px;
+  padding: 16px 22px;
+  background: linear-gradient(135deg, rgba(47,112,136,.06), transparent);
+  border-left: 3px solid var(--sea);
+  border-radius: 2px;
+}
+.phase-story-head {
+  font-family: "Cinzel", serif;
+  font-size: 12px; letter-spacing: .1em; text-transform: uppercase;
+  color: rgba(150,210,230,.85); margin-bottom: 6px;
+}
+.phase-story-when {
+  font-size: 11px; color: var(--ink-mute); font-style: italic;
+  margin-bottom: 10px;
+}
+.phase-story p {
+  font-family: "Cormorant Garamond", serif;
+  font-style: italic;
+  font-size: 14.5px; line-height: 1.75;
+  color: rgba(232,226,207,.72);
+  margin-bottom: 8px;
+}
+.phase-story p:last-child { margin-bottom: 0; }
+.phase-story em { color: var(--gold-bright); font-style: normal; }
+
+/* Aftermath loot/consequences list (visible) */
+.afterlist {
+  padding: 16px 20px;
+  background: linear-gradient(135deg, rgba(80,180,120,.05), transparent);
+  border-left: 3px solid rgba(80,180,120,.4);
+  border-radius: 2px;
+  margin-top: 12px;
+}
+.afterlist-label {
+  font-family: "Cinzel", serif;
+  font-size: 9.5px; letter-spacing: .3em; text-transform: uppercase;
+  color: rgba(140,210,160,.75); margin-bottom: 10px;
+}
+.afterlist ul { padding-left: 18px; margin: 0; }
+.afterlist li { font-size: 14px; line-height: 1.7; color: rgba(232,226,207,.66); margin-bottom: 7px; }
+.afterlist li b {
+  font-family: "Cinzel", serif; font-weight: 500;
+  font-size: 9.5px; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--gold); margin-right: 4px;
+}
 </style>
 </head>
 <body class="dm-locked">
@@ -538,70 +792,274 @@ body.dm-locked .music-ctrl { display: none; }
     <div class="qf-cell"><div class="qf-label">Levels</div><div class="qf-value">1–5+</div></div>
   </div>
 
-  <!-- Read aloud -->
-  <section class="section" id="read-aloud">
-    <div class="section-label">Opening Narration</div>
-    <div class="section-title">บทบรรยายเปิดฉาก</div>
-    <p class="section-sub">Read Aloud — เริ่มทันทีเมื่อเรือผู้เล่นใกล้ Stellamar</p>
+  <!-- ═══ ACT I — The Crew ═══ -->
+  <section class="section" id="crew">
+    <div class="section-label">Act I · The Crew</div>
+    <div class="section-title">ลูกเรือของ "Maravillas"</div>
+    <p class="section-sub">กดดูรายละเอียดของแต่ละคน · พวกเขาเป็นมืออาชีพ ไม่ใช่มือใหม่</p>
 
-    <div class="read-aloud">
-      <div class="ra-eyebrow">📜 Read Aloud</div>
-      <div class="ra-text">
-        <p>เรือลำของพวกคุณกำลังเลี้ยวผ่านหัวแหลมสุดท้าย — Porto Stellare ปรากฏข้างหน้า สูงตระหง่านบนหน้าผา ทองอร่าม</p>
-        <p>แต่ระหว่างพวกคุณกับเมือง — <span class="mood">เรือสินค้า 3 ลำ</span> · ลำหนึ่งกำลังจม · ลำหนึ่งกำลังไหม้ · ลำที่สามนิ่งสนิทใบเรือพับ ไม่มีคน เลือดในน้ำสีแดงเข้ม นกนางนวลวนรอบไม่มีตัวไหนกล้าลง</p>
-        <p>กัปตันเรือของพวกคุณตะโกน "เตรียมตัว!" — แต่สาย เสียง<em>ครีบเล็บ</em>กระทบกราบเรือดังขึ้นพร้อมกันจากหลายจุด · ใบหน้าเขียวเทาดวงตาไร้รูม่านโผล่ขึ้น</p>
-        <p>ไกลออกไป 60 ฟุต น้ำทะเลพลุ่งตัวขึ้นเป็นเสา — <em>ผู้หญิงคนหนึ่งยืนอยู่บนเสาหินที่ผุดจากใต้น้ำ ดวงตาสีขาวล้วน ถือตรีศูล</em> เธอเปิดปากร้องเพลงที่ฟังไม่ออก แต่หัวใจพวกคุณ<em>เต้นช้าลง</em>โดยไม่มีเหตุผล <span class="mood">— Roll for initiative.</span></p>
+    <div class="npc-grid">
+      <!-- Captain Tarn -->
+      <div class="npc-card" onclick="toggleNpc(this)">
+        <div class="npc-tap">+</div>
+        <div class="npc-portrait">
+          <img src="/assets/npcs/captain-tarn.png" alt="Captain Tarn" loading="lazy" />
+          <div class="npc-surface">
+            <div class="npc-name">Captain Tarn</div>
+            <div class="npc-role">กัปตันเรือ · Veteran</div>
+          </div>
+        </div>
+        <div class="npc-detail">
+          <div class="npc-detail-row"><b>อายุ</b> 50 · ผิวสีเดียวกับเชือกเปื้อนน้ำเค็ม</div>
+          <div class="npc-detail-row"><b>ประวัติ</b> ล่องเรือเส้นทาง Porto Stellare มา 38 ครั้ง · ฆ่า sahuagin 11 ครั้ง (6 สะอาด · 5 เสียลูกเรือ)</div>
+          <div class="npc-detail-row"><b>ตำแหน่ง</b> หางเสือ — ไม่ยอมปล่อย</div>
+          <div class="npc-detail-row"><b>บุคลิก</b> เงียบ มืออาชีพ ออกคำสั่งสั้นกระชับ พูดมากขึ้นตอนเครียด</div>
+          <div class="npc-detail-row"><b>เครื่องหมาย</b> รอยฟันยาว 4 นิ้วที่แขนซ้าย — ของอะไรเขาไม่บอก</div>
+          <div class="npc-stats">
+            <div class="npc-stat-cell"><div class="npc-stat-l">HP</div><div class="npc-stat-v">18</div></div>
+            <div class="npc-stat-cell"><div class="npc-stat-l">AC</div><div class="npc-stat-v">13</div></div>
+            <div class="npc-stat-cell"><div class="npc-stat-l">Weapon</div><div class="npc-stat-v">Cutlass</div></div>
+            <div class="npc-stat-cell"><div class="npc-stat-l">Atk</div><div class="npc-stat-v">+4 / 1d8+2</div></div>
+          </div>
+          <div class="npc-quote">"38 ครั้ง · ฉัน — ไม่เคย — เห็นพวกมัน — มีคนนำ"</div>
+        </div>
+      </div>
+
+      <!-- First Mate Ren -->
+      <div class="npc-card" onclick="toggleNpc(this)">
+        <div class="npc-tap">+</div>
+        <div class="npc-portrait">
+          <img src="/assets/npcs/first-mate-ren.png" alt="First Mate Ren" loading="lazy" />
+          <div class="npc-surface">
+            <div class="npc-name">First Mate Ren</div>
+            <div class="npc-role">ต้นเรือ · Young Professional</div>
+          </div>
+        </div>
+        <div class="npc-detail">
+          <div class="npc-detail-row"><b>อายุ</b> 22 · ลูกชาวประมง</div>
+          <div class="npc-detail-row"><b>ประวัติ</b> เพิ่งเลื่อนตำแหน่งจากลูกเรือเมื่อปีก่อน · ถือดาบสั้นของพ่อที่ตายในทะเล (ฝักเก่ากว่าตัวเขา)</div>
+          <div class="npc-detail-row"><b>ตำแหน่ง</b> กลางลำเรือ — เคลื่อนช่วยทุกคน</div>
+          <div class="npc-detail-row"><b>บุคลิก</b> ไม่กลัว สุภาพ มีระเบียบ มือมั่นคงกว่าที่หน้าตาบอก</div>
+          <div class="npc-detail-row"><b>เครื่องหมาย</b> สายคล้องคอแกะเป็นรูปเบ็ดตกปลา (ของพ่อ)</div>
+          <div class="npc-stats">
+            <div class="npc-stat-cell"><div class="npc-stat-l">HP</div><div class="npc-stat-v">14</div></div>
+            <div class="npc-stat-cell"><div class="npc-stat-l">AC</div><div class="npc-stat-v">12</div></div>
+            <div class="npc-stat-cell"><div class="npc-stat-l">Weapon</div><div class="npc-stat-v">Shortsword</div></div>
+            <div class="npc-stat-cell"><div class="npc-stat-l">Atk</div><div class="npc-stat-v">+3 / 1d6+1</div></div>
+          </div>
+          <div class="npc-quote">"พี่ Tarn... น้ำตรงนี้... มันไม่ขยับ..."</div>
+        </div>
+      </div>
+
+      <!-- Cook Bessa -->
+      <div class="npc-card" onclick="toggleNpc(this)">
+        <div class="npc-tap">+</div>
+        <div class="npc-portrait">
+          <img src="/assets/npcs/cook-bessa.png" alt="Cook Bessa" loading="lazy" />
+          <div class="npc-surface">
+            <div class="npc-name">Cook Bessa</div>
+            <div class="npc-role">แม่ครัว · The Survivor</div>
+          </div>
+        </div>
+        <div class="npc-detail">
+          <div class="npc-detail-row"><b>อายุ</b> 45 · ผู้หญิงตัวใหญ่ใจดี</div>
+          <div class="npc-detail-row"><b>ประวัติ</b> ทำซุปปลาเค็มอร่อยที่สุดในมหาสมุทร · ใต้เบาะนั่งในครัว — มีดสับเนื้อ 3 เล่ม "เผื่อ"</div>
+          <div class="npc-detail-row"><b>ตำแหน่ง</b> ใต้ดาดฟ้า · ลั่นกลอนครัว · ถ้ามีคนต้องการช่วย เธอขึ้นมา</div>
+          <div class="npc-detail-row"><b>บุคลิก</b> ใจดีระดับแม่ · เคยเจอเหตุการณ์ฉุกเฉินมามาก · ทำงานเงียบ</div>
+          <div class="npc-detail-row"><b>เครื่องหมาย</b> รอยไหม้เล็กที่โหนกแก้มขวา · มือสับเนื้อแม่นกว่าทหาร</div>
+          <div class="npc-stats">
+            <div class="npc-stat-cell"><div class="npc-stat-l">HP</div><div class="npc-stat-v">12</div></div>
+            <div class="npc-stat-cell"><div class="npc-stat-l">AC</div><div class="npc-stat-v">11</div></div>
+            <div class="npc-stat-cell"><div class="npc-stat-l">Weapon</div><div class="npc-stat-v">Cleaver</div></div>
+            <div class="npc-stat-cell"><div class="npc-stat-l">Atk</div><div class="npc-stat-v">+2 / 1d6</div></div>
+          </div>
+          <div class="npc-quote">"กัปตัน — ลั่นกลอนแล้ว · เตือนถ้าต้องการขึ้น"</div>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- Setup -->
-  <section class="section" id="setup">
-    <div class="section-label">Battlefield Setup</div>
-    <div class="section-title">สนามรบ</div>
+  <!-- ═══ ACT II — Opening Script ═══ -->
+  <section class="section" id="opening-script">
+    <div class="section-label">Act II · Opening Script</div>
+    <div class="section-title">บทบรรยายเปิดฉาก · 5 จังหวะ</div>
+    <p class="section-sub">DM อ่านเรียงตามนี้ · ใช้ประมาณ 13-18 นาทีก่อน initiative</p>
 
-    <div class="setup">
-      <ul>
-        <li><b>เรือผู้เล่น</b> "Maravillas" — เรือสำเภา 60 ฟุต · ดาดฟ้าแบ่ง 3 โซน (หัว / กลาง / ท้าย)</li>
-        <li><b>NPC ลูกเรือ</b> Helmsman Tarn (หางเสือ) · Mate Ren (หัวเรือ) · Cook Bessa (ใต้ดาดฟ้า) — ไม่ใช่นักรบ แต่ช่วยปัดศัตรูได้ Athletics +2</li>
-        <li><b>เรือสินค้าอื่น</b> Lustralis (กำลังไหม้, มีผู้รอด) · Calandra (ลูกเรือตายหมด) · Vespera (กำลังจม)</li>
-        <li><b>ระยะถึง Stellamar</b> 800 ฟุต — เห็นชัด แต่ไกลเกินช่วย</li>
-        <li><b>เวลา</b> เย็น · พระอาทิตย์ใกล้ตก · แสงทองสะท้อนผิวน้ำ ทัศนวิสัยเต็ม</li>
-        <li><b>เป้าหมาย</b> เอาชีวิตรอด · ถ้าทำได้ ฆ่าหรือไล่ Priestess</li>
-      </ul>
+    <!-- Beat 1 -->
+    <div class="beat">
+      <div class="beat-num">1</div>
+      <div class="beat-head">The Crew</div>
+      <div class="beat-when">3 นาที · player check-in</div>
+      <div class="beat-narration">
+        <p>"พวกคุณ 4 คนขึ้นเรือลำเดียวกันเมื่อ 5 วันก่อน · ที่ท่าใต้ของแผ่นดินใหญ่"</p>
+        <p>"เรือชื่อ <em>'Maravillas'</em> · เรือสำเภาขนาดกลาง · บรรทุกผ้าไหมและเครื่องเทศ · จุดหมายปลายทาง <em>Porto Stellare</em>"</p>
+        <p>"กัปตันชื่อ Tarn · ผู้ชายอายุ 50 ผิวสีเชือกเปื้อนน้ำเค็ม · ต้นเรือชื่อ Ren อายุ 22 ลูกชาวประมง · แม่ครัวชื่อ Bessa อายุ 45 ทำซุปปลาเค็มอร่อยที่สุดในมหาสมุทร"</p>
+      </div>
+      <div class="beat-dm-cue">
+        <b>DM Cue</b>ถามผู้เล่นแต่ละคน: <em>"คุณมาที่ Porto Stellare ทำไม? หนึ่งประโยค"</em> · จดคำตอบ · ใช้เป็น hook ใน session
+      </div>
+    </div>
+
+    <!-- Beat 2 -->
+    <div class="beat">
+      <div class="beat-num">2</div>
+      <div class="beat-head">The Voyage So Far</div>
+      <div class="beat-when">3 นาที · planting unease</div>
+      <div class="beat-narration">
+        <p>"5 วันสงบกว่าที่ Tarn คาด"</p>
+        <p>"คืนแรกเขาเตือน — 'มี 2 โซนต้องระวัง · Bone Reef ที่ฉลามชอบ · Lostfin ที่บางที sahuagin โผล่ · ดวงตาขาว ตัวเขียว ปีนเรือเก่ง'"</p>
+        <p>"Ren ขัด — 'Sahuagin · ผมเคยได้ยินจากพ่อ'"</p>
+        <p>"Tarn พยักหน้า — '<em>ใช่ · เดินทาง 4-6 ตัว · ฉลามด้วย · ฆ่าง่ายถ้ารู้ว่าจะมา · ยากถ้าไม่รู้ · เราจะรู้</em>'"</p>
+        <p>"5 คืน — ไม่มี · แค่ดาวสว่างและคลื่นใจดีอย่างผิดธรรมชาติ"</p>
+        <p>"คืนที่ 4 Tarn เริ่มมองทะเลแปลกๆ · Bessa ถาม 'มีอะไรไหม?' · เขาตอบเบาๆ — '<em>สงบไป · แค่นั้น</em>'"</p>
+      </div>
+    </div>
+
+    <!-- Beat 3 -->
+    <div class="beat">
+      <div class="beat-num">3</div>
+      <div class="beat-head">The City Revealed</div>
+      <div class="beat-when">3-4 นาที · awe moment</div>
+      <div class="beat-narration">
+        <p>"วันที่ 5 · บ่ายแก่ · <em>golden hour</em> · แสงทุกอย่างเป็นสีน้ำผึ้ง"</p>
+        <p>"Tarn ยิ้มเป็นครั้งแรกของวัน — 'อีกชั่วโมง · เตรียมตัว · พวกคุณจะได้เห็น'"</p>
+        <p>"เรือเลี้ยวผ่านหินสุดท้าย"</p>
+        <p><em>[หยุด 3 วินาที · ปล่อยให้ผู้เล่นนิ่ง]</em></p>
+        <p>"และเมือง — ปรากฏ"</p>
+        <p>"Porto Stellare บนหน้าผาฝั่งตะวันออก · 7 ชั้นไล่ระดับ · หลังคาหินอ่อนสะท้อนแสงทอง · ระฆัง Crown Cathedral กำลังตี เสียงข้ามน้ำมาช้ากว่าภาพ 2 วินาที"</p>
+        <p>"Tarn พูดกับตัวเอง — '<em>38 ครั้ง — ครั้งนี้ยังทำให้ฉันหายใจไม่ออก</em>'"</p>
+      </div>
+    </div>
+
+    <!-- Beat 4 -->
+    <div class="beat">
+      <div class="beat-num">4</div>
+      <div class="beat-head">Wrongness — Tarn Sees First</div>
+      <div class="beat-when">3 นาที · veteran responds</div>
+      <div class="beat-narration">
+        <p>"Tarn — ที่ยิ้มเมื่อ 30 วินาทีก่อน — หยุดยิ้ม"</p>
+        <p>"มือซ้ายลดจากเอวมาที่ด้ามมีด — '<em>Ren · ลดใบเรือกลาง · Bessa · ลงครัว ลั่นกลอน · ตอนนี้</em>'"</p>
+        <p>"ไม่ใช่คำสั่งของคนตกใจ · เป็นคำสั่งของคนที่ทำมา 38 ครั้ง"</p>
+        <p><em>[หยุด]</em></p>
+        <p>"ระหว่างเรือคุณกับเมือง — <em>สามลำ</em>"</p>
+        <p>"ลำแรก 200 ฟุต · กำลังจม · ใบเรือฉีก · น้ำกลางกราบ"</p>
+        <p>"ลำที่สอง 150 ฟุต · กำลังไหม้ · ควันดำพุ่งตรง ไม่มีลม"</p>
+        <p>"ลำที่สาม 80 ฟุต · นิ่งสนิท · ใบพับเรียบร้อย · ดาดฟ้าว่าง"</p>
+        <p>"เลือดในน้ำ · เกือบดำในแสงทอง"</p>
+        <p>"Tarn พูดเสียงนิ่ง — '<em>Sahuagin · 8 ตัว · ฉลาม 2 · ปกติ · เรากำลังไป · ทำตามที่ฝึก</em>'"</p>
+        <p>"Ren ดึงดาบสั้นออก มือมั่นคงกว่าที่คาด · Bessa จากใต้ดาดฟ้า — 'ลั่นกลอนแล้ว'"</p>
+        <p>"Tarn ผงกหัว — '<em>4 คน · เลือกตำแหน่ง · หัว ท้าย หรือกราบ · เคยทำแบบนี้</em>'"</p>
+      </div>
+      <div class="beat-dm-cue">
+        <b>DM Cue</b>ให้ผู้เล่นเลือกตำแหน่ง — หัว/ท้าย/กราบซ้าย/กราบขวา · ทำให้พวกเขารู้สึก agency
+      </div>
+    </div>
+
+    <!-- Beat 5 -->
+    <div class="beat">
+      <div class="beat-num">5</div>
+      <div class="beat-head">The Boarding → The Reveal</div>
+      <div class="beat-when">3-4 นาที · trigger initiative</div>
+      <div class="beat-narration">
+        <p>"เสียงเล็บกระทบไม้ — ทั้ง 4 ด้านพร้อมกัน"</p>
+        <p>"Tarn พูดสบายๆ — '<em>ขึ้นมาเลย · ฉันรอ</em>'"</p>
+        <p>"ใบหน้าเขียวเทาโผล่เหนือกราบ · ดวงตาขาวล้วน · ฟันสามแถว"</p>
+        <p>"Ren เคลื่อนทันที — ดาบฟันลงข้อมือตัวใกล้ที่สุด · เลือดสีดำสาด · มันร่วงลงน้ำ"</p>
+        <p>"Tarn จากหางเสือ — '<em>1 ลง · 7 เหลือ · ทุกคน · ปกติ</em>'"</p>
+        <p><em>[หยุด]</em></p>
+        <p>"แล้ว — น้ำห่างออกไป 60 ฟุต — <em>พลุ่งขึ้นเป็นเสา</em>"</p>
+        <p><em>[หยุด]</em></p>
+        <p>"เสาหินผุดจากใต้น้ำ · หินเก่าแก่สีดำสนิมแดง · บนเสายืน <em>อะไรบางอย่าง</em>"</p>
+        <p>"ผู้หญิง sahuagin — แต่ไม่ใช่ตัวอื่นๆ · สูงกว่า · ผิวเข้มกว่า · เกล็ดสะท้อนแสงเหมือนกระจกแตก · ตรีศูลปลายเป็นเงา แล้วก็ไม่ใช่เงา"</p>
+        <p>"เธอเปิดปาก"</p>
+        <p>"เสียงไม่ผ่านหูพวกคุณก่อน — ผ่าน <em>กระดูก</em>"</p>
+        <p><em>[เปลี่ยน tone]</em></p>
+        <p>"Tarn — กัปตัน 38 ครั้ง — ที่เพิ่งบอก 'ปกติ' เมื่อ 10 วินาทีก่อน — <em>เงียบ</em>"</p>
+        <p>"เขายังจับหางเสือ · ดวงตามอง <em>เสาหิน</em> · พูดเบามาก —"</p>
+        <p>"'<em>38 ครั้ง · ฉัน — ไม่เคย — เห็นพวกมัน — มีคนนำ</em>'"</p>
+        <p><em>[หยุด]</em></p>
+        <p>"สาหุกินบนเรือ — เร็วขึ้น · ฉลาดขึ้น · ตีเป็นทีม"</p>
+        <p>"Ren โดนข้อศอกเข้ากราม · ล้ม · ลุกได้ · ตกใจกว่าเดิม"</p>
+        <p>"Bessa จากใต้ดาดฟ้า — '<em>กัปตัน?! เกิดอะไร?!</em>'"</p>
+        <p>"Tarn ไม่ตอบ · ยังมองเสาหิน · พูดประโยคที่จะติดหูพวกคุณไปทั้ง session —"</p>
+        <p>"'<em>ไม่ใช่การโจมตี · นี่คือ — พิธี</em>'"</p>
+        <p><em>[หยุดยาว]</em></p>
+        <p><em><strong>Roll for initiative.</strong></em></p>
+      </div>
     </div>
   </section>
 
-  <!-- Combat Phases -->
+  <!-- ═══ ACT III — Combat Phases ═══ -->
   <section class="section" id="phases">
-    <div class="section-label">Combat Flow</div>
+    <div class="section-label">Act III · Combat</div>
     <div class="section-title">3 จังหวะของการต่อสู้</div>
+    <p class="section-sub">เรื่องราว — เปิด · กลไก/DC/HP — ซ่อนไว้ในการ์ด (กดดู)</p>
 
-    <div class="phase">
-      <div class="ph-num">1</div>
-      <div class="ph-title">การปีนขึ้นเรือ · Boarding</div>
-      <div class="ph-when">รอบ 1-2 · ก่อน Priestess เปิดตัว</div>
-      <p><b>เหตุการณ์</b> Sahuagin Warriors ปีนขึ้นมาพร้อมกันหลายจุด · Reef Sharks กัดท้องเรือใต้น้ำ</p>
-      <p><b>กลไก</b> ผู้เล่นเลือก — ปัด Sahuagin ตก (Athletics DC 12 · Fail = Warrior ขึ้นมา) หรือต่อสู้</p>
-      <p><b>Hull Damage Tracker</b> ทุก ๆ Shark Bite สำเร็จ = 1 ขีด · ครบ <em>กำหนดตามระดับ</em> = เรือเริ่มเอียง (DEX Save DC 11 ทุกคนทุกรอบ)</p>
+    <!-- Phase 1 -->
+    <div class="phase-story">
+      <div class="phase-story-head">⚓ Phase 1 — Boarding</div>
+      <div class="phase-story-when">รอบ 1-2 · ก่อน Priestess เปิดตัว</div>
+      <p>Sahuagin Warriors ปีนขึ้นจาก 4 จุดพร้อมกัน — บีบให้ party กระจาย · Reef Sharks กัดท้องเรือใต้น้ำ · Tarn ออกคำสั่งจากหางเสือ · Ren ทำหน้าที่ไว้ใจได้ · Bessa ขังตัวในครัว · <em>ทีมยังคุมสถานการณ์ได้</em></p>
+    </div>
+    <div class="reveal-card">
+      <button class="reveal-toggle" onclick="toggleReveal(this)">
+        <div class="reveal-icon">⚙</div>
+        <div class="reveal-name">Phase 1 — Mechanics</div>
+        <div class="reveal-tag">DC / HP</div>
+        <svg class="reveal-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="reveal-body">
+        <div class="stat-row"><b>Athletics DC 12</b> ปัด Sahuagin ตกก่อนขึ้น (Action) · Fail = Warrior ขึ้นบนเรือ · Success = 1d6 fall + เสีย action ปีนใหม่</div>
+        <div class="stat-row"><b>Hull Damage Tracker</b> Shark Bite สำเร็จ = 1 ขีด · L1-2: ครบ 2 ขีดเรือเอียง · L3+: ครบ 3 ขีด</div>
+        <div class="stat-row"><b>เรือเอียง</b> DEX Save DC 11 ทุกคน/รอบ หรือล้ม prone</div>
+        <div class="stat-row"><b>ปิดรู</b> Investigation DC 13 + ใช้ผ้าใบจากห้องเก็บของ (1 action)</div>
+        <div class="stat-row"><b>NPC ผู้ช่วย</b> Ren ตี +3 1d6+1 · Tarn ออกคำสั่งจากหางเสือ (ถ้ามีคนสู้แทน เขาให้ Inspiration ได้ 1 ครั้ง)</div>
+      </div>
     </div>
 
-    <div class="phase">
-      <div class="ph-num">2</div>
-      <div class="ph-title">การปรากฏของ Priestess · Reveal</div>
-      <div class="ph-when">รอบ 3 · เมื่อ Sahuagin 1-2 ตัวล้ม</div>
-      <p><b>เหตุการณ์</b> เสาหินใต้น้ำผุดขึ้น · Priestess ยืนบนนั้น ห่าง 60 ฟุต · แสงสีฟ้าใต้น้ำกระจายเป็นวง</p>
-      <p><b>WIS Save DC 13</b> (Lvl 3+ เท่านั้น · ระดับต่ำกว่า: narrative อย่างเดียว) — Fail = Disadvantage 1 รอบ</p>
-      <p><b>Resonant Call</b> (Reaction) Sahuagin/Shark ทั้งหมดได้ Advantage 1 รอบเต็ม</p>
+    <!-- Phase 2 -->
+    <div class="phase-story">
+      <div class="phase-story-head">🔱 Phase 2 — The Reveal</div>
+      <div class="phase-story-when">รอบ 3 · เมื่อ Sahuagin 1-2 ตัวล้ม</div>
+      <p>เสาหินผุดจากใต้น้ำ 60 ft จากเรือ · Priestess ยืนบนนั้น · แสงสีฟ้าใต้น้ำเรืองรอบ · ลมหยุด · เสียงรบเงียบลงชั่วขณะ · เธอเปิดปาก · เสียงผ่านกระดูกก่อนผ่านหู · <em>Tarn เปลี่ยน</em> · ประโยค "ไม่ใช่การโจมตี · นี่คือพิธี"</p>
+    </div>
+    <div class="reveal-card">
+      <button class="reveal-toggle" onclick="toggleReveal(this)">
+        <div class="reveal-icon">⚙</div>
+        <div class="reveal-name">Phase 2 — Mechanics</div>
+        <div class="reveal-tag">Save · Reaction</div>
+        <svg class="reveal-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="reveal-body">
+        <div class="stat-row"><b>WIS Save DC 13</b> (L3+) Fail = Disadvantage 1 รอบ + เห็นภาพอุโมงค์ใต้ดิน (free lore reveal)</div>
+        <div class="stat-row"><b>L1-2 Variant</b> ไม่มี Save · เป็น cinematic อย่างเดียว · Priestess ไม่โจมตี</div>
+        <div class="stat-row"><b>Resonant Call</b> (Reaction · 1/encounter) เมื่อ Sahuagin ตายตัวแรก · ทุก Sahuagin/Shark ใน 60 ft ได้ Advantage 1 รอบ</div>
+        <div class="stat-row"><b>Tarn's reaction</b> เงียบ 1 รอบ ไม่ออกคำสั่ง · ผู้เล่นต้องคิดเอง · กลับมาออกคำสั่งรอบถัดไป</div>
+      </div>
     </div>
 
-    <div class="phase">
-      <div class="ph-num">3</div>
-      <div class="ph-title">จุดเปลี่ยน · Climax</div>
-      <div class="ph-when">รอบ 4+ · จนกว่า Priestess จะตาย หรือหนี</div>
-      <p><b>Lvl 1-2</b> Priestess ไม่เข้าต่อสู้ — เธอชี้ตรีศูล สาหุกินที่เหลือดำลงน้ำพร้อมเธอ · ทิ้ง <strong>Resonance Focus</strong> ไว้บนดาดฟ้า · จบศึก</p>
-      <p><b>Lvl 3+</b> Priestess ร่ายเวทย์: Sacred Flame, Hold Person, Spiritual Weapon · เมื่อ HP เหลือครึ่ง ดำลงน้ำ ส่ง <em>Giant Octopus tentacle</em> โจมตี 2 รอบป้องกัน</p>
-      <p><b>Voice of the Pull</b> (Recharge 5–6 · Lvl 4+) กรวย 30 ft · WIS Save DC 12 หรือ Restrained 1 รอบ + <em>เห็นภาพอุโมงค์ใต้ดิน (free lore reveal)</em></p>
+    <!-- Phase 3 -->
+    <div class="phase-story">
+      <div class="phase-story-head">🌊 Phase 3 — Climax / Exit</div>
+      <div class="phase-story-when">รอบ 4+ · จนกว่าจะจบ</div>
+      <p><strong>L1-2:</strong> Priestess ชี้ตรีศูลขึ้น เล็งดวงดาวดวงแรก · Sahuagin ทุกตัว <em>หยุดกลางท่าฟัน</em> · ดำลงน้ำพร้อมกันเหมือนคนที่หลับไป · Reef Sharks ไหลออกไปไกล · Priestess เอียงคอประเมินค่าผู้เล่น · ยิ้มโดยไม่มีปาก · เสาหินจมกลับ · ทิ้ง <em>Resonance Focus</em> บนดาดฟ้า</p>
+      <p><strong>L3+:</strong> Priestess เข้าสู้ — Sacred Flame, Hold Person, Spiritual Weapon · HP เหลือครึ่ง = ดำลงน้ำ ส่ง octopus tentacle ป้องกัน 2 รอบ แล้วหนี</p>
+    </div>
+    <div class="reveal-card">
+      <button class="reveal-toggle" onclick="toggleReveal(this)">
+        <div class="reveal-icon">⚙</div>
+        <div class="reveal-name">Phase 3 — Mechanics</div>
+        <div class="reveal-tag">By Level</div>
+        <svg class="reveal-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="reveal-body">
+        <div class="stat-row"><b>Lvl 1-2</b> Cinematic exit · ไม่มี save · Priestess ไม่ฟาด · ทิ้ง Resonance Focus บนดาดฟ้าให้อัตโนมัติ</div>
+        <div class="stat-row"><b>Lvl 3</b> Priestess HP 22 · ร่าย Sacred Flame + Spiritual Weapon · หนีเมื่อ HP เหลือครึ่ง</div>
+        <div class="stat-row"><b>Lvl 4</b> Priestess HP 33 · เพิ่ม Hold Person + Voice of the Pull (Recharge 5-6)</div>
+        <div class="stat-row"><b>Lvl 5+</b> Priestess HP 45 · Spiritual Weapon รอบ 1 · Hold Person upcast 2 เป้า</div>
+        <div class="stat-row"><b>Voice of the Pull</b> กรวย 30 ft · WIS Save DC 12 · Fail = Restrained 1 รอบ + <em>เห็นภาพอุโมงค์ใต้ดิน (free lore reveal สำหรับผู้เล่น)</em></div>
+        <div class="stat-row"><b>Octopus Tentacle</b> +4 to hit, 1d10+2 bludgeoning, 2 รอบเท่านั้น · ไม่มี HP · หาย/คืนเมื่อ Priestess หนี</div>
+      </div>
     </div>
   </section>
 
@@ -777,37 +1235,56 @@ body.dm-locked .music-ctrl { display: none; }
     </div>
   </section>
 
-  <!-- Hazards -->
+  <!-- Hazards (collapsible card) -->
   <section class="section" id="hazards">
-    <div class="section-label">Environmental Hazards</div>
+    <div class="section-label">Act IV · Environment</div>
     <div class="section-title">อันตรายในสนาม</div>
+    <p class="section-sub">กดเพื่อดู 4 hazards ที่ DM ใช้ได้ระหว่างต่อสู้</p>
 
-    <div class="hazards">
-      <div class="hazard">
-        <div class="hazard-name">⚓ Slippery Deck</div>
-        <div class="hazard-desc">ดาดฟ้าเปียกเลือดน้ำทะเล · Acrobatics DC 11 ทุกครั้งที่ Dash/Disengage หรือล้ม (prone)</div>
-      </div>
-      <div class="hazard">
-        <div class="hazard-name">🔥 Burning Rigging</div>
-        <div class="hazard-desc">เถ้าจากเรือ Lustralis ลอยมา · ยืนใต้เสากระโดง 3 รอบ = 1d6 fire damage</div>
-      </div>
-      <div class="hazard">
-        <div class="hazard-name">🌊 Hull Breach</div>
-        <div class="hazard-desc">รอยกัดของฉลามครบกำหนด = เรือเอียง (DEX Save DC 11/รอบ) · ปิด: Investigation DC 13</div>
-      </div>
-      <div class="hazard">
-        <div class="hazard-name">💀 Overboard</div>
-        <div class="hazard-desc">ตกน้ำ: 1d6 bludgeoning · ในน้ำ disadvantage บน melee · ฉลามได้ advantage</div>
+    <div class="reveal-card">
+      <button class="reveal-toggle" onclick="toggleReveal(this)">
+        <div class="reveal-icon">🔥</div>
+        <div class="reveal-name">Environmental Hazards</div>
+        <div class="reveal-tag">4 hazards</div>
+        <svg class="reveal-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="reveal-body">
+        <div class="hazards">
+          <div class="hazard">
+            <div class="hazard-name">⚓ Slippery Deck</div>
+            <div class="hazard-desc">ดาดฟ้าเปียกเลือดน้ำทะเล · Acrobatics DC 11 ทุกครั้งที่ Dash/Disengage หรือล้ม (prone)</div>
+          </div>
+          <div class="hazard">
+            <div class="hazard-name">🔥 Burning Rigging</div>
+            <div class="hazard-desc">เถ้าจากเรือ Lustralis ลอยมา · ยืนใต้เสากระโดง 3 รอบ = 1d6 fire damage</div>
+          </div>
+          <div class="hazard">
+            <div class="hazard-name">🌊 Hull Breach</div>
+            <div class="hazard-desc">รอยกัดของฉลามครบกำหนด = เรือเอียง (DEX Save DC 11/รอบ) · ปิด: Investigation DC 13</div>
+          </div>
+          <div class="hazard">
+            <div class="hazard-name">💀 Overboard</div>
+            <div class="hazard-desc">ตกน้ำ: 1d6 bludgeoning · ในน้ำ disadvantage บน melee · ฉลามได้ advantage</div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- Difficulty Matrix -->
+  <!-- Difficulty Matrix (collapsible card) -->
   <section class="section" id="difficulty">
-    <div class="section-label">Difficulty Scaling</div>
+    <div class="section-label">Act V · Scaling</div>
     <div class="section-title">การปรับสำหรับแต่ละ Level</div>
-    <p class="section-sub">ใช้เป็น guide — ปรับเพิ่มลดได้ตามจำนวน party</p>
+    <p class="section-sub">กดเพื่อดูตาราง Lvl 1-5+ และคำแนะนำ</p>
 
+    <div class="reveal-card">
+      <button class="reveal-toggle" onclick="toggleReveal(this)">
+        <div class="reveal-icon">📊</div>
+        <div class="reveal-name">Difficulty Scaling Table</div>
+        <div class="reveal-tag">Lvl 1 – 5+</div>
+        <svg class="reveal-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="reveal-body">
     <table class="diff-table">
       <thead>
         <tr>
@@ -873,21 +1350,75 @@ body.dm-locked .music-ctrl { display: none; }
         <li><b>Priestess หนีไม่ใช่ตาย</b> ใช้เธอเป็น recurring villain ใน session ต่อๆ ไปได้</li>
       </ul>
     </div>
+      </div>
+    </div>
   </section>
 
   <!-- Aftermath -->
   <section class="section" id="aftermath">
-    <div class="section-label">Aftermath</div>
-    <div class="section-title">ผลของการต่อสู้</div>
+    <div class="section-label">Act VI · Aftermath</div>
+    <div class="section-title">เปลี่ยนผ่านสู่ Stellamar</div>
+    <p class="section-sub">บทบรรยายปิดฉาก — DM อ่านหลัง combat จบ</p>
 
-    <div class="aftermath">
-      <div class="aftermath-label">✦ Outcome</div>
+    <!-- Closing narration (visible — story content) -->
+    <div class="beat">
+      <div class="beat-num">✦</div>
+      <div class="beat-head">Closing Narration</div>
+      <div class="beat-when">5-10 นาที · approach Stellamar</div>
+      <div class="beat-narration">
+        <p>"ความเงียบของเรือพวกคุณนั้น... แปลก"</p>
+        <p>"Tarn ยังยึดหางเสือ แต่ดวงตาเขามองไกล · '<em>ฉันต้องเขียนเรื่องนี้ลงในสมุดบันทึก · ครั้งแรกใน 38 ครั้ง</em>'"</p>
+        <p>"Ren นั่งลงกลางดาดฟ้า · มีดของเขาตก · มือสั่น · ไม่ใช่ความกลัวเด็ก ๆ — เป็นความสั่นของคนที่เพิ่งรู้ว่าโลกใหญ่กว่าที่พ่อเคยบอก"</p>
+        <p>"Bessa คลานขึ้นมาจากใต้ดาดฟ้า · เสื้อผ้าเปียก · น้ำลึกถึงเข่าในครัว · '<em>ยังหายใจอยู่ · ทุกคนยังหายใจไหม?</em>'"</p>
+        <p>"จากไกล — เรือ <em>Lustralis</em> ที่ยังลอยอยู่ · ใบเรือเริ่มกางออก · กัปตันของเรือนั้น — ผมเทาผิวสีน้ำตาลอ่อน — ยืนยกหมวกขอบคุณข้ามน้ำ"</p>
+        <p>"และที่หน้า — Porto Stellare"</p>
+        <p>"แสงทองเปลี่ยนเป็นสีส้มเข้ม · โคมไฟท่าเรือเริ่มถูกจุดทีละดวง · เห็น Harbormaster ยืนรอที่ท่าหลัก · เขามองพวกคุณเข้ามา · มองเรือสินค้าที่จม · แล้วเขา <em>เห็น</em> เครื่องประดับในมือพวกคุณ — แม้จาก 80 ฟุต — และสีหน้าเขา <em>เปลี่ยน</em>"</p>
+      </div>
+    </div>
+
+    <!-- Loot (visible — story-relevant) -->
+    <div class="afterlist">
+      <div class="afterlist-label">💰 Loot · ของรางวัล</div>
       <ul>
-        <li><b>Loot</b> 80 gp · Trident +1 (เฉพาะถ้า Priestess ตาย/หนี) · ปลอกคอเขี้ยวทะเล ×4 (10 gp ใบ)</li>
-        <li><b>Resonance Focus (Key Item)</b> เครื่องประดับโลหะไม่รู้จัก สลักอักขระ 7 ตัว · เรืองแสงเมื่อใกล้น้ำ — <em>Lira ที่ Pier 7 จะตื่นเต้น · Elwen ที่ White Cliff จะขอแปล</em></li>
-        <li><b>Captain Marcos Roca</b> (เรือ Lustralis รอด) เสนอ 100 gp · จะเป็นพยานให้ Harbormaster Vel ยอมให้ผู้เล่นเข้าเมือง</li>
-        <li><b>Sahuagin Carvings</b> ผิวศพมีอักขระเดียวกัน · Insight DC 13: <em>"แกะหลังตาย — พิธีกรรม"</em></li>
-        <li><b>Story Consequence</b> Vel เห็น = <em>กลัวมากกว่าโล่งใจ</em> · Lira สังเกตและตามมาคืนแรก · ทะเลคืนนั้น "ไม่มีแสงใต้น้ำ" · เด็กที่หายใน Iron Quarters คนหนึ่งกลับมา — <em>แต่ดวงตาเปลี่ยน</em></li>
+        <li><b>เงิน</b> 80 gp (เหรียญเงินจากเรือสินค้าหลายลำ)</li>
+        <li><b>Trident +1</b> (เฉพาะถ้า Priestess ตาย/หนี · Lvl 3+)</li>
+        <li><b>ปลอกคอเขี้ยวทะเล ×4</b> (ขายได้ 10 gp/ใบ)</li>
+        <li><b>เครื่องเทศ &amp; ผ้าไหม</b> บนเรือ Maravillas ยังขายได้ตามปกติ — ส่วนแบ่ง 50 gp/คน เมื่อขายในเมือง</li>
+        <li><b>💵 100 gp</b> จาก Captain Marcos Roca (เรือ Lustralis รอด) ขอบคุณ + พยานให้</li>
+      </ul>
+    </div>
+
+    <!-- Key item (visible — major plot driver) -->
+    <div class="afterlist" style="background:linear-gradient(135deg,rgba(120,80,180,.08),transparent);border-left-color:rgba(140,100,220,.5)">
+      <div class="afterlist-label" style="color:rgba(180,140,240,.8)">🟣 Key Item · Resonance Focus</div>
+      <ul>
+        <li>เครื่องประดับโลหะไม่รู้จัก · สลักอักขระ 7 ตัว · <em>เรืองแสงสีฟ้าอ่อนๆ เมื่ออยู่ใกล้น้ำ</em></li>
+        <li><b>Lira ที่ Pier 7</b> จะ <em>ตื่นเต้น</em> ทันทีที่เห็น — ตัวเปิดเส้น quest 'The Ghost Ship'</li>
+        <li><b>Prof. Elwen ที่ White Cliff</b> จะขอแปลอักขระ — ตัวเปิดเส้น Hollow Below lore</li>
+        <li><b>Harbormaster Vel</b> เห็นจากระยะ 80 ฟุต · <em>กลัวมากกว่าโล่งใจ</em></li>
+      </ul>
+    </div>
+
+    <!-- Sahuagin carvings clue -->
+    <div class="afterlist" style="background:linear-gradient(135deg,rgba(176,90,30,.06),transparent);border-left-color:rgba(220,140,60,.45)">
+      <div class="afterlist-label" style="color:rgba(240,180,100,.85)">🔍 Clue · Sahuagin Carvings</div>
+      <ul>
+        <li>ผิวศพ Sahuagin ทุกตัวมีอักขระเดียวกับ Resonance Focus</li>
+        <li><b>Insight DC 13:</b> <em>"แกะ <strong>หลังตาย</strong> — เป็นพิธีกรรม ไม่ใช่รอยสัก"</em></li>
+        <li><b>Religion DC 14:</b> Sahuagin ปกติไม่ทำพิธีให้คนตาย — ใครก็ตามที่แกะ ใช้ศพเป็น <em>สื่อ</em></li>
+      </ul>
+    </div>
+
+    <!-- Story consequences (visible — affects next session) -->
+    <div class="afterlist" style="background:linear-gradient(135deg,rgba(176,26,26,.06),transparent);border-left-color:rgba(220,80,60,.45)">
+      <div class="afterlist-label" style="color:rgba(232,140,120,.85)">⚠ Story Consequences · ผลที่มีต่อ session ต่อไป</div>
+      <ul>
+        <li><b>Harbormaster Vel</b> เห็น = <em>กลัวมากกว่าโล่งใจ</em> · จะเฝ้าผู้เล่นจากระยะ · ไม่กล้าเข้ามาคุยตรง</li>
+        <li><b>Lira of the Docks</b> สังเกตทันที · ตามมา <em>คืนแรกที่พวกคุณพัก</em> · จะขอคุยส่วนตัว</li>
+        <li><b>ทะเลคืนนั้น</b> "ไม่มีแสงใต้น้ำ" — Bessa, นักดาราศาสตร์, นักบวช · ทั้งหมดสังเกตและถาม</li>
+        <li><b>เด็กที่หายใน Iron Quarters คนหนึ่ง</b> กลับมาเอง · <em>แต่ดวงตาเปลี่ยน</em> · ครอบครัวเขาดีใจ · พวกเขาไม่รู้ว่ามันคือสัญญาณ</li>
+        <li><b>Captain Marcos Roca</b> รอด · จะปรากฏใน session ต่อๆ ไปเป็นพันธมิตรผู้เล่น · เขาเสนอเรือฟรีเมื่อต้องการ</li>
+        <li><b>Priestess หนีไม่ตาย</b> = <em>recurring villain</em> · เธอจะปรากฏอีกในตอน climax ของ campaign</li>
       </ul>
     </div>
   </section>
@@ -920,6 +1451,23 @@ body.dm-locked .music-ctrl { display: none; }
 <script src="/shared.js"></script>
 <script>
 function toggleStat(btn) {
+  btn.classList.toggle('open');
+  btn.nextElementSibling.classList.toggle('open');
+}
+
+// NPC card — click anywhere on the card toggles open/close (multi-open: each card independent)
+function toggleNpc(card) {
+  card.classList.toggle('open');
+}
+// Detail panel clicks shouldn't bubble up and close the card
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.npc-detail').forEach(el => {
+    el.addEventListener('click', e => e.stopPropagation());
+  });
+});
+
+// Reveal card (Hazards, Difficulty, Phase Mechanics) — toggle button + body
+function toggleReveal(btn) {
   btn.classList.toggle('open');
   btn.nextElementSibling.classList.toggle('open');
 }

@@ -1,0 +1,550 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8" />
+<base href="/" />
+<title>Sea Ambush — Battle Map · The Veiled Codex</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;500;600;700&family=Noto+Serif+Thai:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --bg-deep:#06060c; --bg-card:#15151c; --bg-card-2:#1c1c25;
+  --line:#2a2a35; --ink:#e8e2cf; --ink-soft:#c9c2ad; --ink-mute:#7a7461;
+  --gold:#c9a45c; --gold-bright:#f6efd2; --gold-dim:#8a6f3a;
+  --sea:#2f7088; --blood:#b01a1a;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;width:100%;overflow:hidden;background:var(--bg-deep);color:var(--ink);
+  font-family:"Noto Serif Thai","Cinzel",Georgia,serif;-webkit-user-select:none;user-select:none;
+  -webkit-tap-highlight-color:transparent;}
+
+/* ── Table / stage ───────────────────────────────────────── */
+#stage{position:fixed;inset:0;overflow:hidden;cursor:grab;
+  background:radial-gradient(ellipse 120% 100% at 50% 42%,#16161f 0%,#0c0c12 55%,#060608 100%);
+  touch-action:none;}
+#stage.grabbing{cursor:grabbing}
+#stage.ruler{cursor:crosshair}
+#world{position:absolute;top:0;left:0;transform-origin:0 0;will-change:transform}
+#map{display:block;width:1448px;height:1086px;pointer-events:none;-webkit-user-drag:none;
+  box-shadow:0 0 0 1px rgba(201,164,92,.25),0 30px 90px rgba(0,0,0,.6);}
+
+/* Optional grid overlay (calibration aid) */
+#grid{position:absolute;top:0;left:0;width:1448px;height:1086px;pointer-events:none;display:none}
+#grid.on{display:block}
+
+/* Ruler svg */
+#ruler-svg{position:absolute;top:0;left:0;width:1448px;height:1086px;pointer-events:none;overflow:visible}
+.ruler-line{stroke:var(--gold-bright);stroke-width:2;stroke-dasharray:6 5;vector-effect:non-scaling-stroke;
+  filter:drop-shadow(0 0 4px rgba(0,0,0,.8))}
+.ruler-dot{fill:var(--gold-bright);stroke:#000;stroke-width:1;vector-effect:non-scaling-stroke}
+.ruler-label{fill:var(--gold-bright);font-family:"Cinzel",serif;font-weight:600;
+  paint-order:stroke;stroke:#000;stroke-width:4px;stroke-linejoin:round}
+
+/* ── Tokens ──────────────────────────────────────────────── */
+.token{position:absolute;display:flex;align-items:center;justify-content:center;
+  border-radius:50%;border:2px solid rgba(0,0,0,.6);cursor:grab;
+  transform:translate(-50%,-50%);font-family:"Cinzel",serif;font-weight:700;
+  color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.9);
+  box-shadow:0 3px 10px rgba(0,0,0,.6),inset 0 2px 6px rgba(255,255,255,.25),inset 0 -3px 8px rgba(0,0,0,.4);
+  transition:box-shadow .15s;}
+.token:hover{box-shadow:0 0 0 3px rgba(246,239,210,.5),0 4px 14px rgba(0,0,0,.7),inset 0 2px 6px rgba(255,255,255,.25)}
+.token.dragging{cursor:grabbing;box-shadow:0 0 0 3px var(--gold-bright),0 10px 26px rgba(0,0,0,.8);z-index:50!important}
+.token .tk-label{pointer-events:none;line-height:1;white-space:nowrap}
+
+/* ── Top toolbar ─────────────────────────────────────────── */
+#topbar{position:fixed;top:0;left:0;right:0;height:50px;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 16px;
+  background:linear-gradient(180deg,rgba(6,6,12,.96),rgba(6,6,12,.78));
+  border-bottom:1px solid rgba(201,164,92,.2);backdrop-filter:blur(8px)}
+.tb-title{font-family:"Cinzel Decorative",serif;font-size:14px;color:var(--gold-bright);letter-spacing:.04em;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tb-title small{font-family:"Cinzel",serif;font-size:9px;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--gold-dim);display:block;margin-top:1px}
+.tb-tools{display:flex;align-items:center;gap:6px;flex-wrap:nowrap}
+.tb-btn{font-family:"Cinzel",serif;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink-soft);background:rgba(201,164,92,.05);border:1px solid rgba(201,164,92,.25);
+  border-radius:3px;padding:7px 11px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;
+  transition:color .15s,border-color .15s,background .15s;white-space:nowrap}
+.tb-btn:hover{color:var(--gold-bright);border-color:var(--gold);background:rgba(201,164,92,.12)}
+.tb-btn.active{color:var(--gold-bright);border-color:var(--gold);background:rgba(201,164,92,.2);
+  box-shadow:inset 0 0 0 1px rgba(201,164,92,.3)}
+.tb-link{text-decoration:none}
+@media (max-width:760px){.tb-btn .lbl{display:none}.tb-btn{padding:7px 9px}.tb-title small{display:none}}
+
+/* ── Token tray (left) ───────────────────────────────────── */
+#tray{position:fixed;left:12px;top:62px;z-index:90;width:128px;
+  background:linear-gradient(180deg,rgba(21,21,28,.96),rgba(14,14,22,.96));
+  border:1px solid rgba(201,164,92,.22);border-radius:6px;padding:10px;
+  box-shadow:0 14px 40px rgba(0,0,0,.5);transition:transform .3s}
+#tray.hidden{transform:translateX(-150%)}
+.tray-h{font-family:"Cinzel",serif;font-size:8.5px;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--gold-dim);margin:8px 2px 6px}
+.tray-h:first-child{margin-top:0}
+.tray-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}
+.tray-tok{width:100%;aspect-ratio:1;border-radius:50%;border:2px solid rgba(0,0,0,.5);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-family:"Cinzel",serif;font-weight:700;
+  font-size:12px;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.9);
+  box-shadow:inset 0 2px 5px rgba(255,255,255,.25),inset 0 -3px 6px rgba(0,0,0,.4);
+  transition:transform .12s,box-shadow .12s}
+.tray-tok:hover{transform:scale(1.12);box-shadow:0 0 0 2px var(--gold-bright),inset 0 2px 5px rgba(255,255,255,.25)}
+.tray-tok:active{transform:scale(.95)}
+.tray-tip{font-family:"Noto Serif Thai",serif;font-size:10px;color:var(--ink-mute);line-height:1.5;margin-top:10px;
+  padding-top:8px;border-top:1px solid rgba(201,164,92,.12)}
+
+/* ── Calibration panel (bottom-left, collapsible) ────────── */
+#calib{position:fixed;left:12px;bottom:12px;z-index:90;width:188px;
+  background:linear-gradient(180deg,rgba(21,21,28,.97),rgba(14,14,22,.97));
+  border:1px solid rgba(201,164,92,.22);border-radius:6px;padding:0;overflow:hidden;
+  box-shadow:0 14px 40px rgba(0,0,0,.5)}
+.calib-head{display:flex;align-items:center;justify-content:space-between;cursor:pointer;
+  padding:10px 12px;font-family:"Cinzel",serif;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+.calib-head:hover{color:var(--gold-bright)}
+.calib-body{display:none;padding:0 12px 12px}
+#calib.open .calib-body{display:block}
+#calib.open .calib-arrow{transform:rotate(180deg)}
+.calib-arrow{transition:transform .25s}
+.calib-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+.calib-row label{font-family:"Cinzel",serif;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-mute)}
+.nudge{display:flex;align-items:center;gap:4px}
+.nudge button{width:22px;height:22px;border-radius:3px;border:1px solid rgba(201,164,92,.3);
+  background:rgba(201,164,92,.06);color:var(--gold-bright);cursor:pointer;font-size:13px;line-height:1;
+  display:flex;align-items:center;justify-content:center}
+.nudge button:hover{background:rgba(201,164,92,.16);border-color:var(--gold)}
+.nudge span{min-width:38px;text-align:center;font-family:"Cinzel",serif;font-size:11px;color:var(--gold-bright)}
+
+/* ── Bottom-right home / dm links ────────────────────────── */
+#corner{position:fixed;right:12px;bottom:12px;z-index:90;display:flex;flex-direction:column;gap:8px;align-items:flex-end}
+.corner-btn{display:inline-flex;align-items:center;gap:8px;text-decoration:none;
+  font-family:"Cinzel",serif;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:rgba(201,164,92,.75);
+  background:rgba(6,6,12,.9);border:1px solid rgba(201,164,92,.3);border-radius:3px;padding:9px 14px;
+  backdrop-filter:blur(6px);transition:color .2s,border-color .2s}
+.corner-btn:hover{color:var(--gold-bright);border-color:var(--gold)}
+
+/* ── Compact music player (bottom center) ────────────────── */
+#music{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);z-index:90;
+  display:flex;align-items:center;gap:10px;padding:7px 12px;
+  background:linear-gradient(180deg,rgba(21,21,28,.95),rgba(14,14,22,.97));
+  border:1px solid rgba(201,164,92,.22);border-radius:30px;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+.m-play{width:32px;height:32px;border-radius:50%;border:none;cursor:pointer;background:var(--gold-bright);color:#08040a;
+  display:flex;align-items:center;justify-content:center;flex:none}
+.m-play:hover{background:#fff}
+.m-play svg{width:14px;height:14px;fill:currentColor}
+.m-tracks{display:flex;gap:4px}
+.m-trk{font-family:"Cinzel",serif;font-size:9px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--ink-soft);background:rgba(201,164,92,.05);border:1px solid rgba(201,164,92,.22);
+  border-radius:20px;padding:5px 10px;cursor:pointer;transition:color .15s,border-color .15s,background .15s;white-space:nowrap}
+.m-trk:hover{color:var(--gold-bright);border-color:rgba(201,164,92,.5)}
+.m-trk.active{color:var(--gold-bright);border-color:var(--gold);background:rgba(201,164,92,.18)}
+.m-vol{-webkit-appearance:none;appearance:none;width:64px;height:4px;border-radius:2px;cursor:pointer;
+  background:linear-gradient(to right,var(--gold) var(--fill,30%),rgba(201,164,92,.18) var(--fill,30%))}
+.m-vol::-webkit-slider-thumb{-webkit-appearance:none;width:11px;height:11px;border-radius:50%;background:var(--gold-bright);cursor:pointer}
+.m-vol::-moz-range-thumb{width:11px;height:11px;border-radius:50%;background:var(--gold-bright);border:none;cursor:pointer}
+@media (max-width:760px){#music{display:none}}
+
+/* Hint toast */
+#hint{position:fixed;left:50%;top:60px;transform:translateX(-50%);z-index:95;
+  font-family:"Noto Serif Thai",serif;font-size:12px;color:var(--gold-bright);
+  background:rgba(6,6,12,.92);border:1px solid rgba(201,164,92,.3);border-radius:4px;padding:8px 16px;
+  pointer-events:none;opacity:0;transition:opacity .4s}
+#hint.show{opacity:1}
+</style>
+</head>
+<body>
+
+<div id="stage">
+  <div id="world">
+    <img id="map" src="/map/assets/sea-ambush.png" alt="Sea Ambush battle map — deck of the Maravillas" />
+    <div id="grid"></div>
+    <svg id="ruler-svg" viewBox="0 0 1448 1086" preserveAspectRatio="none"></svg>
+    <!-- tokens injected here -->
+  </div>
+</div>
+
+<!-- Toolbar -->
+<div id="topbar">
+  <div class="tb-title">Sea Ambush<small>Voice of the Bay · Battle Map</small></div>
+  <div class="tb-tools">
+    <button class="tb-btn" id="btn-tray" title="ซ่อน/แสดงถาดโทเคน">⊞ <span class="lbl">Tokens</span></button>
+    <button class="tb-btn active" id="btn-snap" title="สแนปเข้ากริด">🧲 <span class="lbl">Snap</span></button>
+    <button class="tb-btn" id="btn-grid" title="แสดงเส้นกริดช่วยจัดวาง">▦ <span class="lbl">Grid</span></button>
+    <button class="tb-btn" id="btn-ruler" title="วัดระยะ (ฟุต)">📏 <span class="lbl">Ruler</span></button>
+    <button class="tb-btn" id="btn-reset" title="รีเซ็ตมุมมอง">⊙ <span class="lbl">Fit</span></button>
+    <button class="tb-btn" id="btn-clear" title="ลบโทเคนทั้งหมด">🗑 <span class="lbl">Clear</span></button>
+  </div>
+</div>
+
+<!-- Token tray -->
+<div id="tray">
+  <div class="tray-h">Players</div>
+  <div class="tray-grid" id="grp-pc"></div>
+  <div class="tray-h">Crew (Allies)</div>
+  <div class="tray-grid" id="grp-ally"></div>
+  <div class="tray-h">Enemies</div>
+  <div class="tray-grid" id="grp-enemy"></div>
+  <div class="tray-tip">คลิกเพื่อวางโทเคน · ลากเพื่อย้าย · <b>ดับเบิลคลิก</b>เพื่อลบ</div>
+</div>
+
+<!-- Calibration -->
+<div id="calib">
+  <div class="calib-head" id="calib-head">
+    <span>⚙ Grid Calibration</span>
+    <svg class="calib-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+  </div>
+  <div class="calib-body">
+    <div class="calib-row"><label>Cell size</label><div class="nudge"><button data-k="cell" data-d="-1">−</button><span id="v-cell">55</span><button data-k="cell" data-d="1">+</button></div></div>
+    <div class="calib-row"><label>Offset X</label><div class="nudge"><button data-k="ox" data-d="-1">−</button><span id="v-ox">0</span><button data-k="ox" data-d="1">+</button></div></div>
+    <div class="calib-row"><label>Offset Y</label><div class="nudge"><button data-k="oy" data-d="-1">−</button><span id="v-oy">0</span><button data-k="oy" data-d="1">+</button></div></div>
+    <div class="tray-tip" style="margin-top:4px;padding-top:8px">เปิด <b>Grid</b> แล้วปรับให้เส้นตรงกับช่องในรูป · 1 ช่อง = 5 ฟุต</div>
+  </div>
+</div>
+
+<!-- Music -->
+<audio id="bg-audio" src="/assets/moonspire-harbor.mp3" preload="auto" loop></audio>
+<div id="music">
+  <button class="m-play" id="m-play" aria-label="Play / pause">
+    <svg id="m-icon-play" viewBox="0 0 24 24"><path d="M6 4l14 8-14 8V4z"/></svg>
+    <svg id="m-icon-pause" viewBox="0 0 24 24" style="display:none"><path d="M6 5h4v14H6zm8 0h4v14h-4z"/></svg>
+  </button>
+  <div class="m-tracks">
+    <button class="m-trk active" data-src="/assets/moonspire-harbor.mp3">⚔ Combat</button>
+    <button class="m-trk" data-src="/assets/stella-mara.mp3">🌙 Bay</button>
+    <button class="m-trk" data-src="/assets/black-tide-high.mp3">🌊 Tide</button>
+  </div>
+  <input type="range" class="m-vol" id="m-vol" min="0" max="1" step="0.05" value="0.3" aria-label="Volume" />
+</div>
+
+<!-- Corner links -->
+<div id="corner">
+  <a class="corner-btn" href="/oneshot/sea-ambush" title="DM Guide">📖 DM Guide</a>
+  <a class="corner-btn" href="/" title="Home">⌂ The Veiled Codex</a>
+</div>
+
+<div id="hint"></div>
+
+<script>
+(function(){
+  "use strict";
+  const IMG_W = 1448, IMG_H = 1086;
+  const FEET_PER_CELL = 5;
+  const LS_KEY = "sea-ambush-vtt-v1";
+
+  const stage = document.getElementById("stage");
+  const world = document.getElementById("world");
+  const gridEl = document.getElementById("grid");
+  const rulerSvg = document.getElementById("ruler-svg");
+
+  // ── State ──────────────────────────────────────────────
+  const state = {
+    view:{x:0,y:0,scale:1},
+    cell:55, ox:0, oy:0,
+    snap:true, grid:false, ruler:false,
+    tokens:[]   // {id,label,color,size,x,y}
+  };
+  let nextId = 1;
+
+  // ── Token definitions ──────────────────────────────────
+  const DEFS = {
+    pc:[
+      {key:"P1",label:"1",color:"#3b82f6"},
+      {key:"P2",label:"2",color:"#22c55e"},
+      {key:"P3",label:"3",color:"#eab308"},
+      {key:"P4",label:"4",color:"#06b6d4"},
+    ],
+    ally:[
+      {key:"Tarn", label:"T",color:"#c9a45c"},
+      {key:"Ren",  label:"R",color:"#d8b878"},
+      {key:"Bessa",label:"B",color:"#b8893f"},
+    ],
+    enemy:[
+      {key:"Sahuagin",label:"S",color:"#2f9e5e"},
+      {key:"Shark",   label:"K",color:"#64748b"},
+      {key:"Priestess",label:"✦",color:"#8b3fd6",size:1},
+    ],
+  };
+
+  // ── Persistence ────────────────────────────────────────
+  function save(){
+    try{ localStorage.setItem(LS_KEY, JSON.stringify({
+      view:state.view, cell:state.cell, ox:state.ox, oy:state.oy,
+      snap:state.snap, grid:state.grid, tokens:state.tokens
+    })); }catch(e){}
+  }
+  function load(){
+    try{
+      const raw = localStorage.getItem(LS_KEY); if(!raw) return false;
+      const d = JSON.parse(raw);
+      Object.assign(state.view, d.view||{});
+      if(typeof d.cell==="number") state.cell=d.cell;
+      if(typeof d.ox==="number") state.ox=d.ox;
+      if(typeof d.oy==="number") state.oy=d.oy;
+      if(typeof d.snap==="boolean") state.snap=d.snap;
+      if(typeof d.grid==="boolean") state.grid=d.grid;
+      if(Array.isArray(d.tokens)){ state.tokens=d.tokens; for(const t of state.tokens) nextId=Math.max(nextId,t.id+1); }
+      return true;
+    }catch(e){ return false; }
+  }
+
+  // ── View transform ─────────────────────────────────────
+  function applyView(){
+    world.style.transform = `translate(${state.view.x}px,${state.view.y}px) scale(${state.view.scale})`;
+  }
+  function screenToWorld(sx,sy){
+    return { x:(sx-state.view.x)/state.view.scale, y:(sy-state.view.y)/state.view.scale };
+  }
+  function fitView(){
+    const pad=70;
+    const sw=window.innerWidth-pad*2, sh=window.innerHeight-pad*2-40;
+    const scale=Math.min(sw/IMG_W, sh/IMG_H);
+    state.view.scale=scale;
+    state.view.x=(window.innerWidth-IMG_W*scale)/2;
+    state.view.y=(window.innerHeight-IMG_H*scale)/2+10;
+    applyView(); save();
+  }
+
+  // ── Grid overlay ───────────────────────────────────────
+  function renderGrid(){
+    gridEl.classList.toggle("on", state.grid);
+    const c=state.cell;
+    gridEl.style.backgroundImage =
+      "linear-gradient(to right, rgba(201,164,92,.5) 1px, transparent 1px),"+
+      "linear-gradient(to bottom, rgba(201,164,92,.5) 1px, transparent 1px)";
+    gridEl.style.backgroundSize = `${c}px ${c}px`;
+    gridEl.style.backgroundPosition = `${state.ox}px ${state.oy}px`;
+  }
+
+  // ── Snap ───────────────────────────────────────────────
+  function snapPoint(x,y){
+    if(!state.snap) return {x,y};
+    const c=state.cell;
+    const cx = state.ox + (Math.floor((x-state.ox)/c)+0.5)*c;
+    const cy = state.oy + (Math.floor((y-state.oy)/c)+0.5)*c;
+    return {x:cx,y:cy};
+  }
+
+  // ── Tokens ─────────────────────────────────────────────
+  function makeTokenEl(t){
+    const el=document.createElement("div");
+    el.className="token"; el.dataset.id=t.id;
+    el.style.background=`radial-gradient(circle at 35% 30%, ${lighten(t.color,30)}, ${t.color} 70%, ${darken(t.color,25)})`;
+    el.innerHTML=`<span class="tk-label">${t.label}</span>`;
+    positionToken(el,t);
+    attachTokenDrag(el,t);
+    world.appendChild(el);
+    t._el=el;
+  }
+  function positionToken(el,t){
+    const sz=(t.size||1)*state.cell;
+    el.style.width=sz+"px"; el.style.height=sz+"px";
+    el.style.left=t.x+"px"; el.style.top=t.y+"px";
+    el.style.fontSize=Math.round(sz*0.42)+"px";
+  }
+  function renderTokens(){
+    world.querySelectorAll(".token").forEach(n=>n.remove());
+    for(const t of state.tokens) makeTokenEl(t);
+  }
+  function spawnToken(def){
+    // place at current viewport center, snapped, with small cascade to avoid stacking
+    const c=screenToWorld(window.innerWidth/2, window.innerHeight/2);
+    const jitter=(state.tokens.length%5)*state.cell*0.5;
+    let p=snapPoint(c.x+jitter, c.y+jitter);
+    p.x=Math.max(0,Math.min(IMG_W,p.x)); p.y=Math.max(0,Math.min(IMG_H,p.y));
+    const t={id:nextId++,label:def.label,color:def.color,size:def.size||1,x:p.x,y:p.y};
+    state.tokens.push(t); makeTokenEl(t); save();
+    toast(def.key+" วางแล้ว");
+  }
+  function removeToken(t){
+    const i=state.tokens.indexOf(t);
+    if(i>=0){ state.tokens.splice(i,1); if(t._el) t._el.remove(); save(); }
+  }
+
+  function attachTokenDrag(el,t){
+    let moved=false, startWX=0, startWY=0, startTX=0, startTY=0, pid=null;
+    el.addEventListener("pointerdown",e=>{
+      if(state.ruler) return;           // ruler mode: let background handle
+      e.stopPropagation();
+      pid=e.pointerId; el.setPointerCapture(pid);
+      const w=screenToWorld(e.clientX,e.clientY);
+      startWX=w.x; startWY=w.y; startTX=t.x; startTY=t.y; moved=false;
+      el.classList.add("dragging");
+    });
+    el.addEventListener("pointermove",e=>{
+      if(pid===null) return;
+      const w=screenToWorld(e.clientX,e.clientY);
+      const dx=w.x-startWX, dy=w.y-startWY;
+      if(Math.abs(dx)>2||Math.abs(dy)>2) moved=true;
+      t.x=startTX+dx; t.y=startTY+dy;
+      el.style.left=t.x+"px"; el.style.top=t.y+"px";
+    });
+    el.addEventListener("pointerup",e=>{
+      if(pid===null) return;
+      el.releasePointerCapture(pid); pid=null;
+      el.classList.remove("dragging");
+      if(moved){ const p=snapPoint(t.x,t.y); t.x=p.x; t.y=p.y; el.style.left=t.x+"px"; el.style.top=t.y+"px"; save(); }
+    });
+    el.addEventListener("dblclick",e=>{ e.stopPropagation(); removeToken(t); });
+  }
+
+  // colour helpers
+  function clamp(n){return Math.max(0,Math.min(255,n));}
+  function hexToRgb(h){const m=h.replace("#","");return [parseInt(m.slice(0,2),16),parseInt(m.slice(2,4),16),parseInt(m.slice(4,6),16)];}
+  function lighten(h,p){const[r,g,b]=hexToRgb(h);return `rgb(${clamp(r+p)},${clamp(g+p)},${clamp(b+p)})`;}
+  function darken(h,p){const[r,g,b]=hexToRgb(h);return `rgb(${clamp(r-p)},${clamp(g-p)},${clamp(b-p)})`;}
+
+  // ── Pan / zoom ─────────────────────────────────────────
+  let panning=false, panPID=null, panSX=0, panSY=0, panVX=0, panVY=0;
+  stage.addEventListener("pointerdown",e=>{
+    if(state.ruler){ startRuler(e); return; }
+    panning=true; panPID=e.pointerId; stage.setPointerCapture(panPID);
+    panSX=e.clientX; panSY=e.clientY; panVX=state.view.x; panVY=state.view.y;
+    stage.classList.add("grabbing");
+  });
+  stage.addEventListener("pointermove",e=>{
+    if(state.ruler && rulerActive){ moveRuler(e); return; }
+    if(!panning) return;
+    state.view.x=panVX+(e.clientX-panSX);
+    state.view.y=panVY+(e.clientY-panSY);
+    applyView();
+  });
+  stage.addEventListener("pointerup",e=>{
+    if(state.ruler && rulerActive){ endRuler(e); return; }
+    if(panning){ panning=false; stage.classList.remove("grabbing"); if(panPID!==null){try{stage.releasePointerCapture(panPID);}catch(_){}} panPID=null; save(); }
+  });
+
+  stage.addEventListener("wheel",e=>{
+    e.preventDefault();
+    const factor=e.deltaY<0?1.12:1/1.12;
+    zoomAt(e.clientX,e.clientY,factor);
+  },{passive:false});
+  function zoomAt(cx,cy,factor){
+    const old=state.view.scale;
+    let ns=Math.max(0.12,Math.min(5,old*factor));
+    const wx=(cx-state.view.x)/old, wy=(cy-state.view.y)/old;
+    state.view.scale=ns;
+    state.view.x=cx-wx*ns; state.view.y=cy-wy*ns;
+    applyView(); save();
+  }
+
+  // pinch zoom (two-pointer)
+  const pts=new Map(); let pinchDist=0, pinchMid=null;
+  stage.addEventListener("pointerdown",e=>{ pts.set(e.pointerId,{x:e.clientX,y:e.clientY}); if(pts.size===2) startPinch(); });
+  stage.addEventListener("pointermove",e=>{ if(pts.has(e.pointerId)){pts.set(e.pointerId,{x:e.clientX,y:e.clientY}); if(pts.size===2) doPinch();} });
+  function endPt(e){ pts.delete(e.pointerId); pinchDist=0; }
+  stage.addEventListener("pointerup",endPt);
+  stage.addEventListener("pointercancel",endPt);
+  function twoPts(){const a=[...pts.values()];return a;}
+  function startPinch(){ panning=false; stage.classList.remove("grabbing"); const a=twoPts();
+    pinchDist=Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y); pinchMid={x:(a[0].x+a[1].x)/2,y:(a[0].y+a[1].y)/2}; }
+  function doPinch(){ const a=twoPts(); const d=Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y);
+    if(pinchDist>0){ zoomAt(pinchMid.x,pinchMid.y,d/pinchDist); } pinchDist=d;
+    pinchMid={x:(a[0].x+a[1].x)/2,y:(a[0].y+a[1].y)/2}; }
+
+  // ── Ruler ──────────────────────────────────────────────
+  let rulerActive=false, rStart=null;
+  function startRuler(e){ rulerActive=true; rStart=screenToWorld(e.clientX,e.clientY); }
+  function moveRuler(e){ if(!rStart) return; drawRuler(rStart, screenToWorld(e.clientX,e.clientY)); }
+  function endRuler(e){ rulerActive=false; }
+  function drawRuler(a,b){
+    const dist=Math.hypot(b.x-a.x,b.y-a.y);
+    const feet=Math.round(dist/state.cell*FEET_PER_CELL/FEET_PER_CELL)*FEET_PER_CELL;
+    const mx=(a.x+b.x)/2, my=(a.y+b.y)/2;
+    rulerSvg.innerHTML=
+      `<line class="ruler-line" x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}"/>`+
+      `<circle class="ruler-dot" cx="${a.x}" cy="${a.y}" r="5"/>`+
+      `<circle class="ruler-dot" cx="${b.x}" cy="${b.y}" r="5"/>`+
+      `<text class="ruler-label" x="${mx}" y="${my-12}" font-size="${22/state.view.scale}" text-anchor="middle">${feet} ft</text>`;
+  }
+  function clearRuler(){ rulerSvg.innerHTML=""; rStart=null; rulerActive=false; }
+
+  // ── Toolbar wiring ─────────────────────────────────────
+  function setBtn(id,on){ document.getElementById(id).classList.toggle("active",on); }
+  document.getElementById("btn-snap").onclick=function(){ state.snap=!state.snap; setBtn("btn-snap",state.snap); save(); toast(state.snap?"Snap เปิด":"Snap ปิด"); };
+  document.getElementById("btn-grid").onclick=function(){ state.grid=!state.grid; setBtn("btn-grid",state.grid); renderGrid(); save(); };
+  document.getElementById("btn-ruler").onclick=function(){ state.ruler=!state.ruler; setBtn("btn-ruler",state.ruler); stage.classList.toggle("ruler",state.ruler); if(!state.ruler) clearRuler(); toast(state.ruler?"โหมดวัดระยะ — ลากบนแมพ":"ปิดไม้บรรทัด"); };
+  document.getElementById("btn-reset").onclick=fitView;
+  document.getElementById("btn-clear").onclick=function(){ if(state.tokens.length && confirm("ลบโทเคนทั้งหมด?")){ state.tokens.length=0; renderTokens(); save(); } };
+  document.getElementById("btn-tray").onclick=function(){ document.getElementById("tray").classList.toggle("hidden"); };
+
+  // ── Tray buttons ───────────────────────────────────────
+  function buildTray(){
+    const map={pc:"grp-pc",ally:"grp-ally",enemy:"grp-enemy"};
+    for(const grp in DEFS){
+      const host=document.getElementById(map[grp]);
+      for(const def of DEFS[grp]){
+        const b=document.createElement("button");
+        b.className="tray-tok"; b.title=def.key; b.textContent=def.label;
+        b.style.background=`radial-gradient(circle at 35% 30%, ${lighten(def.color,30)}, ${def.color} 70%, ${darken(def.color,25)})`;
+        b.onclick=()=>spawnToken(def);
+        host.appendChild(b);
+      }
+    }
+  }
+
+  // ── Calibration ────────────────────────────────────────
+  document.getElementById("calib-head").onclick=function(){ document.getElementById("calib").classList.toggle("open"); };
+  function refreshCalibLabels(){ document.getElementById("v-cell").textContent=state.cell;
+    document.getElementById("v-ox").textContent=state.ox; document.getElementById("v-oy").textContent=state.oy; }
+  document.querySelectorAll(".nudge button").forEach(btn=>{
+    btn.onclick=function(){
+      const k=btn.dataset.k, d=parseInt(btn.dataset.d,10);
+      if(k==="cell") state.cell=Math.max(10,state.cell+d);
+      if(k==="ox") state.ox+=d;
+      if(k==="oy") state.oy+=d;
+      refreshCalibLabels(); renderGrid();
+      // re-fit token sizes to new cell
+      for(const t of state.tokens){ if(t._el) positionToken(t._el,t); }
+      save();
+    };
+  });
+
+  // ── Music ──────────────────────────────────────────────
+  const audio=document.getElementById("bg-audio");
+  const mPlay=document.getElementById("m-play");
+  const iPlay=document.getElementById("m-icon-play"), iPause=document.getElementById("m-icon-pause");
+  const vol=document.getElementById("m-vol");
+  audio.volume=parseFloat(vol.value);
+  function setVolFill(){ vol.style.setProperty("--fill",(vol.value*100)+"%"); }
+  setVolFill();
+  vol.oninput=function(){ audio.volume=parseFloat(vol.value); setVolFill(); };
+  mPlay.onclick=function(){ if(audio.paused){ audio.play().catch(()=>{}); } else { audio.pause(); } };
+  audio.onplay=function(){ iPlay.style.display="none"; iPause.style.display=""; };
+  audio.onpause=function(){ iPlay.style.display=""; iPause.style.display="none"; };
+  document.querySelectorAll(".m-trk").forEach(b=>{
+    b.onclick=function(){
+      document.querySelectorAll(".m-trk").forEach(x=>x.classList.remove("active"));
+      b.classList.add("active");
+      const wasPlaying=!audio.paused;
+      audio.src=b.dataset.src;
+      if(wasPlaying) audio.play().catch(()=>{});
+    };
+  });
+
+  // ── Hint toast ─────────────────────────────────────────
+  let toastT=null;
+  function toast(msg){ const h=document.getElementById("hint"); h.textContent=msg; h.classList.add("show");
+    clearTimeout(toastT); toastT=setTimeout(()=>h.classList.remove("show"),1400); }
+
+  // ── Keyboard ───────────────────────────────────────────
+  window.addEventListener("keydown",e=>{
+    if(e.key==="r"||e.key==="R") document.getElementById("btn-ruler").click();
+    else if(e.key==="g"||e.key==="G") document.getElementById("btn-grid").click();
+    else if(e.key==="f"||e.key==="F") fitView();
+    else if(e.key==="Escape"){ if(state.ruler){ document.getElementById("btn-ruler").click(); } }
+  });
+
+  window.addEventListener("resize",()=>{ /* keep current view */ });
+
+  // ── Init ───────────────────────────────────────────────
+  const hadSaved=load();
+  buildTray();
+  refreshCalibLabels();
+  setBtn("btn-snap",state.snap);
+  setBtn("btn-grid",state.grid);
+  renderGrid();
+  renderTokens();
+  const mapImg=document.getElementById("map");
+  if(hadSaved){ applyView(); } else { if(mapImg.complete) fitView(); else mapImg.onload=fitView; }
+  setTimeout(()=>toast("ลากเพื่อเลื่อน · สกอลล์เพื่อซูม · คลิกโทเคนในถาดเพื่อวาง"),500);
+})();
+</script>
+</body>
+</html>

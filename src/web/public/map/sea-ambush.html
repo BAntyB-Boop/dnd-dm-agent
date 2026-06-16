@@ -50,6 +50,10 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg-deep);color
 .token:hover{box-shadow:0 0 0 3px rgba(246,239,210,.5),0 4px 14px rgba(0,0,0,.7),inset 0 2px 6px rgba(255,255,255,.25)}
 .token.dragging{cursor:grabbing;box-shadow:0 0 0 3px var(--gold-bright),0 10px 26px rgba(0,0,0,.8);z-index:50!important}
 .token .tk-label{pointer-events:none;line-height:1;white-space:nowrap}
+.token.has-img{background-size:cover!important;background-position:center!important;color:transparent}
+.token .tk-cap{position:absolute;left:50%;bottom:-15px;transform:translateX(-50%);
+  font-family:"Cinzel",serif;font-size:10px;font-weight:600;color:var(--gold-bright);
+  white-space:nowrap;pointer-events:none;text-shadow:0 1px 3px #000,0 0 4px #000}
 
 /* ── Top toolbar ─────────────────────────────────────────── */
 #topbar{position:fixed;top:0;left:0;right:0;height:50px;z-index:100;
@@ -90,6 +94,55 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg-deep);color
 .tray-tok:active{transform:scale(.95)}
 .tray-tip{font-family:"Noto Serif Thai",serif;font-size:10px;color:var(--ink-mute);line-height:1.5;margin-top:10px;
   padding-top:8px;border-top:1px solid rgba(201,164,92,.12)}
+/* custom token tray item (with optional image) */
+.tray-tok.img{background-size:cover;background-position:center;color:transparent}
+.tray-tok-wrap{position:relative}
+.tray-tok-wrap .tt-del{position:absolute;top:-4px;right:-4px;width:15px;height:15px;border-radius:50%;
+  background:var(--blood);color:#fff;border:1px solid #000;font-size:10px;line-height:13px;text-align:center;
+  cursor:pointer;display:none;z-index:2}
+.tray-tok-wrap:hover .tt-del{display:block}
+.tray-new{width:100%;margin-top:8px;font-family:"Cinzel",serif;font-size:9.5px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--gold-bright);background:rgba(201,164,92,.1);
+  border:1px dashed rgba(201,164,92,.5);border-radius:4px;padding:8px;cursor:pointer;
+  transition:background .15s,border-color .15s}
+.tray-new:hover{background:rgba(201,164,92,.2);border-color:var(--gold)}
+
+/* ── New-token modal ─────────────────────────────────────── */
+#modal{position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;
+  background:rgba(4,4,8,.72);backdrop-filter:blur(4px)}
+#modal.open{display:flex}
+.modal-card{width:min(360px,92vw);background:linear-gradient(180deg,var(--bg-card-2),var(--bg-card));
+  border:1px solid rgba(201,164,92,.3);border-radius:8px;padding:22px;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+.modal-card h3{font-family:"Cinzel Decorative",serif;font-size:16px;color:var(--gold-bright);
+  letter-spacing:.04em;margin-bottom:16px;text-align:center}
+.mf-row{margin-bottom:14px}
+.mf-row > label{display:block;font-family:"Cinzel",serif;font-size:9px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--gold-dim);margin-bottom:6px}
+.mf-input{width:100%;background:var(--bg-deep);border:1px solid rgba(201,164,92,.25);border-radius:4px;
+  color:var(--ink);font-family:"Noto Serif Thai",serif;font-size:14px;padding:9px 11px;outline:none}
+.mf-input:focus{border-color:var(--gold)}
+.mf-colors{display:flex;flex-wrap:wrap;gap:7px;align-items:center}
+.mf-sw{width:26px;height:26px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:transform .12s}
+.mf-sw:hover{transform:scale(1.15)}
+.mf-sw.sel{border-color:var(--gold-bright);box-shadow:0 0 0 2px rgba(246,239,210,.4)}
+.mf-color-native{width:30px;height:30px;border:1px solid rgba(201,164,92,.4);border-radius:50%;
+  background:none;cursor:pointer;padding:0;overflow:hidden}
+.mf-img{display:flex;align-items:center;gap:12px}
+.mf-preview{width:54px;height:54px;border-radius:50%;flex:none;border:2px solid rgba(201,164,92,.4);
+  background-size:cover;background-position:center;display:flex;align-items:center;justify-content:center;
+  font-family:"Cinzel",serif;font-weight:700;color:#fff;font-size:20px;text-shadow:0 1px 3px #000}
+.mf-file{font-family:"Cinzel",serif;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink-soft);background:rgba(201,164,92,.06);border:1px solid rgba(201,164,92,.3);
+  border-radius:4px;padding:8px 12px;cursor:pointer}
+.mf-file:hover{color:var(--gold-bright);border-color:var(--gold)}
+.mf-clear{font-size:11px;color:var(--ink-mute);cursor:pointer;text-decoration:underline}
+.modal-actions{display:flex;gap:10px;margin-top:6px}
+.modal-actions button{flex:1;font-family:"Cinzel",serif;font-size:10px;letter-spacing:.16em;text-transform:uppercase;
+  border-radius:4px;padding:11px;cursor:pointer;border:1px solid rgba(201,164,92,.3)}
+.btn-cancel{background:transparent;color:var(--ink-soft)}
+.btn-cancel:hover{color:var(--ink);border-color:var(--ink-mute)}
+.btn-ok{background:var(--gold);color:#1a1206;border-color:var(--gold);font-weight:600}
+.btn-ok:hover{background:var(--gold-bright)}
 
 /* ── Calibration panel (bottom-left, collapsible) ────────── */
 #calib{position:fixed;left:12px;bottom:12px;z-index:90;width:188px;
@@ -181,6 +234,9 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg-deep);color
   <div class="tray-grid" id="grp-ally"></div>
   <div class="tray-h">Enemies</div>
   <div class="tray-grid" id="grp-enemy"></div>
+  <div class="tray-h">Custom</div>
+  <div class="tray-grid" id="grp-custom"></div>
+  <button class="tray-new" id="btn-new-token">＋ New Token</button>
   <div class="tray-tip">คลิกเพื่อวางโทเคน · ลากเพื่อย้าย · <b>ดับเบิลคลิก</b>เพื่อลบ</div>
 </div>
 
@@ -219,6 +275,46 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg-deep);color
   <a class="corner-btn" href="/" title="Home">⌂ The Veiled Codex</a>
 </div>
 
+<!-- New-token modal -->
+<div id="modal">
+  <div class="modal-card">
+    <h3 id="modal-title">สร้างโทเคนใหม่</h3>
+    <div class="mf-row">
+      <label>ชื่อ / ตัวอักษร</label>
+      <input type="text" class="mf-input" id="mf-name" placeholder="เช่น Aria หรือ A" maxlength="14" />
+    </div>
+    <div class="mf-row">
+      <label>สี</label>
+      <div class="mf-colors" id="mf-colors">
+        <span class="mf-sw" data-c="#3b82f6" style="background:#3b82f6"></span>
+        <span class="mf-sw" data-c="#22c55e" style="background:#22c55e"></span>
+        <span class="mf-sw" data-c="#eab308" style="background:#eab308"></span>
+        <span class="mf-sw" data-c="#06b6d4" style="background:#06b6d4"></span>
+        <span class="mf-sw" data-c="#ef4444" style="background:#ef4444"></span>
+        <span class="mf-sw" data-c="#a855f7" style="background:#a855f7"></span>
+        <span class="mf-sw" data-c="#ec4899" style="background:#ec4899"></span>
+        <span class="mf-sw" data-c="#c9a45c" style="background:#c9a45c"></span>
+        <input type="color" class="mf-color-native" id="mf-color-native" value="#3b82f6" title="เลือกสีเอง" />
+      </div>
+    </div>
+    <div class="mf-row">
+      <label>รูป (ไม่บังคับ)</label>
+      <div class="mf-img">
+        <div class="mf-preview" id="mf-preview"></div>
+        <div>
+          <label class="mf-file" for="mf-file-input">เลือกรูป…</label>
+          <input type="file" id="mf-file-input" accept="image/*" style="display:none" />
+          <div class="mf-clear" id="mf-clear" style="display:none;margin-top:6px">ลบรูป</div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" id="mf-cancel">ยกเลิก</button>
+      <button class="btn-ok" id="mf-add">เพิ่มลงถาด</button>
+    </div>
+  </div>
+</div>
+
 <div id="hint"></div>
 
 <script>
@@ -238,9 +334,11 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg-deep);color
     view:{x:0,y:0,scale:1},
     cell:55, ox:0, oy:0,
     snap:true, grid:false, ruler:false,
-    tokens:[]   // {id,label,color,size,x,y}
+    tokens:[],      // {id,label,color,size,x,y,img?}
+    customDefs:[]   // {key,label,color,img?}  user-created reusable tokens
   };
   let nextId = 1;
+  let nextDefId = 1;
 
   // ── Token definitions ──────────────────────────────────
   const DEFS = {
@@ -264,10 +362,13 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg-deep);color
 
   // ── Persistence ────────────────────────────────────────
   function save(){
-    try{ localStorage.setItem(LS_KEY, JSON.stringify({
-      view:state.view, cell:state.cell, ox:state.ox, oy:state.oy,
-      snap:state.snap, grid:state.grid, tokens:state.tokens
-    })); }catch(e){}
+    try{
+      const tokens=state.tokens.map(t=>({id:t.id,label:t.label,color:t.color,size:t.size,x:t.x,y:t.y,img:t.img}));
+      localStorage.setItem(LS_KEY, JSON.stringify({
+        view:state.view, cell:state.cell, ox:state.ox, oy:state.oy,
+        snap:state.snap, grid:state.grid, tokens, customDefs:state.customDefs
+      }));
+    }catch(e){ console.warn("save failed",e); }
   }
   function load(){
     try{
@@ -280,6 +381,7 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg-deep);color
       if(typeof d.snap==="boolean") state.snap=d.snap;
       if(typeof d.grid==="boolean") state.grid=d.grid;
       if(Array.isArray(d.tokens)){ state.tokens=d.tokens; for(const t of state.tokens) nextId=Math.max(nextId,t.id+1); }
+      if(Array.isArray(d.customDefs)){ state.customDefs=d.customDefs; for(const def of state.customDefs){ const n=parseInt(String(def.key).replace(/\D/g,""),10); if(n) nextDefId=Math.max(nextDefId,n+1); } }
       return true;
     }catch(e){ return false; }
   }
@@ -325,8 +427,15 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg-deep);color
   function makeTokenEl(t){
     const el=document.createElement("div");
     el.className="token"; el.dataset.id=t.id;
-    el.style.background=`radial-gradient(circle at 35% 30%, ${lighten(t.color,30)}, ${t.color} 70%, ${darken(t.color,25)})`;
-    el.innerHTML=`<span class="tk-label">${t.label}</span>`;
+    if(t.img){
+      el.classList.add("has-img");
+      el.style.backgroundImage=`url(${t.img})`;
+      el.style.borderColor=t.color||"rgba(0,0,0,.6)";
+      el.innerHTML = t.label ? `<span class="tk-cap">${escapeHtml(t.label)}</span>` : "";
+    } else {
+      el.style.background=`radial-gradient(circle at 35% 30%, ${lighten(t.color,30)}, ${t.color} 70%, ${darken(t.color,25)})`;
+      el.innerHTML=`<span class="tk-label">${escapeHtml(t.label)}</span>`;
+    }
     positionToken(el,t);
     attachTokenDrag(el,t);
     world.appendChild(el);
@@ -349,8 +458,9 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg-deep);color
     let p=snapPoint(c.x+jitter, c.y+jitter);
     p.x=Math.max(0,Math.min(IMG_W,p.x)); p.y=Math.max(0,Math.min(IMG_H,p.y));
     const t={id:nextId++,label:def.label,color:def.color,size:def.size||1,x:p.x,y:p.y};
+    if(def.img) t.img=def.img;
     state.tokens.push(t); makeTokenEl(t); save();
-    toast(def.key+" วางแล้ว");
+    toast((def.key||def.label||"Token")+" วางแล้ว");
   }
   function removeToken(t){
     const i=state.tokens.indexOf(t);
@@ -382,6 +492,27 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg-deep);color
       if(moved){ const p=snapPoint(t.x,t.y); t.x=p.x; t.y=p.y; el.style.left=t.x+"px"; el.style.top=t.y+"px"; save(); }
     });
     el.addEventListener("dblclick",e=>{ e.stopPropagation(); removeToken(t); });
+  }
+
+  function escapeHtml(s){ return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+
+  // Downscale an uploaded image to a 128px square JPEG dataURL (keeps localStorage small)
+  function processImage(file,cb){
+    const reader=new FileReader();
+    reader.onload=ev=>{
+      const img=new Image();
+      img.onload=()=>{
+        const S=128, c=document.createElement("canvas"); c.width=S; c.height=S;
+        const ctx=c.getContext("2d");
+        const scale=Math.max(S/img.width,S/img.height);
+        const w=img.width*scale, h=img.height*scale;
+        ctx.drawImage(img,(S-w)/2,(S-h)/2,w,h);
+        cb(c.toDataURL("image/jpeg",0.85));
+      };
+      img.onerror=()=>cb(null);
+      img.src=ev.target.result;
+    };
+    reader.readAsDataURL(file);
   }
 
   // colour helpers
@@ -465,17 +596,36 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg-deep);color
   document.getElementById("btn-tray").onclick=function(){ document.getElementById("tray").classList.toggle("hidden"); };
 
   // ── Tray buttons ───────────────────────────────────────
+  function styleTrayTok(b,def){
+    if(def.img){ b.classList.add("img"); b.style.backgroundImage=`url(${def.img})`; b.textContent=""; }
+    else { b.style.background=`radial-gradient(circle at 35% 30%, ${lighten(def.color,30)}, ${def.color} 70%, ${darken(def.color,25)})`; b.textContent=def.label; }
+  }
   function buildTray(){
     const map={pc:"grp-pc",ally:"grp-ally",enemy:"grp-enemy"};
     for(const grp in DEFS){
       const host=document.getElementById(map[grp]);
       for(const def of DEFS[grp]){
         const b=document.createElement("button");
-        b.className="tray-tok"; b.title=def.key; b.textContent=def.label;
-        b.style.background=`radial-gradient(circle at 35% 30%, ${lighten(def.color,30)}, ${def.color} 70%, ${darken(def.color,25)})`;
+        b.className="tray-tok"; b.title=def.key;
+        styleTrayTok(b,def);
         b.onclick=()=>spawnToken(def);
         host.appendChild(b);
       }
+    }
+    renderCustomTray();
+  }
+  function renderCustomTray(){
+    const host=document.getElementById("grp-custom");
+    host.innerHTML="";
+    for(const def of state.customDefs){
+      const wrap=document.createElement("div"); wrap.className="tray-tok-wrap";
+      const b=document.createElement("button");
+      b.className="tray-tok"; b.title=def.label||def.key;
+      styleTrayTok(b,def);
+      b.onclick=()=>spawnToken(def);
+      const del=document.createElement("span"); del.className="tt-del"; del.textContent="×"; del.title="ลบจากถาด";
+      del.onclick=(e)=>{ e.stopPropagation(); const i=state.customDefs.indexOf(def); if(i>=0){ state.customDefs.splice(i,1); renderCustomTray(); save(); } };
+      wrap.appendChild(b); wrap.appendChild(del); host.appendChild(wrap);
     }
   }
 
@@ -495,6 +645,45 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg-deep);color
       save();
     };
   });
+
+  // ── New-token modal ────────────────────────────────────
+  const modal=document.getElementById("modal");
+  const mfName=document.getElementById("mf-name");
+  const mfColors=document.getElementById("mf-colors");
+  const mfNative=document.getElementById("mf-color-native");
+  const mfFile=document.getElementById("mf-file-input");
+  const mfPreview=document.getElementById("mf-preview");
+  const mfClear=document.getElementById("mf-clear");
+  let formColor="#3b82f6", formImg=null;
+
+  function updatePreview(){
+    if(formImg){ mfPreview.style.backgroundImage=`url(${formImg})`; mfPreview.style.background=""; mfPreview.style.backgroundImage=`url(${formImg})`; mfPreview.textContent=""; mfClear.style.display=""; }
+    else { mfPreview.style.backgroundImage="none";
+      mfPreview.style.background=`radial-gradient(circle at 35% 30%, ${lighten(formColor,30)}, ${formColor} 70%, ${darken(formColor,25)})`;
+      mfPreview.textContent=(mfName.value.trim()[0]||"?").toUpperCase(); mfClear.style.display="none"; }
+  }
+  function selectColor(c){ formColor=c; mfNative.value=c;
+    mfColors.querySelectorAll(".mf-sw").forEach(s=>s.classList.toggle("sel",s.dataset.c===c)); updatePreview(); }
+  function openModal(){ mfName.value=""; formImg=null; mfFile.value=""; selectColor("#3b82f6"); updatePreview(); modal.classList.add("open"); setTimeout(()=>mfName.focus(),50); }
+  function closeModal(){ modal.classList.remove("open"); }
+
+  document.getElementById("btn-new-token").onclick=openModal;
+  mfColors.querySelectorAll(".mf-sw").forEach(s=>{ s.onclick=()=>selectColor(s.dataset.c); });
+  mfNative.oninput=()=>{ formColor=mfNative.value; mfColors.querySelectorAll(".mf-sw").forEach(s=>s.classList.remove("sel")); updatePreview(); };
+  mfName.oninput=updatePreview;
+  mfFile.onchange=()=>{ const f=mfFile.files[0]; if(!f) return; processImage(f,d=>{ if(d){ formImg=d; updatePreview(); } else toast("โหลดรูปไม่สำเร็จ"); }); };
+  mfClear.onclick=()=>{ formImg=null; mfFile.value=""; updatePreview(); };
+  document.getElementById("mf-cancel").onclick=closeModal;
+  modal.addEventListener("click",e=>{ if(e.target===modal) closeModal(); });
+  document.getElementById("mf-add").onclick=()=>{
+    const label=mfName.value.trim();
+    if(!label && !formImg){ toast("ใส่ชื่อหรือเลือกรูปก่อน"); return; }
+    const def={key:"C"+(nextDefId++), label, color:formColor};
+    if(formImg) def.img=formImg;
+    state.customDefs.push(def);
+    renderCustomTray(); save(); closeModal();
+    spawnToken(def);   // place one immediately
+  };
 
   // ── Music ──────────────────────────────────────────────
   const audio=document.getElementById("bg-audio");
@@ -525,10 +714,13 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg-deep);color
 
   // ── Keyboard ───────────────────────────────────────────
   window.addEventListener("keydown",e=>{
+    if(e.key==="Escape"){ if(modal.classList.contains("open")){ closeModal(); return; } if(state.ruler){ document.getElementById("btn-ruler").click(); } return; }
+    const tag=(e.target.tagName||"").toLowerCase();
+    if(tag==="input"||tag==="textarea"||modal.classList.contains("open")) return;
     if(e.key==="r"||e.key==="R") document.getElementById("btn-ruler").click();
     else if(e.key==="g"||e.key==="G") document.getElementById("btn-grid").click();
     else if(e.key==="f"||e.key==="F") fitView();
-    else if(e.key==="Escape"){ if(state.ruler){ document.getElementById("btn-ruler").click(); } }
+    else if(e.key==="n"||e.key==="N") openModal();
   });
 
   window.addEventListener("resize",()=>{ /* keep current view */ });

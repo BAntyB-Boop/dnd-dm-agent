@@ -194,6 +194,54 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg-deep);color
 .m-vol::-moz-range-thumb{width:11px;height:11px;border-radius:50%;background:var(--gold-bright);border:none;cursor:pointer}
 @media (max-width:760px){#music{display:none}}
 
+/* ── Info panel (token details) ──────────────────────────── */
+#info{position:fixed;top:62px;right:12px;bottom:12px;z-index:96;width:300px;
+  background:linear-gradient(180deg,rgba(21,21,28,.98),rgba(14,14,22,.98));
+  border:1px solid rgba(201,164,92,.28);border-radius:8px;overflow:hidden;
+  box-shadow:0 18px 50px rgba(0,0,0,.6);transform:translateX(118%);transition:transform .3s;
+  display:flex;flex-direction:column}
+#info.open{transform:translateX(0)}
+.info-hero{position:relative;height:128px;flex:none;overflow:hidden;background:#0a0a12;
+  border-bottom:1px solid rgba(201,164,92,.2)}
+.info-hero img{width:100%;height:100%;object-fit:cover;object-position:center 28%}
+.info-hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 35%,rgba(14,14,22,.97))}
+.info-close{position:absolute;top:8px;right:8px;z-index:3;width:26px;height:26px;border-radius:50%;
+  background:rgba(6,6,12,.7);border:1px solid rgba(201,164,92,.4);color:var(--gold-bright);cursor:pointer;
+  font-size:15px;line-height:1;display:flex;align-items:center;justify-content:center}
+.info-close:hover{border-color:var(--gold);background:rgba(80,10,10,.5)}
+.info-name{position:absolute;left:14px;right:42px;bottom:8px;z-index:2;font-family:"Cinzel Decorative",serif;
+  font-size:17px;line-height:1.15;color:var(--gold-bright);text-shadow:0 2px 6px #000}
+.info-scroll{flex:1;overflow-y:auto;padding:12px 14px 18px}
+.info-scroll::-webkit-scrollbar{width:7px}
+.info-scroll::-webkit-scrollbar-thumb{background:rgba(201,164,92,.35);border-radius:7px}
+.info-role{font-family:"Cinzel",serif;font-size:9px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--gold-dim);margin-bottom:10px}
+.info-core{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(201,164,92,.15);
+  border:1px solid rgba(201,164,92,.25);margin-bottom:12px}
+.icc{background:var(--bg-deep);padding:7px 4px;text-align:center}
+.icc-l{font-family:"Cinzel",serif;font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-dim)}
+.icc-v{font-family:"Cinzel",serif;font-size:13px;color:var(--gold-bright)}
+.info-ab{display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background:rgba(201,164,92,.15);
+  border:1px solid rgba(201,164,92,.25);margin-bottom:12px}
+.iab{background:var(--bg-deep);padding:6px 1px;text-align:center}
+.iab-l{font-family:"Cinzel",serif;font-size:7.5px;letter-spacing:.06em;color:var(--gold-dim)}
+.iab-v{font-family:"Cinzel",serif;font-size:11px;color:var(--ink)}
+.iab-m{font-size:8.5px;color:var(--ink-mute)}
+.info-row{font-size:12.5px;line-height:1.55;color:rgba(232,226,207,.7);padding:4px 0;
+  border-bottom:1px dashed rgba(201,164,92,.1)}
+.info-row b{font-family:"Cinzel",serif;font-size:8.5px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--gold);margin-right:5px}
+.info-sub-h{font-family:"Cinzel",serif;font-size:9px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--gold-dim);margin:14px 0 6px}
+.info-act{margin-top:7px;padding:8px 10px;background:rgba(201,164,92,.05);
+  border-left:2px solid rgba(201,164,92,.35);border-radius:2px}
+.info-act-n{font-family:"Cinzel",serif;font-size:11px;color:var(--gold-bright);margin-bottom:3px}
+.info-act-n em{font-style:italic;color:var(--gold-dim);font-size:10px;margin-left:4px;text-transform:none;letter-spacing:0}
+.info-act-d{font-size:12px;line-height:1.5;color:rgba(232,226,207,.62)}
+.info-quote{margin-top:12px;padding:9px 12px;background:rgba(201,164,92,.06);border-left:2px solid var(--gold);
+  font-style:italic;font-size:12.5px;line-height:1.55;color:rgba(246,239,210,.72)}
+@media (max-width:760px){#info{width:auto;left:12px;right:12px;top:auto;height:54%}}
+
 /* Hint toast */
 #hint{position:fixed;left:50%;top:60px;transform:translateX(-50%);z-index:95;
   font-family:"Noto Serif Thai",serif;font-size:12px;color:var(--gold-bright);
@@ -273,6 +321,16 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg-deep);color
 <div id="corner">
   <a class="corner-btn" href="/oneshot/sea-ambush" title="DM Guide">📖 DM Guide</a>
   <a class="corner-btn" href="/" title="Home">⌂ The Veiled Codex</a>
+</div>
+
+<!-- Token detail panel -->
+<div id="info">
+  <div class="info-hero">
+    <img id="info-img" alt="" />
+    <button class="info-close" id="info-close" aria-label="ปิด">×</button>
+    <div class="info-name" id="info-name"></div>
+  </div>
+  <div class="info-scroll" id="info-scroll"></div>
 </div>
 
 <!-- New-token modal -->
@@ -363,7 +421,7 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg-deep);color
   // ── Persistence ────────────────────────────────────────
   function save(){
     try{
-      const tokens=state.tokens.map(t=>({id:t.id,label:t.label,color:t.color,size:t.size,x:t.x,y:t.y,img:t.img}));
+      const tokens=state.tokens.map(t=>({id:t.id,defKey:t.defKey,label:t.label,color:t.color,size:t.size,x:t.x,y:t.y,img:t.img}));
       localStorage.setItem(LS_KEY, JSON.stringify({
         view:state.view, cell:state.cell, ox:state.ox, oy:state.oy,
         snap:state.snap, grid:state.grid, tokens, customDefs:state.customDefs
@@ -457,15 +515,89 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg-deep);color
     const jitter=(state.tokens.length%5)*state.cell*0.5;
     let p=snapPoint(c.x+jitter, c.y+jitter);
     p.x=Math.max(0,Math.min(IMG_W,p.x)); p.y=Math.max(0,Math.min(IMG_H,p.y));
-    const t={id:nextId++,label:def.label,color:def.color,size:def.size||1,x:p.x,y:p.y};
+    const t={id:nextId++,defKey:def.key,label:def.label,color:def.color,size:def.size||1,x:p.x,y:p.y};
     if(def.img) t.img=def.img;
     state.tokens.push(t); makeTokenEl(t); save();
     toast((def.key||def.label||"Token")+" วางแล้ว");
   }
   function removeToken(t){
     const i=state.tokens.indexOf(t);
-    if(i>=0){ state.tokens.splice(i,1); if(t._el) t._el.remove(); save(); }
+    if(i>=0){ state.tokens.splice(i,1); if(t._el) t._el.remove(); if(currentInfo===t) closeInfo(); save(); }
   }
+
+  // ── Token detail panel ─────────────────────────────────
+  const INFO = {
+    Tarn:{ name:"Captain Tarn", role:"กัปตันเรือ · Veteran",
+      core:[["AC","13"],["HP","18"],["Hit","+4"]],
+      traits:[["Weapon","Cutlass — 1d8+2 slashing"],["อายุ","50 · ผิวสีเชือกเปื้อนน้ำเค็ม"],
+        ["บทบาท","ยืนหางเสือ ออกคำสั่ง · ให้ Inspiration 1/encounter"],["ประวัติ","ล่องเส้น Porto Stellare 38 ครั้ง · ฆ่า sahuagin 11 ครั้ง"]],
+      quote:"38 ครั้ง · ฉัน — ไม่เคย — เห็นพวกมัน — มีคนนำ" },
+    Ren:{ name:"First Mate Ren", role:"ต้นเรือ · Young Professional",
+      core:[["AC","12"],["HP","14"],["Hit","+3"]],
+      traits:[["Weapon","Shortsword — 1d6+1 piercing"],["อายุ","22 · ลูกชาวประมง"],
+        ["บทบาท","กลางลำเรือ เคลื่อนช่วยทุกคน"],["เครื่องหมาย","สร้อยคอรูปเบ็ดตกปลา (ของพ่อ)"]],
+      quote:"พี่ Tarn... น้ำตรงนี้... มันไม่ขยับ..." },
+    Bessa:{ name:"Cook Bessa", role:"แม่ครัว · The Survivor",
+      core:[["AC","11"],["HP","12"],["Hit","+2"]],
+      traits:[["Weapon","Cleaver — 1d6 slashing"],["อายุ","45 · หญิงร่างใหญ่ใจดี"],
+        ["บทบาท","ใต้ดาดฟ้า ลั่นกลอนครัว · ขึ้นช่วยถ้าจำเป็น"],["เครื่องหมาย","มีดสับเนื้อ 3 เล่ม 'เผื่อ'"]],
+      quote:"กัปตัน — ลั่นกลอนแล้ว · เตือนถ้าต้องการขึ้น" },
+    Sahuagin:{ name:"Sahuagin Warrior", role:"Medium humanoid (sahuagin) · LE", cr:"CR 1/2",
+      core:[["AC","12"],["HP","22"],["Speed","30 / sw 40"]],
+      ab:[["STR","13","+1"],["DEX","11","+0"],["CON","12","+1"],["INT","12","+1"],["WIS","13","+1"],["CHA","9","−1"]],
+      traits:[["Senses","Darkvision 120 ft · Perception +5"],["Blood Frenzy","Advantage บน melee เมื่อ target HP &lt; ครึ่ง"],
+        ["Amphibious","หายใจในน้ำ · บนบกต้องเปียกทุก 4 ชม."]],
+      actions:[
+        {n:"Multiattack",meta:"Action",d:"Bite + Claws หรือ Spear"},
+        {n:"Bite",meta:"+3, 5 ft",d:"3 (1d4+1) piercing"},
+        {n:"Claws",meta:"+3, 5 ft",d:"3 (1d4+1) slashing"},
+        {n:"Spear",meta:"+3, 20–60 ft",d:"4 (1d6+1) · 1d8+1 สองมือ"}],
+      quote:"ปีนขึ้น 4 มุม · มุ่ง target HP ต่ำสุด · ตกน้ำแล้วฉลามมา assist" },
+    Shark:{ name:"Reef Shark", role:"Medium beast · unaligned", cr:"CR 1/2",
+      core:[["AC","12"],["HP","22"],["Speed","sw 40"]],
+      ab:[["STR","14","+2"],["DEX","13","+1"],["CON","13","+1"],["INT","1","−5"],["WIS","10","+0"],["CHA","4","−3"]],
+      traits:[["Senses","Blindsight 30 ft"],["Pack Tactics","Advantage เมื่อมีพันธมิตรติด target"],["Water Breathing","หายใจในน้ำเท่านั้น"]],
+      actions:[{n:"Bite",meta:"+4, 5 ft (ในน้ำ)",d:"6 (1d8+2) piercing"}],
+      quote:"กัดท้องเรือเพิ่ม Hull Damage · มีคนตกน้ำ = สลับเป้าทันที · Priestess ตาย → หนี" },
+    Priestess:{ name:"Sahuagin Priestess", role:"Voice of the Bay · Boss", cr:"CR 2",
+      core:[["AC","12"],["HP","33"],["Speed","30 / sw 40"]],
+      ab:[["STR","13","+1"],["DEX","11","+0"],["CON","12","+1"],["INT","12","+1"],["WIS","13","+1"],["CHA","12","+1"]],
+      traits:[["Senses","Darkvision 120 ft · passive 15"],["Blood Frenzy","Adv melee vs target HP &lt; ครึ่ง"],
+        ["Shark Telepathy","สื่อสารฉลามใน 120 ft"]],
+      actions:[
+        {n:"Multiattack",meta:"Action",d:"trident หรือ trident + bite"},
+        {n:"Trident",meta:"+3, 5 / 20–60 ft",d:"4 (1d6+1) piercing"},
+        {n:"Spellcasting",meta:"save DC 11",d:"Sacred Flame, Hold Person, Spiritual Weapon, Cure Wounds, Inflict Wounds"},
+        {n:"Voice of the Pull",meta:"Recharge 5–6",d:"กรวย 30 ft · WIS DC 12 · Fail = Restrained 1 รอบ + เห็นภาพอุโมงค์ใต้ดิน"},
+        {n:"Resonant Call",meta:"1/enc · Reaction",d:"พันธมิตรตาย → Sahuagin/Shark ใน 60 ft ได้ Advantage 1 รอบ"}],
+      quote:"HP ≤ 50% ดำลงน้ำ ส่ง octopus tentacle ป้อง 2 รอบ แล้วหนี" },
+  };
+
+  let currentInfo=null;
+  const infoEl=document.getElementById("info");
+  function renderInfo(i){
+    let h="";
+    if(i.role) h+=`<div class="info-role">${i.role}${i.cr?` · ${i.cr}`:""}</div>`;
+    if(i.core) h+=`<div class="info-core">`+i.core.map(c=>`<div class="icc"><div class="icc-l">${c[0]}</div><div class="icc-v">${c[1]}</div></div>`).join("")+`</div>`;
+    if(i.ab) h+=`<div class="info-ab">`+i.ab.map(a=>`<div class="iab"><div class="iab-l">${a[0]}</div><div class="iab-v">${a[1]}</div><div class="iab-m">${a[2]}</div></div>`).join("")+`</div>`;
+    if(i.traits) h+=i.traits.map(r=>`<div class="info-row"><b>${r[0]}</b>${r[1]}</div>`).join("");
+    if(i.actions) h+=`<div class="info-sub-h">Actions</div>`+i.actions.map(a=>`<div class="info-act"><div class="info-act-n">${a.n}${a.meta?` <em>${a.meta}</em>`:""}</div><div class="info-act-d">${a.d}</div></div>`).join("");
+    if(i.quote) h+=`<div class="info-quote">“${i.quote}”</div>`;
+    return h;
+  }
+  function showInfo(t){
+    currentInfo=t;
+    const info=INFO[t.defKey];
+    document.getElementById("info-name").textContent = info ? info.name : (t.label || "Token");
+    const imgEl=document.getElementById("info-img");
+    if(t.img){ imgEl.style.display=""; imgEl.src=t.img; } else { imgEl.style.display="none"; }
+    document.getElementById("info-scroll").innerHTML = info
+      ? renderInfo(info)
+      : `<div class="info-role">โทเคนกำหนดเอง</div><div class="info-row">ไม่มีข้อมูลรายละเอียดสำหรับโทเคนนี้</div>`;
+    infoEl.classList.add("open");
+  }
+  function closeInfo(){ infoEl.classList.remove("open"); currentInfo=null; }
+  document.getElementById("info-close").onclick=closeInfo;
 
   function attachTokenDrag(el,t){
     let moved=false, startWX=0, startWY=0, startTX=0, startTY=0, pid=null;
@@ -490,6 +622,7 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg-deep);color
       el.releasePointerCapture(pid); pid=null;
       el.classList.remove("dragging");
       if(moved){ const p=snapPoint(t.x,t.y); t.x=p.x; t.y=p.y; el.style.left=t.x+"px"; el.style.top=t.y+"px"; save(); }
+      else { showInfo(t); }
     });
     el.addEventListener("dblclick",e=>{ e.stopPropagation(); removeToken(t); });
   }
@@ -524,6 +657,7 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg-deep);color
   // ── Pan / zoom ─────────────────────────────────────────
   let panning=false, panPID=null, panSX=0, panSY=0, panVX=0, panVY=0;
   stage.addEventListener("pointerdown",e=>{
+    closeInfo();
     if(state.ruler){ startRuler(e); return; }
     panning=true; panPID=e.pointerId; stage.setPointerCapture(panPID);
     panSX=e.clientX; panSY=e.clientY; panVX=state.view.x; panVY=state.view.y;
@@ -714,7 +848,7 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg-deep);color
 
   // ── Keyboard ───────────────────────────────────────────
   window.addEventListener("keydown",e=>{
-    if(e.key==="Escape"){ if(modal.classList.contains("open")){ closeModal(); return; } if(state.ruler){ document.getElementById("btn-ruler").click(); } return; }
+    if(e.key==="Escape"){ if(modal.classList.contains("open")){ closeModal(); return; } if(infoEl.classList.contains("open")){ closeInfo(); return; } if(state.ruler){ document.getElementById("btn-ruler").click(); } return; }
     const tag=(e.target.tagName||"").toLowerCase();
     if(tag==="input"||tag==="textarea"||modal.classList.contains("open")) return;
     if(e.key==="r"||e.key==="R") document.getElementById("btn-ruler").click();

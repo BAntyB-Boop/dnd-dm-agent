@@ -461,6 +461,37 @@ body.dm-locked .float-back { display: none; }
 }
 body.dm-locked .player-bar { display: none; }
 
+/* Collapse / restore toggle */
+.pb-collapse {
+  position: absolute;
+  top: -14px; left: 50%; transform: translateX(-50%);
+  width: 38px; height: 22px;
+  background: linear-gradient(180deg, #15151c, #0e0e16);
+  border: 1px solid rgba(201,164,92,.32);
+  border-bottom: 1px solid var(--bg-paper);
+  border-radius: 14px 14px 0 0;
+  color: rgba(232,226,207,.55);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  padding: 0;
+  transition: color .2s, border-color .2s, background .2s;
+}
+.pb-collapse:hover { color: var(--gold-bright); border-color: var(--gold); background: linear-gradient(180deg, #1c1c25, #15151c); }
+.pb-collapse svg { width: 14px; height: 14px; transition: transform .3s; }
+
+.player-bar.collapsed {
+  transform: translateY(calc(100% - 22px));
+}
+.player-bar.collapsed .pb-collapse svg { transform: rotate(180deg); }
+.player-bar { transition: transform .35s cubic-bezier(.3,.7,.2,1); }
+
+/* Float-back follows the bar height when collapsed */
+.player-bar.collapsed ~ .float-back,
+body:has(.player-bar.collapsed) .float-back { bottom: 32px !important; }
+@media (max-width: 880px) {
+  body:has(.player-bar.collapsed) .float-back { bottom: 32px !important; }
+}
+
 /* Left: track info */
 .pb-info {
   display: flex; align-items: center; gap: 14px;
@@ -1640,6 +1671,9 @@ body.dm-locked .player-bar { display: none; }
 
 <!-- Spotify-style Music Player Bar -->
 <div class="player-bar" id="music-ctrl">
+  <button class="pb-collapse" id="pb-collapse" aria-label="Hide / show player" title="Hide player">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+  </button>
   <!-- Left: track info -->
   <div class="pb-info">
     <div class="pb-art playing combat" id="pb-art">
@@ -1838,6 +1872,21 @@ VCLock.installOverlay({
   }
   prevBtn.addEventListener('click', () => cycleTrack(-1));
   nextBtn.addEventListener('click', () => cycleTrack(1));
+
+  // Collapse / show toggle — persists in localStorage
+  const COLLAPSE_KEY = 'sea-ambush:player-collapsed';
+  const collapseBtn = document.getElementById('pb-collapse');
+  function setCollapsed(c){
+    ctrl.classList.toggle('collapsed', c);
+    collapseBtn.title = c ? 'Show player' : 'Hide player';
+    try { localStorage.setItem(COLLAPSE_KEY, c ? '1' : '0'); } catch(e){}
+  }
+  try {
+    if (localStorage.getItem(COLLAPSE_KEY) === '1') setCollapsed(true);
+  } catch(e){}
+  collapseBtn.addEventListener('click', () => {
+    setCollapsed(!ctrl.classList.contains('collapsed'));
+  });
 
   // Volume icon also toggles mute (separate from play/pause)
   volIcon.addEventListener('click', () => {

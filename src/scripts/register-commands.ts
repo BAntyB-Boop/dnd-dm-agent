@@ -10,8 +10,9 @@ import * as sessionCmd from "../bot/commands/session.js";
 import * as bugCmd from "../bot/commands/bug.js";
 import * as dm2Cmd from "../bot/commands/dm2.js";
 import * as restCmd from "../bot/commands/rest.js";
+import * as askCmd from "../bot/commands/ask.js";
 
-const commands = [rollCmd, charCmd, combatCmd, dmCmd, campaignCmd, mapCmd, sessionCmd, bugCmd, dm2Cmd, restCmd].map(c => c.data.toJSON());
+const commands = [rollCmd, charCmd, combatCmd, dmCmd, campaignCmd, mapCmd, sessionCmd, bugCmd, dm2Cmd, restCmd, askCmd].map(c => c.data.toJSON());
 
 const rest = new REST({ version: "10" }).setToken(config.discord.token);
 

@@ -10,6 +10,7 @@ import * as sessionCmd from "./commands/session.js";
 import * as bugCmd from "./commands/bug.js";
 import * as dm2Cmd from "./commands/dm2.js";
 import * as restCmd from "./commands/rest.js";
+import * as askCmd from "./commands/ask.js";
 
 const COMPONENT_HANDLERS: Record<string, (i: ButtonInteraction) => Promise<void>> = {
   char:     (i) => charCmd.handleComponent(i),
@@ -28,7 +29,7 @@ interface Command {
 
 const commands = new Collection<string, Command>();
 
-for (const cmd of [rollCmd, charCmd, combatCmd, dmCmd, campaignCmd, mapCmd, sessionCmd, bugCmd, dm2Cmd, restCmd]) {
+for (const cmd of [rollCmd, charCmd, combatCmd, dmCmd, campaignCmd, mapCmd, sessionCmd, bugCmd, dm2Cmd, restCmd, askCmd]) {
   commands.set(cmd.data.name, cmd as Command);
 }
 

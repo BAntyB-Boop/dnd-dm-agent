@@ -519,6 +519,12 @@ body:has(.player-bar.collapsed) .float-back { bottom: 32px !important; }
     radial-gradient(ellipse at 30% 70%, rgba(47,112,136,.6), transparent 60%),
     linear-gradient(135deg, #0a1820, #060c12);
 }
+.pb-art.tide {
+  background:
+    radial-gradient(ellipse at 50% 20%, rgba(120,80,180,.5), transparent 60%),
+    radial-gradient(ellipse at 30% 80%, rgba(40,20,60,.7), transparent 60%),
+    linear-gradient(135deg, #0a0410, #04020a);
+}
 .pb-art-icon {
   position: absolute;
   inset: 0;
@@ -1715,6 +1721,9 @@ body:has(.player-bar.collapsed) .float-back { bottom: 32px !important; }
       <button class="pb-track-btn" data-track="/assets/stella-mara.mp3" data-label="Bay" data-icon="🌙" data-sub="Bay Theme · Aftermath" data-art="bay" data-title="Stella Mara">
         <span class="pb-dot"></span>Bay
       </button>
+      <button class="pb-track-btn" data-track="/assets/black-tide-high.mp3" data-label="Tide" data-icon="🌊" data-sub="Black Tide High · Rising Dread" data-art="tide" data-title="Black Tide High">
+        <span class="pb-dot"></span>Tide
+      </button>
     </div>
     <div class="pb-vol-wrap">
       <button class="pb-vol-icon" id="pb-vol-icon" aria-label="Mute">
@@ -1830,7 +1839,7 @@ VCLock.installOverlay({
       pbTitle.textContent  = matchBtn.dataset.title;
       pbSub.textContent    = matchBtn.dataset.sub;
       pbArtIcon.textContent = matchBtn.dataset.icon;
-      pbArt.classList.remove('combat','bay');
+      pbArt.classList.remove('combat','bay','tide');
       pbArt.classList.add(matchBtn.dataset.art);
     }
   }

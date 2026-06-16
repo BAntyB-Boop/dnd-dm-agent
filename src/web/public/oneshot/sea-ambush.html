@@ -441,96 +441,255 @@ body {
 body.dm-locked .wrap,
 body.dm-locked .float-back { display: none; }
 
-/* ---------- Music control ---------- */
-.music-ctrl {
+/* ════════════════════════════════════════════════════════
+   Spotify-style Music Player (bottom bar)
+════════════════════════════════════════════════════════ */
+.player-bar {
   position: fixed;
-  top: 62px; right: 22px;
-  z-index: 40;
-  display: inline-flex; align-items: center; gap: 10px;
-  padding: 7px 12px;
-  background: linear-gradient(#f6ead0, #e7d4ac);
-  border: 1px solid rgba(92,58,30,0.6);
-  border-radius: 3px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.5), inset 0 0 0 2px rgba(212,160,23,0.14);
-  transition: border-color .25s, box-shadow .25s;
+  bottom: 0; left: 0; right: 0;
+  z-index: 95;
+  height: 84px;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 24px;
+  padding: 0 24px;
+  background: linear-gradient(180deg, rgba(14,14,22,.92), rgba(6,6,12,.98));
+  border-top: 1px solid rgba(201,164,92,.18);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 -10px 30px rgba(0,0,0,.5);
 }
-.music-ctrl:hover {
-  border-color: var(--gold);
-  box-shadow: 0 8px 26px rgba(0,0,0,0.6), 0 0 14px rgba(212,160,23,0.2), inset 0 0 0 2px rgba(212,160,23,0.28);
-}
-.music-btn {
-  background: none; border: none; cursor: pointer;
-  color: var(--gold-deep); padding: 0; display: flex; align-items: center;
-  transition: color .2s, transform .15s;
-}
-.music-btn:hover { color: #3a2a12; transform: scale(1.12); }
-.music-btn svg { width: 14px; height: 14px; }
-.music-vol {
-  -webkit-appearance: none; appearance: none;
-  width: 64px; height: 2px;
-  background: linear-gradient(to right, #8a5e22 var(--fill,30%), rgba(92,58,30,0.3) var(--fill,30%));
-  outline: none; cursor: pointer; border-radius: 2px;
-}
-.music-vol::-webkit-slider-thumb {
-  -webkit-appearance: none; width: 10px; height: 10px; border-radius: 50%;
-  background: #8a5e22; cursor: pointer; box-shadow: 0 0 5px rgba(92,58,30,0.5);
-}
-.music-vol::-moz-range-thumb {
-  width: 10px; height: 10px; border-radius: 50%;
-  background: #8a5e22; cursor: pointer; border: none;
-}
-.music-ctrl.pending .music-btn { animation: music-pulse 1.8s ease-in-out infinite; }
-@keyframes music-pulse {
-  0%,100% { color: var(--gold-deep); }
-  50% { color: #8a5e22; filter: drop-shadow(0 0 5px rgba(212,160,23,0.8)); }
-}
-body.dm-locked .music-ctrl { display: none; }
+body.dm-locked .player-bar { display: none; }
 
-/* Track selector inside music control */
-.music-divider {
-  width: 1px; height: 18px;
-  background: rgba(92,58,30,.45);
-  flex: none;
+/* Left: track info */
+.pb-info {
+  display: flex; align-items: center; gap: 14px;
+  min-width: 0;
 }
-.track-btn {
-  background: none;
-  border: 1px solid rgba(92,58,30,.4);
+.pb-art {
+  width: 56px; height: 56px;
+  border-radius: 4px;
+  flex: none;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(201,164,92,.3);
+  box-shadow: 0 4px 12px rgba(0,0,0,.5);
+  transition: transform .3s, box-shadow .3s;
+}
+.pb-art.combat {
+  background:
+    radial-gradient(ellipse at 30% 30%, rgba(220,80,60,.55), transparent 60%),
+    radial-gradient(ellipse at 70% 80%, rgba(140,30,10,.5), transparent 60%),
+    linear-gradient(135deg, #2a0808, #08020a);
+}
+.pb-art.bay {
+  background:
+    radial-gradient(ellipse at 70% 30%, rgba(120,180,210,.55), transparent 60%),
+    radial-gradient(ellipse at 30% 70%, rgba(47,112,136,.6), transparent 60%),
+    linear-gradient(135deg, #0a1820, #060c12);
+}
+.pb-art-icon {
+  position: absolute;
+  inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,.6));
+}
+.pb-art.playing { animation: pb-art-pulse 3.6s ease-in-out infinite; }
+@keyframes pb-art-pulse {
+  0%,100% { box-shadow: 0 4px 12px rgba(0,0,0,.5), 0 0 0 rgba(201,164,92,0); }
+  50%      { box-shadow: 0 4px 18px rgba(0,0,0,.6), 0 0 24px rgba(201,164,92,.18); }
+}
+
+.pb-text {
+  min-width: 0;
+  display: flex; flex-direction: column; gap: 3px;
+}
+.pb-title {
+  font-family: "Cinzel Decorative", serif;
+  font-size: 14px;
+  color: var(--gold-bright);
+  letter-spacing: .03em;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.pb-sub {
+  font-family: "Cinzel", serif;
+  font-size: 10px; letter-spacing: .22em; text-transform: uppercase;
+  color: rgba(232,226,207,.55);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+/* Center: controls + progress */
+.pb-center {
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  width: min(500px, 50vw);
+}
+.pb-controls {
+  display: flex; align-items: center; gap: 18px;
+}
+.pb-ctrl-btn {
+  background: none; border: none; cursor: pointer;
+  color: rgba(232,226,207,.65);
+  padding: 4px; display: flex; align-items: center; justify-content: center;
+  border-radius: 50%;
+  transition: color .2s, transform .15s, background .2s;
+}
+.pb-ctrl-btn:hover { color: var(--gold-bright); transform: scale(1.1); }
+.pb-ctrl-btn svg { width: 18px; height: 18px; }
+.pb-play {
+  width: 36px; height: 36px;
+  background: var(--gold-bright);
+  color: #08040a;
+  border-radius: 50%;
+}
+.pb-play:hover { background: #fff; color: #08040a; transform: scale(1.08); }
+.pb-play svg { width: 16px; height: 16px; fill: currentColor; }
+.player-bar.pending .pb-play { animation: pb-play-pulse 1.8s ease-in-out infinite; }
+@keyframes pb-play-pulse {
+  0%,100% { box-shadow: 0 0 0 rgba(201,164,92,0); }
+  50%      { box-shadow: 0 0 0 6px rgba(201,164,92,.3); }
+}
+
+.pb-progress-wrap {
+  display: flex; align-items: center; gap: 10px;
+  width: 100%;
+}
+.pb-time {
+  font-family: "Cinzel", serif;
+  font-size: 10px;
+  color: rgba(232,226,207,.45);
+  min-width: 36px;
+  text-align: center;
+}
+.pb-progress {
+  flex: 1;
+  -webkit-appearance: none; appearance: none;
+  height: 4px;
+  background: linear-gradient(to right, var(--gold) var(--fill,0%), rgba(201,164,92,.18) var(--fill,0%));
+  outline: none; cursor: pointer; border-radius: 2px;
+  transition: height .15s;
+}
+.pb-progress:hover { height: 6px; }
+.pb-progress::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--gold-bright);
+  cursor: pointer;
+  box-shadow: 0 0 6px rgba(212,160,23,.6);
+  opacity: 0;
+  transition: opacity .15s;
+}
+.pb-progress:hover::-webkit-slider-thumb { opacity: 1; }
+.pb-progress::-moz-range-thumb {
+  width: 12px; height: 12px; border-radius: 50%;
+  background: var(--gold-bright); cursor: pointer; border: none;
+}
+
+/* Right: track switcher + volume */
+.pb-right {
+  display: flex; align-items: center; justify-content: flex-end;
+  gap: 14px;
+  min-width: 0;
+}
+.pb-tracks {
+  display: flex; gap: 4px;
+}
+.pb-track-btn {
+  background: rgba(201,164,92,.04);
+  border: 1px solid rgba(201,164,92,.22);
   border-radius: 2px;
   cursor: pointer;
-  padding: 4px 8px;
+  padding: 5px 11px;
   font-family: "Cinzel", serif;
-  font-size: 9px; letter-spacing: .14em; text-transform: uppercase;
-  color: rgba(92,58,30,.7);
-  display: inline-flex; align-items: center; gap: 5px;
-  transition: color .2s, border-color .2s, background .2s, transform .15s;
+  font-size: 9.5px; letter-spacing: .18em; text-transform: uppercase;
+  color: rgba(232,226,207,.55);
+  display: inline-flex; align-items: center; gap: 6px;
+  transition: color .2s, border-color .2s, background .2s;
 }
-.track-btn:hover {
-  color: #3a2a12;
-  border-color: var(--gold-deep);
-  background: rgba(212,160,23,.1);
+.pb-track-btn:hover {
+  color: var(--gold-bright);
+  border-color: rgba(201,164,92,.5);
+  background: rgba(201,164,92,.1);
 }
-.track-btn.active {
-  color: #1a0e06;
-  border-color: var(--gold-deep);
-  background: rgba(212,160,23,.28);
-  box-shadow: inset 0 0 0 1px rgba(212,160,23,.4);
+.pb-track-btn.active {
+  color: var(--gold-bright);
+  border-color: var(--gold);
+  background: rgba(201,164,92,.18);
+  box-shadow: inset 0 0 0 1px rgba(212,160,23,.25);
 }
-.track-btn .track-dot {
+.pb-track-btn .pb-dot {
   width: 5px; height: 5px; border-radius: 50%;
-  background: rgba(92,58,30,.4);
+  background: rgba(232,226,207,.3);
   flex: none;
 }
-.track-btn.active .track-dot {
-  background: #1a0e06;
-  box-shadow: 0 0 6px rgba(212,160,23,.7);
-  animation: track-pulse 1.6s ease-in-out infinite;
+.pb-track-btn.active .pb-dot {
+  background: var(--gold-bright);
+  box-shadow: 0 0 6px var(--gold-bright);
+  animation: pb-dot-pulse 1.6s ease-in-out infinite;
 }
-@keyframes track-pulse {
-  0%,100% { opacity: 1; transform: scale(1); }
-  50%      { opacity: .5; transform: scale(.85); }
+@keyframes pb-dot-pulse {
+  0%,100% { opacity: 1; }
+  50%      { opacity: .4; }
 }
-@media (max-width: 720px) {
-  .track-btn { padding: 3px 6px; font-size: 8.5px; letter-spacing: .1em; }
+
+.pb-vol-wrap {
+  display: flex; align-items: center; gap: 8px;
+}
+.pb-vol-icon {
+  color: rgba(232,226,207,.55);
+  display: flex; align-items: center;
+  cursor: pointer;
+  background: none; border: none; padding: 0;
+  transition: color .2s;
+}
+.pb-vol-icon:hover { color: var(--gold-bright); }
+.pb-vol-icon svg { width: 16px; height: 16px; }
+.pb-vol {
+  -webkit-appearance: none; appearance: none;
+  width: 90px; height: 4px;
+  background: linear-gradient(to right, var(--gold) var(--fill,30%), rgba(201,164,92,.18) var(--fill,30%));
+  outline: none; cursor: pointer; border-radius: 2px;
+}
+.pb-vol::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 11px; height: 11px;
+  border-radius: 50%;
+  background: var(--gold-bright);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity .15s;
+}
+.pb-vol:hover::-webkit-slider-thumb { opacity: 1; }
+.pb-vol::-moz-range-thumb {
+  width: 11px; height: 11px; border-radius: 50%;
+  background: var(--gold-bright); cursor: pointer; border: none;
+}
+
+/* Push the floating "Back" button up so it doesn't overlap the bar */
+.float-back { bottom: 100px !important; }
+
+/* Mobile / tablet */
+@media (max-width: 880px) {
+  .player-bar {
+    height: auto;
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 10px 14px;
+  }
+  .pb-info { order: 1; }
+  .pb-center { order: 2; width: 100%; }
+  .pb-right { order: 3; justify-content: space-between; }
+  .pb-art { width: 44px; height: 44px; }
+  .pb-art-icon { font-size: 20px; }
+  .pb-title { font-size: 13px; }
+  .pb-track-btn { padding: 4px 8px; font-size: 8.5px; letter-spacing: .12em; }
+  .pb-vol { width: 70px; }
+  .float-back { bottom: 200px !important; }
+}
+@media (max-width: 480px) {
+  .pb-time { font-size: 9.5px; min-width: 30px; }
+  .pb-track-btn { padding: 3px 6px; font-size: 8px; }
 }
 
 /* ─── NPC card (collapsible w/ portrait) ─── */
@@ -1479,27 +1638,60 @@ body.dm-locked .music-ctrl { display: none; }
 
 <audio id="bg-audio" src="/assets/moonspire-harbor.mp3" preload="auto"></audio>
 
-<!-- Music control -->
-<div class="music-ctrl" id="music-ctrl">
-  <button class="music-btn" id="music-btn" aria-label="Toggle music">
-    <svg id="icon-sound" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
-      <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
-      <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
-    </svg>
-    <svg id="icon-mute" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:none">
-      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
-      <line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/>
-    </svg>
-  </button>
-  <input type="range" class="music-vol" id="music-vol" min="0" max="1" step="0.05" value="0.3" aria-label="Volume">
-  <div class="music-divider"></div>
-  <button class="track-btn active" data-track="/assets/moonspire-harbor.mp3" data-label="Combat" title="Moonspire Harbor — Combat theme">
-    <span class="track-dot"></span>Combat
-  </button>
-  <button class="track-btn" data-track="/assets/stella-mara.mp3" data-label="Bay" title="Stella Mara — Bay theme · aftermath">
-    <span class="track-dot"></span>Bay
-  </button>
+<!-- Spotify-style Music Player Bar -->
+<div class="player-bar" id="music-ctrl">
+  <!-- Left: track info -->
+  <div class="pb-info">
+    <div class="pb-art playing combat" id="pb-art">
+      <div class="pb-art-icon" id="pb-art-icon">⚔</div>
+    </div>
+    <div class="pb-text">
+      <div class="pb-title" id="pb-title">Moonspire Harbor</div>
+      <div class="pb-sub" id="pb-sub">Combat Theme · Sea Ambush</div>
+    </div>
+  </div>
+
+  <!-- Center: controls + progress -->
+  <div class="pb-center">
+    <div class="pb-controls">
+      <button class="pb-ctrl-btn" id="pb-prev" aria-label="Previous track" title="Combat">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
+      </button>
+      <button class="pb-play pb-ctrl-btn" id="music-btn" aria-label="Play / pause">
+        <svg id="icon-sound" viewBox="0 0 24 24" fill="currentColor"><path d="M6 4l14 8-14 8V4z"/></svg>
+        <svg id="icon-mute" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M6 5h4v14H6zm8 0h4v14h-4z"/></svg>
+      </button>
+      <button class="pb-ctrl-btn" id="pb-next" aria-label="Next track" title="Bay">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 6h2v12h-2zM6 6l8.5 6L6 18z"/></svg>
+      </button>
+    </div>
+    <div class="pb-progress-wrap">
+      <div class="pb-time" id="pb-current">0:00</div>
+      <input type="range" class="pb-progress" id="pb-progress" min="0" max="100" value="0" step="0.1" aria-label="Seek">
+      <div class="pb-time" id="pb-duration">0:00</div>
+    </div>
+  </div>
+
+  <!-- Right: tracks + volume -->
+  <div class="pb-right">
+    <div class="pb-tracks">
+      <button class="pb-track-btn active" data-track="/assets/moonspire-harbor.mp3" data-label="Combat" data-icon="⚔" data-sub="Combat Theme · Sea Ambush" data-art="combat" data-title="Moonspire Harbor">
+        <span class="pb-dot"></span>Combat
+      </button>
+      <button class="pb-track-btn" data-track="/assets/stella-mara.mp3" data-label="Bay" data-icon="🌙" data-sub="Bay Theme · Aftermath" data-art="bay" data-title="Stella Mara">
+        <span class="pb-dot"></span>Bay
+      </button>
+    </div>
+    <div class="pb-vol-wrap">
+      <button class="pb-vol-icon" id="pb-vol-icon" aria-label="Mute">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+          <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+        </svg>
+      </button>
+      <input type="range" class="pb-vol" id="music-vol" min="0" max="1" step="0.05" value="0.3" aria-label="Volume">
+    </div>
+  </div>
 </div>
 
 <script src="/shared.js"></script>
@@ -1544,7 +1736,7 @@ VCLock.installOverlay({
   tick();
 })();
 
-// ── Music player — "Voice of the Bay" playlist (starts once the page is unlocked) ──
+// ── Music player — Spotify-style bottom bar ──
 (function(){
   const audio     = document.getElementById('bg-audio');
   const btn       = document.getElementById('music-btn');
@@ -1552,17 +1744,64 @@ VCLock.installOverlay({
   const iconSound = document.getElementById('icon-sound');
   const iconMute  = document.getElementById('icon-mute');
   const volSlider = document.getElementById('music-vol');
+  const volIcon   = document.getElementById('pb-vol-icon');
+  const trackBtns = document.querySelectorAll('.pb-track-btn');
+  const prevBtn   = document.getElementById('pb-prev');
+  const nextBtn   = document.getElementById('pb-next');
+  const progress  = document.getElementById('pb-progress');
+  const currentT  = document.getElementById('pb-current');
+  const durationT = document.getElementById('pb-duration');
+  const pbTitle   = document.getElementById('pb-title');
+  const pbSub     = document.getElementById('pb-sub');
+  const pbArt     = document.getElementById('pb-art');
+  const pbArtIcon = document.getElementById('pb-art-icon');
   if (!audio || !btn) return;
 
-  // Track selector — DM picks Combat / Bay manually. Each track loops itself.
-  const trackBtns = document.querySelectorAll('.track-btn');
   audio.loop = true;
 
-  function setActiveTrack(src){
-    trackBtns.forEach(b => b.classList.toggle('active', b.dataset.track === src));
+  function fmtTime(s){
+    if (!isFinite(s) || s < 0) return '0:00';
+    const m = Math.floor(s / 60);
+    const sec = Math.floor(s % 60);
+    return m + ':' + String(sec).padStart(2, '0');
   }
 
-  // Crossfade switch: fade current out, swap src, fade back in.
+  function updateProgress(){
+    if (!audio.duration || !isFinite(audio.duration)) return;
+    const pct = (audio.currentTime / audio.duration) * 100;
+    progress.value = pct;
+    progress.style.setProperty('--fill', pct + '%');
+    currentT.textContent = fmtTime(audio.currentTime);
+    durationT.textContent = fmtTime(audio.duration);
+  }
+  audio.addEventListener('timeupdate', updateProgress);
+  audio.addEventListener('loadedmetadata', updateProgress);
+
+  // Seek by dragging progress bar
+  progress.addEventListener('input', function(){
+    if (!audio.duration) return;
+    audio.currentTime = (parseFloat(this.value) / 100) * audio.duration;
+    progress.style.setProperty('--fill', this.value + '%');
+  });
+
+  // Find the track button matching a given src
+  function findBtn(src){
+    return [...trackBtns].find(b => src.endsWith(b.dataset.track) || b.dataset.track === src);
+  }
+
+  function setActiveTrack(src){
+    const matchBtn = findBtn(src);
+    trackBtns.forEach(b => b.classList.toggle('active', b === matchBtn));
+    if (matchBtn){
+      pbTitle.textContent  = matchBtn.dataset.title;
+      pbSub.textContent    = matchBtn.dataset.sub;
+      pbArtIcon.textContent = matchBtn.dataset.icon;
+      pbArt.classList.remove('combat','bay');
+      pbArt.classList.add(matchBtn.dataset.art);
+    }
+  }
+
+  // Crossfade switch
   function switchTrack(src){
     if (audio.src.endsWith(src)) return;
     const targetVol = parseFloat(volSlider.value) || 0.3;
@@ -1588,6 +1827,23 @@ VCLock.installOverlay({
 
   trackBtns.forEach(b => {
     b.addEventListener('click', () => switchTrack(b.dataset.track));
+  });
+
+  // Prev/Next cycle between the 2 tracks
+  function cycleTrack(dir){
+    const list = [...trackBtns];
+    const activeIdx = list.findIndex(b => b.classList.contains('active'));
+    const nextIdx = ((activeIdx + dir) % list.length + list.length) % list.length;
+    switchTrack(list[nextIdx].dataset.track);
+  }
+  prevBtn.addEventListener('click', () => cycleTrack(-1));
+  nextBtn.addEventListener('click', () => cycleTrack(1));
+
+  // Volume icon also toggles mute (separate from play/pause)
+  volIcon.addEventListener('click', () => {
+    audio.muted = !audio.muted;
+    try { localStorage.setItem('index-music-mute', audio.muted); } catch(e){}
+    volIcon.style.opacity = audio.muted ? '.4' : '1';
   });
 
   function updateSlider(){
@@ -1637,12 +1893,21 @@ VCLock.installOverlay({
   // If the page was already unlocked on load, start immediately.
   if (window.VCLock && VCLock.isUnlocked()) startBayTheme();
 
+  // Play/pause toggle (the big center button is now a real play/pause)
+  function refreshPlayIcon(){
+    const paused = audio.paused;
+    iconSound.style.display = paused ? '' : 'none';
+    iconMute.style.display  = paused ? 'none' : '';
+    pbArt.classList.toggle('playing', !paused);
+  }
+  audio.addEventListener('play', refreshPlayIcon);
+  audio.addEventListener('pause', refreshPlayIcon);
+  refreshPlayIcon();
+
   btn.addEventListener('click', function(){
     if (!started){ tryStart(); return; }
-    audio.muted = !audio.muted;
-    iconSound.style.display = audio.muted ? 'none' : '';
-    iconMute.style.display  = audio.muted ? ''     : 'none';
-    try { localStorage.setItem('index-music-mute', audio.muted); } catch(e){}
+    if (audio.paused) audio.play().catch(()=>{});
+    else audio.pause();
   });
 
   volSlider.addEventListener('input', function(){

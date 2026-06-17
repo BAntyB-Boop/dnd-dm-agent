@@ -1666,6 +1666,286 @@ body:has(.player-bar.collapsed) .float-back { bottom: 32px !important; }
     </div>
   </section>
 
+  <!-- ═══ ACT VII — Loot Compendium ═══ -->
+  <section class="section" id="loot">
+    <div class="section-label">Act VII · Loot Compendium</div>
+    <div class="section-title">รายละเอียดของและการเก็บ</div>
+    <p class="section-sub">Skill check ทุกอย่าง DC ต่ำ · ผู้เล่นเก็บตอนไหนก็ได้ · กดดูแต่ละการ์ดสำหรับรายการเต็ม</p>
+
+    <!-- Harvest Rules -->
+    <div class="reveal-card">
+      <button class="reveal-toggle" onclick="toggleReveal(this)">
+        <div class="reveal-icon">🛠</div>
+        <div class="reveal-name">Harvest Rules · กติกาเก็บของ</div>
+        <div class="reveal-tag">Group · Tools · Time</div>
+        <svg class="reveal-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="reveal-body">
+        <div class="stat-row"><b>No Time Pressure</b> ผู้เล่นเก็บตอนไหนก็ได้ — ระหว่าง combat (Bonus Action, ไม่ได้ Reaction), หลัง combat, หรือก่อนเข้าเมือง</div>
+        <div class="stat-row"><b>Group Harvest</b> 2 คนช่วยกัน = Advantage บน roll · 3+ คน = auto-success ที่ DC ≤ 10</div>
+        <div class="stat-row"><b>Skinning Knife</b> (mundane, 1 gp) — ลด DC ลง 2 บน harvest ทุกอย่าง · ขายที่ Stellamar ทั่วไป</div>
+        <div class="stat-row"><b>Herbalism Kit</b> — Advantage บน harvest น้ำมันตับ / เลือด / ของเหลว</div>
+        <div class="stat-row"><b>Smith's Tools</b> — Advantage บน harvest กระดูก / ฟัน / กรงเล็บ</div>
+        <div class="stat-row"><b>Fail แล้วอะไร?</b> โดยปกติของยังได้แต่มี penalty (แตก / ขายเหลือครึ่ง / สูญหายส่วนหนึ่ง) · ดู column "Fail" ในตาราง</div>
+        <div class="stat-row"><b>ไม่ทันเก็บ?</b> หลัง 24 ชม. ของสด (ตา, เลือด, น้ำมัน) จะใช้ไม่ได้ · ของแห้ง (ฟัน, กระดูก, เกล็ด) ยังใช้ได้</div>
+      </div>
+    </div>
+
+    <!-- Sahuagin Priestess Drops -->
+    <div class="stat-block">
+      <button class="stat-toggle" onclick="toggleStat(this)">
+        <div class="stat-icon">🔱</div>
+        <div class="stat-name">Sahuagin Priestess · Equipment &amp; Drops</div>
+        <div class="stat-cr">12 items</div>
+        <svg class="stat-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="stat-body">
+        <div class="sub-h" style="margin-top:0">⚔ Equipment · ของที่เธอใช้</div>
+
+        <div class="stat-action special">
+          <div class="stat-action-name">Tideheart Trident <em>· Magic Weapon</em></div>
+          <div class="stat-action-desc">
+            โลหะดำสนิมแดง · 3 ง่ามแกะเป็นรูปคลื่น · ปลายเป็นเงาในแสงปกติ · ส่องด้วยไฟจะเห็น <em>อักขระ Hollow 7 ตัว</em> ฝังไว้<br>
+            <strong>+1 ใน L3 · +1 ใน L4 · +2 (Tideheart) ใน L5+</strong><br>
+            <strong>Water Breathing:</strong> ผู้ถือหายใจใต้น้ำได้ 1 ชม./วัน<br>
+            <strong style="color:rgba(220,140,120,.9)">⚠ Curse Lite:</strong> ถ้าเก็บไว้นาน 7 วัน Priestess จะเรียกคืน — ตรีศูลหายไปเอง
+          </div>
+        </div>
+
+        <div class="stat-action">
+          <div class="stat-action-name">Ritual Cordage <em>· สายผูกข้อมือ · 25 gp</em></div>
+          <div class="stat-action-desc">สายเชือกถักจากผมคนตาย + เส้นใยปะการังดำ · มี 3 ปม · แต่ละปม = สัญลักษณ์ Hollow · Druid/Cleric ใช้เป็น ritual focus ได้ · Auto pick up</div>
+        </div>
+
+        <div class="stat-action">
+          <div class="stat-action-name">Pouch of Salt Tears <em>· 6 ก้อน · 15 gp/ก้อน</em></div>
+          <div class="stat-action-desc">เกลือแร่ผลึกสีน้ำเงิน · แต้มบนตา → มองทะลุ illusion ใต้น้ำได้ 1 ชม. · alchemist รับซื้อ · Auto pick up</div>
+        </div>
+
+        <div class="stat-action">
+          <div class="stat-action-name">Coral Headdress <em>· 50 gp</em></div>
+          <div class="stat-action-desc">เครื่องประดับศีรษะปะการังขาว · <strong>ใส่ตอนกลางคืน = ฝันถึงอุโมงค์ใต้ดิน</strong> (free lore reveal) · WIS Save DC 11 เพื่อ Long Rest benefit · Auto pick up</div>
+        </div>
+
+        <div class="sub-h">💀 Body Parts · Harvest</div>
+        <div class="stat-row"><b>รอยสัก 7 ตัวอักขระบนหลัง</b> <span style="color:var(--gold)">Investigation DC 10 (30s · ต้องรีบ · เรืองแสง 1 นาทีหลังตาย)</span> · clue Hollow · Fail = ดูไม่ทันก่อนแสงดับ</div>
+        <div class="stat-row"><b>ฟันแหลม 3 แถว</b> 5 gp/ฟัน · <span style="color:var(--gold)">Survival DC 10 (2 นาที)</span> · Fail = ฟันแตก 40%</div>
+        <div class="stat-row"><b>ก้อนหินดำในปาก</b> <em>(Hollow piece)</em> · <span style="color:var(--gold)">Investigation DC 15 (1 นาที)</span> · Fail = หาไม่พบรอบแรก · ลองอีกครั้ง</div>
+      </div>
+    </div>
+
+    <!-- Sahuagin Warrior Drops -->
+    <div class="stat-block">
+      <button class="stat-toggle" onclick="toggleStat(this)">
+        <div class="stat-icon">🐟</div>
+        <div class="stat-name">Sahuagin Warrior · Equipment &amp; Drops (ต่อตัว)</div>
+        <div class="stat-cr">11 items</div>
+        <svg class="stat-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="stat-body">
+        <div class="sub-h" style="margin-top:0">⚔ Equipment · ของที่ตัวมันใช้</div>
+
+        <div class="stat-action">
+          <div class="stat-action-name">Coral Spear <em>· 3 gp · Auto pick up</em></div>
+          <div class="stat-action-desc">ปลายปะการังลับคม · 1d6 piercing · ใช้ได้ครั้งเดียวบนบก (แห้งแล้วเปราะ) · PCs ใช้ได้ 1 fight · Curiosity ขายได้</div>
+        </div>
+
+        <div class="stat-action">
+          <div class="stat-action-name">Net of Bone Weights <em>· 50% chance · 5 gp</em></div>
+          <div class="stat-action-desc">ตาข่ายถักจากเส้นเอ็นปลา ถ่วงด้วยกระดูก · ใช้แทน net weapon · Auto pick up</div>
+        </div>
+
+        <div class="sub-h">💀 Body Parts · Harvest</div>
+        <div class="stat-row"><b>ฟันสามแถว</b> 5-10 gp/ตัว · <span style="color:var(--gold)">Survival DC 8 (1 นาที)</span> · Fail = ฟันแตก เหลือ 50%</div>
+        <div class="stat-row"><b>กรงเล็บ</b> 8 gp/ตัว · <span style="color:var(--gold)">Survival DC 10 (2 นาที)</span> · ใช้ทำ dagger ได้ (craft DC 12) · Fail = กรงเล็บหัก</div>
+        <div class="stat-row"><b>เกล็ดเขียวเทา</b> 4 gp/ตัว · <span style="color:var(--gold)">Survival DC 10 (5 นาที)</span> · ช่างเย็บรับ · ทำ scale-mail underlay (AC +1 ถ้ามี 50 เกล็ด) · Fail = เกล็ดฉีก เหลือ 1 gp</div>
+        <div class="stat-row"><b>ตา (Phosphorescent)</b> 8 gp/ตา · <span style="color:var(--gold)">Medicine DC 12 (30s · ต้องรีบใน 1 ชม.)</span> · ใช้แทน Light spell 4 ชม. · Fail = แสงดับ ใช้ไม่ได้</div>
+        <div class="stat-row"><b>อักขระ Hollow บนหลัง</b> <span style="color:var(--gold)">Insight DC 13</span> · clue: "แกะหลังตาย — พิธีกรรม"</div>
+
+        <div class="sub-h">🎒 Personal Pouch · d6 Random Drop</div>
+        <table class="diff-table">
+          <thead><tr><th>d6</th><th>สิ่งที่พบ</th><th>ราคา</th></tr></thead>
+          <tbody>
+            <tr><td>1-2</td><td>เปลือกหอย 3 ฝา (ใช้แทนเหรียญ)</td><td>1 gp</td></tr>
+            <tr><td>3</td><td>กระดูกแกะเป็นรูปคน (totem)</td><td>5 gp</td></tr>
+            <tr><td>4</td><td>ตาข่ายผม · ถักจากเส้นผมคน</td><td>0 gp (สยอง)</td></tr>
+            <tr><td>5</td><td>ปลอกคอเขี้ยวทะเล</td><td>10 gp</td></tr>
+            <tr><td>6</td><td>อักขระ Hollow แกะเล็กๆ · clue (Insight DC 13)</td><td>—</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Reef Shark Salvage -->
+    <div class="stat-block">
+      <button class="stat-toggle" onclick="toggleStat(this)">
+        <div class="stat-icon">🦈</div>
+        <div class="stat-name">Reef Shark · Salvage (ต่อตัว)</div>
+        <div class="stat-cr">6 parts</div>
+        <svg class="stat-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="stat-body">
+        <div class="stat-row"><b>ฟันฉลาม</b> (~40 ฟัน) 1 gp/5 ฟัน · necklace 8 gp · <span style="color:var(--gold)">Survival DC 8 (1 นาที)</span> · Fail = ฟันแตก 30%</div>
+        <div class="stat-row"><b>ครีบ</b> 15 gp/ครีบ · alchemy reagent · ผิดกฎหมายบางเมือง · <span style="color:var(--gold)">Survival DC 10 (3 นาที)</span> · Fail = ครีบฉีก เหลือครึ่ง</div>
+        <div class="stat-row"><b>น้ำมันตับ</b> 12 gp/ขวด (2 ขวด/ฉลาม) · lamp fuel · เผาไหม้สว่างมาก · <span style="color:var(--gold)">Medicine DC 12 (5 นาที · ต้องมีขวด)</span> · Fail = ได้ 1 ขวดแทน 2</div>
+        <div class="stat-row"><b>หนัง</b> 20 gp/แผ่น · sandpaper · armor undercoat · กระเป๋า · <span style="color:var(--gold)">Survival DC 12 (10 นาที)</span> · Fail = ขายเหลือ 8 gp</div>
+        <div class="stat-row"><b>กระดูกขากรรไกร</b> 5 gp · trophy · <span style="color:var(--gold)">Athletics DC 10 (5 นาที)</span> · Fail = หัก เหลือ 2 gp</div>
+        <div class="stat-row"><b>เลือดสด</b> 8 gp/ขวด · Druid summoning ritual · เน่าใน 1 ชม. · <span style="color:var(--gold)">Medicine DC 10 (2 นาที · ต้องมีขวด)</span> · Fail = เลือดเสีย ใช้ไม่ได้</div>
+      </div>
+    </div>
+
+    <!-- Ship Salvage -->
+    <div class="stat-block">
+      <button class="stat-toggle" onclick="toggleStat(this)">
+        <div class="stat-icon">🚢</div>
+        <div class="stat-name">Ship Salvage · เรือสินค้า 3 ลำ</div>
+        <div class="stat-cr">Vespera / Calandra / Lustralis</div>
+        <svg class="stat-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="stat-body">
+        <div class="sub-h" style="margin-top:0">⚓ Vespera · กำลังจม</div>
+        <div class="stat-row"><b>เวลา</b> ~10 นาทีก่อนจมหมด · ต้องรีบ</div>
+        <div class="stat-row"><b>Trigger</b> Investigation DC 12 (ตอนยังลอย) เพื่อค้น</div>
+        <div class="stat-row"><b>Loot</b> 30 gp ในตู้กัปตัน · Healing Potion ×2 · Spell Scroll: Detect Magic · Auto pick up เมื่อพบ</div>
+        <div class="stat-row"><b>Hazard</b> ห้องล่างน้ำเข้า · DEX Save DC 12 หรือ 1d6 bludgeoning จากของลอย</div>
+
+        <div class="sub-h">⚓ Calandra · ลูกเรือตายหมด</div>
+        <div class="stat-row"><b>Trigger</b> เข้าได้ปลอดภัย · <strong style="color:rgba(220,140,120,.9)">WIS Save DC 12 หรือ Frightened 1 นาที</strong> (ภาพศพ)</div>
+        <div class="stat-row"><b>Fixed Loot</b> 40 gp · 2 อัญมณีเล็ก (50 gp) · ผ้าไหมพิเศษ 80 gp (ไม่เปียก)</div>
+        <div class="stat-row"><b>Logbook</b> <span style="color:var(--gold)">Insight DC 13</span> — <em>"แสงสีฟ้าใต้น้ำตามเรามาตั้งแต่ Cape Yvar"</em> · clue: Hollow active เกิน 300 ไมล์</div>
+        <div class="stat-row"><b>เลือดสดของลูกเรือ</b> ไม่มี wound · เป็นชิ้นเดียวกับศพในคลอง Silver Steps (link plot)</div>
+
+        <div class="sub-h">🎒 Calandra · d8 Random Find</div>
+        <table class="diff-table">
+          <thead><tr><th>d8</th><th>สิ่งที่พบ</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>กระเป๋าเงินลูกเรือ — 2d6 sp</td></tr>
+            <tr><td>2</td><td>ของส่วนตัว — ลูกบอลผ้าไหม, มีดเล็ก (1 gp)</td></tr>
+            <tr><td>3</td><td>จดหมายรัก เขียนยังไม่จบ</td></tr>
+            <tr><td>4</td><td>แผนที่ปลอม — แต่มีเครื่องหมายลึกลับ</td></tr>
+            <tr><td>5</td><td>Healing Potion</td></tr>
+            <tr><td>6</td><td>ขนมปังแห้ง · ไวน์</td></tr>
+            <tr><td>7</td><td>แหวนของกัปตัน — 25 gp</td></tr>
+            <tr><td>8</td><td><strong>Logbook page</strong> ที่ฉีกแล้วบางส่วน — clue Hollow ลึกขึ้น</td></tr>
+          </tbody>
+        </table>
+
+        <div class="sub-h">🔥 Lustralis · กำลังไหม้ · Marcos Roca รอด</div>
+        <div class="stat-row"><b>ดับไฟ</b> Athletics DC 11 + ใช้น้ำ 1 นาที · ถ้า PCs ช่วย Marcos ยกระดับการตอบแทน</div>
+        <div class="stat-row"><b>ตอบแทนแบบช่วย</b> 200 gp + <strong>จดหมายแนะนำให้ Harbormaster Vel</strong> + เรือฟรี 1 trip + <em>Compass of Calm Waters</em></div>
+
+        <div class="stat-action special" style="margin-top:14px">
+          <div class="stat-action-name">Compass of Calm Waters <em>· จาก Marcos Roca</em></div>
+          <div class="stat-action-desc">เข็มทิศทองเก่า · ปกติชี้ทิศเหนือ · ใน <strong>พายุหรือทะเลกลางคืน</strong> ชี้ทิศที่ปลอดภัยที่สุดแทน · ใช้ 1 ครั้ง/วัน · Attunement ไม่ต้อง · ผ่านดาวน์ระดับสมัยใช้ค่าครั้งเสมอ</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Resonance Focus -->
+    <div class="stat-block" style="border-color:rgba(140,80,200,.4)">
+      <button class="stat-toggle" onclick="toggleStat(this)" style="background:linear-gradient(180deg,rgba(80,40,120,.35),rgba(40,20,60,.4))">
+        <div class="stat-icon" style="border-color:rgba(140,80,200,.5)">🟣</div>
+        <div class="stat-name">Resonance Focus · Full Mechanics &amp; Lore</div>
+        <div class="stat-cr" style="background:rgba(140,80,200,.18);border-color:rgba(180,130,240,.5);color:rgba(200,160,255,.9)">Key Item</div>
+        <svg class="stat-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="stat-body">
+        <div class="stat-row"><b>Type</b> Wondrous item · Attunement ไม่ต้อง</div>
+        <div class="stat-row"><b>Appearance</b> เครื่องประดับโลหะไม่รู้จัก · สลักอักขระ 7 ตัว · ขนาดราว ๆ ปลอกคอ</div>
+
+        <div class="sub-h">⚙ Mechanical Effect</div>
+        <div class="stat-action special">
+          <div class="stat-action-name">Passive · Glow</div>
+          <div class="stat-action-desc">
+            เรืองแสงสีฟ้าจางเมื่อ:<br>
+            · อยู่ใน 30 ft จากสิ่งที่มี Hollow taint<br>
+            · อยู่ใต้น้ำ<br>
+            · กลางคืนของ "tide night" (1 ใน 7 คืน)
+          </div>
+        </div>
+        <div class="stat-action special">
+          <div class="stat-action-name">Active · The Question <em>(1/day)</em></div>
+          <div class="stat-action-desc">
+            ผู้ถือถาม yes/no 1 ข้อ · Focus ตอบโดยเรืองแสงสว่าง (yes) หรือดับ (no)<br>
+            <strong>Divination ระดับต่ำ</strong> · ตอบผิดได้ <strong>25%</strong> (DM roll ลับ d4 = 1 → ตอบผิด)
+          </div>
+        </div>
+        <div class="stat-action special">
+          <div class="stat-action-name">Side Effect · The Dream</div>
+          <div class="stat-action-desc">
+            ผู้ถือ <em>ฝันเห็นอุโมงค์ใต้ดิน</em> ทุก 3 คืน · <strong>WIS Save DC 11</strong> หรือเสีย Long Rest benefit คืนนั้น<br>
+            <em>Note: ผู้เล่นจะรู้ pattern หลังคืนที่ 2-3 · DM ทำเป็น ritual ส่วนหนึ่งของ session</em>
+          </div>
+        </div>
+
+        <div class="sub-h">📜 Lore Layers · เปิดทีละขั้น</div>
+        <div class="stat-row"><b>ขั้น 1</b> (ได้มา) "เครื่องประดับโลหะไม่รู้จัก สลักอักขระ 7 ตัว · เรืองแสงเมื่อใกล้น้ำ"</div>
+        <div class="stat-row"><b>ขั้น 2</b> (Lira ที่ Pier 7) "ฉันเคยเห็น 2 อันก่อนหน้านี้ · ทุกอันถูกขโมยมาจาก<em>เมืองที่หายไป</em>"</div>
+        <div class="stat-row"><b>ขั้น 3</b> (Prof. Elwen ที่ White Cliff) "อักขระ 7 ตัว = '<em>ผู้สืบทอด · ฟัง · ตื่น</em>' · มันคือ summons"</div>
+        <div class="stat-row"><b>ขั้น 4</b> (Father Aldous ที่ Old Crown) "ของเก่ามาก · ไม่ใช่ของถูกสร้าง · มันคือ <em>ส่วนของ Hollow</em> ที่หลุดออกมา"</div>
+      </div>
+    </div>
+
+    <!-- Loot by Level -->
+    <div class="reveal-card">
+      <button class="reveal-toggle" onclick="toggleReveal(this)">
+        <div class="reveal-icon">📊</div>
+        <div class="reveal-name">Loot by Level · ของได้ตาม Lvl</div>
+        <div class="reveal-tag">L1 → L5+</div>
+        <svg class="reveal-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="reveal-body">
+        <table class="diff-table">
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Lvl 1</th>
+              <th>Lvl 2</th>
+              <th>Lvl 3</th>
+              <th>Lvl 4</th>
+              <th>Lvl 5+</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="lvl">เหรียญ Sahuagin</td><td>30 gp</td><td>50 gp</td><td>80 gp</td><td>120 gp</td><td>160 gp</td></tr>
+            <tr><td class="lvl">Sahuagin parts</td><td>1 ตัว</td><td>2 ตัว</td><td>3 ตัว</td><td>4 ตัว</td><td>5 ตัว</td></tr>
+            <tr><td class="lvl">Shark parts</td><td>1 ฉลาม</td><td>1 ฉลาม</td><td>1 ฉลาม</td><td>2 ฉลาม</td><td>2 ฉลาม</td></tr>
+            <tr><td class="lvl">Priestess Trident</td><td>—</td><td>—</td><td>+1</td><td>+1</td><td><strong>Tideheart +2</strong></td></tr>
+            <tr><td class="lvl">Healing Potions (Vespera)</td><td>2</td><td>2</td><td>3</td><td>3</td><td>4</td></tr>
+            <tr><td class="lvl">Resonance Focus</td><td>✓ free</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td></tr>
+            <tr><td class="lvl">Marcos Roca reward</td><td>50 gp</td><td>75 gp</td><td>100 gp</td><td>150 gp</td><td>200 gp + เรือฟรี</td></tr>
+          </tbody>
+        </table>
+        <div class="diff-notes" style="margin-top:14px">
+          <div class="diff-notes-label">⚐ หมายเหตุ</div>
+          <ul>
+            <li><b>L1-2:</b> Priestess ไม่ตาย → ไม่ได้ Trident · แต่ Resonance Focus ทิ้งให้ฟรี</li>
+            <li><b>L3+:</b> ฆ่า Priestess ได้ → Trident +1 · L5+ ปลดล็อก Tideheart (water breathing)</li>
+            <li><b>Sahuagin parts</b> นับจำนวน Warrior ที่ตาย — มากกว่านี้ถ้า PCs เลือก harvest ทั้งหมด</li>
+            <li><b>Marcos Roca reward เพิ่ม</b> ถ้าช่วยดับไฟ Lustralis (Athletics DC 11) → 2× reward + Compass of Calm Waters</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Total Value Summary -->
+    <div class="reveal-card">
+      <button class="reveal-toggle" onclick="toggleReveal(this)">
+        <div class="reveal-icon">💰</div>
+        <div class="reveal-name">Total Value Summary · รวมมูลค่า</div>
+        <div class="reveal-tag">Quick Reference</div>
+        <svg class="reveal-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="reveal-body">
+        <div class="stat-row"><b>L1-2 Minimum</b> ~50-100 gp + Resonance Focus + Marcos reward (50-75 gp) · ไม่มี magic weapon</div>
+        <div class="stat-row"><b>L1-2 Maximum</b> (harvest ครบ + ช่วย Lustralis) ~250 gp + Compass + Resonance Focus + Healing Potions ×2</div>
+        <div class="stat-row"><b>L3-4 Standard</b> ~300-500 gp + Trident +1 + Resonance Focus + 2-3 Healing Potions</div>
+        <div class="stat-row"><b>L5+ Maximum</b> ~600+ gp + Tideheart Trident +2 + Compass + Resonance Focus + 4 Healing Potions + Spell Scroll + ของจาก Calandra ครบ</div>
+        <div class="stat-row" style="border-bottom:none;padding-top:10px"><b>⚐ Note</b> รวม cargo ของ Maravillas (50 gp/PC) จาก Tarn — DM แจกหลังขายในเมือง</div>
+      </div>
+    </div>
+  </section>
+
 </div>
 
 <a class="float-back" href="/oneshot/porto-arrival">

@@ -854,6 +854,134 @@ body::after{
   .music-vol{width:55px}
 }
 
+/* ===== CINEMATIC HERO ===== */
+.cine-hero{
+  position:relative;min-height:100vh;
+  display:grid;grid-template-columns:1.05fr 1fr;gap:0;
+  overflow:hidden;z-index:5;
+}
+.cine-portrait{position:relative;overflow:hidden;border-right:1px solid var(--line)}
+.cine-portrait img{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 16%;
+  filter:saturate(1.06) contrast(1.04) brightness(.98);
+  animation:cine-breathe 9s ease-in-out infinite;
+  will-change:transform;
+}
+@keyframes cine-breathe{0%,100%{transform:scale(1.03)}50%{transform:scale(1.08)}}
+.cine-portrait::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:
+    linear-gradient(90deg,transparent 50%,rgba(6,7,13,.82) 86%,var(--bg-deep) 100%),
+    linear-gradient(180deg,rgba(6,7,13,.55) 0%,transparent 22%,transparent 66%,rgba(6,7,13,.85) 100%),
+    radial-gradient(ellipse at 32% 36%,rgba(74,110,255,.16),transparent 55%);
+}
+.cine-text{position:relative;z-index:6;padding:14vh 7vw 8vh 5vw;display:flex;flex-direction:column;justify-content:center}
+.cine-kicker{display:flex;align-items:center;gap:14px;margin-bottom:20px}
+.cine-kicker .glyph{width:24px;height:24px;color:var(--azure-bright);filter:drop-shadow(0 0 8px rgba(74,110,255,.6));flex:none}
+.cine-kicker .lbl{font-family:"Cinzel",serif;text-transform:uppercase;letter-spacing:.32em;font-size:.7rem;color:var(--azure-bright)}
+.cine-kicker .line{flex:1;max-width:120px;height:1px;background:linear-gradient(to right,var(--azure-dim),transparent)}
+.cine-name{
+  font-family:"Cinzel Decorative",serif;font-weight:700;
+  font-size:clamp(50px,6.6vw,104px);letter-spacing:.04em;line-height:.96;margin:0;
+  background:linear-gradient(180deg,var(--gold-bright) 26%,var(--gold) 52%,var(--azure-bright) 96%);
+  background-size:100% 200%;
+  -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;
+  text-shadow:0 0 60px rgba(74,110,255,.28);
+  animation:title-shift 6s ease-in-out infinite alternate;
+}
+.cine-name .ltr{display:inline-block;opacity:0;transform:translateY(18px);animation:letter-fall .9s cubic-bezier(.2,.7,.2,1) forwards}
+.cine-sub{margin-top:22px;font-family:"Cinzel",serif;letter-spacing:.24em;text-transform:uppercase;font-size:.86rem;color:var(--ink-soft)}
+.cine-sub .sep{color:var(--azure-bright);margin:0 .5em}
+.cine-quote{margin-top:30px;max-width:520px;font-family:"Cormorant Garamond",serif;font-style:italic;font-size:1.3rem;line-height:1.5;color:var(--ink-soft);padding-left:18px;border-left:2px solid var(--azure-dim)}
+.cine-quote .q{color:var(--azure-bright);font-style:normal;font-family:"Cinzel",serif;letter-spacing:.16em;font-size:.8em}
+.cine-thaiq{margin-top:14px;max-width:520px;font-size:1rem;color:var(--ink-mute);font-style:italic;line-height:1.7}
+.cine-cta{margin-top:36px;display:flex;align-items:center;gap:12px;font-family:"Cinzel",serif;letter-spacing:.3em;text-transform:uppercase;font-size:.66rem;color:var(--azure-bright);animation:badge-pulse 2.6s ease-in-out infinite}
+.cine-cta::before{content:"";width:1px;height:14px;background:var(--azure-bright)}
+.cine-cta::after{content:"";width:22px;height:1px;background:var(--azure-bright)}
+
+/* ===== STORY / CHAPTERS ===== */
+.story{position:relative;z-index:10;max-width:1240px;margin:0 auto;padding:104px 32px 60px}
+.chap{margin-bottom:90px;display:grid;grid-template-columns:1fr 2.2fr;gap:48px}
+.chap.flip{grid-template-columns:2.2fr 1fr}
+.chap-aside{position:sticky;top:80px;align-self:start}
+.chap-num{font-family:"Cinzel Decorative",serif;font-weight:700;font-size:6.4rem;line-height:1;color:transparent;-webkit-text-stroke:1px var(--azure-deep);margin-bottom:14px;display:block}
+.chap-tag{font-family:"Cinzel",serif;text-transform:uppercase;letter-spacing:.3em;font-size:.7rem;color:var(--azure-bright);margin-bottom:10px}
+.chap-title{font-family:"Cinzel Decorative",serif;font-weight:400;font-size:2.1rem;line-height:1.12;letter-spacing:.02em;color:var(--ink);margin:0}
+.chap-title .th{display:block;font-family:"Noto Serif Thai",serif;font-size:1.15rem;color:var(--azure-bright);margin-top:8px;letter-spacing:0;text-shadow:0 0 24px rgba(74,110,255,.25)}
+.chap-flair{margin-top:18px;font-style:italic;color:var(--ink-mute);font-size:1rem;max-width:250px;line-height:1.6}
+.chap-body{min-width:0;font-size:1.02rem;color:var(--ink-soft);line-height:1.7}
+.chap-body > p{margin:0 0 16px}
+.chap-note{margin-top:14px;font-family:"Cormorant Garamond",serif;font-style:italic;color:var(--ink-mute);font-size:.98rem;line-height:1.55}
+.chap-note b{color:var(--azure-bright);font-style:normal}
+
+/* ===== INFO GRID ===== */
+.info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.info-cell{border:1px solid rgba(74,110,255,.22);background:linear-gradient(180deg,rgba(74,110,255,.06),transparent);padding:13px 15px}
+.info-cell .k{font-family:"Cinzel",serif;text-transform:uppercase;letter-spacing:.22em;font-size:.56rem;color:var(--gold-dim);margin-bottom:6px}
+.info-cell .v{font-family:"Cinzel",serif;font-size:.98rem;color:var(--ink);letter-spacing:.05em}
+.info-cell .v.azure{color:var(--azure-bright)}
+
+/* ===== ABILITY HEX ===== */
+.scores{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
+.score{position:relative;aspect-ratio:1/1.15;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
+  background:radial-gradient(circle at center,rgba(74,110,255,.16) 0%,transparent 70%),var(--bg-card);
+  border:1px solid var(--line);clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);padding:0 6px;
+  transition:border-color .25s}
+.score.prime{background:radial-gradient(circle at center,rgba(74,110,255,.34) 0%,transparent 72%),var(--bg-card);border-color:var(--azure-bright)}
+.score .ab{font-family:"Cinzel",serif;font-size:.54rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-dim)}
+.score .mod{font-family:"Cinzel Decorative",serif;font-weight:700;font-size:1.7rem;color:var(--ink);line-height:1;margin:3px 0 2px}
+.score.prime .mod{color:var(--azure-bright)}
+.score .sc{font-family:"Cinzel",serif;font-size:.66rem;color:var(--ink-mute)}
+
+/* ===== COMBAT STRIP ===== */
+.combat-strip{margin-top:18px;display:grid;grid-template-columns:repeat(4,1fr);gap:10px 8px;border-top:1px solid var(--line-soft);padding-top:16px}
+.combat-strip + .combat-strip{border-top:none;padding-top:6px;margin-top:8px}
+.combat-cell{text-align:center}
+.combat-cell .k{font-family:"Cinzel",serif;text-transform:uppercase;letter-spacing:.18em;font-size:.54rem;color:var(--gold-dim)}
+.combat-cell .v{font-family:"Cinzel",serif;font-size:1.22rem;color:var(--azure-bright);margin-top:4px}
+.combat-cell .v small{font-size:.58rem;color:var(--ink-mute);letter-spacing:.04em}
+
+/* ===== VIEWSTRIP PLATE ===== */
+.viewstrip{position:relative;margin:36px -32px;height:clamp(360px,52vh,540px);background:#05060c;border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden}
+.viewstrip img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 28%;filter:contrast(1.05) saturate(1.02)}
+.viewstrip::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(90deg,rgba(6,7,13,.55) 0%,transparent 26%,transparent 74%,rgba(6,7,13,.55) 100%),
+  linear-gradient(180deg,rgba(6,7,13,.4) 0%,transparent 26%,transparent 62%,rgba(6,7,13,.72) 100%)}
+.viewstrip .caption{position:absolute;left:32px;bottom:26px;z-index:2;max-width:560px}
+.viewstrip .caption .lbl{font-family:"Cinzel",serif;letter-spacing:.32em;text-transform:uppercase;font-size:.6rem;color:var(--azure-bright);margin-bottom:8px}
+.viewstrip .caption .txt{font-family:"Cormorant Garamond",serif;font-style:italic;font-size:1.25rem;line-height:1.4;color:var(--ink)}
+
+/* ===== CINEMA END ===== */
+.cine-end{position:relative;margin:80px 0 20px;text-align:center;padding:56px 24px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.cine-end::before,.cine-end::after{content:"";position:absolute;left:50%;width:52px;height:52px;border:1px solid var(--azure-deep);transform:translateX(-50%) rotate(45deg)}
+.cine-end::before{top:-26px;background:var(--bg-deep)}
+.cine-end::after{bottom:-26px;background:var(--bg-deep)}
+.end-quote{font-family:"Cormorant Garamond",serif;font-style:italic;font-size:1.8rem;line-height:1.45;max-width:760px;margin:0 auto;
+  background:linear-gradient(180deg,var(--gold-bright) 28%,var(--gold) 60%,var(--azure-bright) 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+.end-attr{margin-top:18px;font-family:"Cinzel",serif;letter-spacing:.34em;text-transform:uppercase;font-size:.62rem;color:var(--azure-bright)}
+.colophon{margin-top:28px;text-align:center;font-family:"Cinzel",serif;letter-spacing:.3em;text-transform:uppercase;font-size:.56rem;color:var(--ink-faint)}
+
+/* ===== CHRONICLE RESPONSIVE ===== */
+@media (max-width:920px){
+  .cine-hero{grid-template-columns:1fr;min-height:auto}
+  .cine-portrait{aspect-ratio:4/5;border-right:none;border-bottom:1px solid var(--line)}
+  .cine-text{padding:8vh 7vw}
+  .chap,.chap.flip{grid-template-columns:1fr;gap:22px}
+  .chap-aside{position:relative;top:auto}
+  .chap-num{font-size:4.6rem}
+  .info-grid{grid-template-columns:repeat(2,1fr)}
+  .scores{grid-template-columns:repeat(3,1fr)}
+  .combat-strip{grid-template-columns:repeat(2,1fr);gap:14px}
+  .viewstrip{margin:24px -18px}
+}
+@media (max-width:520px){
+  .cine-name{font-size:46px}
+  .end-quote{font-size:1.3rem}
+  .story{padding:72px 18px 48px}
+  .viewstrip .caption{left:18px}
+}
+
 /* ===== Floating back ===== */
 .float-home{
   position:fixed;bottom:24px;right:24px;z-index:60;
@@ -910,37 +1038,47 @@ body::after{
   <a class="topbar-link" href="/">← Back to Codex</a>
 </nav>
 
-<div class="wrap">
-
-  <!-- HERO -->
-  <section class="hero">
-    <div class="flame-motif"></div>
-    <div class="hero-badge">
-      <span class="badge-dot"></span>
-      Wizard · High Elf · Last of Aelindra's Flame
+<!-- ============ CINEMATIC HERO ============ -->
+<section class="cine-hero">
+  <div class="cine-portrait">
+    <img src="/assets/folio/dermogorgon.jpg" alt="Dermogorgon — Azure Flame Wizard" />
+  </div>
+  <div class="cine-text">
+    <div class="cine-kicker">
+      <svg class="glyph" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2 C8 6 6 9 6 13 a6 6 0 0 0 12 0 c0 -3 -2 -6 -6 -11 z M12 8 C10 10 9 12 9 14 a3 3 0 0 0 6 0 c0 -2 -2 -4 -3 -6 z"/></svg>
+      <span class="lbl">Folio · VII · Azure Codex</span>
+      <span class="line"></span>
     </div>
-    <div class="hero-eyebrow">The Veiled Codex · Folio of the Azure Flame</div>
-    <h1 class="hero-title">Dermogorgon</h1>
-    <div class="hero-sub">The Azure Flame · Wanderer Among Lanterns</div>
-    <p class="hero-thai">เด็กผู้หญิงที่เคยทำให้ทุกห้องสว่างขึ้น · กลายเป็นผู้หญิงที่สวมความหยิ่งเป็นเกราะ · ไล่ตามเงาของคนที่ไม่กลับมา</p>
-    <div class="hero-divider"></div>
-  </section>
+    <h1 class="cine-name">Dermogorgon</h1>
+    <div class="cine-sub">High Elf <span class="sep">·</span> Wizard <span class="sep">·</span> Last of Aelindra's Flame</div>
+    <div class="cine-quote"><span class="q">"</span> I only know this <em>…</em> while the azure flame still burns, the answer must be somewhere. <span class="q">"</span></div>
+    <p class="cine-thaiq">เด็กผู้หญิงที่เคยทำให้ทุกห้องสว่างขึ้น · กลายเป็นผู้หญิงที่สวมความหยิ่งเป็นเกราะ · ไล่ตามเงาของคนที่ไม่กลับมา</p>
+    <div class="cine-cta">Scroll to descend</div>
+  </div>
+</section>
 
-  <!-- PORTRAIT + IDENTITY -->
-  <div class="portrait-section">
-    <figure class="portrait-frame">
-      <img src="/assets/folio/dermogorgon.jpg" alt="Dermogorgon — Azure Flame Wizard portrait" width="820" height="1032" decoding="async" />
-    </figure>
-    <div class="identity-block">
-      <div class="identity-row">
-        <div class="id-cell"><div class="id-label">Species</div><div class="id-val">High Elf</div></div>
-        <div class="id-cell"><div class="id-label">Class · Level</div><div class="id-val azure">Wizard · 1</div></div>
-        <div class="id-cell"><div class="id-label">Background</div><div class="id-val">Sage</div></div>
-        <div class="id-cell"><div class="id-label">Alignment</div><div class="id-val">Neutral</div></div>
-        <div class="id-cell"><div class="id-label">Faith</div><div class="id-val">Apollo</div></div>
-        <div class="id-cell"><div class="id-label">Age</div><div class="id-val">200</div></div>
-        <div class="id-cell"><div class="id-label">Height · Weight</div><div class="id-val">5'9" · 143 lb</div></div>
-        <div class="id-cell"><div class="id-label">Eyes · Skin · Hair</div><div class="id-val">Blue · Honey · Blonde</div></div>
+<!-- ============ STORY ============ -->
+<div class="story">
+
+  <!-- CHAPTER I — The Catalogue -->
+  <section class="chap">
+    <div class="chap-aside">
+      <span class="chap-num">I</span>
+      <div class="chap-tag">The Catalogue</div>
+      <h2 class="chap-title">Of Name<br/>&amp; Bearing<span class="th">บันทึกประจำตัว</span></h2>
+      <div class="chap-flair">A girl who once lit every room — now a woman who wears pride as armor.</div>
+    </div>
+    <div class="chap-body">
+      <div class="info-grid">
+        <div class="info-cell"><div class="k">Species</div><div class="v">High Elf</div></div>
+        <div class="info-cell"><div class="k">Class · Level</div><div class="v azure">Wizard · 1</div></div>
+        <div class="info-cell"><div class="k">Background</div><div class="v">Sage</div></div>
+        <div class="info-cell"><div class="k">Alignment</div><div class="v">Neutral</div></div>
+        <div class="info-cell"><div class="k">Faith</div><div class="v">Apollo</div></div>
+        <div class="info-cell"><div class="k">Age</div><div class="v">200</div></div>
+        <div class="info-cell"><div class="k">Height · Weight</div><div class="v">5'9" · 143 lb</div></div>
+        <div class="info-cell"><div class="k">Eyes · Skin</div><div class="v">Blue · Honey</div></div>
+        <div class="info-cell"><div class="k">Hair</div><div class="v">Blonde</div></div>
       </div>
 
       <div class="signature-magic">
@@ -950,75 +1088,65 @@ body::after{
         <div class="sig-quote">"<em>ฉันรู้แค่ว่า ตราบเปลวฟ้ายังลุก · คำตอบต้องมีอยู่ที่ไหนสักแห่ง</em>"</div>
       </div>
     </div>
+  </section>
+
+  <!-- PLATE — turnaround -->
+  <div class="viewstrip reveal">
+    <img src="/assets/folio/dermogorgon-turnaround.jpg" alt="Dermogorgon — front, side, back turnaround" />
+    <div class="caption">
+      <div class="lbl">Plate · 01 — Four Faces of the Azure Flame</div>
+      <div class="txt">Front, side, back — the same robe in every weather. She keeps only one wardrobe, and one unanswered question.</div>
+    </div>
   </div>
 
-  <!-- ABILITY SCORES -->
-  <section class="section" id="stats">
-    <div class="section-label">Ability Scores</div>
-    <div class="section-title">ค่าพลัง</div>
-    <div class="stat-grid">
-      <div class="stat-cell">
-        <div class="sc-name">STR</div>
-        <div class="sc-score">10</div>
-        <div class="sc-mod">+0</div>
+  <!-- CHAPTER II — Aspects of Power -->
+  <section class="chap flip">
+    <div class="chap-body">
+      <div class="scores">
+        <div class="score"><div class="ab">STR</div><div class="mod">+0</div><div class="sc">10</div></div>
+        <div class="score"><div class="ab">DEX</div><div class="mod">+1</div><div class="sc">13</div></div>
+        <div class="score"><div class="ab">CON</div><div class="mod">+2</div><div class="sc">15</div></div>
+        <div class="score prime"><div class="ab">INT</div><div class="mod">+3</div><div class="sc">17</div></div>
+        <div class="score prime"><div class="ab">WIS</div><div class="mod">+1</div><div class="sc">12</div></div>
+        <div class="score"><div class="ab">CHA</div><div class="mod">−1</div><div class="sc">8</div></div>
       </div>
-      <div class="stat-cell">
-        <div class="sc-name">DEX</div>
-        <div class="sc-score">13</div>
-        <div class="sc-mod">+1</div>
+      <div class="chap-note">Saving Throws · <b>INT +5</b> · <b>WIS +3</b> &nbsp;·&nbsp; Proficiency <b>+2</b></div>
+
+      <div class="combat-strip">
+        <div class="combat-cell"><div class="k">Armor Class</div><div class="v">11 <small>no armor</small></div></div>
+        <div class="combat-cell"><div class="k">Hit Points</div><div class="v">8 <small>1d6+2</small></div></div>
+        <div class="combat-cell"><div class="k">Initiative</div><div class="v">+1</div></div>
+        <div class="combat-cell"><div class="k">Speed</div><div class="v">30 <small>ft</small></div></div>
+        <div class="combat-cell"><div class="k">Spell DC</div><div class="v">13</div></div>
+        <div class="combat-cell"><div class="k">Spell Atk</div><div class="v">+5</div></div>
+        <div class="combat-cell"><div class="k">Hit Dice</div><div class="v">1d6</div></div>
+        <div class="combat-cell"><div class="k">Darkvision</div><div class="v">60 <small>ft</small></div></div>
       </div>
-      <div class="stat-cell">
-        <div class="sc-name">CON</div>
-        <div class="sc-score">15</div>
-        <div class="sc-mod">+2</div>
+      <div class="combat-strip">
+        <div class="combat-cell"><div class="k">Quarterstaff</div><div class="v">+2 <small>1d6 bludg</small></div></div>
+        <div class="combat-cell"><div class="k">Dagger ×2</div><div class="v">+3 <small>1d4 pierce</small></div></div>
+        <div class="combat-cell"><div class="k">Fire Bolt</div><div class="v">+5 <small>1d10 fire</small></div></div>
+        <div class="combat-cell"><div class="k">Ray of Frost</div><div class="v">+5 <small>1d8 cold</small></div></div>
       </div>
-      <div class="stat-cell prime">
-        <div class="sc-save">Save +5</div>
-        <div class="sc-name">INT</div>
-        <div class="sc-score">17</div>
-        <div class="sc-mod">+3</div>
-      </div>
-      <div class="stat-cell prime">
-        <div class="sc-save">Save +3</div>
-        <div class="sc-name">WIS</div>
-        <div class="sc-score">12</div>
-        <div class="sc-mod">+1</div>
-      </div>
-      <div class="stat-cell">
-        <div class="sc-name">CHA</div>
-        <div class="sc-score">8</div>
-        <div class="sc-mod">−1</div>
-      </div>
+      <div class="chap-note">Senses · Darkvision 60 ft · Passive Perception 11 · Passive Insight 13 · Passive Investigation 13</div>
+    </div>
+    <div class="chap-aside">
+      <span class="chap-num">II</span>
+      <div class="chap-tag">Aspects of Power</div>
+      <h2 class="chap-title">Flesh, Frost<br/>&amp; Flame<span class="th">ค่าพลังและการต่อสู้</span></h2>
+      <div class="chap-flair">A frail body hiding a furnace. INT is the blade — the rest is only kindling.</div>
     </div>
   </section>
 
-  <!-- COMBAT -->
-  <section class="section" id="combat">
-    <div class="section-label">Combat Profile</div>
-    <div class="section-title">ความสามารถในการต่อสู้</div>
-    <div class="combat-grid">
-      <div class="cb-cell"><div class="cb-label">Armor Class</div><div class="cb-val">11 <small>(no armor)</small></div></div>
-      <div class="cb-cell"><div class="cb-label">Hit Points</div><div class="cb-val">8 <small>(1d6+2)</small></div></div>
-      <div class="cb-cell"><div class="cb-label">Initiative</div><div class="cb-val">+1</div></div>
-      <div class="cb-cell"><div class="cb-label">Speed</div><div class="cb-val">30 ft</div></div>
-      <div class="cb-cell"><div class="cb-label">Proficiency</div><div class="cb-val">+2</div></div>
-      <div class="cb-cell"><div class="cb-label">Spell Save DC</div><div class="cb-val">13</div></div>
-      <div class="cb-cell"><div class="cb-label">Spell Attack</div><div class="cb-val">+5</div></div>
-      <div class="cb-cell"><div class="cb-label">Hit Dice</div><div class="cb-val">1d6</div></div>
+  <!-- CHAPTER III — Disciplines -->
+  <section class="chap">
+    <div class="chap-aside">
+      <span class="chap-num">III</span>
+      <div class="chap-tag">Disciplines</div>
+      <h2 class="chap-title">What the<br/>Sage Knows<span class="th">ทักษะ</span></h2>
+      <div class="chap-flair">Knowledge is the one thing no one can steal — so she gathers it like warmth.</div>
     </div>
-    <div class="combat-grid">
-      <div class="cb-cell"><div class="cb-label">Quarterstaff</div><div class="cb-val">+2 <small>1d6 bludg</small></div></div>
-      <div class="cb-cell"><div class="cb-label">Dagger ×2</div><div class="cb-val">+3 <small>1d4 pierce</small></div></div>
-      <div class="cb-cell"><div class="cb-label">Fire Bolt</div><div class="cb-val">+5 <small>1d10 fire · 120 ft</small></div></div>
-      <div class="cb-cell"><div class="cb-label">Ray of Frost</div><div class="cb-val">+5 <small>1d8 cold · 60 ft</small></div></div>
-    </div>
-    <p class="section-sub" style="margin-top:14px">Senses · Darkvision 60 ft · Passive Perception 11 · Passive Insight 13 · Passive Investigation 13</p>
-  </section>
-
-  <!-- SKILLS -->
-  <section class="section" id="skills">
-    <div class="section-label">Skills &amp; Proficiencies</div>
-    <div class="section-title">ทักษะ</div>
+    <div class="chap-body">
     <div class="skills-grid">
       <div class="skill expert"><div class="skill-name">Arcana <small>INT</small></div><div class="skill-mod">+5</div></div>
       <div class="skill expert"><div class="skill-name">History <small>INT</small></div><div class="skill-mod">+5</div></div>
@@ -1037,12 +1165,12 @@ body::after{
       <div class="skill"><div class="skill-name">Persuasion <small>CHA</small></div><div class="skill-mod">−1</div></div>
     </div>
     <p class="section-sub">⬩ ทักษะที่มี proficiency เน้นสีน้ำเงิน · INT-based skills ของ Sage = expert-tone</p>
+    </div>
   </section>
 
-  <!-- SPELLS -->
-  <section class="section" id="spells">
-    <div class="section-label">Spellbook</div>
-    <div class="section-title">เวทมนตร์</div>
+  <!-- CHAPTER IV — The Spellbook -->
+  <section class="chap flip">
+    <div class="chap-body">
     <div class="spells-head">
       <div class="spells-meta">
         <div><b>Class</b><span>Wizard</span></div>
@@ -1087,12 +1215,24 @@ body::after{
       <p style="margin-top:8px"><b style="color:var(--azure-bright)">Ritual Adept</b> — ร่ายเวทย์ ritual ใดๆ ที่อยู่ใน spellbook ได้แม้ไม่ prepare</p>
       <p style="margin-top:8px"><b style="color:var(--azure-bright)">High Elf Lineage</b> — Fey Ancestry · Trance (Long Rest 4 ชม.) · Keen Senses (Insight/Perception/Survival)</p>
     </div>
+    </div>
+    <div class="chap-aside">
+      <span class="chap-num">IV</span>
+      <div class="chap-tag">The Spellbook</div>
+      <h2 class="chap-title">Pages of<br/>Azure Fire<span class="th">เวทมนตร์</span></h2>
+      <div class="chap-flair">Every spell is a candle against the dark — and a clue she has not yet read.</div>
+    </div>
   </section>
 
-  <!-- EQUIPMENT -->
-  <section class="section" id="equipment">
-    <div class="section-label">Equipment &amp; Belongings</div>
-    <div class="section-title">ของที่พกติดตัว</div>
+  <!-- CHAPTER V — Belongings -->
+  <section class="chap">
+    <div class="chap-aside">
+      <span class="chap-num">V</span>
+      <div class="chap-tag">Belongings</div>
+      <h2 class="chap-title">All She<br/>Carries<span class="th">ของที่พกติดตัว</span></h2>
+      <div class="chap-flair">A spellbook, a lamp, and a coat that has seen too many roads. Little else.</div>
+    </div>
+    <div class="chap-body">
     <div class="equip-grid">
       <div class="equip-col">
         <h4>⚔ Weapons</h4>
@@ -1136,12 +1276,12 @@ body::after{
         </div>
       </div>
     </div>
+    </div>
   </section>
 
-  <!-- PERSONALITY -->
-  <section class="section" id="personality">
-    <div class="section-label">Personality</div>
-    <div class="section-title">บุคลิก</div>
+  <!-- CHAPTER VI — Temperament -->
+  <section class="chap flip">
+    <div class="chap-body">
     <div class="persona-grid">
       <div class="persona-card">
         <h5>◆ Personality Trait</h5>
@@ -1160,12 +1300,24 @@ body::after{
         <p>เธอหาความสงบในความสันโดษไม่เจอ · ความว่างเปล่าผลักให้เธอตัดสินใจหุนหัน · และผลักไสคนที่พยายามเข้าใกล้ก่อนที่จะถูกทำร้ายอีกครั้ง</p>
       </div>
     </div>
+    </div>
+    <div class="chap-aside">
+      <span class="chap-num">VI</span>
+      <div class="chap-tag">Temperament</div>
+      <h2 class="chap-title">Pride &amp;<br/>the Quiet<span class="th">บุคลิก</span></h2>
+      <div class="chap-flair">Cold to strangers, boundless to the few she trusts. Few words — each one weighs.</div>
+    </div>
   </section>
 
-  <!-- LIKES & DISLIKES -->
-  <section class="section" id="taste">
-    <div class="section-label">Likes &amp; Dislikes</div>
-    <div class="section-title">ที่ชอบและที่ชัง</div>
+  <!-- CHAPTER VII — Light & Shadow -->
+  <section class="chap">
+    <div class="chap-aside">
+      <span class="chap-num">VII</span>
+      <div class="chap-tag">Light &amp; Shadow</div>
+      <h2 class="chap-title">What She<br/>Holds Close<span class="th">ที่ชอบและที่ชัง</span></h2>
+      <div class="chap-flair">She distrusts an easy smile — and loves the silence that follows a storm.</div>
+    </div>
+    <div class="chap-body">
     <div class="likes-grid">
       <div class="like-col like">
         <h5>◆ Likes</h5>
@@ -1190,12 +1342,12 @@ body::after{
         </ul>
       </div>
     </div>
+    </div>
   </section>
 
-  <!-- BACKSTORY -->
-  <section class="section" id="backstory">
-    <div class="section-label">Backstory</div>
-    <div class="section-title">เรื่องราว</div>
+  <!-- CHAPTER VIII — The Long Road -->
+  <section class="chap flip">
+    <div class="chap-body">
     <div class="backstory">
       <p>ครั้งหนึ่ง <strong>Dermogorgon</strong> เป็นที่รักที่สุดของหมู่บ้าน <em>Aelindra</em> — เด็กผู้หญิงที่ทำให้ทุกห้องสว่างขึ้นเพียงเพราะเธอเดินผ่าน · เสียงหัวเราะของเธอจริงและไม่กลัวที่จะดัง</p>
       <p>เมื่ออายุ <em>180 ปี</em> · เธอตกหลุมรัก · คนที่เธอชื่อไม่ออกเสียงดังๆ · ความรักนั้นปลุกบางอย่างขึ้นในเวทมนตร์ของเธอ — <em>Azure Flame</em> เปลวเพลิงสีน้ำเงินบริสุทธิ์ที่นักปราชญ์บอกว่าเกิดเฉพาะกับวิญญาณที่สมบูรณ์ · มีผู้กล่าวว่ามันคือพรของ <em>Apollo</em> เอง</p>
@@ -1217,12 +1369,24 @@ body::after{
         เธอไม่กล้าบอกใคร · เธอไม่กล้าแม้แต่จะคิดถึงมัน · เพราะถ้าเปลวเพลิงดับ · นั่นไม่ใช่แค่การสูญเสียเวทมนตร์ · มันคือการยอมรับว่า — <strong>คนที่เธอตามหา · ไม่มีอยู่อีกแล้ว</strong>
       </div>
     </div>
+    </div>
+    <div class="chap-aside">
+      <span class="chap-num">VIII</span>
+      <div class="chap-tag">The Long Road</div>
+      <h2 class="chap-title">She Walked<br/>Without<br/>Farewell<span class="th">เรื่องราว</span></h2>
+      <div class="chap-flair">Twenty years of waiting, then a coat, a spellbook, and a door left open behind her.</div>
+    </div>
   </section>
 
-  <!-- ALLIES & HOOKS -->
-  <section class="section" id="allies">
-    <div class="section-label">Allies &amp; Hooks</div>
-    <div class="section-title">ผู้ใกล้ชิดและสิ่งดึงดูด</div>
+  <!-- CHAPTER IX — Bonds & Threads -->
+  <section class="chap">
+    <div class="chap-aside">
+      <span class="chap-num">IX</span>
+      <div class="chap-tag">Bonds &amp; Threads</div>
+      <h2 class="chap-title">Those Who<br/>Pull Her On<span class="th">ผู้ใกล้ชิดและสิ่งดึงดูด</span></h2>
+      <div class="chap-flair">She asks the same question in every new town — even now that she has forgotten the name.</div>
+    </div>
+    <div class="chap-body">
     <div class="duo-grid">
       <div class="duo-card">
         <h5>✧ Allies &amp; Organizations</h5>
@@ -1240,18 +1404,32 @@ body::after{
         </ul>
       </div>
     </div>
-  </section>
-
-  <!-- APOLLO -->
-  <section class="section" id="apollo">
-    <div class="section-label">Faith</div>
-    <div class="section-title">ศรัทธาแห่ง Apollo</div>
-    <div class="apollo-card">
-      <div class="apollo-icon">☼</div>
-      <h4>Apollo · God of Light, Truth, and Healing</h4>
-      <p>เธอไม่ได้บูชาเขาเหมือนนักบวช · แต่เธอเชื่อในแสงของเขา · ความจริงและความหวังคือสิ่งเดียวที่ Azure Flame ยังลุกอยู่ได้ · ทุกค่ำที่เธอนั่งคนเดียวในที่เงียบ — เธอจะจุดเทียนสีน้ำเงินสองเล่ม · เล่มหนึ่งให้คนที่หายไป · อีกเล่มให้ตัวเอง</p>
     </div>
   </section>
+
+  <!-- CHAPTER X — Faith -->
+  <section class="chap flip">
+    <div class="chap-body">
+      <div class="apollo-card">
+        <div class="apollo-icon">☼</div>
+        <h4>Apollo · God of Light, Truth, and Healing</h4>
+        <p>เธอไม่ได้บูชาเขาเหมือนนักบวช · แต่เธอเชื่อในแสงของเขา · ความจริงและความหวังคือสิ่งเดียวที่ Azure Flame ยังลุกอยู่ได้ · ทุกค่ำที่เธอนั่งคนเดียวในที่เงียบ — เธอจะจุดเทียนสีน้ำเงินสองเล่ม · เล่มหนึ่งให้คนที่หายไป · อีกเล่มให้ตัวเอง</p>
+      </div>
+    </div>
+    <div class="chap-aside">
+      <span class="chap-num">X</span>
+      <div class="chap-tag">Faith</div>
+      <h2 class="chap-title">Two Blue<br/>Candles<span class="th">ศรัทธาแห่ง Apollo</span></h2>
+      <div class="chap-flair">One candle for the one who vanished. One for herself. Both kept burning.</div>
+    </div>
+  </section>
+
+  <!-- CINEMA END -->
+  <div class="cine-end reveal">
+    <div class="end-quote">"ตราบที่ Azure Flame ยังลุก · คำตอบต้องมีอยู่ที่ไหนสักแห่ง"</div>
+    <div class="end-attr">Dermogorgon · The Azure Flame · Wanderer Among Lanterns</div>
+  </div>
+  <div class="colophon">The Veiled Codex · Folio VII · Of the Azure Flame</div>
 
 </div>
 
@@ -1279,7 +1457,7 @@ body::after{
 
 // 2) Letter-by-letter hero title reveal
 (function(){
-  const title = document.querySelector('.hero-title');
+  const title = document.querySelector('.cine-name');
   if (!title) return;
   const text = title.textContent.trim();
   title.textContent = '';
@@ -1300,7 +1478,7 @@ body::after{
 
 // 3) Floating runes around hero
 (function(){
-  const hero = document.querySelector('.hero');
+  const hero = document.querySelector('.cine-hero');
   if (!hero) return;
   const glyphs = ['✦','✧','◆','◈','✶','❅','◇','♆'];
   for (let i = 0; i < 6; i++){
@@ -1320,7 +1498,7 @@ body::after{
 
 // 4) Scroll reveal — fade-up sections as they enter viewport
 (function(){
-  const targets = document.querySelectorAll('.section, .portrait-section');
+  const targets = document.querySelectorAll('.chap, .viewstrip, .cine-end');
   targets.forEach(el => el.classList.add('reveal'));
   if (!('IntersectionObserver' in window)){
     targets.forEach(el => el.classList.add('in'));

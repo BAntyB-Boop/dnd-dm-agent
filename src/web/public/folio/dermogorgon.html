@@ -83,6 +83,43 @@ body{
   background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.7 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
 }
 
+/* ===== Light shafts (slow descending azure) ===== */
+body::after{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:2;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(74,110,255,.10) 0%, transparent 50%),
+    repeating-linear-gradient(85deg, transparent 0 80px, rgba(127,160,255,.025) 80px 82px);
+  animation:shaft-drift 28s ease-in-out infinite;
+}
+@keyframes shaft-drift{
+  0%,100%{opacity:.7;background-position:0 0,0 0}
+  50%{opacity:1;background-position:0 0,30px 0}
+}
+
+/* Slow rune sigils floating around hero */
+.rune{
+  position:absolute;
+  font-family:"Cinzel Decorative",serif;
+  color:rgba(127,160,255,.18);
+  font-size:24px;
+  pointer-events:none;
+  animation:rune-orbit 26s linear infinite;
+  text-shadow:0 0 12px rgba(74,110,255,.4);
+}
+@keyframes rune-orbit{
+  0%{transform:translate(0,0) rotate(0deg);opacity:0}
+  10%{opacity:1}
+  90%{opacity:1}
+  100%{transform:translate(var(--rx,40px),var(--ry,-30px)) rotate(360deg);opacity:0}
+}
+
+/* Scroll reveal */
+.reveal{
+  opacity:0;transform:translateY(20px);
+  transition:opacity 1s ease,transform 1s cubic-bezier(.2,.7,.2,1);
+}
+.reveal.in{opacity:1;transform:translateY(0)}
+
 /* ===== Topbar ===== */
 #topbar{
   position:fixed;top:0;left:0;right:0;z-index:90;
@@ -150,12 +187,28 @@ body{
   font-family:"Cinzel Decorative",serif;
   font-size:clamp(36px,6vw,72px);
   background:linear-gradient(180deg,var(--gold-bright) 0%,var(--gold) 50%,var(--azure-bright) 100%);
+  background-size:100% 200%;
   -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;
   letter-spacing:.04em;line-height:1.1;
   text-shadow:0 0 60px rgba(74,110,255,.3);
   margin-bottom:10px;
   position:relative;z-index:2;
+  animation:title-shift 6s ease-in-out infinite alternate;
 }
+@keyframes title-shift{
+  0%{background-position:0% 0%;text-shadow:0 0 60px rgba(74,110,255,.3)}
+  100%{background-position:0% 100%;text-shadow:0 0 80px rgba(127,160,255,.5)}
+}
+.hero-title .ltr{
+  display:inline-block;
+  opacity:0;transform:translateY(20px);
+  animation:letter-fall .9s cubic-bezier(.2,.7,.2,1) forwards;
+}
+@keyframes letter-fall{
+  0%{opacity:0;transform:translateY(20px) scale(.95);filter:blur(4px)}
+  100%{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}
+}
+.hero-title .space{display:inline-block;width:.3em}
 .hero-sub{
   font-family:"Cinzel",serif;
   font-size:14px;letter-spacing:.22em;text-transform:uppercase;
@@ -198,7 +251,45 @@ body{
   border-radius:2px;
   pointer-events:none;z-index:2;
 }
-.portrait-frame img{width:100%;display:block;filter:saturate(1.05) brightness(.95)}
+.portrait-frame img{
+  width:100%;display:block;
+  filter:saturate(1.05) brightness(.95);
+  animation:portrait-breathe 7s ease-in-out infinite;
+  transition:filter .6s;
+}
+.portrait-frame:hover img{filter:saturate(1.15) brightness(1.04);transform:scale(1.01)}
+@keyframes portrait-breathe{
+  0%,100%{transform:scale(1.0);filter:saturate(1.05) brightness(.92)}
+  50%{transform:scale(1.012);filter:saturate(1.12) brightness(1)}
+}
+.portrait-frame::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(135deg,transparent 40%,rgba(127,160,255,.18) 50%,transparent 60%);
+  background-size:200% 200%;
+  pointer-events:none;z-index:3;
+  animation:portrait-shimmer 8s ease-in-out infinite;
+}
+@keyframes portrait-shimmer{
+  0%,100%{background-position:0% 0%;opacity:0}
+  50%{background-position:100% 100%;opacity:.7}
+}
+
+/* Signature magic — pulsing aura */
+.signature-magic{animation:sig-pulse 4s ease-in-out infinite}
+@keyframes sig-pulse{
+  0%,100%{box-shadow:inset 0 0 0 rgba(74,110,255,0),0 0 0 rgba(74,110,255,0)}
+  50%{box-shadow:inset 4px 0 14px rgba(74,110,255,.18),0 0 32px rgba(74,110,255,.18)}
+}
+.sig-name{
+  background:linear-gradient(90deg,var(--azure-bright),#9bb6ff,var(--azure-bright));
+  background-size:200% auto;
+  -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;
+  animation:sig-name-glow 5s linear infinite;
+}
+@keyframes sig-name-glow{
+  0%{background-position:0% 50%}
+  100%{background-position:200% 50%}
+}
 
 .identity-block{
   display:flex;flex-direction:column;justify-content:center;
@@ -302,6 +393,16 @@ body{
 .stat-cell.prime{
   background:linear-gradient(180deg,rgba(74,110,255,.14),rgba(10,12,22,.4));
   border-color:var(--azure-bright);
+  animation:prime-glow 3.5s ease-in-out infinite;
+}
+@keyframes prime-glow{
+  0%,100%{box-shadow:0 0 0 rgba(74,110,255,0)}
+  50%{box-shadow:0 0 24px rgba(74,110,255,.22),inset 0 0 12px rgba(74,110,255,.08)}
+}
+.stat-cell .sc-score{transition:color .3s,text-shadow .3s}
+.stat-cell:hover .sc-score{
+  color:var(--azure-bright);
+  text-shadow:0 0 18px rgba(74,110,255,.6);
 }
 .sc-name{
   font-family:"Cinzel",serif;
@@ -418,8 +519,21 @@ body{
   border:1px solid rgba(74,110,255,.2);
   border-radius:2px;
   font-size:13.5px;color:var(--ink-soft);
+  transition:background .3s,border-color .3s,transform .25s,box-shadow .3s;
+  position:relative;overflow:hidden;
 }
-.spell:hover{background:rgba(74,110,255,.08);border-color:rgba(74,110,255,.45)}
+.spell::before{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(90deg,transparent 0%,rgba(127,160,255,.12) 50%,transparent 100%);
+  transform:translateX(-100%);
+  transition:transform .6s ease;
+}
+.spell:hover{
+  background:rgba(74,110,255,.1);border-color:var(--azure-bright);
+  transform:translateY(-1px);
+  box-shadow:0 4px 12px rgba(74,110,255,.18);
+}
+.spell:hover::before{transform:translateX(100%)}
 .spell-name{
   font-family:"Cormorant Garamond",serif;
   font-size:14.5px;color:var(--ink);
@@ -565,6 +679,23 @@ body{
   border-left:4px solid #9b6acc;
   border-radius:3px;
   position:relative;
+  animation:secret-throb 5s ease-in-out infinite;
+}
+@keyframes secret-throb{
+  0%,100%{box-shadow:inset 0 0 0 rgba(140,80,220,0),0 0 0 rgba(140,80,220,0)}
+  50%{box-shadow:inset 4px 0 18px rgba(140,80,220,.18),0 0 32px rgba(140,80,220,.16)}
+}
+.secret-name{
+  animation:secret-flicker 8s ease-in-out infinite;
+}
+@keyframes secret-flicker{
+  0%,100%{opacity:.95;text-shadow:0 0 18px rgba(140,80,220,.4)}
+  47%{opacity:.95;text-shadow:0 0 18px rgba(140,80,220,.4)}
+  48%{opacity:.6;text-shadow:0 0 6px rgba(140,80,220,.2)}
+  50%{opacity:.95;text-shadow:0 0 18px rgba(140,80,220,.4)}
+  60%{opacity:.95}
+  61%{opacity:.5}
+  62%{opacity:.95}
 }
 .secret-label{
   font-family:"Cinzel",serif;
@@ -626,6 +757,13 @@ body{
   font-size:32px;color:var(--apollo);
   text-shadow:0 0 24px rgba(255,245,208,.4);
   margin-bottom:10px;
+  animation:apollo-rotate 60s linear infinite,apollo-glow 4s ease-in-out infinite;
+  display:inline-block;
+}
+@keyframes apollo-rotate{to{transform:rotate(360deg)}}
+@keyframes apollo-glow{
+  0%,100%{text-shadow:0 0 24px rgba(255,245,208,.4)}
+  50%{text-shadow:0 0 42px rgba(255,245,208,.8),0 0 8px rgba(255,245,208,.6)}
 }
 .apollo-card h4{
   font-family:"Cinzel Decorative",serif;
@@ -1027,7 +1165,7 @@ body{
 </a>
 
 <script>
-// Azure flame motes
+// 1) Azure flame motes
 (function(){
   const field = document.getElementById('flame-field');
   if (!field) return;
@@ -1040,6 +1178,81 @@ body{
     f.style.animationDelay = (Math.random() * 12) + 's';
     field.appendChild(f);
   }
+})();
+
+// 2) Letter-by-letter hero title reveal
+(function(){
+  const title = document.querySelector('.hero-title');
+  if (!title) return;
+  const text = title.textContent.trim();
+  title.textContent = '';
+  [...text].forEach((ch, i) => {
+    if (ch === ' '){
+      const s = document.createElement('span');
+      s.className = 'space';
+      title.appendChild(s);
+      return;
+    }
+    const sp = document.createElement('span');
+    sp.className = 'ltr';
+    sp.textContent = ch;
+    sp.style.animationDelay = (0.18 + i * 0.06) + 's';
+    title.appendChild(sp);
+  });
+})();
+
+// 3) Floating runes around hero
+(function(){
+  const hero = document.querySelector('.hero');
+  if (!hero) return;
+  const glyphs = ['✦','✧','◆','◈','✶','❅','◇','♆'];
+  for (let i = 0; i < 6; i++){
+    const r = document.createElement('div');
+    r.className = 'rune';
+    r.textContent = glyphs[i % glyphs.length];
+    r.style.left = (15 + Math.random() * 70) + '%';
+    r.style.top  = (20 + Math.random() * 60) + '%';
+    r.style.setProperty('--rx', (Math.random() * 80 - 40) + 'px');
+    r.style.setProperty('--ry', (Math.random() * 80 - 40) + 'px');
+    r.style.animationDelay = (i * 4) + 's';
+    r.style.animationDuration = (20 + Math.random() * 10) + 's';
+    r.style.fontSize = (16 + Math.random() * 14) + 'px';
+    hero.appendChild(r);
+  }
+})();
+
+// 4) Scroll reveal — fade-up sections as they enter viewport
+(function(){
+  const targets = document.querySelectorAll('.section, .portrait-section');
+  targets.forEach(el => el.classList.add('reveal'));
+  if (!('IntersectionObserver' in window)){
+    targets.forEach(el => el.classList.add('in'));
+    return;
+  }
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting){
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -10% 0px' });
+  targets.forEach(el => io.observe(el));
+})();
+
+// 5) Cursor-following azure glow on portrait
+(function(){
+  const frame = document.querySelector('.portrait-frame');
+  if (!frame) return;
+  frame.addEventListener('pointermove', (e) => {
+    const rect = frame.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    frame.style.background = `radial-gradient(circle at ${x}% ${y}%, rgba(74,110,255,.18), rgba(10,12,22,.6) 60%)`;
+  });
+  frame.addEventListener('pointerleave', () => {
+    frame.style.background = 'rgba(10,12,22,.6)';
+  });
 })();
 </script>
 </body>

@@ -29,6 +29,7 @@
   --c-monk:    #ffd685;
   --c-ranger:  #ff5a30;
   --c-cleric:  #5fa494;
+  --c-wizard:  #4a6eff;
 }
 html,body{background:var(--bg-deep);color:var(--ink);overflow-x:hidden}
 body{
@@ -231,6 +232,7 @@ h1.title{
 .folio.halo     {--accent:var(--c-monk)}
 .folio.hellfire {--accent:var(--c-ranger)}
 .folio.crow     {--accent:var(--c-cleric)}
+.folio.azure    {--accent:var(--c-wizard)}
 
 .folio.in{opacity:1;transform:translateY(0)}
 .folio:nth-child(1){transition-delay:0.05s}
@@ -857,6 +859,42 @@ h1.title{
         <div class="blurb">"I always have a backup plan — because this world has no mercy for those who hesitate." Her crow is always one step ahead.</div>
         <div class="open-row">
           <span class="vol">Vol. VI · 103 pp.</span>
+          <span class="open">Open Folio<span class="arrow"></span></span>
+        </div>
+      </div>
+    </a>
+
+    <!-- ===== Dermogorgon — wizard / azure ===== -->
+    <a class="folio azure" href="/folio/dermogorgon">
+      <i class="corner-bl"></i><i class="corner-br"></i>
+      <div class="sigil" aria-hidden="true">
+        <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.3">
+          <path d="M16 4 C18 8 22 11 22 16 C22 21 18 24 16 28 C14 24 10 21 10 16 C10 11 14 8 16 4 Z"/>
+          <path d="M16 10 C17 13 19 14 19 17 C19 20 17 22 16 24 C15 22 13 20 13 17 C13 14 15 13 16 10 Z" fill="currentColor" opacity="0.4"/>
+          <circle cx="16" cy="18" r="0.8" fill="currentColor"/>
+        </svg>
+      </div>
+      <div class="pane">
+        <div class="fx-layer">
+          <div class="accent-glow"></div>
+        </div>
+        <div class="folio-num">Folio · VII</div>
+        <img src="assets/folio/dermogorgon.png" alt="Dermogorgon">
+        <div class="ident">
+          <div class="race">High Elf · 200 yrs</div>
+          <h3 class="name">Dermogorgon</h3>
+          <div class="epithet">— the Azure Flame</div>
+        </div>
+      </div>
+      <div class="body">
+        <div class="stat-row">
+          <div class="c"><div class="k">Class</div><div class="v">Wizard</div></div>
+          <div class="c"><div class="k">Faith</div><div class="v">Apollo</div></div>
+          <div class="c"><div class="k">Seeks</div><div class="v">A Vanished Love</div></div>
+        </div>
+        <div class="blurb">"As long as my Azure Flame still burns, the answer must exist somewhere." A scholar wrapped in pride, searching for someone whose name she has begun to forget.</div>
+        <div class="open-row">
+          <span class="vol">Vol. VII · 87 pp.</span>
           <span class="open">Open Folio<span class="arrow"></span></span>
         </div>
       </div>

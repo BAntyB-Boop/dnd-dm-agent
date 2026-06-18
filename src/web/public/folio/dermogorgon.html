@@ -1,0 +1,1046 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8" />
+<base href="/" />
+<title>Dermogorgon — Azure Flame · Folio of the Veiled Codex</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" href="shared.css">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Noto+Serif+Thai:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --bg-deep:#06070d;
+  --bg-paper:#0a0c16;
+  --bg-card:#101220;
+  --bg-card-2:#181a2c;
+  --line:#262a44;
+  --line-soft:#1a1c30;
+  --ink:#e8eaf0;
+  --ink-soft:#bcc2d6;
+  --ink-mute:#7882a0;
+  --ink-faint:#3f4566;
+  --gold:#d4b76a;
+  --gold-bright:#f0d896;
+  --gold-dim:#8a7340;
+  --gold-deep:#5a4622;
+  --azure:#4a6eff;
+  --azure-bright:#7fa0ff;
+  --azure-dim:#2a4ed0;
+  --azure-deep:#152a80;
+  --apollo:#fff5d0;
+  --silver:#a8b0c8;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg-deep);color:var(--ink);overflow-x:hidden}
+body{
+  min-height:100vh;
+  background:
+    radial-gradient(1200px 800px at 50% 0%, rgba(74,110,255,0.12) 0%, transparent 60%),
+    radial-gradient(800px 500px at 50% 100%, rgba(0,0,0,0.55), transparent 60%),
+    var(--bg-deep);
+  font-family:"Noto Serif Thai","Cormorant Garamond",Georgia,serif;
+}
+
+/* ===== Azure flame ambient ===== */
+.flame-field{
+  position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden;
+}
+.flame{
+  position:absolute;bottom:-20px;
+  width:3px;height:3px;border-radius:50%;
+  background:radial-gradient(circle,var(--azure-bright),var(--azure-dim) 50%,transparent 80%);
+  box-shadow:0 0 8px rgba(74,110,255,.8);
+  animation:flame-rise linear infinite;
+  opacity:0;
+}
+@keyframes flame-rise{
+  0%{transform:translate(0,0) scale(.6);opacity:0}
+  10%{opacity:1}
+  100%{transform:translate(var(--dx,30px),-110vh) scale(.2);opacity:0}
+}
+/* Big flame motif behind hero */
+.flame-motif{
+  position:absolute;top:120px;left:50%;transform:translateX(-50%);
+  width:600px;height:600px;
+  background:radial-gradient(circle at 50% 60%,
+    rgba(74,110,255,.32) 0%,
+    rgba(74,110,255,.18) 25%,
+    rgba(74,110,255,.06) 45%,
+    transparent 65%);
+  filter:blur(40px);
+  z-index:0;
+  pointer-events:none;
+  animation:flame-pulse 4s ease-in-out infinite;
+}
+@keyframes flame-pulse{
+  0%,100%{opacity:.7;transform:translateX(-50%) scale(1)}
+  50%{opacity:1;transform:translateX(-50%) scale(1.08)}
+}
+
+/* Grain */
+.grain{
+  position:fixed;inset:0;pointer-events:none;z-index:201;opacity:.06;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.7 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+
+/* ===== Topbar ===== */
+#topbar{
+  position:fixed;top:0;left:0;right:0;z-index:90;
+  height:54px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 26px;
+  background:linear-gradient(180deg,rgba(6,7,13,.95),rgba(6,7,13,.85));
+  border-bottom:1px solid rgba(74,110,255,.18);
+  backdrop-filter:blur(10px);
+}
+.breadcrumb{
+  display:flex;align-items:center;gap:8px;
+  font-family:"Cinzel",serif;
+  font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;
+}
+.breadcrumb a{color:rgba(232,234,240,.4);text-decoration:none;transition:color .2s}
+.breadcrumb a:hover{color:var(--azure-bright)}
+.breadcrumb .sep{color:rgba(74,110,255,.4)}
+.breadcrumb .current{color:rgba(232,234,240,.78)}
+.topbar-link{
+  font-family:"Cinzel",serif;
+  font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;
+  color:rgba(232,234,240,.45);text-decoration:none;
+  padding:6px 12px;border:1px solid transparent;border-radius:2px;
+  transition:color .2s,border-color .2s;
+}
+.topbar-link:hover{color:var(--azure-bright);border-color:rgba(74,110,255,.35)}
+
+/* ===== Wrap ===== */
+.wrap{
+  position:relative;z-index:10;
+  max-width:1100px;margin:0 auto;
+  padding:90px 28px 80px;
+}
+
+/* ===== Hero ===== */
+.hero{
+  text-align:center;padding:30px 0 60px;
+  position:relative;
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:10px;
+  font-family:"Cinzel",serif;
+  font-size:9.5px;letter-spacing:.32em;text-transform:uppercase;
+  color:rgba(150,180,255,.85);
+  border:1px solid rgba(74,110,255,.5);
+  background:rgba(74,110,255,.1);
+  padding:6px 16px;border-radius:2px;margin-bottom:22px;
+}
+.hero-badge .badge-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--azure-bright);
+  box-shadow:0 0 8px var(--azure-bright);
+  animation:badge-pulse 2.4s ease-in-out infinite;
+}
+@keyframes badge-pulse{
+  0%,100%{opacity:1;box-shadow:0 0 8px var(--azure-bright)}
+  50%{opacity:.45;box-shadow:0 0 4px var(--azure-bright)}
+}
+.hero-eyebrow{
+  font-family:"Cinzel",serif;
+  font-size:10px;letter-spacing:.38em;text-transform:uppercase;
+  color:var(--gold-dim);margin-bottom:14px;
+}
+.hero-title{
+  font-family:"Cinzel Decorative",serif;
+  font-size:clamp(36px,6vw,72px);
+  background:linear-gradient(180deg,var(--gold-bright) 0%,var(--gold) 50%,var(--azure-bright) 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;
+  letter-spacing:.04em;line-height:1.1;
+  text-shadow:0 0 60px rgba(74,110,255,.3);
+  margin-bottom:10px;
+  position:relative;z-index:2;
+}
+.hero-sub{
+  font-family:"Cinzel",serif;
+  font-size:14px;letter-spacing:.22em;text-transform:uppercase;
+  color:rgba(232,234,240,.55);margin-bottom:14px;
+  position:relative;z-index:2;
+}
+.hero-thai{
+  font-size:clamp(15px,1.8vw,17px);
+  color:rgba(232,234,240,.6);line-height:1.7;
+  max-width:580px;margin:0 auto;
+  font-style:italic;
+  position:relative;z-index:2;
+}
+.hero-divider{
+  width:140px;height:1px;margin:30px auto 0;
+  background:linear-gradient(90deg,transparent,var(--azure-dim) 50%,transparent);
+  position:relative;z-index:2;
+}
+
+/* ===== Portrait card ===== */
+.portrait-section{
+  display:grid;grid-template-columns:minmax(280px,1fr) 1.4fr;
+  gap:36px;margin-bottom:48px;
+  align-items:start;
+}
+@media (max-width:820px){
+  .portrait-section{grid-template-columns:1fr}
+}
+.portrait-frame{
+  position:relative;
+  border:1px solid rgba(74,110,255,.4);
+  border-radius:3px;
+  overflow:hidden;
+  background:rgba(10,12,22,.6);
+  box-shadow:0 16px 50px rgba(0,0,0,.6),0 0 60px rgba(74,110,255,.1),inset 0 0 0 1px rgba(74,110,255,.08);
+}
+.portrait-frame::before{
+  content:"";position:absolute;inset:6px;
+  border:1px solid rgba(74,110,255,.15);
+  border-radius:2px;
+  pointer-events:none;z-index:2;
+}
+.portrait-frame img{width:100%;display:block;filter:saturate(1.05) brightness(.95)}
+
+.identity-block{
+  display:flex;flex-direction:column;justify-content:center;
+}
+.identity-row{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:1px;
+  background:rgba(74,110,255,.18);
+  border:1px solid rgba(74,110,255,.28);
+  margin-bottom:16px;
+}
+.id-cell{
+  padding:13px 16px;background:var(--bg-paper);
+}
+.id-label{
+  font-family:"Cinzel",serif;
+  font-size:9px;letter-spacing:.28em;text-transform:uppercase;
+  color:var(--gold-dim);margin-bottom:4px;
+}
+.id-val{
+  font-family:"Cinzel",serif;
+  font-size:13.5px;color:var(--ink);letter-spacing:.04em;
+}
+.id-val.azure{color:var(--azure-bright)}
+
+.signature-magic{
+  margin-top:14px;
+  padding:18px 22px;
+  background:linear-gradient(135deg,rgba(74,110,255,.14),rgba(10,12,22,.5));
+  border:1px solid rgba(74,110,255,.45);
+  border-left:4px solid var(--azure-bright);
+  border-radius:3px;
+  position:relative;
+}
+.sig-label{
+  font-family:"Cinzel",serif;
+  font-size:9px;letter-spacing:.32em;text-transform:uppercase;
+  color:var(--azure-bright);margin-bottom:8px;
+}
+.sig-name{
+  font-family:"Cinzel Decorative",serif;
+  font-size:22px;color:var(--azure-bright);letter-spacing:.04em;
+  margin-bottom:5px;
+  text-shadow:0 0 24px rgba(74,110,255,.4);
+}
+.sig-desc{
+  font-size:14.5px;line-height:1.65;color:rgba(232,234,240,.7);
+  font-style:italic;
+}
+.sig-quote{
+  margin-top:12px;
+  padding-top:10px;border-top:1px solid rgba(74,110,255,.2);
+  font-family:"Cormorant Garamond",serif;
+  font-size:13.5px;font-style:italic;color:rgba(255,245,208,.7);
+  text-align:right;
+}
+
+/* ===== Section base ===== */
+.section{margin-bottom:54px;scroll-margin-top:80px}
+.section-label{
+  font-family:"Cinzel",serif;
+  font-size:9.5px;letter-spacing:.36em;text-transform:uppercase;
+  color:var(--gold-dim);margin-bottom:6px;
+  display:flex;align-items:center;gap:12px;
+}
+.section-label::after{
+  content:"";flex:1;height:1px;
+  background:linear-gradient(90deg,rgba(212,183,106,.3),transparent);
+}
+.section-title{
+  font-family:"Cinzel Decorative",serif;
+  font-size:clamp(22px,3.2vw,32px);
+  color:var(--azure-bright);letter-spacing:.04em;line-height:1.15;
+  margin-bottom:4px;
+  text-shadow:0 0 30px rgba(74,110,255,.18);
+}
+.section-sub{
+  font-family:"Cormorant Garamond",serif;
+  font-style:italic;font-size:14.5px;
+  color:var(--ink-mute);margin-bottom:24px;
+}
+
+/* ===== Stats Grid ===== */
+.stat-grid{
+  display:grid;grid-template-columns:repeat(6,1fr);gap:10px;
+  margin-bottom:24px;
+}
+@media (max-width:720px){.stat-grid{grid-template-columns:repeat(3,1fr)}}
+.stat-cell{
+  padding:16px 12px;
+  background:linear-gradient(180deg,rgba(74,110,255,.06),rgba(10,12,22,.5));
+  border:1px solid rgba(74,110,255,.25);
+  border-radius:3px;text-align:center;
+  position:relative;overflow:hidden;
+  transition:border-color .25s,transform .25s,box-shadow .25s;
+}
+.stat-cell:hover{
+  border-color:var(--azure-bright);
+  transform:translateY(-2px);
+  box-shadow:0 8px 24px rgba(0,0,0,.4),0 0 18px rgba(74,110,255,.18);
+}
+.stat-cell.prime{
+  background:linear-gradient(180deg,rgba(74,110,255,.14),rgba(10,12,22,.4));
+  border-color:var(--azure-bright);
+}
+.sc-name{
+  font-family:"Cinzel",serif;
+  font-size:9px;letter-spacing:.28em;text-transform:uppercase;
+  color:var(--gold-dim);margin-bottom:5px;
+}
+.sc-score{
+  font-family:"Cinzel Decorative",serif;
+  font-size:26px;color:var(--ink);line-height:1;
+  margin-bottom:3px;
+}
+.stat-cell.prime .sc-score{color:var(--azure-bright)}
+.sc-mod{
+  font-family:"Cinzel",serif;
+  font-size:12px;color:var(--ink-mute);letter-spacing:.05em;
+}
+.sc-save{
+  position:absolute;top:6px;right:8px;
+  font-family:"Cinzel",serif;
+  font-size:8px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--azure-bright);
+  border:1px solid rgba(74,110,255,.5);
+  background:rgba(74,110,255,.12);
+  padding:1px 5px;border-radius:2px;
+}
+
+/* Combat + skills block */
+.combat-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
+  background:rgba(74,110,255,.18);
+  border:1px solid rgba(74,110,255,.32);
+  margin-bottom:24px;
+}
+@media (max-width:640px){.combat-grid{grid-template-columns:repeat(2,1fr)}}
+.cb-cell{
+  padding:14px 12px;background:var(--bg-paper);text-align:center;
+}
+.cb-label{
+  font-family:"Cinzel",serif;
+  font-size:8.5px;letter-spacing:.26em;text-transform:uppercase;
+  color:var(--gold-dim);margin-bottom:4px;
+}
+.cb-val{
+  font-family:"Cinzel",serif;
+  font-size:16px;color:var(--azure-bright);
+}
+.cb-val small{font-size:11px;color:var(--ink-mute);margin-left:4px}
+
+.skills-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:8px;
+  margin-bottom:18px;
+}
+@media (max-width:720px){.skills-grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:480px){.skills-grid{grid-template-columns:1fr}}
+.skill{
+  padding:7px 12px;background:rgba(74,110,255,.04);
+  border:1px solid rgba(74,110,255,.18);border-radius:2px;
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:13px;color:var(--ink-soft);
+}
+.skill.prof{
+  background:rgba(74,110,255,.12);
+  border-color:rgba(74,110,255,.4);
+  color:var(--ink);
+}
+.skill.expert{
+  background:rgba(74,110,255,.18);
+  border-color:var(--azure-bright);
+  color:var(--azure-bright);
+}
+.skill-name{font-family:"Cormorant Garamond",serif;font-size:14px}
+.skill-name small{font-size:9.5px;letter-spacing:.16em;color:var(--ink-mute);margin-left:5px}
+.skill-mod{
+  font-family:"Cinzel",serif;font-size:12px;
+  padding:2px 8px;border-radius:2px;
+  background:rgba(74,110,255,.15);
+  color:var(--azure-bright);
+}
+.skill-tag{
+  font-family:"Cinzel",serif;
+  font-size:8px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--gold-dim);margin-left:8px;
+}
+.skill.expert .skill-tag{color:var(--gold-bright)}
+
+/* ===== Spells ===== */
+.spells-head{
+  display:flex;align-items:center;gap:14px;margin-bottom:14px;
+}
+.spells-meta{
+  display:flex;gap:18px;
+  font-family:"Cinzel",serif;
+  font-size:10px;letter-spacing:.24em;text-transform:uppercase;
+}
+.spells-meta b{color:var(--azure-bright);font-weight:500;margin-right:6px}
+.spells-meta span{color:var(--gold-dim)}
+
+.spell-section{margin-bottom:22px}
+.spell-section h4{
+  font-family:"Cinzel",serif;
+  font-size:11.5px;letter-spacing:.28em;text-transform:uppercase;
+  color:rgba(232,234,240,.55);margin-bottom:10px;padding-bottom:8px;
+  border-bottom:1px solid rgba(74,110,255,.2);
+}
+.spell-section h4 small{color:var(--gold-dim);margin-left:10px;font-size:9.5px}
+.spell-list{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:8px;
+}
+@media (max-width:640px){.spell-list{grid-template-columns:1fr}}
+.spell{
+  display:grid;grid-template-columns:1fr auto;gap:8px;
+  padding:10px 14px;
+  background:rgba(74,110,255,.04);
+  border:1px solid rgba(74,110,255,.2);
+  border-radius:2px;
+  font-size:13.5px;color:var(--ink-soft);
+}
+.spell:hover{background:rgba(74,110,255,.08);border-color:rgba(74,110,255,.45)}
+.spell-name{
+  font-family:"Cormorant Garamond",serif;
+  font-size:14.5px;color:var(--ink);
+}
+.spell-name b{font-weight:500}
+.spell-name em{
+  font-style:normal;
+  font-family:"Cinzel",serif;
+  font-size:8px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--gold-dim);margin-left:6px;
+  padding:1px 5px;border:1px solid rgba(212,160,23,.3);border-radius:2px;
+  background:rgba(212,160,23,.06);
+}
+.spell-info{
+  font-family:"Cinzel",serif;
+  font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--gold-dim);text-align:right;
+  align-self:center;white-space:nowrap;
+}
+
+/* ===== Equipment ===== */
+.equip-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px;
+}
+@media (max-width:720px){.equip-grid{grid-template-columns:1fr}}
+.equip-col{
+  padding:16px 20px;
+  background:var(--bg-card);
+  border:1px solid var(--line);border-left:3px solid var(--azure-dim);
+  border-radius:3px;
+}
+.equip-col h4{
+  font-family:"Cinzel",serif;
+  font-size:10.5px;letter-spacing:.26em;text-transform:uppercase;
+  color:var(--azure-bright);margin-bottom:10px;
+  display:flex;align-items:center;gap:8px;
+}
+.equip-list{list-style:none;display:flex;flex-direction:column;gap:5px}
+.equip-list li{
+  font-size:14px;color:rgba(232,234,240,.7);
+  padding:4px 0;border-bottom:1px dashed rgba(74,110,255,.08);
+  display:flex;justify-content:space-between;align-items:baseline;
+}
+.equip-list li:last-child{border-bottom:none}
+.equip-list .qty{
+  font-family:"Cinzel",serif;
+  font-size:11px;color:var(--gold-dim);letter-spacing:.05em;
+}
+.purse-row{
+  display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;
+}
+.purse{
+  padding:8px 14px;
+  background:rgba(212,160,23,.08);
+  border:1px solid rgba(212,160,23,.3);
+  border-radius:2px;font-family:"Cinzel",serif;
+  font-size:12px;letter-spacing:.1em;color:var(--gold-bright);
+}
+.purse b{margin-right:5px;color:var(--gold-dim);font-size:9px;letter-spacing:.2em;text-transform:uppercase}
+
+/* ===== Personality ===== */
+.persona-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;
+}
+@media (max-width:720px){.persona-grid{grid-template-columns:1fr}}
+.persona-card{
+  padding:16px 20px;
+  background:linear-gradient(135deg,rgba(74,110,255,.06),rgba(10,12,22,.5));
+  border:1px solid rgba(74,110,255,.22);
+  border-radius:3px;
+}
+.persona-card h5{
+  font-family:"Cinzel",serif;
+  font-size:9.5px;letter-spacing:.32em;text-transform:uppercase;
+  color:var(--azure-bright);margin-bottom:8px;
+}
+.persona-card p{
+  font-size:14.5px;line-height:1.7;
+  color:rgba(232,234,240,.72);
+}
+
+/* Likes & Dislikes */
+.likes-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
+@media (max-width:720px){.likes-grid{grid-template-columns:1fr}}
+.like-col{
+  padding:16px 20px;
+  background:var(--bg-card);
+  border:1px solid var(--line);border-radius:3px;
+}
+.like-col.like{border-left:3px solid var(--azure-bright)}
+.like-col.dislike{border-left:3px solid #c44a2a}
+.like-col h5{
+  font-family:"Cinzel",serif;
+  font-size:10px;letter-spacing:.3em;text-transform:uppercase;
+  margin-bottom:10px;
+}
+.like-col.like h5{color:var(--azure-bright)}
+.like-col.dislike h5{color:#e07555}
+.like-col ul{list-style:none;display:flex;flex-direction:column;gap:6px}
+.like-col li{
+  padding-left:18px;position:relative;
+  font-size:13.5px;line-height:1.55;
+  color:rgba(232,234,240,.68);
+}
+.like-col.like li::before{content:"◆";position:absolute;left:0;top:1px;color:var(--azure-bright);font-size:8px;line-height:1.7}
+.like-col.dislike li::before{content:"⨯";position:absolute;left:0;top:0;color:#e07555;font-size:12px}
+
+/* ===== Backstory ===== */
+.backstory{
+  background:var(--bg-card);
+  border:1px solid var(--line);
+  border-left:3px solid var(--azure-bright);
+  padding:30px 36px;border-radius:3px;
+  position:relative;
+}
+.backstory::before{
+  content:"";
+  position:absolute;top:0;left:-3px;width:3px;height:30%;
+  background:linear-gradient(180deg,var(--azure-bright),transparent);
+  filter:blur(2px);
+}
+.backstory p{
+  font-family:"Cormorant Garamond",serif;
+  font-size:16.5px;line-height:1.9;
+  color:rgba(232,234,240,.76);
+  margin-bottom:18px;
+}
+.backstory p:last-child{margin-bottom:0}
+.backstory p em{color:var(--azure-bright);font-style:normal;font-weight:500}
+.backstory p strong{color:var(--gold-bright);font-weight:500}
+.backstory .scene-break{
+  text-align:center;color:var(--azure-dim);
+  font-size:18px;letter-spacing:.8em;margin:14px 0;
+  opacity:.55;
+}
+
+/* Secret box (always visible per user choice) */
+.secret-box{
+  margin-top:30px;
+  padding:24px 28px;
+  background:linear-gradient(135deg,rgba(80,40,120,.16),rgba(10,12,22,.5));
+  border:1px solid rgba(140,80,220,.4);
+  border-left:4px solid #9b6acc;
+  border-radius:3px;
+  position:relative;
+}
+.secret-label{
+  font-family:"Cinzel",serif;
+  font-size:9px;letter-spacing:.36em;text-transform:uppercase;
+  color:rgba(200,170,240,.85);margin-bottom:10px;
+  display:flex;align-items:center;gap:10px;
+}
+.secret-name{
+  font-family:"Cinzel Decorative",serif;
+  font-size:18px;color:rgba(220,200,255,.95);margin-bottom:8px;
+  text-shadow:0 0 18px rgba(140,80,220,.4);
+}
+.secret-text{
+  font-family:"Cormorant Garamond",serif;
+  font-style:italic;font-size:15px;line-height:1.7;
+  color:rgba(232,234,240,.72);
+}
+
+/* ===== Allies & Hooks ===== */
+.duo-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px}
+@media (max-width:720px){.duo-grid{grid-template-columns:1fr}}
+.duo-card{
+  padding:18px 22px;
+  background:var(--bg-card);
+  border:1px solid rgba(74,110,255,.22);
+  border-radius:3px;
+}
+.duo-card h5{
+  font-family:"Cinzel",serif;
+  font-size:10px;letter-spacing:.3em;text-transform:uppercase;
+  color:var(--azure-bright);margin-bottom:10px;
+  padding-bottom:8px;border-bottom:1px solid rgba(74,110,255,.18);
+}
+.duo-card ul{list-style:none}
+.duo-card li{
+  font-size:14px;line-height:1.65;
+  color:rgba(232,234,240,.68);
+  padding:6px 0;
+  border-bottom:1px dashed rgba(74,110,255,.08);
+}
+.duo-card li:last-child{border-bottom:none}
+.duo-card li b{
+  font-family:"Cinzel",serif;
+  font-size:9px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--gold-dim);display:block;margin-bottom:3px;
+}
+
+/* ===== Apollo ===== */
+.apollo-card{
+  padding:26px 32px;
+  background:
+    radial-gradient(circle at 50% 0%,rgba(255,245,208,.08),transparent 60%),
+    linear-gradient(180deg,rgba(212,183,106,.04),rgba(10,12,22,.6));
+  border:1px solid rgba(255,245,208,.22);
+  border-radius:3px;
+  text-align:center;
+}
+.apollo-icon{
+  font-size:32px;color:var(--apollo);
+  text-shadow:0 0 24px rgba(255,245,208,.4);
+  margin-bottom:10px;
+}
+.apollo-card h4{
+  font-family:"Cinzel Decorative",serif;
+  font-size:20px;color:var(--apollo);letter-spacing:.06em;
+  margin-bottom:6px;text-shadow:0 0 18px rgba(255,245,208,.3);
+}
+.apollo-card p{
+  font-size:14.5px;line-height:1.7;
+  color:rgba(232,234,240,.7);
+  max-width:560px;margin:0 auto;
+  font-style:italic;
+}
+
+/* ===== Floating back ===== */
+.float-home{
+  position:fixed;bottom:24px;right:24px;z-index:60;
+  display:flex;align-items:center;gap:9px;
+  font-family:"Cinzel",serif;
+  font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;
+  color:rgba(150,180,255,.7);text-decoration:none;
+  background:rgba(6,7,13,.92);
+  border:1px solid rgba(74,110,255,.32);
+  border-radius:2px;padding:10px 16px;
+  backdrop-filter:blur(6px);
+  box-shadow:0 8px 28px rgba(0,0,0,.6);
+  transition:color .2s,border-color .2s;
+}
+.float-home:hover{color:var(--azure-bright);border-color:var(--azure-bright)}
+.float-home svg{flex:none}
+</style>
+</head>
+<body>
+
+<!-- Ambient layers -->
+<div class="flame-field" id="flame-field"></div>
+<div class="grain"></div>
+
+<!-- Topbar -->
+<nav id="topbar">
+  <div class="breadcrumb">
+    <a href="/">The Veiled Codex</a>
+    <span class="sep">›</span>
+    <a href="/">Roster of Folios</a>
+    <span class="sep">›</span>
+    <span class="current">Dermogorgon</span>
+  </div>
+  <a class="topbar-link" href="/">← Back to Codex</a>
+</nav>
+
+<div class="wrap">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="flame-motif"></div>
+    <div class="hero-badge">
+      <span class="badge-dot"></span>
+      Wizard · High Elf · Last of Aelindra's Flame
+    </div>
+    <div class="hero-eyebrow">The Veiled Codex · Folio of the Azure Flame</div>
+    <h1 class="hero-title">Dermogorgon</h1>
+    <div class="hero-sub">The Azure Flame · Wanderer Among Lanterns</div>
+    <p class="hero-thai">เด็กผู้หญิงที่เคยทำให้ทุกห้องสว่างขึ้น · กลายเป็นผู้หญิงที่สวมความหยิ่งเป็นเกราะ · ไล่ตามเงาของคนที่ไม่กลับมา</p>
+    <div class="hero-divider"></div>
+  </section>
+
+  <!-- PORTRAIT + IDENTITY -->
+  <div class="portrait-section">
+    <figure class="portrait-frame">
+      <img src="/assets/folio/dermogorgon.png" alt="Dermogorgon — Azure Flame Wizard portrait" />
+    </figure>
+    <div class="identity-block">
+      <div class="identity-row">
+        <div class="id-cell"><div class="id-label">Species</div><div class="id-val">High Elf</div></div>
+        <div class="id-cell"><div class="id-label">Class · Level</div><div class="id-val azure">Wizard · 1</div></div>
+        <div class="id-cell"><div class="id-label">Background</div><div class="id-val">Sage</div></div>
+        <div class="id-cell"><div class="id-label">Alignment</div><div class="id-val">Neutral</div></div>
+        <div class="id-cell"><div class="id-label">Faith</div><div class="id-val">Apollo</div></div>
+        <div class="id-cell"><div class="id-label">Age</div><div class="id-val">200</div></div>
+        <div class="id-cell"><div class="id-label">Height · Weight</div><div class="id-val">5'9" · 143 lb</div></div>
+        <div class="id-cell"><div class="id-label">Eyes · Skin · Hair</div><div class="id-val">Blue · Honey · Blonde</div></div>
+      </div>
+
+      <div class="signature-magic">
+        <div class="sig-label">✦ Signature Magic</div>
+        <div class="sig-name">Azure Flame</div>
+        <div class="sig-desc">เปลวเพลิงสีน้ำเงินบริสุทธิ์ · นักปราชญ์เชื่อว่า "พรของ Apollo" ที่เกิดเฉพาะกับวิญญาณที่สมบูรณ์เท่านั้น</div>
+        <div class="sig-quote">"<em>ฉันรู้แค่ว่า ตราบเปลวฟ้ายังลุก · คำตอบต้องมีอยู่ที่ไหนสักแห่ง</em>"</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ABILITY SCORES -->
+  <section class="section" id="stats">
+    <div class="section-label">Ability Scores</div>
+    <div class="section-title">ค่าพลัง</div>
+    <div class="stat-grid">
+      <div class="stat-cell">
+        <div class="sc-name">STR</div>
+        <div class="sc-score">10</div>
+        <div class="sc-mod">+0</div>
+      </div>
+      <div class="stat-cell">
+        <div class="sc-name">DEX</div>
+        <div class="sc-score">13</div>
+        <div class="sc-mod">+1</div>
+      </div>
+      <div class="stat-cell">
+        <div class="sc-name">CON</div>
+        <div class="sc-score">15</div>
+        <div class="sc-mod">+2</div>
+      </div>
+      <div class="stat-cell prime">
+        <div class="sc-save">Save +5</div>
+        <div class="sc-name">INT</div>
+        <div class="sc-score">17</div>
+        <div class="sc-mod">+3</div>
+      </div>
+      <div class="stat-cell prime">
+        <div class="sc-save">Save +3</div>
+        <div class="sc-name">WIS</div>
+        <div class="sc-score">12</div>
+        <div class="sc-mod">+1</div>
+      </div>
+      <div class="stat-cell">
+        <div class="sc-name">CHA</div>
+        <div class="sc-score">8</div>
+        <div class="sc-mod">−1</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMBAT -->
+  <section class="section" id="combat">
+    <div class="section-label">Combat Profile</div>
+    <div class="section-title">ความสามารถในการต่อสู้</div>
+    <div class="combat-grid">
+      <div class="cb-cell"><div class="cb-label">Armor Class</div><div class="cb-val">11 <small>(no armor)</small></div></div>
+      <div class="cb-cell"><div class="cb-label">Hit Points</div><div class="cb-val">8 <small>(1d6+2)</small></div></div>
+      <div class="cb-cell"><div class="cb-label">Initiative</div><div class="cb-val">+1</div></div>
+      <div class="cb-cell"><div class="cb-label">Speed</div><div class="cb-val">30 ft</div></div>
+      <div class="cb-cell"><div class="cb-label">Proficiency</div><div class="cb-val">+2</div></div>
+      <div class="cb-cell"><div class="cb-label">Spell Save DC</div><div class="cb-val">13</div></div>
+      <div class="cb-cell"><div class="cb-label">Spell Attack</div><div class="cb-val">+5</div></div>
+      <div class="cb-cell"><div class="cb-label">Hit Dice</div><div class="cb-val">1d6</div></div>
+    </div>
+    <div class="combat-grid">
+      <div class="cb-cell"><div class="cb-label">Quarterstaff</div><div class="cb-val">+2 <small>1d6 bludg</small></div></div>
+      <div class="cb-cell"><div class="cb-label">Dagger ×2</div><div class="cb-val">+3 <small>1d4 pierce</small></div></div>
+      <div class="cb-cell"><div class="cb-label">Fire Bolt</div><div class="cb-val">+5 <small>1d10 fire · 120 ft</small></div></div>
+      <div class="cb-cell"><div class="cb-label">Ray of Frost</div><div class="cb-val">+5 <small>1d8 cold · 60 ft</small></div></div>
+    </div>
+    <p class="section-sub" style="margin-top:14px">Senses · Darkvision 60 ft · Passive Perception 11 · Passive Insight 13 · Passive Investigation 13</p>
+  </section>
+
+  <!-- SKILLS -->
+  <section class="section" id="skills">
+    <div class="section-label">Skills &amp; Proficiencies</div>
+    <div class="section-title">ทักษะ</div>
+    <div class="skills-grid">
+      <div class="skill expert"><div class="skill-name">Arcana <small>INT</small></div><div class="skill-mod">+5</div></div>
+      <div class="skill expert"><div class="skill-name">History <small>INT</small></div><div class="skill-mod">+5</div></div>
+      <div class="skill expert"><div class="skill-name">Religion <small>INT</small></div><div class="skill-mod">+5</div></div>
+      <div class="skill prof"><div class="skill-name">Insight <small>WIS</small></div><div class="skill-mod">+3</div></div>
+      <div class="skill prof"><div class="skill-name">Survival <small>WIS</small></div><div class="skill-mod">+3</div></div>
+      <div class="skill"><div class="skill-name">Acrobatics <small>DEX</small></div><div class="skill-mod">+1</div></div>
+      <div class="skill"><div class="skill-name">Animal H. <small>WIS</small></div><div class="skill-mod">+1</div></div>
+      <div class="skill"><div class="skill-name">Investigation <small>INT</small></div><div class="skill-mod">+3</div></div>
+      <div class="skill"><div class="skill-name">Medicine <small>WIS</small></div><div class="skill-mod">+1</div></div>
+      <div class="skill"><div class="skill-name">Nature <small>INT</small></div><div class="skill-mod">+3</div></div>
+      <div class="skill"><div class="skill-name">Perception <small>WIS</small></div><div class="skill-mod">+1</div></div>
+      <div class="skill"><div class="skill-name">Sleight of H. <small>DEX</small></div><div class="skill-mod">+1</div></div>
+      <div class="skill"><div class="skill-name">Stealth <small>DEX</small></div><div class="skill-mod">+1</div></div>
+      <div class="skill"><div class="skill-name">Athletics <small>STR</small></div><div class="skill-mod">+0</div></div>
+      <div class="skill"><div class="skill-name">Persuasion <small>CHA</small></div><div class="skill-mod">−1</div></div>
+    </div>
+    <p class="section-sub">⬩ ทักษะที่มี proficiency เน้นสีน้ำเงิน · INT-based skills ของ Sage = expert-tone</p>
+  </section>
+
+  <!-- SPELLS -->
+  <section class="section" id="spells">
+    <div class="section-label">Spellbook</div>
+    <div class="section-title">เวทมนตร์</div>
+    <div class="spells-head">
+      <div class="spells-meta">
+        <div><b>Class</b><span>Wizard</span></div>
+        <div><b>Ability</b><span>INT</span></div>
+        <div><b>Save DC</b><span>13</span></div>
+        <div><b>Atk</b><span>+5</span></div>
+        <div><b>1st slots</b><span>2</span></div>
+      </div>
+    </div>
+
+    <div class="spell-section">
+      <h4>Cantrips <small>(At Will)</small></h4>
+      <div class="spell-list">
+        <div class="spell"><div class="spell-name"><b>Fire Bolt</b></div><div class="spell-info">+5 · 1d10 fire · 120 ft</div></div>
+        <div class="spell"><div class="spell-name"><b>Control Flames</b></div><div class="spell-info">60 ft · 5 ft cube · S</div></div>
+        <div class="spell"><div class="spell-name"><b>Minor Illusion</b></div><div class="spell-info">30 ft · 1 min · S,M</div></div>
+        <div class="spell"><div class="spell-name"><b>Ray of Frost</b> <em>Elven Lineage</em></div><div class="spell-info">+5 · 1d8 cold · 60 ft</div></div>
+      </div>
+    </div>
+
+    <div class="spell-section">
+      <h4>1st Level Spells <small>(2 slots)</small></h4>
+      <div class="spell-list">
+        <div class="spell"><div class="spell-name"><b>Absorb Elements</b> <em>Ritual</em></div><div class="spell-info">Reaction · Self · 1 rnd</div></div>
+        <div class="spell"><div class="spell-name"><b>Shield</b></div><div class="spell-info">Reaction · Self · 1 rnd · +5 AC</div></div>
+        <div class="spell"><div class="spell-name"><b>Burning Hands</b></div><div class="spell-info">15 ft cone · DEX 13 · 3d6 fire</div></div>
+        <div class="spell"><div class="spell-name"><b>Mage Armor</b></div><div class="spell-info">Touch · 8 hours · AC 13+DEX</div></div>
+        <div class="spell"><div class="spell-name"><b>Magic Missile</b></div><div class="spell-info">120 ft · 3×(1d4+1) force</div></div>
+        <div class="spell"><div class="spell-name"><b>Chromatic Orb</b></div><div class="spell-info">+5 · 90 ft · 3d8 (choose type)</div></div>
+        <div class="spell"><div class="spell-name"><b>Silent Image</b></div><div class="spell-info">60 ft · 15 ft cube · 10 min conc</div></div>
+        <div class="spell"><div class="spell-name"><b>Tenser's Floating Disk</b> <em>Ritual</em></div><div class="spell-info">30 ft · 1 hour · floating platform</div></div>
+        <div class="spell"><div class="spell-name"><b>Tasha's Hideous Laughter</b></div><div class="spell-info">30 ft · WIS 13 · 1 min conc · prone</div></div>
+        <div class="spell"><div class="spell-name"><b>Longstrider</b></div><div class="spell-info">Touch · 1 hour · +10 ft speed</div></div>
+        <div class="spell"><div class="spell-name"><b>Jump</b></div><div class="spell-info">Bonus · Touch · 1 min · jump ×3</div></div>
+        <div class="spell"><div class="spell-name"><b>Feather Fall</b></div><div class="spell-info">Reaction · 60 ft · 1 min · slow fall</div></div>
+      </div>
+    </div>
+
+    <div class="persona-card" style="margin-top:8px">
+      <h5>✧ Class Features</h5>
+      <p><b style="color:var(--azure-bright)">Arcane Recovery</b> — เมื่อจบ Short Rest หนึ่งครั้งต่อ Long Rest · recover spell slots รวมระดับไม่เกิน 1 (ไม่เกิน lvl 6)</p>
+      <p style="margin-top:8px"><b style="color:var(--azure-bright)">Ritual Adept</b> — ร่ายเวทย์ ritual ใดๆ ที่อยู่ใน spellbook ได้แม้ไม่ prepare</p>
+      <p style="margin-top:8px"><b style="color:var(--azure-bright)">High Elf Lineage</b> — Fey Ancestry · Trance (Long Rest 4 ชม.) · Keen Senses (Insight/Perception/Survival)</p>
+    </div>
+  </section>
+
+  <!-- EQUIPMENT -->
+  <section class="section" id="equipment">
+    <div class="section-label">Equipment &amp; Belongings</div>
+    <div class="section-title">ของที่พกติดตัว</div>
+    <div class="equip-grid">
+      <div class="equip-col">
+        <h4>⚔ Weapons</h4>
+        <ul class="equip-list">
+          <li>Quarterstaff <span class="qty">1 · 4 lb</span></li>
+          <li>Dagger <span class="qty">2 · 1 lb each</span></li>
+          <li>Small Knife <span class="qty">1 · —</span></li>
+        </ul>
+      </div>
+      <div class="equip-col">
+        <h4>📖 Sage's Kit</h4>
+        <ul class="equip-list">
+          <li>Spellbook <span class="qty">1 · 3 lb</span></li>
+          <li>Book (research notes) <span class="qty">1 · 5 lb</span></li>
+          <li>Parchment <span class="qty">10 · —</span></li>
+          <li>Ink (1 oz) <span class="qty">2 · —</span></li>
+          <li>Ink Pen <span class="qty">1 · —</span></li>
+        </ul>
+      </div>
+      <div class="equip-col">
+        <h4>🎒 Traveling Gear</h4>
+        <ul class="equip-list">
+          <li>Backpack <span class="qty">1 · 5 lb</span></li>
+          <li>Robe <span class="qty">1 · 4 lb</span></li>
+          <li>Lamp <span class="qty">1 · 1 lb</span></li>
+          <li>Tinderbox <span class="qty">1 · 1 lb</span></li>
+          <li>Oil (1 flask) <span class="qty">10 · 1 lb each</span></li>
+        </ul>
+      </div>
+      <div class="equip-col">
+        <h4>⚖ Encumbrance</h4>
+        <ul class="equip-list">
+          <li>Carried <span class="qty">35 lb</span></li>
+          <li>Encumbered at <span class="qty">150 lb</span></li>
+          <li>Push/Drag/Lift <span class="qty">300 lb</span></li>
+        </ul>
+        <div class="purse-row">
+          <span class="purse"><b>GP</b>15</span>
+          <span class="purse"><b>SP</b>0</span>
+          <span class="purse"><b>CP</b>0</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PERSONALITY -->
+  <section class="section" id="personality">
+    <div class="section-label">Personality</div>
+    <div class="section-title">บุคลิก</div>
+    <div class="persona-grid">
+      <div class="persona-card">
+        <h5>◆ Personality Trait</h5>
+        <p>หยิ่งและเป็นอิสระอย่างเปิดเผย · ต่อต้านการถูกควบคุมหรือซักถาม · ดูเย็นชาและห่างเหินต่อคนแปลกหน้า · แต่ภักดีไม่จำกัดต่อคนที่ได้รับความไว้ใจของเธอ · พูดน้อยแต่ทุกคำมีน้ำหนัก</p>
+      </div>
+      <div class="persona-card">
+        <h5>✦ Ideal</h5>
+        <p>"ความรักคือแสงที่จริงที่สุด" — เธอเชื่อว่าทุกวิญญาณสมควรได้รักและถูกรัก · และว่าความสมดุลของโลกตั้งอยู่บนรากนั้น</p>
+      </div>
+      <div class="persona-card">
+        <h5>⛓ Bond</h5>
+        <p>ครอบครัวของเธอที่ Aelindra ยึดเธอไว้กับโลกใบนี้ · และความทรงจำของคนที่เธอเคยรัก — คนที่หายไปโดยไม่ทิ้งแม้แต่รอยเท้าเดียว</p>
+      </div>
+      <div class="persona-card">
+        <h5>✖ Flaw</h5>
+        <p>เธอหาความสงบในความสันโดษไม่เจอ · ความว่างเปล่าผลักให้เธอตัดสินใจหุนหัน · และผลักไสคนที่พยายามเข้าใกล้ก่อนที่จะถูกทำร้ายอีกครั้ง</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- LIKES & DISLIKES -->
+  <section class="section" id="taste">
+    <div class="section-label">Likes &amp; Dislikes</div>
+    <div class="section-title">ที่ชอบและที่ชัง</div>
+    <div class="likes-grid">
+      <div class="like-col like">
+        <h5>◆ Likes</h5>
+        <ul>
+          <li>ตำราโบราณและองค์ความรู้ที่ถูกลืม</li>
+          <li>ท้องฟ้ายามค่ำคืนและสถานที่สีเงิน</li>
+          <li>เปลวเพลิงสีน้ำเงินและช่วงเวลา Arcane Recovery</li>
+          <li>ชาดอกออร์คิด · ของขม</li>
+          <li>ประวัติศาสตร์และหนังสือ — โดยเฉพาะที่ยังไม่เคยถูกอ่าน</li>
+          <li>ที่เงียบสงบหลังพายุ</li>
+        </ul>
+      </div>
+      <div class="like-col dislike">
+        <h5>⨯ Dislikes</h5>
+        <ul>
+          <li>การถูกถามเรื่องอดีต</li>
+          <li>คนที่โกหกหรือทรยศ trust</li>
+          <li>ที่ดัง · ที่แออัด</li>
+          <li>การสูญเสีย control บนเวทมนตร์</li>
+          <li>คำชมเชิงสงสาร</li>
+          <li>คนที่ยิ้มง่ายเกินไป — เธอไม่เชื่อ</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- BACKSTORY -->
+  <section class="section" id="backstory">
+    <div class="section-label">Backstory</div>
+    <div class="section-title">เรื่องราว</div>
+    <div class="backstory">
+      <p>ครั้งหนึ่ง <strong>Dermogorgon</strong> เป็นที่รักที่สุดของหมู่บ้าน <em>Aelindra</em> — เด็กผู้หญิงที่ทำให้ทุกห้องสว่างขึ้นเพียงเพราะเธอเดินผ่าน · เสียงหัวเราะของเธอจริงและไม่กลัวที่จะดัง</p>
+      <p>เมื่ออายุ <em>180 ปี</em> · เธอตกหลุมรัก · คนที่เธอชื่อไม่ออกเสียงดังๆ · ความรักนั้นปลุกบางอย่างขึ้นในเวทมนตร์ของเธอ — <em>Azure Flame</em> เปลวเพลิงสีน้ำเงินบริสุทธิ์ที่นักปราชญ์บอกว่าเกิดเฉพาะกับวิญญาณที่สมบูรณ์ · มีผู้กล่าวว่ามันคือพรของ <em>Apollo</em> เอง</p>
+      <div class="scene-break">✦ · ✦ · ✦</div>
+      <p>แล้ว <em>เช้าวันหนึ่ง</em> · คนที่เธอรักก็หายไป</p>
+      <p>ไม่มีโน้ต · ไม่มีรอยเท้า · ไม่มีร่องรอย — ราวกับว่าพวกเขาไม่เคยมีอยู่จริง · เธอ <em>รอ 20 ปี</em> ก่อนยอมรับว่าพวกเขาจะไม่กลับมา</p>
+      <p>เด็กผู้หญิงที่เคยหัวเราะอย่างอิสระ · กลายเป็นใครคนหนึ่งที่ <strong>สวมความหยิ่งเป็นเกราะ</strong> · เธอหยิบ Spellbook ของเธอ · ผูกเสื้อคลุม · แล้วเดินออกจาก Aelindra <em>โดยไม่กล่าวลา</em></p>
+      <div class="scene-break">✦ · ✦ · ✦</div>
+      <p>เธอไม่รู้ว่าจะหาคนที่หายไปเจอหรือไม่ · เธอรู้แค่ว่า — <strong>ตราบที่ Azure Flame ยังลุก คำตอบต้องมีอยู่ที่ไหนสักแห่ง</strong></p>
+      <p>เธอจึงเดินทาง · จากเมืองหนึ่งสู่อีกเมือง · จากท่าเรือสู่ห้องสมุด · ถามคำถามเดียวกันทุกที่ที่เธอไป — "<em>เคยเห็นใครชื่อ...</em>" ก่อนจะหยุดและถามแบบกว้างกว่านั้นแทน · เพราะเธอเริ่มลืมแม้กระทั่งวิธีจะออกเสียงชื่อนั้น</p>
+    </div>
+
+    <div class="secret-box">
+      <div class="secret-label">🟣 Hidden Truth · ความลับของเปลวเพลิง</div>
+      <div class="secret-name">Her flame dims when she loses hope</div>
+      <div class="secret-text">
+        <em>Azure Flame</em> ที่นักปราชญ์บอกว่าเป็นเครื่องหมายของวิญญาณที่สมบูรณ์ · มันยึดอยู่กับ <strong>ความหวัง</strong>ของเธอเอง · ทุกครั้งที่เธอเริ่มยอมรับว่าคนรักของเธอตายแล้ว · ทุกครั้งที่ใจของเธอใกล้ยอมแพ้ — เปลวเพลิงสีน้ำเงินจะ <em>หรี่ลง</em> · จาง · ลงน้อย · จนแทบเป็นแค่ประกายเล็กๆ ในฝ่ามือ
+        <br><br>
+        เธอไม่กล้าบอกใคร · เธอไม่กล้าแม้แต่จะคิดถึงมัน · เพราะถ้าเปลวเพลิงดับ · นั่นไม่ใช่แค่การสูญเสียเวทมนตร์ · มันคือการยอมรับว่า — <strong>คนที่เธอตามหา · ไม่มีอยู่อีกแล้ว</strong>
+      </div>
+    </div>
+  </section>
+
+  <!-- ALLIES & HOOKS -->
+  <section class="section" id="allies">
+    <div class="section-label">Allies &amp; Hooks</div>
+    <div class="section-title">ผู้ใกล้ชิดและสิ่งดึงดูด</div>
+    <div class="duo-grid">
+      <div class="duo-card">
+        <h5>✧ Allies &amp; Organizations</h5>
+        <ul>
+          <li><b>Family in Aelindra</b>ห่างเหินมาเป็นทศวรรษ · แต่ไม่เคยถูกลืม · พันธะที่เธอเก็บไว้ในความเงียบ</li>
+          <li><b>Followers of Apollo</b>ผู้ที่กระจายอยู่ตามวัดและสาวก · เธอเรียกหาพวกเขาเฉพาะเวลาต้องการข้อมูล</li>
+        </ul>
+      </div>
+      <div class="duo-card">
+        <h5>✦ Roleplay Hooks</h5>
+        <ul>
+          <li><b>Combat Role</b>Blaster + Utility · เปลวเพลิงและเวทย์สนับสนุน</li>
+          <li><b>Signature Cantrips</b>Fire Bolt · Control Flames</li>
+          <li><b>Hook</b>ถามถึงคนที่หายในทุกเมืองใหม่ที่เธอไป · แม้เธอจะลืมชื่อแล้ว</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- APOLLO -->
+  <section class="section" id="apollo">
+    <div class="section-label">Faith</div>
+    <div class="section-title">ศรัทธาแห่ง Apollo</div>
+    <div class="apollo-card">
+      <div class="apollo-icon">☼</div>
+      <h4>Apollo · God of Light, Truth, and Healing</h4>
+      <p>เธอไม่ได้บูชาเขาเหมือนนักบวช · แต่เธอเชื่อในแสงของเขา · ความจริงและความหวังคือสิ่งเดียวที่ Azure Flame ยังลุกอยู่ได้ · ทุกค่ำที่เธอนั่งคนเดียวในที่เงียบ — เธอจะจุดเทียนสีน้ำเงินสองเล่ม · เล่มหนึ่งให้คนที่หายไป · อีกเล่มให้ตัวเอง</p>
+    </div>
+  </section>
+
+</div>
+
+<!-- Floating back -->
+<a class="float-home" href="/">
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12L12 3l9 9"/><path d="M9 21V12h6v9"/></svg>
+  Roster
+</a>
+
+<script>
+// Azure flame motes
+(function(){
+  const field = document.getElementById('flame-field');
+  if (!field) return;
+  for (let i = 0; i < 30; i++){
+    const f = document.createElement('div');
+    f.className = 'flame';
+    f.style.left = Math.random() * 100 + '%';
+    f.style.setProperty('--dx', (Math.random() * 60 - 30) + 'px');
+    f.style.animationDuration = (8 + Math.random() * 14) + 's';
+    f.style.animationDelay = (Math.random() * 12) + 's';
+    field.appendChild(f);
+  }
+})();
+</script>
+</body>
+</html>

@@ -22,6 +22,7 @@
     { "source": "/folio/aython", "destination": "/folio/aython.html" },
     { "source": "/folio/jen", "destination": "/folio/jen.html" },
     { "source": "/folio/kael-veranth", "destination": "/folio/kael-veranth.html" },
-    { "source": "/folio/kael-vorn", "destination": "/folio/kael-vorn.html" }
+    { "source": "/folio/kael-vorn", "destination": "/folio/kael-vorn.html" },
+    { "source": "/folio/dermogorgon", "destination": "/folio/dermogorgon.html" }
   ]
 }

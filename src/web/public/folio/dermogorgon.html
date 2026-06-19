@@ -999,6 +999,235 @@ body::after{
 }
 .float-home:hover{color:var(--azure-bright);border-color:var(--azure-bright)}
 .float-home svg{flex:none}
+
+/* ===== Chronicle Floating Trigger ===== */
+.chronicle-trigger{
+  position:fixed;left:24px;bottom:24px;z-index:60;
+  display:flex;align-items:center;gap:10px;
+  font-family:"Cinzel",serif;
+  font-size:10px;letter-spacing:.24em;text-transform:uppercase;
+  color:rgba(150,180,255,.85);
+  background:linear-gradient(135deg,rgba(74,110,255,.18),rgba(6,7,13,.92));
+  border:1px solid rgba(74,110,255,.45);
+  border-radius:2px;padding:12px 18px;
+  backdrop-filter:blur(8px);
+  box-shadow:0 10px 32px rgba(0,0,0,.6),0 0 24px rgba(74,110,255,.18);
+  cursor:pointer;
+  transition:color .25s,border-color .25s,transform .25s,box-shadow .25s;
+  animation:trigger-breathe 4s ease-in-out infinite;
+}
+.chronicle-trigger:hover{
+  color:var(--azure-bright);border-color:var(--azure-bright);
+  transform:translateY(-2px);
+  box-shadow:0 14px 38px rgba(0,0,0,.7),0 0 36px rgba(74,110,255,.32);
+}
+.chronicle-trigger svg{flex:none;width:16px;height:16px;color:var(--azure-bright);filter:drop-shadow(0 0 6px rgba(74,110,255,.7))}
+@keyframes trigger-breathe{
+  0%,100%{box-shadow:0 10px 32px rgba(0,0,0,.6),0 0 18px rgba(74,110,255,.14)}
+  50%{box-shadow:0 10px 32px rgba(0,0,0,.6),0 0 32px rgba(74,110,255,.32)}
+}
+@media (max-width:600px){
+  .chronicle-trigger{left:14px;bottom:14px;padding:9px 14px;font-size:9px}
+}
+
+/* ===== Phoenix Flight Overlay ===== */
+.phoenix-overlay{
+  position:fixed;inset:0;z-index:500;
+  background:radial-gradient(ellipse at center,rgba(6,7,13,.85),rgba(6,7,13,.98));
+  opacity:0;pointer-events:none;
+  transition:opacity .3s ease;
+}
+.phoenix-overlay.active{opacity:1;pointer-events:auto}
+.phoenix-overlay svg{position:absolute;inset:0;width:100%;height:100%}
+.phoenix-trail{
+  fill:none;stroke:url(#trail-grad);stroke-width:3;
+  stroke-linecap:round;stroke-linejoin:round;
+  filter:url(#trail-glow);
+  stroke-dasharray:2400;stroke-dashoffset:2400;
+}
+.phoenix-overlay.active .phoenix-trail{
+  animation:trail-draw 2s cubic-bezier(.4,.1,.3,1) forwards;
+}
+@keyframes trail-draw{
+  0%{stroke-dashoffset:2400;opacity:0}
+  8%{opacity:1}
+  60%{stroke-dashoffset:0;opacity:1}
+  100%{stroke-dashoffset:-1200;opacity:0}
+}
+.phoenix-bird{
+  transform-origin:center;
+  filter:drop-shadow(0 0 12px rgba(127,160,255,.95)) drop-shadow(0 0 28px rgba(74,110,255,.55));
+  opacity:0;
+}
+.phoenix-overlay.active .phoenix-bird{
+  animation:bird-show 2s linear forwards;
+}
+@keyframes bird-show{
+  0%,5%{opacity:0}
+  10%,90%{opacity:1}
+  100%{opacity:0}
+}
+.phoenix-bird .feather{fill:#7fa0ff}
+.phoenix-bird .body{fill:#bcd0ff}
+.phoenix-bird .ember{fill:#fff5d0}
+.phoenix-skip{
+  position:absolute;top:24px;right:24px;
+  font-family:"Cinzel",serif;
+  font-size:10px;letter-spacing:.28em;text-transform:uppercase;
+  color:rgba(150,180,255,.6);
+  background:transparent;border:1px solid rgba(74,110,255,.32);
+  border-radius:2px;padding:8px 14px;
+  cursor:pointer;opacity:0;
+  transition:color .2s,border-color .2s,opacity .4s;
+}
+.phoenix-overlay.active .phoenix-skip{opacity:1;transition-delay:.5s}
+.phoenix-skip:hover{color:var(--azure-bright);border-color:var(--azure-bright)}
+
+/* ===== Chronicle Popup ===== */
+.chronicle-modal{
+  position:fixed;inset:0;z-index:600;
+  background:rgba(3,4,9,.92);
+  backdrop-filter:blur(10px);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;
+  transition:opacity .5s ease;
+  padding:0;
+}
+.chronicle-modal.active{opacity:1;pointer-events:auto}
+.chronicle-panel{
+  position:relative;
+  width:min(960px,96vw);
+  max-height:92vh;
+  background:
+    radial-gradient(800px 400px at 50% 0%,rgba(74,110,255,.12),transparent 60%),
+    linear-gradient(180deg,var(--bg-paper),var(--bg-deep));
+  border:1px solid rgba(74,110,255,.32);
+  border-radius:4px;
+  box-shadow:0 30px 80px rgba(0,0,0,.85),0 0 60px rgba(74,110,255,.18);
+  overflow:hidden;display:flex;flex-direction:column;
+  transform:translateY(20px) scale(.98);
+  transition:transform .55s cubic-bezier(.2,.7,.2,1);
+}
+.chronicle-modal.active .chronicle-panel{transform:translateY(0) scale(1)}
+.chronicle-head{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:18px 28px;
+  border-bottom:1px solid rgba(74,110,255,.22);
+  background:linear-gradient(180deg,rgba(74,110,255,.08),transparent);
+  flex:none;
+}
+.chronicle-title{
+  font-family:"Cinzel Decorative",serif;
+  font-size:16px;letter-spacing:.06em;
+  color:var(--azure-bright);
+  text-shadow:0 0 18px rgba(74,110,255,.4);
+}
+.chronicle-title small{
+  display:block;font-family:"Cinzel",serif;
+  font-size:8.5px;letter-spacing:.32em;text-transform:uppercase;
+  color:var(--gold-dim);margin-top:4px;
+}
+.chronicle-controls{display:flex;align-items:center;gap:10px}
+.lang-toggle{
+  display:flex;border:1px solid rgba(74,110,255,.32);border-radius:2px;
+  overflow:hidden;
+}
+.lang-toggle button{
+  background:transparent;border:none;cursor:pointer;
+  font-family:"Cinzel",serif;
+  font-size:9.5px;letter-spacing:.22em;
+  color:rgba(150,180,255,.55);
+  padding:6px 12px;transition:background .2s,color .2s;
+}
+.lang-toggle button.active{background:rgba(74,110,255,.22);color:var(--azure-bright)}
+.lang-toggle button:hover:not(.active){color:rgba(200,220,255,.85)}
+.chronicle-close{
+  width:32px;height:32px;border-radius:50%;
+  background:transparent;border:1px solid rgba(74,110,255,.32);
+  color:rgba(150,180,255,.7);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;line-height:1;
+  transition:color .2s,border-color .2s,transform .2s;
+}
+.chronicle-close:hover{color:var(--azure-bright);border-color:var(--azure-bright);transform:rotate(90deg)}
+.chronicle-body{
+  overflow-y:auto;
+  padding:32px 36px 40px;
+  scroll-behavior:smooth;
+}
+.chronicle-body::-webkit-scrollbar{width:6px}
+.chronicle-body::-webkit-scrollbar-track{background:rgba(74,110,255,.06)}
+.chronicle-body::-webkit-scrollbar-thumb{background:rgba(74,110,255,.4);border-radius:3px}
+
+.scene{
+  margin-bottom:56px;
+  position:relative;
+}
+.scene:last-child{margin-bottom:0}
+.scene-head{margin-bottom:18px}
+.scene-num{
+  font-family:"Cinzel Decorative",serif;font-weight:700;
+  font-size:3.2rem;line-height:1;
+  color:transparent;-webkit-text-stroke:1px var(--azure-deep);
+  margin-bottom:8px;display:block;
+}
+.scene-meta{
+  font-family:"Cinzel",serif;
+  font-size:9.5px;letter-spacing:.32em;text-transform:uppercase;
+  color:var(--gold-dim);margin-bottom:6px;
+}
+.scene-title-en{
+  font-family:"Cinzel Decorative",serif;
+  font-size:1.7rem;line-height:1.15;
+  color:var(--ink);margin-bottom:4px;letter-spacing:.02em;
+}
+.scene-title-th{
+  font-family:"Noto Serif Thai",serif;
+  font-size:1.05rem;color:var(--azure-bright);
+  text-shadow:0 0 18px rgba(74,110,255,.25);
+}
+.scene-img{
+  width:100%;height:auto;display:block;
+  margin:22px 0;
+  border-radius:3px;
+  border:1px solid rgba(74,110,255,.28);
+  box-shadow:0 14px 42px rgba(0,0,0,.6),0 0 32px rgba(74,110,255,.08);
+}
+.scene-narrative{
+  font-family:"Noto Serif Thai","Cormorant Garamond",serif;
+  font-size:15.5px;line-height:1.9;
+  color:rgba(232,234,240,.78);
+  margin-bottom:18px;
+}
+.scene-narrative em{color:var(--azure-bright);font-style:normal;font-weight:500}
+.scene-narrative strong{color:var(--gold-bright);font-weight:500}
+.scene-quote{
+  margin-top:20px;padding:16px 22px;
+  border-left:3px solid var(--azure-bright);
+  background:linear-gradient(90deg,rgba(74,110,255,.08),transparent);
+  font-family:"Cormorant Garamond",serif;
+  font-style:italic;font-size:1.1rem;line-height:1.55;
+  color:rgba(255,245,208,.78);
+}
+.scene-divider{
+  text-align:center;margin:48px 0;
+  color:var(--azure-dim);font-size:14px;letter-spacing:.8em;
+  opacity:.55;
+}
+
+/* lang toggle: hide opposite */
+.chronicle-modal[data-lang="th"] .lang-en{display:none}
+.chronicle-modal[data-lang="en"] .lang-th{display:none}
+
+body.chronicle-open{overflow:hidden}
+
+@media (max-width:600px){
+  .chronicle-panel{width:100vw;max-height:100vh;height:100vh;border-radius:0}
+  .chronicle-head{padding:14px 18px}
+  .chronicle-body{padding:22px 20px 32px}
+  .scene-num{font-size:2.4rem}
+  .scene-title-en{font-size:1.3rem}
+}
 </style>
 </head>
 <body>
@@ -1453,6 +1682,178 @@ body::after{
 
 </div>
 
+<!-- Chronicle Trigger -->
+<button class="chronicle-trigger" id="chronicle-trigger" aria-label="Open chronicle">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 3 C8 7 5 11 5 15 a7 7 0 0 0 14 0 c0 -4 -3 -8 -7 -12 z"/>
+    <path d="M12 9 C10 11 9 13 9 15 a3 3 0 0 0 6 0 c0 -2 -1 -4 -3 -6 z" fill="currentColor" opacity=".35"/>
+  </svg>
+  <span>The Three Scenes · บันทึกแห่งเปลวฟ้า</span>
+</button>
+
+<!-- Phoenix Flight Overlay -->
+<div class="phoenix-overlay" id="phoenix-overlay" aria-hidden="true">
+  <svg viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <linearGradient id="trail-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="#4a6eff" stop-opacity="0"/>
+        <stop offset="30%" stop-color="#7fa0ff" stop-opacity=".9"/>
+        <stop offset="70%" stop-color="#bcd0ff" stop-opacity="1"/>
+        <stop offset="100%" stop-color="#fff5d0" stop-opacity="1"/>
+      </linearGradient>
+      <filter id="trail-glow" x="-20%" y="-20%" width="140%" height="140%">
+        <feGaussianBlur stdDeviation="6" result="b1"/>
+        <feGaussianBlur stdDeviation="14" result="b2"/>
+        <feMerge>
+          <feMergeNode in="b2"/>
+          <feMergeNode in="b1"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+      <path id="phoenix-path" d="M -180 960 Q 460 380 980 540 T 2100 160" fill="none" pathLength="1000"/>
+    </defs>
+    <use href="#phoenix-path" class="phoenix-trail"/>
+    <g class="phoenix-bird">
+      <!-- tail feathers (behind, pointing back) -->
+      <path class="feather" opacity=".45" d="M -12 0 C -46 -10 -80 -4 -104 6 C -74 8 -40 10 -12 0 Z"/>
+      <path class="feather" opacity=".7"  d="M -12 0 C -42 8  -72 18 -92 28 C -64 20 -36 12 -12 0 Z"/>
+      <!-- wings -->
+      <path class="feather" d="M -6 -4 C -28 -26 -8 -46 20 -36 C 10 -22 -2 -10 -6 -4 Z"/>
+      <path class="feather" d="M -6  4 C -28  26 -8  46 20  36 C 10  22 -2  10 -6  4 Z"/>
+      <!-- body -->
+      <ellipse class="body" cx="0" cy="0" rx="20" ry="6"/>
+      <!-- head ember -->
+      <circle class="ember" cx="18" cy="0" r="5"/>
+      <animateMotion dur="2s" rotate="auto" repeatCount="1" fill="freeze">
+        <mpath href="#phoenix-path"/>
+      </animateMotion>
+    </g>
+  </svg>
+  <button class="phoenix-skip" id="phoenix-skip">Skip ▸</button>
+</div>
+
+<!-- Chronicle Popup -->
+<div class="chronicle-modal" id="chronicle-modal" data-lang="th" role="dialog" aria-hidden="true">
+  <div class="chronicle-panel">
+    <div class="chronicle-head">
+      <div class="chronicle-title">
+        Chronicle of the Azure Flame
+        <small>The Three Scenes · บันทึกสามฉากแห่งเปลวฟ้า</small>
+      </div>
+      <div class="chronicle-controls">
+        <div class="lang-toggle" id="lang-toggle">
+          <button data-lang="th" class="active">TH</button>
+          <button data-lang="en">EN</button>
+        </div>
+        <button class="chronicle-close" id="chronicle-close" aria-label="Close">×</button>
+      </div>
+    </div>
+    <div class="chronicle-body" id="chronicle-body">
+
+      <!-- SCENE I -->
+      <section class="scene">
+        <div class="scene-head">
+          <span class="scene-num">I</span>
+          <div class="scene-meta lang-th">180 ปี · Aelindra · สวนแอปเปิ้ลใต้กิ่งดอก</div>
+          <div class="scene-meta lang-en">180 Years · Aelindra · Beneath the Blossoming Bough</div>
+          <h3 class="scene-title-en">The First Flame in the Orchard</h3>
+          <div class="scene-title-th">เปลวแรกในสวนแอปเปิ้ล</div>
+        </div>
+        <img class="scene-img" src="/assets/folio/scene-1.png" alt="The first azure flame in the orchard" />
+        <div class="scene-narrative lang-th">
+          เธอจำได้ว่าสวนแอปเปิ้ลคืนนั้น <em>เงียบกว่าทุกคืน</em> · แต่หัวใจเธอกลับดังที่สุดในชีวิตที่ผ่านมา · ใครคนนั้นยืนอยู่ใต้กิ่งดอกที่กำลังร่วง · มือยื่นออกมาเหมือนกำลังถามอะไรบางอย่าง — สิ่งที่ทั้งคู่รู้คำตอบอยู่แล้ว
+          <br><br>
+          เธอ <strong>หัวเราะ</strong> · เสียงหัวเราะที่จะกลายเป็นสิ่งสุดท้ายของเด็กผู้หญิงคนนั้น แม้เธอจะยังไม่รู้
+          <br><br>
+          และในวินาทีเดียวกันนั้น · ฝ่ามือของเธอก็ลุกขึ้นเป็น <em>เปลวสีน้ำเงิน</em> — สีที่ไม่เคยมีในตำราเล่มใด · เธอไม่ได้ตกใจ · เธอแค่มองมันสักครู่ · แล้วเงยหน้ามองตาคนตรงหน้า · ราวกับว่ามันคือสิ่งเดียวที่ควรจะอยู่ตรงนั้น
+        </div>
+        <div class="scene-narrative lang-en">
+          She remembers the orchard was <em>quieter that night</em> than any night before — and her heart was louder than it had ever been. They stood beneath a branch of falling blossoms, hand outstretched, asking a question they both already knew the answer to.
+          <br><br>
+          She <strong>laughed</strong> — a sound that would be the last belonging to that girl, though she did not yet know it.
+          <br><br>
+          And in that same breath, her palm bloomed into <em>blue fire</em> — a color found in no spellbook ever written. She did not flinch. She only looked at the flame, then up into the eyes before her, as if it were simply the thing that should have been there all along.
+        </div>
+        <div class="scene-quote lang-th">"เปลวมันร้อน <em>เหมือนหัวใจฉันตอนนี้</em> เลย"</div>
+        <div class="scene-quote lang-en">"It burns as warm as <em>my heart does right now</em>."</div>
+      </section>
+
+      <div class="scene-divider">✦ · ✦ · ✦</div>
+
+      <!-- SCENE II -->
+      <section class="scene">
+        <div class="scene-head">
+          <span class="scene-num">II</span>
+          <div class="scene-meta lang-th">200 ปี · Aelindra · เช้าวันนั้น</div>
+          <div class="scene-meta lang-en">200 Years · Aelindra · That Morning</div>
+          <h3 class="scene-title-en">The Morning of No Sound</h3>
+          <div class="scene-title-th">เช้าที่ไม่มีเสียง</div>
+        </div>
+        <img class="scene-img" src="/assets/folio/scene-2.png" alt="The morning of the disappearance" />
+        <div class="scene-narrative lang-th">
+          ผ้าห่มอีกข้าง <em>เรียบเป็นปกติ</em> · ราวกับไม่มีใครเคยนอนตรงนั้นเลยสักครั้ง · ถ้วยชายังมีไอลอยอยู่ · ปากกาที่วางขวางกระดาษเขียนค้างไว้แค่คำว่า <em>"พรุ่งนี้ฉัน—"</em>
+          <br><br>
+          เธอนั่งอยู่ตรงขอบเตียงนานเท่าที่นานได้ · <strong>ไม่ร้องไห้</strong> · ไม่เรียกชื่อ · ไม่ลุกขึ้น
+          <br><br>
+          เพราะตราบที่เธอยังไม่ขยับ · ตราบที่เธอยังไม่เอื้อมมือไปแตะรอยเตียงข้างที่ว่างนั้น — เช้าวันนี้ก็จะยังไม่ใช่ <em>เช้าที่ทุกอย่างได้หายไปแล้วจริงๆ</em>
+          <br><br>
+          ยังไม่ใช่
+        </div>
+        <div class="scene-narrative lang-en">
+          The sheets on the other side were <em>perfectly smooth</em> — as though no one had ever slept there. Steam still rose faintly from the tea. The pen lay across a page that ended at the words <em>"Tomorrow I—"</em>
+          <br><br>
+          She sat on the edge of the bed for as long as she could bear — <strong>not weeping</strong>, not calling a name, not standing.
+          <br><br>
+          Because as long as she did not move — as long as her hand did not reach across to touch the empty side — this was not yet <em>the morning everything had been lost</em>.
+          <br><br>
+          Not yet.
+        </div>
+        <div class="scene-quote lang-th">"ถ้าฉันไม่ลุกขึ้น · <em>มันก็ยังไม่ใช่ความจริง</em>"</div>
+        <div class="scene-quote lang-en">"If I do not stand up · <em>it is not real yet</em>."</div>
+      </section>
+
+      <div class="scene-divider">✦ · ✦ · ✦</div>
+
+      <!-- SCENE III -->
+      <section class="scene">
+        <div class="scene-head">
+          <span class="scene-num">III</span>
+          <div class="scene-meta lang-th">ไม่ระบุปี · ระหว่างทาง · ศาลร้างกลางป่า</div>
+          <div class="scene-meta lang-en">Unmarked Year · On the Road · A Forgotten Shrine</div>
+          <h3 class="scene-title-en">The Night She Almost Forgot to Breathe</h3>
+          <div class="scene-title-th">คืนที่เธอเกือบจะลืมหายใจ</div>
+        </div>
+        <img class="scene-img" src="/assets/folio/scene-3.png" alt="The night the flame nearly went out" />
+        <div class="scene-narrative lang-th">
+          เธอไม่รู้ว่าเดินทางมาไกลแค่ไหน · ไม่รู้แม้แต่ว่ายังจำทางกลับได้หรือเปล่า · เธอแค่รู้ว่าคืนนั้นเปลวฟ้าในฝ่ามือ <em>หรี่ลงจนแทบเหลือแต่ประกาย</em>
+          <br><br>
+          ครั้งแรกที่มันเกือบจะดับ · ครั้งแรกที่เธอรู้ว่าตัวเอง <strong>เกือบยอมแพ้</strong>
+          <br><br>
+          เธอคุกเข่าลงตรงแท่นหินแตก · จุดเทียนสีน้ำเงินสองเล่ม · เล่มหนึ่งให้คนที่หายไป · อีกเล่มให้ตัวเอง · แล้วเธอพูดออกมาเบาๆ ในความเงียบ · ราวกับให้ใครฟัง —
+          <br><br>
+          <em>"ถ้าเทพแห่งแสงยังให้เปลวฉันลุก · งั้นความจริงที่ฉันกลัว · ก็ยังไม่ใช่ความจริง"</em>
+          <br><br>
+          และเปลวเล็กๆ ในฝ่ามือเธอ · ก็สั่นไหวขึ้นอีกครั้ง
+        </div>
+        <div class="scene-narrative lang-en">
+          She did not know how far she had walked, or whether she still remembered the way back. She only knew that on that night, the blue flame in her palm <em>dimmed to little more than a spark</em>.
+          <br><br>
+          The first time it had ever come this close to going out. The first time she knew she had <strong>nearly given up</strong>.
+          <br><br>
+          She knelt by a cracked stone altar, lit two blue candles — one for the one who vanished, one for herself — and whispered into the silence, as though to someone listening —
+          <br><br>
+          <em>"If the god of light still lets my flame burn, then the truth I fear is not yet true."</em>
+          <br><br>
+          And the small flame in her palm · trembled back to life once more.
+        </div>
+        <div class="scene-quote lang-th">"ตราบที่ Apollo ยังไม่ปิดเปลวนี้ · <em>ฉันก็ยังเดินต่อได้</em>"</div>
+        <div class="scene-quote lang-en">"As long as Apollo has not closed this flame · <em>I can keep walking</em>."</div>
+      </section>
+
+    </div>
+  </div>
+</div>
+
 <!-- Floating back -->
 <a class="float-home" href="/">
   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12L12 3l9 9"/><path d="M9 21V12h6v9"/></svg>
@@ -1646,6 +2047,99 @@ body::after{
   });
   volSlider.addEventListener('change', function(){
     try { localStorage.setItem('dermogorgon-music-vol', audio.volume); } catch(e){}
+  });
+})();
+
+// 8) Chronicle popup — phoenix animation + scene modal
+(function(){
+  const trigger = document.getElementById('chronicle-trigger');
+  const overlay = document.getElementById('phoenix-overlay');
+  const skip    = document.getElementById('phoenix-skip');
+  const modal   = document.getElementById('chronicle-modal');
+  const closeBtn= document.getElementById('chronicle-close');
+  const langBox = document.getElementById('lang-toggle');
+  const body    = document.getElementById('chronicle-body');
+  if (!trigger || !overlay || !modal) return;
+
+  let phoenixTimer = null;
+  let isAnimating  = false;
+
+  // restore preferred language
+  try {
+    const savedLang = localStorage.getItem('dermogorgon-chronicle-lang');
+    if (savedLang === 'th' || savedLang === 'en') modal.setAttribute('data-lang', savedLang);
+  } catch(e){}
+  syncLangButtons();
+
+  function syncLangButtons(){
+    const cur = modal.getAttribute('data-lang');
+    langBox.querySelectorAll('button').forEach(b => {
+      b.classList.toggle('active', b.dataset.lang === cur);
+    });
+  }
+
+  function restartPhoenixAnimation(){
+    // force SVG animation restart by re-toggling active class
+    overlay.classList.remove('active');
+    // trigger reflow
+    void overlay.offsetWidth;
+    overlay.classList.add('active');
+    // restart SMIL animateMotion
+    const animEl = overlay.querySelector('animateMotion');
+    if (animEl && typeof animEl.beginElement === 'function'){
+      try { animEl.beginElement(); } catch(e){}
+    }
+  }
+
+  function startPhoenix(){
+    if (isAnimating) return;
+    isAnimating = true;
+    overlay.setAttribute('aria-hidden', 'false');
+    restartPhoenixAnimation();
+    phoenixTimer = setTimeout(openModal, 2000);
+  }
+
+  function openModal(){
+    clearTimeout(phoenixTimer);
+    overlay.classList.remove('active');
+    overlay.setAttribute('aria-hidden', 'true');
+    modal.classList.add('active');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('chronicle-open');
+    if (body) body.scrollTop = 0;
+    isAnimating = false;
+  }
+
+  function closeModal(){
+    modal.classList.remove('active');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('chronicle-open');
+  }
+
+  trigger.addEventListener('click', startPhoenix);
+  skip   .addEventListener('click', openModal);
+  closeBtn.addEventListener('click', closeModal);
+
+  // backdrop click (only on modal background, not panel)
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) closeModal();
+  });
+
+  // ESC to close
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    if (modal.classList.contains('active')) closeModal();
+    else if (overlay.classList.contains('active')) openModal(); // skip phoenix on esc
+  });
+
+  // Language toggle
+  langBox.addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-lang]');
+    if (!btn) return;
+    const lang = btn.dataset.lang;
+    modal.setAttribute('data-lang', lang);
+    syncLangButtons();
+    try { localStorage.setItem('dermogorgon-chronicle-lang', lang); } catch(e){}
   });
 })();
 </script>

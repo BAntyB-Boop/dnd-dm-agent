@@ -1288,7 +1288,7 @@ body.chronicle-open{overflow:hidden}
     <video
       src="/assets/folio/dermogorgon-hero.mp4"
       poster="/assets/folio/dermogorgon.jpg"
-      autoplay muted loop playsinline preload="metadata"
+      autoplay muted playsinline preload="metadata"
       aria-label="Dermogorgon — Azure Flame Wizard"></video>
   </div>
   <div class="cine-text">
@@ -1863,12 +1863,26 @@ body.chronicle-open{overflow:hidden}
 </a>
 
 <script>
-// 0) Cinematic hero: breathe once on load, then resume only while hovered
+// 0) Cinematic hero: video + breathe play once on load, resume only on hover
 (function(){
   const portrait = document.querySelector('.cine-portrait');
   if (!portrait) return;
-  portrait.addEventListener('pointerenter', () => portrait.classList.add('breathing'));
-  portrait.addEventListener('pointerleave', () => portrait.classList.remove('breathing'));
+  const video = portrait.querySelector('video');
+  portrait.addEventListener('pointerenter', () => {
+    portrait.classList.add('breathing');
+    if (video){
+      video.loop = true;
+      if (video.ended) video.currentTime = 0;
+      video.play().catch(() => {});
+    }
+  });
+  portrait.addEventListener('pointerleave', () => {
+    portrait.classList.remove('breathing');
+    if (video){
+      video.loop = false;
+      video.pause();
+    }
+  });
 })();
 
 // 1) Azure flame motes

@@ -5,6 +5,14 @@
 <base href="/" />
 <title>Dermogorgon — Azure Flame · Folio of the Veiled Codex</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/png" href="/assets/folio/4.png" />
+<link rel="apple-touch-icon" href="/assets/folio/4.png" />
+<meta property="og:title" content="Dermogorgon — Azure Flame" />
+<meta property="og:description" content="Folio of the Veiled Codex — a High Elf wizard who burns memory for fuel." />
+<meta property="og:image" content="/assets/folio/4.png" />
+<meta property="og:type" content="article" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="/assets/folio/4.png" />
 <link rel="stylesheet" href="shared.css">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Noto+Serif+Thai:wght@300;400;500;600&display=swap" rel="stylesheet" />
 <style>
@@ -352,12 +360,23 @@ body::after{
 
 .signature-magic{
   margin-top:14px;
-  padding:18px 22px;
+  padding:18px 22px 18px 96px;
   background:linear-gradient(135deg,rgba(74,110,255,.14),rgba(10,12,22,.5));
   border:1px solid rgba(74,110,255,.45);
   border-left:4px solid var(--azure-bright);
   border-radius:3px;
   position:relative;
+}
+.signature-magic .sig-emblem{
+  position:absolute;left:18px;top:50%;transform:translateY(-50%);
+  width:64px;height:64px;object-fit:contain;
+  filter:drop-shadow(0 0 14px rgba(74,110,255,.7));
+  animation:flame-pulse 4s ease-in-out infinite;
+  pointer-events:none;
+}
+@media (max-width:760px){
+  .signature-magic{padding:18px 22px}
+  .signature-magic .sig-emblem{position:relative;left:auto;top:auto;transform:none;display:block;margin:0 auto 10px}
 }
 .sig-label{
   font-family:"Cinzel",serif;
@@ -1135,7 +1154,14 @@ body::after{
   font-size:16px;letter-spacing:.06em;
   color:var(--azure-bright);
   text-shadow:0 0 18px rgba(74,110,255,.4);
+  display:flex;align-items:center;gap:14px;
 }
+.chronicle-title .emblem{
+  width:36px;height:36px;flex:none;object-fit:contain;
+  filter:drop-shadow(0 0 8px rgba(74,110,255,.6));
+  animation:flame-pulse 4s ease-in-out infinite;
+}
+.chronicle-title .ttl-text{display:block}
 .chronicle-title small{
   display:block;font-family:"Cinzel",serif;
   font-size:8.5px;letter-spacing:.32em;text-transform:uppercase;
@@ -1330,6 +1356,7 @@ body.chronicle-open{overflow:hidden}
       </div>
 
       <div class="signature-magic">
+        <img class="sig-emblem" src="/assets/folio/4.png" alt="" aria-hidden="true" />
         <div class="sig-label">✦ Signature Magic</div>
         <div class="sig-name">Azure Flame</div>
         <div class="sig-desc">เปลวเพลิงสีน้ำเงินบริสุทธิ์ · นักปราชญ์เชื่อว่า "พรของ Apollo" ที่เกิดเฉพาะกับวิญญาณที่สมบูรณ์เท่านั้น</div>
@@ -1340,7 +1367,7 @@ body.chronicle-open{overflow:hidden}
 
   <!-- PLATE — turnaround -->
   <div class="viewstrip reveal">
-    <img src="/assets/folio/1.png" alt="Dermogorgon — front, side, back turnaround" />
+    <img src="/assets/folio/dermogorgon-turnaround.png" alt="Dermogorgon — front, side, back turnaround" />
     <div class="caption">
       <div class="lbl">Plate · 01 — Four Faces of the Azure Flame</div>
       <div class="txt">Front, side, back — the same robe in every weather. She keeps only one wardrobe, and one unanswered question.</div>
@@ -1739,8 +1766,11 @@ body.chronicle-open{overflow:hidden}
   <div class="chronicle-panel">
     <div class="chronicle-head">
       <div class="chronicle-title">
-        Chronicle of the Azure Flame
-        <small>The Three Scenes · บันทึกสามฉากแห่งเปลวฟ้า</small>
+        <img class="emblem" src="/assets/folio/4.png" alt="" aria-hidden="true" />
+        <span class="ttl-text">
+          Chronicle of the Azure Flame
+          <small>The Three Scenes · บันทึกสามฉากแห่งเปลวฟ้า</small>
+        </span>
       </div>
       <div class="chronicle-controls">
         <div class="lang-toggle" id="lang-toggle">

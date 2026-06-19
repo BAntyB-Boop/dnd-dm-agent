@@ -877,7 +877,7 @@ body::after{
 }
 .cine-text{position:relative;z-index:6;padding:14vh 7vw 8vh 5vw;display:flex;flex-direction:column;justify-content:center}
 .cine-kicker{display:flex;align-items:center;gap:14px;margin-bottom:20px}
-.cine-kicker .glyph{width:24px;height:24px;color:var(--azure-bright);filter:drop-shadow(0 0 8px rgba(74,110,255,.6));flex:none}
+.cine-kicker .glyph{width:32px;height:32px;object-fit:contain;color:var(--azure-bright);filter:drop-shadow(0 0 10px rgba(74,110,255,.6));flex:none}
 .cine-kicker .lbl{font-family:"Cinzel",serif;text-transform:uppercase;letter-spacing:.32em;font-size:.7rem;color:var(--azure-bright)}
 .cine-kicker .line{flex:1;max-width:120px;height:1px;background:linear-gradient(to right,var(--azure-dim),transparent)}
 .cine-name{
@@ -959,6 +959,7 @@ body::after{
 .end-quote{font-family:"Cormorant Garamond",serif;font-style:italic;font-size:1.8rem;line-height:1.45;max-width:760px;margin:0 auto;
   background:linear-gradient(180deg,var(--gold-bright) 28%,var(--gold) 60%,var(--azure-bright) 100%);
   -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+.end-seal{display:block;width:96px;height:auto;margin:0 auto 22px;filter:drop-shadow(0 0 24px rgba(74,110,255,.55));animation:flame-pulse 4s ease-in-out infinite}
 .end-attr{margin-top:18px;font-family:"Cinzel",serif;letter-spacing:.34em;text-transform:uppercase;font-size:.62rem;color:var(--azure-bright)}
 .colophon{margin-top:28px;text-align:center;font-family:"Cinzel",serif;letter-spacing:.3em;text-transform:uppercase;font-size:.56rem;color:var(--ink-faint)}
 
@@ -1045,7 +1046,7 @@ body::after{
   </div>
   <div class="cine-text">
     <div class="cine-kicker">
-      <svg class="glyph" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2 C8 6 6 9 6 13 a6 6 0 0 0 12 0 c0 -3 -2 -6 -6 -11 z M12 8 C10 10 9 12 9 14 a3 3 0 0 0 6 0 c0 -2 -2 -4 -3 -6 z"/></svg>
+      <img class="glyph" src="/assets/folio/4.png" alt="Azure Flame sigil" />
       <span class="lbl">Folio · VII · Azure Codex</span>
       <span class="line"></span>
     </div>
@@ -1092,7 +1093,7 @@ body::after{
 
   <!-- PLATE — turnaround -->
   <div class="viewstrip reveal">
-    <img src="/assets/folio/dermogorgon-turnaround.jpg" alt="Dermogorgon — front, side, back turnaround" />
+    <img src="/assets/folio/1.png" alt="Dermogorgon — front, side, back turnaround" />
     <div class="caption">
       <div class="lbl">Plate · 01 — Four Faces of the Azure Flame</div>
       <div class="txt">Front, side, back — the same robe in every weather. She keeps only one wardrobe, and one unanswered question.</div>
@@ -1167,6 +1168,15 @@ body::after{
     <p class="section-sub">⬩ ทักษะที่มี proficiency เน้นสีน้ำเงิน · INT-based skills ของ Sage = expert-tone</p>
     </div>
   </section>
+
+  <!-- PLATE — visions of the azure flame -->
+  <div class="viewstrip reveal">
+    <img src="/assets/folio/3.png" alt="Six visions of Azure Flame magic" />
+    <div class="caption">
+      <div class="lbl">Plate · 02 — Visions of the Azure Flame</div>
+      <div class="txt">เวทย์เดียวกัน หกหน้าตา — เปลวฟ้าจะกลายเป็นอะไรก็ได้ ตราบที่เธอยังจินตนาการมันออก</div>
+    </div>
+  </div>
 
   <!-- CHAPTER IV — The Spellbook -->
   <section class="chap flip">
@@ -1278,6 +1288,15 @@ body::after{
     </div>
     </div>
   </section>
+
+  <!-- PLATE — studies in silence -->
+  <div class="viewstrip reveal">
+    <img src="/assets/folio/2.png" alt="Four expression studies of Dermogorgon" />
+    <div class="caption">
+      <div class="lbl">Plate · 03 — Studies in Silence</div>
+      <div class="txt">สี่อารมณ์ของหญิงสาวที่เคยหัวเราะดัง — ตอนนี้แต่ละสีหน้าหนักเท่าคำพูดที่เธอเคยพูด</div>
+    </div>
+  </div>
 
   <!-- CHAPTER VI — Temperament -->
   <section class="chap flip">
@@ -1426,6 +1445,7 @@ body::after{
 
   <!-- CINEMA END -->
   <div class="cine-end reveal">
+    <img class="end-seal" src="/assets/folio/4.png" alt="Azure Flame seal" />
     <div class="end-quote">"ตราบที่ Azure Flame ยังลุก · คำตอบต้องมีอยู่ที่ไหนสักแห่ง"</div>
     <div class="end-attr">Dermogorgon · The Azure Flame · Wanderer Among Lanterns</div>
   </div>

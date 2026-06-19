@@ -273,6 +273,7 @@ export async function startWebServer(): Promise<void> {
     "anuchit":      "folio/anuchit.html",
     "kael-vorn":    "folio/kael-vorn.html",
     "jen":          "folio/jen.html",
+    "dermogorgon":  "folio/dermogorgon.html",
   };
   for (const [slug, file] of Object.entries(folioMap)) {
     app.get(`/folio/${slug}`, (_req, reply) => reply.sendFile(file));

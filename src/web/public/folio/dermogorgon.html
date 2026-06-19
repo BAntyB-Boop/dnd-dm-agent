@@ -865,10 +865,12 @@ body::after{
 .cine-portrait video{
   position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 16%;
   filter:saturate(1.06) contrast(1.04) brightness(.98);
-  animation:cine-breathe 9s ease-in-out infinite;
+  animation:cine-breathe 9s ease-in-out 1 both;
   will-change:transform;
 }
 .cine-portrait video{pointer-events:none}
+.cine-portrait.breathing video,
+.cine-portrait.breathing img{animation:cine-breathe 9s ease-in-out infinite}
 @keyframes cine-breathe{0%,100%{transform:scale(1.03)}50%{transform:scale(1.08)}}
 .cine-portrait::after{
   content:"";position:absolute;inset:0;pointer-events:none;
@@ -1720,16 +1722,7 @@ body.chronicle-open{overflow:hidden}
     </defs>
     <use href="#phoenix-path" class="phoenix-trail"/>
     <g class="phoenix-bird">
-      <!-- tail feathers (behind, pointing back) -->
-      <path class="feather" opacity=".45" d="M -12 0 C -46 -10 -80 -4 -104 6 C -74 8 -40 10 -12 0 Z"/>
-      <path class="feather" opacity=".7"  d="M -12 0 C -42 8  -72 18 -92 28 C -64 20 -36 12 -12 0 Z"/>
-      <!-- wings -->
-      <path class="feather" d="M -6 -4 C -28 -26 -8 -46 20 -36 C 10 -22 -2 -10 -6 -4 Z"/>
-      <path class="feather" d="M -6  4 C -28  26 -8  46 20  36 C 10  22 -2  10 -6  4 Z"/>
-      <!-- body -->
-      <ellipse class="body" cx="0" cy="0" rx="20" ry="6"/>
-      <!-- head ember -->
-      <circle class="ember" cx="18" cy="0" r="5"/>
+      <image href="/assets/folio/phoenix.svg" x="-70" y="-70" width="140" height="140"/>
       <animateMotion dur="2s" rotate="auto" repeatCount="1" fill="freeze">
         <mpath href="#phoenix-path"/>
       </animateMotion>
@@ -1867,6 +1860,14 @@ body.chronicle-open{overflow:hidden}
 </a>
 
 <script>
+// 0) Cinematic hero: breathe once on load, then resume only while hovered
+(function(){
+  const portrait = document.querySelector('.cine-portrait');
+  if (!portrait) return;
+  portrait.addEventListener('pointerenter', () => portrait.classList.add('breathing'));
+  portrait.addEventListener('pointerleave', () => portrait.classList.remove('breathing'));
+})();
+
 // 1) Azure flame motes
 (function(){
   const field = document.getElementById('flame-field');

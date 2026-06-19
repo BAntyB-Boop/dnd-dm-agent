@@ -1034,46 +1034,56 @@ body::after{
   .chronicle-trigger{left:14px;bottom:14px;padding:9px 14px;font-size:9px}
 }
 
-/* ===== Phoenix Flight Overlay ===== */
+/* ===== Phoenix Reveal Overlay ===== */
 .phoenix-overlay{
   position:fixed;inset:0;z-index:500;
-  background:radial-gradient(ellipse at center,rgba(6,7,13,.85),rgba(6,7,13,.98));
+  background:radial-gradient(ellipse at center,rgba(8,14,36,.92),rgba(6,7,13,.98));
   opacity:0;pointer-events:none;
-  transition:opacity .3s ease;
+  transition:opacity .4s ease;
+  overflow:hidden;
 }
 .phoenix-overlay.active{opacity:1;pointer-events:auto}
-.phoenix-overlay svg{position:absolute;inset:0;width:100%;height:100%}
-.phoenix-trail{
-  fill:none;stroke:url(#trail-grad);stroke-width:3;
-  stroke-linecap:round;stroke-linejoin:round;
-  filter:url(#trail-glow);
-  stroke-dasharray:2400;stroke-dashoffset:2400;
+.phoenix-stage{
+  position:absolute;inset:0;display:grid;place-items:center;
+  pointer-events:none;
 }
-.phoenix-overlay.active .phoenix-trail{
-  animation:trail-draw 2s cubic-bezier(.4,.1,.3,1) forwards;
+.phoenix-stage img{
+  max-height:88vh;max-width:88vw;width:auto;height:auto;
+  object-fit:contain;
+  opacity:0;transform:scale(.82);
+  filter:
+    drop-shadow(0 0 18px rgba(127,160,255,.85))
+    drop-shadow(0 0 48px rgba(74,110,255,.7))
+    drop-shadow(0 0 110px rgba(74,110,255,.45));
+  will-change:transform,opacity,filter;
 }
-@keyframes trail-draw{
-  0%{stroke-dashoffset:2400;opacity:0}
-  8%{opacity:1}
-  60%{stroke-dashoffset:0;opacity:1}
-  100%{stroke-dashoffset:-1200;opacity:0}
+.phoenix-overlay.active .phoenix-stage img{
+  animation:phoenix-reveal 1.4s cubic-bezier(.2,.7,.2,1) forwards,
+            phoenix-glow 3.4s ease-in-out 1.4s infinite;
 }
-.phoenix-bird{
-  transform-origin:center;
-  filter:drop-shadow(0 0 12px rgba(127,160,255,.95)) drop-shadow(0 0 28px rgba(74,110,255,.55));
-  opacity:0;
+@keyframes phoenix-reveal{
+  0%{opacity:0;transform:scale(.82);filter:drop-shadow(0 0 0 rgba(127,160,255,0)) drop-shadow(0 0 0 rgba(74,110,255,0)) blur(6px)}
+  60%{opacity:1;filter:drop-shadow(0 0 24px rgba(127,160,255,1)) drop-shadow(0 0 64px rgba(74,110,255,.85)) drop-shadow(0 0 140px rgba(74,110,255,.55)) blur(0)}
+  100%{opacity:1;transform:scale(1);filter:drop-shadow(0 0 18px rgba(127,160,255,.85)) drop-shadow(0 0 48px rgba(74,110,255,.7)) drop-shadow(0 0 110px rgba(74,110,255,.45)) blur(0)}
 }
-.phoenix-overlay.active .phoenix-bird{
-  animation:bird-show 2s linear forwards;
+@keyframes phoenix-glow{
+  0%,100%{filter:drop-shadow(0 0 18px rgba(127,160,255,.85)) drop-shadow(0 0 48px rgba(74,110,255,.7)) drop-shadow(0 0 110px rgba(74,110,255,.45))}
+  50%{filter:drop-shadow(0 0 28px rgba(170,200,255,1)) drop-shadow(0 0 72px rgba(127,160,255,.95)) drop-shadow(0 0 160px rgba(74,110,255,.7))}
 }
-@keyframes bird-show{
-  0%,5%{opacity:0}
-  10%,90%{opacity:1}
-  100%{opacity:0}
+.phoenix-embers{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.phoenix-ember{
+  position:absolute;bottom:-40px;width:6px;height:6px;border-radius:50%;
+  background:radial-gradient(circle,#dbe6ff 0%,#7fa0ff 45%,rgba(74,110,255,0) 75%);
+  box-shadow:0 0 12px rgba(127,160,255,.9),0 0 24px rgba(74,110,255,.6);
+  opacity:0;will-change:transform,opacity;
+  animation:ember-rise linear infinite;
 }
-.phoenix-bird .feather{fill:#7fa0ff}
-.phoenix-bird .body{fill:#bcd0ff}
-.phoenix-bird .ember{fill:#fff5d0}
+@keyframes ember-rise{
+  0%{transform:translate(0,0) scale(.4);opacity:0}
+  10%{opacity:1}
+  85%{opacity:.9}
+  100%{transform:translate(var(--ex,40px),-110vh) scale(.15);opacity:0}
+}
 .phoenix-skip{
   position:absolute;top:24px;right:24px;
   font-family:"Cinzel",serif;
@@ -1699,35 +1709,12 @@ body.chronicle-open{overflow:hidden}
   <span>The Three Scenes · บันทึกแห่งเปลวฟ้า</span>
 </button>
 
-<!-- Phoenix Flight Overlay -->
+<!-- Phoenix Reveal Overlay -->
 <div class="phoenix-overlay" id="phoenix-overlay" aria-hidden="true">
-  <svg viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice">
-    <defs>
-      <linearGradient id="trail-grad" x1="0%" y1="0%" x2="100%" y2="0%">
-        <stop offset="0%" stop-color="#4a6eff" stop-opacity="0"/>
-        <stop offset="30%" stop-color="#7fa0ff" stop-opacity=".9"/>
-        <stop offset="70%" stop-color="#bcd0ff" stop-opacity="1"/>
-        <stop offset="100%" stop-color="#fff5d0" stop-opacity="1"/>
-      </linearGradient>
-      <filter id="trail-glow" x="-20%" y="-20%" width="140%" height="140%">
-        <feGaussianBlur stdDeviation="6" result="b1"/>
-        <feGaussianBlur stdDeviation="14" result="b2"/>
-        <feMerge>
-          <feMergeNode in="b2"/>
-          <feMergeNode in="b1"/>
-          <feMergeNode in="SourceGraphic"/>
-        </feMerge>
-      </filter>
-      <path id="phoenix-path" d="M -180 960 Q 460 380 980 540 T 2100 160" fill="none" pathLength="1000"/>
-    </defs>
-    <use href="#phoenix-path" class="phoenix-trail"/>
-    <g class="phoenix-bird">
-      <image href="/assets/folio/phoenix.svg" x="-70" y="-70" width="140" height="140"/>
-      <animateMotion dur="2s" rotate="auto" repeatCount="1" fill="freeze">
-        <mpath href="#phoenix-path"/>
-      </animateMotion>
-    </g>
-  </svg>
+  <div class="phoenix-embers" id="phoenix-embers"></div>
+  <div class="phoenix-stage">
+    <img src="/assets/folio/phoenix.svg" alt="Azure Phoenix"/>
+  </div>
   <button class="phoenix-skip" id="phoenix-skip">Skip ▸</button>
 </div>
 
@@ -2085,17 +2072,30 @@ body.chronicle-open{overflow:hidden}
     });
   }
 
-  function restartPhoenixAnimation(){
-    // force SVG animation restart by re-toggling active class
-    overlay.classList.remove('active');
-    // trigger reflow
-    void overlay.offsetWidth;
-    overlay.classList.add('active');
-    // restart SMIL animateMotion
-    const animEl = overlay.querySelector('animateMotion');
-    if (animEl && typeof animEl.beginElement === 'function'){
-      try { animEl.beginElement(); } catch(e){}
+  const embersBox = document.getElementById('phoenix-embers');
+  function spawnEmbers(){
+    if (!embersBox) return;
+    embersBox.innerHTML = '';
+    const n = 26;
+    for (let i = 0; i < n; i++){
+      const e = document.createElement('div');
+      e.className = 'phoenix-ember';
+      e.style.left = Math.random() * 100 + '%';
+      e.style.setProperty('--ex', (Math.random() * 120 - 60) + 'px');
+      const size = 4 + Math.random() * 6;
+      e.style.width = size + 'px';
+      e.style.height = size + 'px';
+      e.style.animationDuration = (4 + Math.random() * 5) + 's';
+      e.style.animationDelay = (Math.random() * 2) + 's';
+      embersBox.appendChild(e);
     }
+  }
+
+  function restartPhoenixAnimation(){
+    overlay.classList.remove('active');
+    void overlay.offsetWidth;
+    spawnEmbers();
+    overlay.classList.add('active');
   }
 
   function startPhoenix(){
@@ -2110,6 +2110,7 @@ body.chronicle-open{overflow:hidden}
     clearTimeout(phoenixTimer);
     overlay.classList.remove('active');
     overlay.setAttribute('aria-hidden', 'true');
+    if (embersBox) embersBox.innerHTML = '';
     modal.classList.add('active');
     modal.setAttribute('aria-hidden', 'false');
     document.body.classList.add('chronicle-open');

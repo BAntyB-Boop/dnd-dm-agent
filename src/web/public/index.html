@@ -340,6 +340,23 @@ h1.title{
 .folio.hellfire:hover .fx-scope{opacity:0.5;transform:translate(-50%,-50%) scale(1) rotate(360deg)}
 .folio.hellfire .fx-scope svg{width:100%;height:100%;filter:drop-shadow(0 0 8px color-mix(in srgb, var(--c-ranger) 60%, transparent))}
 
+/* Anuchit hover video + flash */
+.folio.halo .fx-video{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  opacity:0;transition:opacity .35s ease;pointer-events:none;z-index:2;
+}
+.folio.halo.video-on .fx-video{opacity:1}
+.folio.halo .fx-flash{
+  position:absolute;inset:0;background:radial-gradient(circle at 50% 45%, #fff 0%, rgba(255,236,180,0.9) 35%, rgba(255,214,133,0) 75%);
+  opacity:0;pointer-events:none;z-index:3;mix-blend-mode:screen;
+}
+.folio.halo.flash-on .fx-flash{animation:anuchit-flash .5s ease-out}
+@keyframes anuchit-flash{
+  0%{opacity:0}
+  30%{opacity:1}
+  100%{opacity:0}
+}
+
 /* halo ring (Anuchit monk aasimar) */
 .folio.halo .fx-halo{
   position:absolute;top:14%;left:50%;transform:translateX(-50%) scale(0.7);
@@ -763,6 +780,8 @@ h1.title{
         <div class="accent-glow"></div>
         <div class="folio-num">Folio · IV</div>
         <img src="assets/anuchit-card.jpg" alt="Anuchit Thepsuang">
+        <video class="fx-video" src="assets/anuchit-card.mp4" muted loop playsinline preload="metadata" aria-hidden="true"></video>
+        <div class="fx-flash" aria-hidden="true"></div>
         <div class="ident">
           <div class="race">Aasimar · 23 yrs</div>
           <h3 class="name">Anuchit Thepsuang</h3>
@@ -1247,6 +1266,36 @@ h1.title{
         audio.volume = Math.max(0, start * (1 - step / steps));
         if (step >= steps){ clearInterval(iv); location.href = dest; }
       }, 18);
+    });
+  })();
+</script>
+<script>
+  (function(){
+    const card = document.querySelector('.folio.halo');
+    if(!card) return;
+    const video = card.querySelector('.fx-video');
+    if(!video) return;
+    let timer = null;
+    card.addEventListener('mouseenter', () => {
+      clearTimeout(timer);
+      card.classList.remove('flash-on');
+      void card.offsetWidth;
+      card.classList.add('flash-on');
+      timer = setTimeout(() => {
+        card.classList.add('video-on');
+        video.play().catch(()=>{});
+      }, 250);
+    });
+    card.addEventListener('mouseleave', () => {
+      clearTimeout(timer);
+      card.classList.remove('flash-on');
+      void card.offsetWidth;
+      card.classList.add('flash-on');
+      card.classList.remove('video-on');
+      timer = setTimeout(() => {
+        video.pause();
+        video.currentTime = 0;
+      }, 500);
     });
   })();
 </script>

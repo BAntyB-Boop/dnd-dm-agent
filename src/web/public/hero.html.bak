@@ -5,16 +5,13 @@
 <title>The Veiled Codex — Roster of Folios</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="stylesheet" href="shared.css">
-<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=IM+Fell+English+SC&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&display=swap" rel="stylesheet" />
 <style>
 :root{
-  --bg-deep:#050507;
-  --obsidian:#050507;
+  --bg-deep:#07070a;
   --bg-paper:#0e0e13;
   --bg-card:#15151c;
   --bg-card-2:#1c1c25;
-  --vellum:#1a1510;
-  --vellum-2:#241a10;
   --line:#2a2a35;
   --line-soft:#1d1d25;
   --ink:#e8e2cf;
@@ -22,13 +19,9 @@
   --ink-mute:#7a7461;
   --ink-faint:#4a4636;
   --gold:#c9a45c;
-  --gold-bright:#f4d98a;
   --gold-dim:#8a6f3a;
   --gold-deep:#5a4622;
-  --ember:#ff7a3a;
   --blood:#b01a1a;
-  --blood-deep:#5a0c0c;
-  --moss:#3a4a35;
   /* per-class accents */
   --c-paladin: #d68a8a;
   --c-bard:    #d6a360;
@@ -38,158 +31,42 @@
   --c-cleric:  #5fa494;
   --c-wizard:  #4a6eff;
 }
-html,body{background:var(--obsidian);color:var(--ink);overflow-x:hidden}
+html,body{background:var(--bg-deep);color:var(--ink);overflow-x:hidden}
 body{
   min-height:100vh;
   background:
-    radial-gradient(ellipse 80% 50% at 50% 0%, #2a1a08 0%, transparent 55%),
-    radial-gradient(1200px 800px at 50% 20%, #14141d 0%, transparent 60%),
+    radial-gradient(1200px 800px at 50% -10%, #14141d 0%, transparent 60%),
     radial-gradient(900px 600px at 50% 110%, #110b0b 0%, transparent 65%),
-    var(--obsidian);
+    var(--bg-deep);
 }
-
-/* ============ CUSTOM CURSOR ============ */
-@media (hover:hover) and (pointer:fine){
-  body.codex-cursor{cursor:none}
-  body.codex-cursor a, body.codex-cursor button, body.codex-cursor input, body.codex-cursor [role="button"]{cursor:none}
-  .quill-cursor{
-    position:fixed;left:0;top:0;width:22px;height:22px;pointer-events:none;z-index:9999;
-    transform:translate(-50%,-50%);
-    color:var(--gold);
-    transition:color .2s, transform .12s ease-out, opacity .3s;
-    mix-blend-mode:screen;
-    will-change:transform;
-  }
-  .quill-cursor.flame{color:var(--ember);transform:translate(-50%,-50%) scale(1.35)}
-  .quill-cursor svg{width:100%;height:100%;filter:drop-shadow(0 0 6px currentColor)}
-}
-
-/* ============ AMBIENT — EMBER CANVAS ============ */
-.ember-canvas{position:fixed;inset:0;pointer-events:none;z-index:1;opacity:0.85}
+/* ============ AMBIENT — ROAMING DUST / STARS ============ */
 .atmos{position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden}
-.starlight{position:absolute;width:1px;height:1px;background:#fff;border-radius:50%;box-shadow:0 0 8px #fff}
-
-/* ============ CINEMATIC OPENER ============ */
-.opener{
-  position:relative;height:100vh;min-height:680px;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  overflow:hidden;isolation:isolate;
-  z-index:5;
-}
-.opener::before{
-  content:"";position:absolute;inset:0;
-  background:
-    radial-gradient(ellipse at 50% 40%, rgba(201,164,92,0.10) 0%, transparent 50%),
-    radial-gradient(ellipse at 50% 100%, rgba(176,26,26,0.08) 0%, transparent 50%);
-  z-index:-1;
-}
-.opener .vignette{
-  position:absolute;inset:0;
-  background:radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.65) 95%);
-  pointer-events:none;z-index:2;
-}
-.opener .grain{
-  position:absolute;inset:0;opacity:0.04;pointer-events:none;z-index:3;mix-blend-mode:overlay;
-  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' seed='3'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 0.9 0 0 0 0 0.7 0 0 0 0.6 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
-}
-
-/* slow rotating sigil behind title */
-.opener .opener-sigil{
-  position:absolute;top:50%;left:50%;width:min(78vmin, 880px);height:min(78vmin, 880px);
-  transform:translate(-50%,-50%);
-  color:var(--gold);opacity:0.07;z-index:1;
-  animation:opener-spin 180s linear infinite;
-  filter:drop-shadow(0 0 40px rgba(201,164,92,0.15));
-}
-.opener .opener-sigil svg{width:100%;height:100%}
-@keyframes opener-spin{to{transform:translate(-50%,-50%) rotate(360deg)}}
-
-/* counter-rotating inner ring */
-.opener .opener-sigil-2{
-  position:absolute;top:50%;left:50%;width:min(50vmin, 540px);height:min(50vmin, 540px);
-  transform:translate(-50%,-50%);
-  color:var(--gold-dim);opacity:0.10;z-index:1;
-  animation:opener-spin-rev 110s linear infinite;
-}
-.opener .opener-sigil-2 svg{width:100%;height:100%}
-@keyframes opener-spin-rev{to{transform:translate(-50%,-50%) rotate(-360deg)}}
-
-.opener-content{position:relative;z-index:4;text-align:center;padding:0 20px;max-width:980px}
-
-.opener-eyebrow{
-  font-family:"IM Fell English SC","Cinzel",serif;
-  font-size:0.82rem;letter-spacing:0.42em;text-transform:uppercase;
-  color:var(--gold);opacity:0;
-  margin-bottom:28px;
-  animation:reveal-eyebrow 1.4s ease-out 0.3s forwards;
-}
-@keyframes reveal-eyebrow{
-  0%{opacity:0;transform:translateY(-8px);letter-spacing:0.6em}
-  100%{opacity:0.95;transform:translateY(0);letter-spacing:0.42em}
-}
-
-.opener-title{
-  font-family:"Cinzel Decorative","Cinzel",serif;font-weight:700;
-  font-size:clamp(56px, 10vw, 144px);
-  line-height:0.95;margin:0 0 22px;
-  letter-spacing:0.04em;
-  background:linear-gradient(180deg, #fff5d8 0%, var(--gold-bright) 35%, var(--gold) 65%, var(--gold-deep) 100%);
-  -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;
-  text-shadow:0 0 60px rgba(201,164,92,0.25);
-  filter:blur(20px);opacity:0;
-  animation:reveal-title 2.4s cubic-bezier(.2,.7,.2,1) 0.55s forwards;
-}
-@keyframes reveal-title{
-  0%{filter:blur(20px);opacity:0;transform:scale(1.08)}
-  60%{opacity:1}
-  100%{filter:blur(0);opacity:1;transform:scale(1)}
-}
-
-.opener-subtitle{
-  font-family:"Cormorant Garamond",serif;font-style:italic;
-  font-size:clamp(1.1rem, 1.7vw, 1.45rem);
-  color:var(--ink-soft);max-width:620px;margin:0 auto 14px;line-height:1.55;
+.mote{
+  position:absolute;bottom:-12px;width:2.5px;height:2.5px;border-radius:50%;
+  background:radial-gradient(circle, #fff5d0, var(--gold) 50%, transparent 80%);
+  box-shadow:0 0 6px rgba(201,164,92,0.5);
+  animation:mote-rise linear infinite;
   opacity:0;
-  animation:reveal-soft 1.6s ease-out 1.6s forwards;
 }
-.opener-attrib{
-  font-family:"IM Fell English SC",serif;font-size:0.7rem;letter-spacing:0.32em;text-transform:uppercase;
-  color:var(--ink-mute);opacity:0;margin-top:34px;
-  animation:reveal-soft 1.6s ease-out 2s forwards;
+@keyframes mote-rise{
+  0%   {transform:translate(0,0) scale(0.6);opacity:0}
+  10%  {opacity:0.8}
+  100% {transform:translate(var(--dx,40px),-110vh) scale(0.2);opacity:0}
 }
-@keyframes reveal-soft{
-  0%{opacity:0;transform:translateY(8px)}
-  100%{opacity:0.95;transform:translateY(0)}
+/* shooting stars — occasional */
+.starlight{
+  position:absolute;width:1px;height:1px;background:white;border-radius:50%;
+  box-shadow:0 0 8px white;
 }
-
-/* scroll cue — glowing seal */
-.scroll-cue{
-  position:absolute;bottom:42px;left:50%;transform:translateX(-50%);
-  display:flex;flex-direction:column;align-items:center;gap:12px;
-  font-family:"Cinzel",serif;font-size:0.6rem;letter-spacing:0.36em;text-transform:uppercase;
-  color:var(--gold);opacity:0;
-  animation:reveal-soft 1.6s ease-out 2.4s forwards;
-  z-index:4;
-  cursor:pointer;text-decoration:none;
+@keyframes shoot{
+  0%   {opacity:0;transform:translate(0,0)}
+  4%   {opacity:1}
+  100% {opacity:0;transform:translate(-280px,210px)}
 }
-.scroll-cue .seal{
-  width:48px;height:48px;border:1px solid var(--gold-dim);border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  background:rgba(7,7,10,0.4);backdrop-filter:blur(2px);
-  animation:seal-pulse 3.2s ease-in-out infinite;
-  transition:border-color .3s, color .3s;
-}
-.scroll-cue:hover .seal{border-color:var(--gold-bright);color:var(--gold-bright)}
-.scroll-cue .seal svg{width:18px;height:18px;color:currentColor}
-@keyframes seal-pulse{
-  0%,100%{box-shadow:0 0 0 0 rgba(201,164,92,0.4)}
-  50%    {box-shadow:0 0 0 14px rgba(201,164,92,0)}
-}
-.scroll-cue .cue-text{opacity:0.8}
 
 /* ============ ENTER GAME BUTTON ============ */
 .enter-game-btn{
-  position:fixed;top:80px;left:28px;z-index:200;
+  position:fixed;top:22px;right:28px;z-index:200;
   display:inline-flex;align-items:center;gap:10px;
   padding:10px 20px;background:rgba(7,7,10,0.85);
   border:1px solid var(--gold-dim);color:var(--gold);
@@ -221,21 +98,6 @@ body{
 
 .page{max-width:1300px;margin:0 auto;padding:80px clamp(16px,3vw,40px) 80px;position:relative;z-index:5}
 
-/* ============ ORNAMENTAL DIVIDER ============ */
-.ornament-rule{
-  display:flex;align-items:center;justify-content:center;gap:14px;
-  margin:0 auto;width:100%;max-width:560px;
-  color:var(--gold-dim);
-}
-.ornament-rule .r{flex:1;height:1px;background:linear-gradient(to right,transparent,currentColor 50%,transparent)}
-.ornament-rule .o{display:flex;align-items:center;gap:8px}
-.ornament-rule .o .dot{width:3px;height:3px;background:currentColor;border-radius:50%;opacity:0.7}
-.ornament-rule .o .diamond{
-  width:8px;height:8px;background:transparent;border:1px solid currentColor;transform:rotate(45deg);
-  position:relative;
-}
-.ornament-rule .o .diamond::after{content:"";position:absolute;inset:2px;background:var(--gold);opacity:0.4}
-
 /* ============ HEADER ============ */
 header.shelf-head{
   text-align:center;margin-bottom:48px;position:relative;
@@ -266,80 +128,53 @@ h1.title{
 }
 .meta-cell{padding:10px clamp(12px,2.5vw,22px);border-right:1px solid var(--line-soft)}
 .meta-cell:last-child{border-right:none}
-.meta-cell .k{font-family:"IM Fell English SC","Cinzel",serif;text-transform:uppercase;letter-spacing:0.24em;font-size:0.6rem;color:var(--gold)}
+.meta-cell .k{font-family:"Cinzel",serif;text-transform:uppercase;letter-spacing:0.22em;font-size:0.58rem;color:var(--gold)}
 .meta-cell .v{font-family:"Cinzel",serif;font-size:1rem;color:var(--ink);letter-spacing:0.08em;margin-top:2px}
 
-/* ============ CHRONICLE BANNER — WAX-SEALED PROCLAMATION ============ */
+/* ============ CHRONICLE BANNER ============ */
 .chronicle-banner{
-  margin:56px 0;position:relative;
+  margin-bottom:56px;position:relative;border:1px solid var(--gold-dim);
   background:
-    linear-gradient(135deg, rgba(201,164,92,0.06) 0%, transparent 50%),
-    linear-gradient(315deg, rgba(176,26,26,0.07) 0%, transparent 50%),
-    linear-gradient(180deg, var(--vellum) 0%, var(--vellum-2) 100%);
-  padding:clamp(48px,6vw,84px) clamp(28px,5vw,80px) clamp(40px,5vw,60px);
-  text-align:center;overflow:visible;
+    linear-gradient(135deg, rgba(201,164,92,0.05) 0%, transparent 50%),
+    linear-gradient(315deg, rgba(176,26,26,0.06) 0%, transparent 50%),
+    var(--bg-card);
+  padding:clamp(36px,5vw,60px) clamp(24px,5vw,72px);
+  text-align:center;overflow:hidden;
   opacity:0;animation:fade-up 1s ease-out 0.4s forwards;
-  /* torn parchment top + bottom via SVG mask */
-  -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='none' viewBox='0 0 100 100'><path d='M0 3 Q5 0 10 2 T20 2 T30 1 T40 3 T50 1 T60 3 T70 1 T80 2 T90 3 T100 2 L100 97 Q95 100 90 98 T80 98 T70 99 T60 97 T50 99 T40 97 T30 99 T20 98 T10 97 T0 98 Z' fill='white'/></svg>");
-          mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='none' viewBox='0 0 100 100'><path d='M0 3 Q5 0 10 2 T20 2 T30 1 T40 3 T50 1 T60 3 T70 1 T80 2 T90 3 T100 2 L100 97 Q95 100 90 98 T80 98 T70 99 T60 97 T50 99 T40 97 T30 99 T20 98 T10 97 T0 98 Z' fill='white'/></svg>");
-  -webkit-mask-size:100% 100%;mask-size:100% 100%;
-  border:none;
 }
-/* gilded inner frame */
-.chronicle-banner::after{
-  content:"";position:absolute;inset:18px;border:1px solid var(--gold-dim);pointer-events:none;
-  opacity:0.55;
+.chronicle-banner::before, .chronicle-banner::after,
+.chronicle-banner .cb-corner-bl, .chronicle-banner .cb-corner-br{
+  content:"";position:absolute;width:12px;height:12px;
+  border:1px solid var(--gold-dim);background:var(--bg-deep);transform:rotate(45deg);pointer-events:none;
 }
-
-/* wax seal — top-right corner, outside the inner frame */
-.wax-seal{
-  position:absolute;top:-22px;right:46px;z-index:6;
-  width:88px;height:88px;
-  filter:drop-shadow(0 6px 14px rgba(0,0,0,0.85));
-  animation:seal-glow 4s ease-in-out infinite;
-  transform-origin:50% 50%;
-  transition:transform .4s ease;
-}
-.wax-seal:hover{transform:scale(1.08) rotate(-3deg)}
-.wax-seal svg{width:100%;height:100%}
-@keyframes seal-glow{
-  0%,100%{filter:drop-shadow(0 6px 14px rgba(0,0,0,0.85)) drop-shadow(0 0 0 transparent)}
-  50%    {filter:drop-shadow(0 6px 14px rgba(0,0,0,0.85)) drop-shadow(0 0 18px rgba(176,26,26,0.6))}
-}
+.chronicle-banner::before{top:-6px;left:-6px}
+.chronicle-banner::after{top:-6px;right:-6px}
+.chronicle-banner .cb-corner-bl{bottom:-6px;left:-6px}
+.chronicle-banner .cb-corner-br{bottom:-6px;right:-6px}
 
 /* drifting sigils in banner bg */
 .chronicle-banner .bg-sigil{
   position:absolute;color:var(--gold);opacity:0.04;pointer-events:none;
-  font-family:"Cinzel Decorative",serif;font-size:200px;line-height:1;z-index:1;
+  font-family:"Cinzel Decorative",serif;font-size:200px;line-height:1;
 }
 .chronicle-banner .bg-sigil.left{left:-20px;top:-30px;transform:rotate(-12deg)}
 .chronicle-banner .bg-sigil.right{right:-30px;bottom:-40px;transform:rotate(8deg)}
 
-/* Latin marginalia crossfade */
-.cb-marginalia{
-  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
-  font-family:"IM Fell English SC",serif;font-style:italic;
-  font-size:clamp(48px, 7vw, 92px);
-  color:var(--gold);opacity:0.03;pointer-events:none;z-index:0;
-  white-space:nowrap;letter-spacing:0.1em;
-  transition:opacity 1.2s ease;
-}
-.cb-marginalia.show{opacity:0.045}
+.chronicle-banner .cb-rule{display:flex;align-items:center;gap:16px;margin-bottom:28px}
+.chronicle-banner .cb-rule .r{flex:1;height:1px;background:linear-gradient(to right,transparent,var(--gold-dim) 40%,transparent);opacity:0.5}
+.chronicle-banner .cb-rule .g{color:var(--gold);font-size:10px;opacity:0.6;letter-spacing:0.3em;animation:twinkle 2.6s ease-in-out infinite}
+@keyframes twinkle{0%,100%{opacity:0.3}50%{opacity:0.9}}
 
-.cb-eyebrow{
-  font-family:"IM Fell English SC","Cinzel",serif;font-size:0.7rem;
-  letter-spacing:0.42em;text-transform:uppercase;color:var(--gold);
-  display:block;margin-bottom:18px;position:relative;z-index:3;
-}
+.cb-eyebrow{font-family:"Cinzel",serif;font-size:0.58rem;letter-spacing:0.38em;text-transform:uppercase;color:var(--gold-dim);display:block;margin-bottom:14px}
 .cb-title{
-  font-family:"Cinzel Decorative",serif;font-weight:400;font-size:clamp(28px,4.4vw,54px);
-  letter-spacing:0.08em;color:var(--ink);margin:0 0 18px;line-height:1.15;position:relative;z-index:3;
+  font-family:"Cinzel Decorative",serif;font-weight:400;font-size:clamp(24px,4vw,48px);
+  letter-spacing:0.08em;color:var(--ink);margin:0 0 14px;line-height:1.15;
   background:linear-gradient(180deg, #f6efd2 0%, var(--gold) 100%);
   -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;
 }
 .cb-sub{
-  font-family:"Cormorant Garamond",Georgia,serif;font-style:italic;position:relative;z-index:3;
-  font-size:clamp(1.05rem,1.35vw,1.22rem);color:var(--ink-soft);max-width:580px;margin:0 auto 36px;line-height:1.55;
+  font-family:"Cormorant Garamond",Georgia,serif;font-style:italic;
+  font-size:clamp(1rem,1.3vw,1.18rem);color:var(--ink-mute);max-width:560px;margin:0 auto 36px;line-height:1.55;
 }
 .cb-btn{
   display:inline-flex;align-items:center;gap:16px;text-decoration:none;color:var(--gold);
@@ -357,67 +192,16 @@ h1.title{
 .cb-btn .arr{width:20px;height:1px;background:currentColor;position:relative;transition:width .3s;flex-shrink:0}
 .cb-btn:hover .arr{width:28px}
 .cb-btn .arr::after{content:"";position:absolute;right:0;top:-3px;width:7px;height:7px;border-right:1px solid currentColor;border-top:1px solid currentColor;transform:rotate(45deg)}
-.cb-btns{display:inline-flex;flex-wrap:wrap;gap:14px;justify-content:center;position:relative;z-index:3}
+.cb-btns{display:inline-flex;flex-wrap:wrap;gap:14px;justify-content:center}
 .cb-btn-secondary{color:var(--ink-mute);border-color:var(--line)}
 .cb-btn-secondary:hover{color:var(--ink);border-color:var(--gold-dim)}
-
-/* ============ FILTER RAIL ============ */
-.filter-rail{
-  position:sticky;top:78px;z-index:20;
-  display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;
-  padding:14px 0;margin-bottom:24px;
-  background:linear-gradient(180deg, rgba(5,5,7,0.88) 0%, rgba(5,5,7,0.7) 90%, transparent 100%);
-  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
-  opacity:0;animation:fade-up 0.8s ease-out 0.6s forwards;
-}
-.filter-rail .fr-label{
-  font-family:"IM Fell English SC",serif;font-size:0.65rem;letter-spacing:0.32em;text-transform:uppercase;
-  color:var(--gold-dim);margin-right:6px;
-}
-.fr-btn{
-  position:relative;display:inline-flex;align-items:center;justify-content:center;
-  width:42px;height:42px;border:1px solid var(--line);background:rgba(15,15,20,0.6);
-  color:var(--gold-dim);cursor:pointer;
-  transition:border-color .25s, color .25s, background .25s, transform .25s;
-  padding:0;
-}
-.fr-btn svg{width:22px;height:22px;color:currentColor}
-.fr-btn:hover{border-color:var(--gold-dim);color:var(--gold);transform:translateY(-2px)}
-.fr-btn.active{
-  border-color:var(--accent, var(--gold));
-  color:var(--accent, var(--gold));
-  background:rgba(15,15,20,0.9);
-  box-shadow:0 0 18px color-mix(in srgb, var(--accent, var(--gold)) 35%, transparent);
-}
-.fr-btn.active::after{
-  content:"";position:absolute;left:50%;bottom:-7px;transform:translateX(-50%);
-  width:4px;height:4px;background:currentColor;border-radius:50%;
-  box-shadow:0 0 8px currentColor;
-}
-.fr-btn[data-class="all"]      {--accent:var(--gold)}
-.fr-btn[data-class="peril"]    {--accent:var(--c-paladin)}
-.fr-btn[data-class="bard"]     {--accent:var(--c-bard)}
-.fr-btn[data-class="ember"]    {--accent:var(--c-sorcerer)}
-.fr-btn[data-class="halo"]     {--accent:var(--c-monk)}
-.fr-btn[data-class="hellfire"] {--accent:var(--c-ranger)}
-.fr-btn[data-class="crow"]     {--accent:var(--c-cleric)}
-.fr-btn[data-class="azure"]    {--accent:var(--c-wizard)}
-
-.fr-tooltip{
-  position:absolute;left:50%;top:calc(100% + 10px);transform:translateX(-50%) translateY(-4px);
-  font-family:"Cinzel",serif;font-size:0.52rem;letter-spacing:0.24em;text-transform:uppercase;
-  color:var(--gold);background:rgba(7,7,10,0.96);border:1px solid var(--gold-deep);
-  padding:5px 10px;white-space:nowrap;opacity:0;pointer-events:none;
-  transition:opacity .25s, transform .25s;z-index:30;
-}
-.fr-btn:hover .fr-tooltip{opacity:1;transform:translateX(-50%) translateY(0)}
 
 /* ============ SHELF LABEL ============ */
 .shelf-label{
   display:flex;align-items:center;gap:18px;margin:0 0 28px;
   opacity:0;animation:fade-up 0.8s ease-out 0.7s forwards;
 }
-.shelf-label .num{font-family:"IM Fell English SC","Cinzel",serif;color:var(--gold);font-size:0.84rem;letter-spacing:0.3em}
+.shelf-label .num{font-family:"Cinzel",serif;color:var(--gold);font-size:0.72rem;letter-spacing:0.3em}
 .shelf-label .lbl{font-family:"Cinzel",serif;text-transform:uppercase;letter-spacing:0.2em;font-size:1rem;color:var(--ink)}
 .shelf-label .rule{flex:1;height:1px;background:linear-gradient(to right,var(--gold-dim),transparent)}
 .shelf-label .count{font-family:"Cinzel",serif;color:var(--ink-mute);font-size:0.68rem;letter-spacing:0.28em;text-transform:uppercase}
@@ -430,19 +214,16 @@ h1.title{
 @media (max-width:1100px){.folio-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:600px){.folio-grid{grid-template-columns:1fr;gap:20px}}
 
-/* hide filtered-out folios */
-.folio.is-hidden{display:none}
-
-/* ============ FOLIO CARD — VELLUM FOLIO ============ */
+/* ============ FOLIO CARD ============ */
 .folio{
   position:relative;text-decoration:none;color:inherit;
   display:flex;flex-direction:column;height:100%;
-  background:
-    linear-gradient(180deg, var(--vellum) 0%, var(--bg-card-2) 100%);
+  background:linear-gradient(180deg, var(--bg-card), var(--bg-card-2));
   border:1px solid var(--line);
   overflow:hidden;cursor:pointer;isolation:isolate;
   opacity:0;transform:translateY(20px);
   transition:transform 0.5s cubic-bezier(.2,.7,.2,1), border-color 0.4s, box-shadow 0.4s, opacity 0.6s;
+  /* class accent variable, default gold */
   --accent: var(--gold);
 }
 .folio.peril    {--accent:var(--c-paladin)}
@@ -461,60 +242,18 @@ h1.title{
 .folio:nth-child(5){transition-delay:0.45s}
 .folio:nth-child(6){transition-delay:0.55s}
 
-/* foil ribbon down the left edge */
-.folio::before{
-  content:"";position:absolute;left:0;top:0;bottom:0;width:3px;z-index:8;
-  background:linear-gradient(180deg, transparent, var(--accent) 20%, var(--accent) 80%, transparent);
-  opacity:0;transition:opacity .5s;
-  box-shadow:0 0 12px color-mix(in srgb, var(--accent) 60%, transparent);
-}
-.folio:hover::before{opacity:0.9}
-
-/* corner diamonds — top-left/right + bottom-left/right */
-.folio > .corner-tl, .folio > .corner-tr,
+/* corner diamonds */
+.folio::before, .folio::after,
 .folio > .corner-bl, .folio > .corner-br{
-  position:absolute;width:10px;height:10px;
+  content:"";position:absolute;width:10px;height:10px;
   border:1px solid var(--gold-dim);background:var(--bg-deep);transform:rotate(45deg);
   z-index:7;pointer-events:none;
   transition:border-color 0.4s, background 0.4s;
 }
-.folio > .corner-tl{top:-5px;left:-5px}
-.folio > .corner-tr{top:-5px;right:-5px}
+.folio::before{top:-5px;left:-5px}
+.folio::after {top:-5px;right:-5px}
 .folio > .corner-bl{bottom:-5px;left:-5px}
 .folio > .corner-br{bottom:-5px;right:-5px}
-
-/* gold tracing line on hover (perimeter) */
-.folio .trace{
-  position:absolute;inset:0;pointer-events:none;z-index:6;
-}
-.folio .trace svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
-.folio .trace rect{
-  fill:none;stroke:var(--accent);stroke-width:1;
-  stroke-dasharray:1000;stroke-dashoffset:1000;
-  opacity:0;
-  filter:drop-shadow(0 0 4px color-mix(in srgb, var(--accent) 60%, transparent));
-}
-.folio:hover .trace rect{
-  opacity:0.7;
-  animation:trace-perimeter 1.6s cubic-bezier(.2,.7,.2,1) forwards;
-}
-@keyframes trace-perimeter{
-  0%  {stroke-dashoffset:1000;opacity:0}
-  20% {opacity:0.85}
-  100%{stroke-dashoffset:0;opacity:0.6}
-}
-
-/* visited memory glow — for returning visitors */
-.folio.visited-memory{
-  box-shadow:0 0 0 1px color-mix(in srgb, var(--accent) 14%, transparent),
-             0 0 24px color-mix(in srgb, var(--accent) 8%, transparent);
-}
-.folio.visited-memory > .corner-tl,
-.folio.visited-memory > .corner-tr,
-.folio.visited-memory > .corner-bl,
-.folio.visited-memory > .corner-br{
-  border-color:color-mix(in srgb, var(--accent) 40%, var(--gold-dim));
-}
 
 /* glow ring on hover — uses accent */
 .folio:hover{
@@ -525,7 +264,7 @@ h1.title{
     0 0 0 1px color-mix(in srgb, var(--accent) 30%, transparent),
     0 0 50px color-mix(in srgb, var(--accent) 25%, transparent);
 }
-.folio:hover > .corner-tl, .folio:hover > .corner-tr,
+.folio:hover::before, .folio:hover::after,
 .folio:hover > .corner-bl, .folio:hover > .corner-br{border-color:var(--accent)}
 
 /* sigil emblem — top-right of pane, per character */
@@ -561,11 +300,11 @@ h1.title{
              radial-gradient(ellipse at center 28%, transparent 50%, rgba(0,0,0,0.45) 100%);
   pointer-events:none;z-index:1;
 }
-/* accent ink bleeds in from bottom on hover */
+/* class-tinted overlay that fades in on hover */
 .folio .pane .accent-glow{
   position:absolute;inset:0;z-index:2;pointer-events:none;
-  background:radial-gradient(ellipse at 50% 100%, color-mix(in srgb, var(--accent) 30%, transparent) 0%, transparent 60%);
-  opacity:0;transition:opacity .8s ease;
+  background:radial-gradient(ellipse at 70% 85%, color-mix(in srgb, var(--accent) 22%, transparent) 0%, transparent 55%);
+  opacity:0;transition:opacity .6s;
 }
 .folio:hover .pane .accent-glow{opacity:1}
 
@@ -691,12 +430,11 @@ h1.title{
 .folio.peril:hover .fx-bleed{opacity:0.7;animation:bleed-pulse 3s ease-in-out infinite}
 @keyframes bleed-pulse{0%,100%{opacity:0.5}50%{opacity:0.85}}
 
-/* folio number top-left — marginalia font */
+/* folio number top-left */
 .folio-num{
   position:absolute;top:14px;left:14px;z-index:5;
-  font-family:"IM Fell English SC","Cinzel",serif;color:var(--accent);font-size:0.7rem;letter-spacing:0.28em;text-transform:uppercase;
+  font-family:"Cinzel",serif;color:var(--accent);font-size:0.62rem;letter-spacing:0.32em;text-transform:uppercase;
   text-shadow:0 1px 4px #000;
-  opacity:0.85;
 }
 
 /* identity bar */
@@ -715,16 +453,7 @@ h1.title{
 }
 
 /* lower body */
-.folio .body{padding:16px 18px 16px;display:flex;flex-direction:column;gap:12px;flex:1;background:linear-gradient(180deg, transparent, rgba(26,21,16,0.4))}
-
-/* fleuron between stat and blurb */
-.fleuron{
-  display:flex;align-items:center;justify-content:center;gap:8px;
-  color:var(--gold-dim);font-family:"Cinzel Decorative",serif;font-size:0.7rem;
-  opacity:0.6;
-}
-.fleuron .l{flex:1;height:1px;background:linear-gradient(to right, transparent, currentColor)}
-.fleuron .r{flex:1;height:1px;background:linear-gradient(to left, transparent, currentColor)}
+.folio .body{padding:16px 18px 16px;display:flex;flex-direction:column;gap:12px;flex:1}
 
 .stat-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid var(--line);background:var(--bg-deep);
   transition:border-color .4s}
@@ -739,7 +468,7 @@ h1.title{
 .open-row{display:flex;align-items:center;justify-content:space-between;padding-top:12px;border-top:1px solid var(--line);
   transition:border-color .4s}
 .folio:hover .open-row{border-color:color-mix(in srgb, var(--accent) 35%, var(--line))}
-.open-row .vol{font-family:"IM Fell English SC","Cinzel",serif;font-size:0.66rem;letter-spacing:0.26em;text-transform:uppercase;color:var(--ink-mute)}
+.open-row .vol{font-family:"Cinzel",serif;font-size:0.58rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--ink-mute)}
 .open-row .open{font-family:"Cinzel",serif;font-size:0.66rem;letter-spacing:0.32em;text-transform:uppercase;color:var(--accent);
   display:inline-flex;align-items:center;gap:8px;transition:gap .4s, color .4s}
 .folio:hover .open-row .open{gap:14px}
@@ -757,6 +486,7 @@ h1.title{
   font-family:"Cinzel",serif;font-size:0.4rem;letter-spacing:0.24em;text-transform:uppercase;
   color:var(--gold-dim);opacity:0.6;margin-left:6px;pointer-events:none;
 }
+/* ---- Flag count on chronicle buttons ---- */
 .cb-flag-count{
   font-family:"Cinzel",serif;font-size:0.42rem;letter-spacing:0.18em;text-transform:uppercase;
   color:var(--gold-dim);border:1px solid var(--gold-deep);padding:2px 7px;
@@ -769,50 +499,17 @@ h1.title{
 }
 .cb-btn:hover .cb-visit-label{opacity:1;color:var(--ink-mute)}
 
-/* ============ CLOSING SEAL ============ */
-.closing-seal{
-  margin-top:96px;padding:60px 20px 40px;text-align:center;position:relative;
-  display:flex;flex-direction:column;align-items:center;gap:18px;
-}
-.closing-seal .ember-glow{
-  width:10px;height:10px;border-radius:50%;
-  background:radial-gradient(circle, #ffd4a0 0%, var(--ember) 40%, transparent 80%);
-  box-shadow:0 0 20px var(--ember), 0 0 40px rgba(255,122,58,0.6);
-  animation:ember-flicker 3.4s ease-in-out infinite;
-}
-@keyframes ember-flicker{
-  0%,100%{opacity:0.85;transform:scale(1)}
-  25%    {opacity:0.5;transform:scale(0.85)}
-  50%    {opacity:1;transform:scale(1.1)}
-  75%    {opacity:0.7;transform:scale(0.95)}
-}
-.closing-seal .latin{
-  font-family:"IM Fell English SC",serif;font-style:italic;font-size:0.95rem;
-  letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);
-}
-.closing-seal .crest{
-  width:64px;height:64px;color:var(--gold-dim);opacity:0.7;
-  animation:compass-spin 90s linear infinite;
-}
-.closing-seal .translation{
-  font-family:"Cormorant Garamond",serif;font-style:italic;font-size:0.95rem;
-  color:var(--ink-mute);max-width:420px;line-height:1.45;
-}
-
-/* ============ COLOPHON ============ */
+/* ============ FOOTER ============ */
 .colophon{
-  margin-top:32px;text-align:center;font-family:"IM Fell English SC","Cinzel",serif;
-  letter-spacing:0.3em;text-transform:uppercase;font-size:0.66rem;color:var(--ink-faint);
+  margin-top:72px;text-align:center;font-family:"Cinzel",serif;letter-spacing:0.3em;text-transform:uppercase;font-size:0.58rem;color:var(--ink-faint);
 }
 .colophon .sep{color:var(--gold-dim);margin:0 12px}
 
 /* ============ REDUCE MOTION ============ */
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:0.001ms !important;animation-iteration-count:1 !important;transition-duration:0.001ms !important}
-  .atmos,.ember-canvas,.starlight{display:none}
-  .opener-sigil, .opener-sigil-2{animation:none !important;opacity:0.06}
+  .atmos,.mote,.starlight{display:none}
 }
-
 /* ── MUSIC CONTROL ── */
 .music-ctrl{
   position:fixed;top:80px;right:28px;z-index:200;
@@ -826,7 +523,7 @@ h1.title{
   color:var(--gold);padding:0;display:flex;align-items:center;
   transition:color .2s,transform .15s;
 }
-.music-btn:hover{color:var(--gold-bright);transform:scale(1.12)}
+.music-btn:hover{color:var(--gold-bright,#f6efd2);transform:scale(1.12)}
 .music-btn svg{width:15px;height:15px}
 .music-vol{
   -webkit-appearance:none;appearance:none;
@@ -847,41 +544,10 @@ h1.title{
   0%,100%{color:var(--gold)}
   50%{color:#f6efd2;filter:drop-shadow(0 0 6px rgba(201,164,92,.8))}
 }
-
-/* cursor toggle (lives next to music ctrl) */
-.cursor-toggle{
-  position:fixed;top:128px;right:28px;z-index:200;
-  display:inline-flex;align-items:center;gap:8px;
-  border:1px solid var(--gold-dim);background:rgba(7,7,10,.92);backdrop-filter:blur(6px);
-  padding:6px 12px;transition:border-color .2s;cursor:pointer;
-  font-family:"Cinzel",serif;font-size:0.52rem;letter-spacing:0.26em;text-transform:uppercase;color:var(--gold);
-}
-.cursor-toggle:hover{border-color:var(--gold);color:var(--gold-bright)}
-.cursor-toggle .dot{width:7px;height:7px;border-radius:50%;background:var(--gold-dim);transition:background .2s, box-shadow .2s}
-.cursor-toggle.on .dot{background:var(--gold);box-shadow:0 0 8px var(--gold)}
-
 @media(max-width:600px){
   .music-ctrl{top:auto;bottom:62px;right:14px;padding:5px 10px}
   .music-vol{width:55px}
-  .enter-game-btn{top:72px;left:14px;padding:8px 14px;font-size:0.56rem}
-  .cursor-toggle{display:none}
-  .wax-seal{width:64px;height:64px;right:16px;top:-16px}
-  .filter-rail{padding:10px 0}
-  .fr-btn{width:36px;height:36px}
-  .fr-btn svg{width:18px;height:18px}
-  .filter-rail .fr-label{display:none}
 }
-
-/* ============ SCROLL TOP BUTTON ============ */
-#scroll-top{
-  position:fixed;bottom:24px;right:24px;z-index:150;
-  width:44px;height:44px;border-radius:50%;border:1px solid var(--gold-dim);
-  background:rgba(7,7,10,0.85);color:var(--gold);font-size:18px;cursor:pointer;
-  display:none;align-items:center;justify-content:center;
-  backdrop-filter:blur(6px);transition:color .2s,border-color .2s,transform .2s;
-}
-#scroll-top.show{display:flex}
-#scroll-top:hover{color:var(--gold-bright);border-color:var(--gold);transform:translateY(-2px)}
 </style>
 </head>
 <body>
@@ -964,66 +630,13 @@ h1.title{
   <input type="range" class="music-vol" id="music-vol" min="0" max="1" step="0.05" value="0.3" aria-label="Volume">
 </div>
 
-<!-- Cursor toggle -->
-<button class="cursor-toggle" id="cursor-toggle" aria-label="Toggle custom cursor" title="Toggle scribe's cursor">
-  <span class="dot"></span><span>Quill</span>
-</button>
-
 <a class="enter-game-btn" href="/game">
   Enter the Game
   <span class="btn-arrow"></span>
 </a>
 
-<!-- ============ AMBIENT LAYERS ============ -->
-<canvas class="ember-canvas" id="ember-canvas" aria-hidden="true"></canvas>
+<!-- ============ ATMOSPHERE ============ -->
 <div class="atmos" id="atmos" aria-hidden="true"></div>
-
-<!-- ============ CINEMATIC OPENER ============ -->
-<section class="opener" id="opener" aria-label="Codex intro">
-  <!-- Slow rotating sigil layers -->
-  <div class="opener-sigil" aria-hidden="true">
-    <svg viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-width="0.4">
-      <circle cx="100" cy="100" r="98"/>
-      <circle cx="100" cy="100" r="82"/>
-      <circle cx="100" cy="100" r="62"/>
-      <circle cx="100" cy="100" r="38"/>
-      <circle cx="100" cy="100" r="16"/>
-      <line x1="100" y1="2" x2="100" y2="198"/>
-      <line x1="2" y1="100" x2="198" y2="100"/>
-      <line x1="29" y1="29" x2="171" y2="171"/>
-      <line x1="171" y1="29" x2="29" y2="171"/>
-      <path d="M100 14 L106 100 L100 186 L94 100 Z" fill="currentColor" opacity="0.3" stroke="none"/>
-      <path d="M14 100 L100 94 L186 100 L100 106 Z" fill="currentColor" opacity="0.2" stroke="none"/>
-    </svg>
-  </div>
-  <div class="opener-sigil-2" aria-hidden="true">
-    <svg viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-width="0.5">
-      <circle cx="100" cy="100" r="96" stroke-dasharray="2 4"/>
-      <circle cx="100" cy="100" r="72"/>
-      <circle cx="100" cy="100" r="48" stroke-dasharray="1 3"/>
-      <path d="M100 28 L120 80 L172 100 L120 120 L100 172 L80 120 L28 100 L80 80 Z"/>
-    </svg>
-  </div>
-
-  <div class="opener-content">
-    <div class="opener-eyebrow">Annum Helmus · CC</div>
-    <h1 class="opener-title">The Veiled Codex</h1>
-    <div class="opener-subtitle">Bound and indexed in the chapter-house archive, each volume an oath, a name, a life set down by the Watcher's scribes.</div>
-    <div class="opener-attrib">— Roster of Folios —</div>
-  </div>
-
-  <a href="#chronicle" class="scroll-cue" aria-label="Unseal the Codex">
-    <div class="seal" aria-hidden="true">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
-        <path d="M6 9 L12 15 L18 9"/>
-      </svg>
-    </div>
-    <span class="cue-text">Unseal the Codex</span>
-  </a>
-
-  <div class="vignette" aria-hidden="true"></div>
-  <div class="grain" aria-hidden="true"></div>
-</section>
 
 <div class="page">
 
@@ -1057,46 +670,15 @@ h1.title{
     </div>
   </header>
 
-  <!-- ============ CHRONICLE BANNER — WAX SEAL ============ -->
-  <div class="chronicle-banner" id="chronicle">
-    <!-- Wax seal -->
-    <div class="wax-seal" aria-hidden="true">
-      <svg viewBox="0 0 100 100">
-        <defs>
-          <radialGradient id="wax-grad" cx="40%" cy="35%">
-            <stop offset="0%"  stop-color="#c43030"/>
-            <stop offset="55%" stop-color="#7a1010"/>
-            <stop offset="100%" stop-color="#3a0808"/>
-          </radialGradient>
-          <radialGradient id="wax-shine" cx="35%" cy="30%">
-            <stop offset="0%"  stop-color="#ff8a8a" stop-opacity="0.6"/>
-            <stop offset="50%" stop-color="#ff8a8a" stop-opacity="0"/>
-          </radialGradient>
-        </defs>
-        <path d="M50 4 L62 8 L72 6 L78 14 L88 18 L86 28 L94 34 L88 44 L96 52 L88 60 L92 70 L82 74 L78 84 L68 82 L60 92 L50 86 L40 92 L32 82 L22 84 L18 74 L8 70 L12 60 L4 52 L12 44 L6 34 L14 28 L12 18 L22 14 L28 6 L38 8 Z" fill="url(#wax-grad)" stroke="#2a0404" stroke-width="0.8"/>
-        <path d="M50 4 L62 8 L72 6 L78 14 L88 18 L86 28 L94 34 L88 44 L96 52 L88 60 L92 70 L82 74 L78 84 L68 82 L60 92 L50 86 L40 92 L32 82 L22 84 L18 74 L8 70 L12 60 L4 52 L12 44 L6 34 L14 28 L12 18 L22 14 L28 6 L38 8 Z" fill="url(#wax-shine)"/>
-        <g transform="translate(50,50)">
-          <circle r="22" fill="none" stroke="#3a0808" stroke-width="1.2"/>
-          <circle r="18" fill="none" stroke="#2a0404" stroke-width="0.6"/>
-          <path d="M0 -16 L4 0 L0 16 L-4 0 Z" fill="#2a0404"/>
-          <line x1="-16" y1="0" x2="16" y2="0" stroke="#2a0404" stroke-width="0.6"/>
-          <circle r="2" fill="#2a0404"/>
-        </g>
-      </svg>
-    </div>
-
+  <!-- ============ CHRONICLE BANNER ============ -->
+  <div class="chronicle-banner">
+    <span class="cb-corner-bl"></span>
+    <span class="cb-corner-br"></span>
     <span class="bg-sigil left">✦</span>
     <span class="bg-sigil right">❦</span>
-
-    <!-- Latin marginalia crossfade -->
-    <div class="cb-marginalia" id="cb-marginalia">Lux in tenebris</div>
-
-    <div class="ornament-rule" style="margin-bottom:22px">
-      <span class="r"></span>
-      <span class="o"><span class="dot"></span><span class="diamond"></span><span class="dot"></span></span>
-      <span class="r"></span>
+    <div class="cb-rule">
+      <span class="r"></span><span class="g">✦</span><span class="r"></span>
     </div>
-
     <span class="cb-eyebrow">The Veiled Codex — Chronicle</span>
     <h2 class="cb-title">Heroes of Borderland</h2>
     <p class="cb-sub">Before their names were remembered across the land, five travelers were each searching for something in their own lives. Read how their paths converged.</p>
@@ -1106,67 +688,24 @@ h1.title{
         <span class="arr"></span>
       </a>
     </div>
-
-    <div class="ornament-rule" style="margin-top:30px">
-      <span class="r"></span>
-      <span class="o"><span class="dot"></span><span class="diamond"></span><span class="dot"></span></span>
-      <span class="r"></span>
+    <div class="cb-rule" style="margin-top:28px;margin-bottom:0">
+      <span class="r"></span><span class="g">✦</span><span class="r"></span>
     </div>
   </div>
-
-  <!-- ============ FILTER RAIL ============ -->
-  <nav class="filter-rail" aria-label="Filter folios by class" id="filter-rail">
-    <span class="fr-label">Filter ·</span>
-    <button class="fr-btn active" data-class="all" aria-label="All folios">
-      <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.3">
-        <circle cx="16" cy="16" r="13"/><circle cx="16" cy="16" r="4" fill="currentColor"/>
-      </svg>
-      <span class="fr-tooltip">All</span>
-    </button>
-    <button class="fr-btn" data-class="peril" aria-label="Paladin">
-      <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M16 3 L20 11 H28 L22 16 L24 24 L16 19 L8 24 L10 16 L4 11 H12 Z"/></svg>
-      <span class="fr-tooltip">Paladin</span>
-    </button>
-    <button class="fr-btn" data-class="bard" aria-label="Bard">
-      <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M16 3 L20 8 V20 A4 4 0 0 1 12 20 V8 Z"/><line x1="20" y1="8" x2="26" y2="4"/><circle cx="14" cy="16" r="1.4" fill="currentColor"/></svg>
-      <span class="fr-tooltip">Bard</span>
-    </button>
-    <button class="fr-btn" data-class="ember" aria-label="Sorcerer">
-      <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M16 3 C11 9 8 14 8 19 a8 8 0 0 0 16 0 c0 -5 -3 -10 -8 -16 z"/></svg>
-      <span class="fr-tooltip">Sorcerer</span>
-    </button>
-    <button class="fr-btn" data-class="halo" aria-label="Monk">
-      <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="16" cy="16" r="12"/><circle cx="16" cy="16" r="6"/><path d="M16 4 V28 M4 16 H28"/></svg>
-      <span class="fr-tooltip">Monk</span>
-    </button>
-    <button class="fr-btn" data-class="hellfire" aria-label="Ranger">
-      <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M8 4 L12 10 L16 6 L20 10 L24 4 L24 16 C24 22 16 28 16 28 C16 28 8 22 8 16 Z"/></svg>
-      <span class="fr-tooltip">Ranger</span>
-    </button>
-    <button class="fr-btn" data-class="crow" aria-label="Cleric">
-      <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M8 22 Q12 16 18 16 L24 14 Q28 14 26 18 L24 20 L22 24 L18 26 L12 24 Z"/></svg>
-      <span class="fr-tooltip">Cleric</span>
-    </button>
-    <button class="fr-btn" data-class="azure" aria-label="Wizard">
-      <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M16 4 C18 8 22 11 22 16 C22 21 18 24 16 28 C14 24 10 21 10 16 C10 11 14 8 16 4 Z"/></svg>
-      <span class="fr-tooltip">Wizard</span>
-    </button>
-  </nav>
 
   <!-- ============ SHELF ============ -->
   <div class="shelf-label">
     <span class="num">I</span>
     <span class="lbl">Active Sworn</span>
     <span class="rule"></span>
-    <span class="count" id="shelf-count">07 / 07 enscribed</span>
+    <span class="count">06 / 06 enscribed</span>
   </div>
 
   <div class="folio-grid" id="folio-grid">
 
     <!-- ===== Aurora — paladin / peril ===== -->
     <a class="folio peril" href="/folio/aurora">
-      <i class="corner-tl"></i><i class="corner-tr"></i><i class="corner-bl"></i><i class="corner-br"></i>
-      <span class="trace" aria-hidden="true"><svg preserveAspectRatio="none"><rect x="0" y="0" width="100%" height="100%" pathLength="1000"/></svg></span>
+      <i class="corner-bl"></i><i class="corner-br"></i>
       <div class="sigil" aria-hidden="true">
         <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.3">
           <path d="M16 3 L20 11 H28 L22 16 L24 24 L16 19 L8 24 L10 16 L4 11 H12 Z"/>
@@ -1175,7 +714,7 @@ h1.title{
       <div class="pane">
         <div class="fx-layer fx-bleed"></div>
         <div class="accent-glow"></div>
-        <div class="folio-num">Fol. I</div>
+        <div class="folio-num">Folio · I</div>
         <img src="assets/aurora-card.jpg" alt="Aurora Elaris">
         <div class="ident">
           <div class="race">Wood Elf · 200 yrs</div>
@@ -1189,7 +728,6 @@ h1.title{
           <div class="c"><div class="k">Oath</div><div class="v">Vengeance</div></div>
           <div class="c"><div class="k">Order</div><div class="v">Watch</div></div>
         </div>
-        <div class="fleuron"><span class="l"></span>❦<span class="r"></span></div>
         <div class="blurb">"If justice requires sin, then I will become the sinner." The chapel is silent. Her sword is not yet drawn.</div>
         <div class="open-row">
           <span class="vol">Vol. I · 198 pp.</span>
@@ -1200,8 +738,7 @@ h1.title{
 
     <!-- ===== Aython — bard ===== -->
     <a class="folio bard" href="/folio/aython">
-      <i class="corner-tl"></i><i class="corner-tr"></i><i class="corner-bl"></i><i class="corner-br"></i>
-      <span class="trace" aria-hidden="true"><svg preserveAspectRatio="none"><rect x="0" y="0" width="100%" height="100%" pathLength="1000"/></svg></span>
+      <i class="corner-bl"></i><i class="corner-br"></i>
       <div class="sigil" aria-hidden="true">
         <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.3">
           <path d="M16 3 L20 8 V20 A4 4 0 0 1 12 20 V8 Z"/>
@@ -1212,7 +749,7 @@ h1.title{
       <div class="pane">
         <div class="fx-layer"><div class="fx-drip"></div></div>
         <div class="accent-glow"></div>
-        <div class="folio-num">Fol. II</div>
+        <div class="folio-num">Folio · II</div>
         <img src="assets/aython-portrait.jpg" alt="Aython Ashvail Aurelius">
         <video class="fx-video" src="assets/aython-card.mp4" muted loop playsinline preload="metadata" aria-hidden="true"></video>
         <div class="ident">
@@ -1227,7 +764,6 @@ h1.title{
           <div class="c"><div class="k">House</div><div class="v">Aurelius</div></div>
           <div class="c"><div class="k">Coin</div><div class="v">115 GP</div></div>
         </div>
-        <div class="fleuron"><span class="l"></span>❦<span class="r"></span></div>
         <div class="blurb">"No one is an enemy until they refuse the cup." Disinherited, debt-chased, and still buying the next round.</div>
         <div class="open-row">
           <span class="vol">Vol. II · 87 pp.</span>
@@ -1238,8 +774,7 @@ h1.title{
 
     <!-- ===== Kael Veranth — sorcerer / ember ===== -->
     <a class="folio ember" href="/folio/kael-veranth">
-      <i class="corner-tl"></i><i class="corner-tr"></i><i class="corner-bl"></i><i class="corner-br"></i>
-      <span class="trace" aria-hidden="true"><svg preserveAspectRatio="none"><rect x="0" y="0" width="100%" height="100%" pathLength="1000"/></svg></span>
+      <i class="corner-bl"></i><i class="corner-br"></i>
       <div class="sigil" aria-hidden="true">
         <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.3">
           <path d="M16 3 C11 9 8 14 8 19 a8 8 0 0 0 16 0 c0 -5 -3 -10 -8 -16 z"/>
@@ -1255,7 +790,7 @@ h1.title{
           <span class="e" style="--dx:14px"></span>
         </div>
         <div class="accent-glow"></div>
-        <div class="folio-num">Fol. III</div>
+        <div class="folio-num">Folio · III</div>
         <img src="assets/kael-veranth-card.jpg" alt="Kael Veranth">
         <div class="ident">
           <div class="race">Human · 21 yrs</div>
@@ -1269,7 +804,6 @@ h1.title{
           <div class="c"><div class="k">Bloodline</div><div class="v">Draconic</div></div>
           <div class="c"><div class="k">Mood</div><div class="v">Chaotic N</div></div>
         </div>
-        <div class="fleuron"><span class="l"></span>❦<span class="r"></span></div>
         <div class="blurb">"I burned everything I loved — so I could learn how to protect what remains." Hunted by dragon cults who name him their heir.</div>
         <div class="open-row">
           <span class="vol">Vol. III · 142 pp.</span>
@@ -1280,8 +814,7 @@ h1.title{
 
     <!-- ===== Anuchit — monk / halo ===== -->
     <a class="folio halo" href="/folio/anuchit">
-      <i class="corner-tl"></i><i class="corner-tr"></i><i class="corner-bl"></i><i class="corner-br"></i>
-      <span class="trace" aria-hidden="true"><svg preserveAspectRatio="none"><rect x="0" y="0" width="100%" height="100%" pathLength="1000"/></svg></span>
+      <i class="corner-bl"></i><i class="corner-br"></i>
       <div class="sigil" aria-hidden="true">
         <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.3">
           <circle cx="16" cy="16" r="12"/>
@@ -1301,7 +834,7 @@ h1.title{
           </div>
         </div>
         <div class="accent-glow"></div>
-        <div class="folio-num">Fol. IV</div>
+        <div class="folio-num">Folio · IV</div>
         <img src="assets/anuchit-card.jpg" alt="Anuchit Thepsuang">
         <video class="fx-video" src="assets/anuchit-card.mp4" muted loop playsinline preload="metadata" aria-hidden="true"></video>
         <div class="fx-flash" aria-hidden="true"></div>
@@ -1317,7 +850,6 @@ h1.title{
           <div class="c"><div class="k">Path</div><div class="v">Open Hand</div></div>
           <div class="c"><div class="k">Align</div><div class="v">Neutral G</div></div>
         </div>
-        <div class="fleuron"><span class="l"></span>❦<span class="r"></span></div>
         <div class="blurb">"I survived because of something inside me — but I still don't know what it is." A celestial sigil glows on his forehead; he refuses to speak of it.</div>
         <div class="open-row">
           <span class="vol">Vol. IV · 94 pp.</span>
@@ -1328,8 +860,7 @@ h1.title{
 
     <!-- ===== Kael Vorn — ranger / hellfire ===== -->
     <a class="folio hellfire" href="/folio/kael-vorn">
-      <i class="corner-tl"></i><i class="corner-tr"></i><i class="corner-bl"></i><i class="corner-br"></i>
-      <span class="trace" aria-hidden="true"><svg preserveAspectRatio="none"><rect x="0" y="0" width="100%" height="100%" pathLength="1000"/></svg></span>
+      <i class="corner-bl"></i><i class="corner-br"></i>
       <div class="sigil" aria-hidden="true">
         <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.3">
           <path d="M8 4 L12 10 L16 6 L20 10 L24 4 L24 16 C24 22 16 28 16 28 C16 28 8 22 8 16 Z"/>
@@ -1351,7 +882,7 @@ h1.title{
           </div>
         </div>
         <div class="accent-glow"></div>
-        <div class="folio-num">Fol. V</div>
+        <div class="folio-num">Folio · V</div>
         <img src="assets/kael-vorn-portrait.jpg" alt="Kael Vorn">
         <video class="fx-video" src="assets/kael-vorn-card.mp4" muted loop playsinline preload="metadata" aria-hidden="true"></video>
         <div class="ident">
@@ -1366,7 +897,6 @@ h1.title{
           <div class="c"><div class="k">Legacy</div><div class="v">Infernal</div></div>
           <div class="c"><div class="k">Vow</div><div class="v">Chaotic E</div></div>
         </div>
-        <div class="fleuron"><span class="l"></span>❦<span class="r"></span></div>
         <div class="blurb">"I can stare a hellhound in the eye without blinking. The straight, simple way is the best way."</div>
         <div class="open-row">
           <span class="vol">Vol. V · 116 pp.</span>
@@ -1377,8 +907,7 @@ h1.title{
 
     <!-- ===== Jen Corner — cleric / crow ===== -->
     <a class="folio crow" href="/folio/jen">
-      <i class="corner-tl"></i><i class="corner-tr"></i><i class="corner-bl"></i><i class="corner-br"></i>
-      <span class="trace" aria-hidden="true"><svg preserveAspectRatio="none"><rect x="0" y="0" width="100%" height="100%" pathLength="1000"/></svg></span>
+      <i class="corner-bl"></i><i class="corner-br"></i>
       <div class="sigil" aria-hidden="true">
         <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.3">
           <path d="M8 22 Q12 16 18 16 L24 14 Q28 14 26 18 L24 20 L22 24 L18 26 L12 24 Z"/>
@@ -1392,7 +921,7 @@ h1.title{
           <span class="bird b3"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 12 L6 9 L10 11 L14 8 L18 10 L22 7 L20 10 L16 13 L12 11 L8 14 L4 13 Z"/></svg></span>
         </div>
         <div class="accent-glow"></div>
-        <div class="folio-num">Fol. VI</div>
+        <div class="folio-num">Folio · VI</div>
         <img src="assets/jen-corner-card.jpg" alt="Jen Corner">
         <div class="ident">
           <div class="race">Human · 24 yrs</div>
@@ -1406,7 +935,6 @@ h1.title{
           <div class="c"><div class="k">Faith</div><div class="v">Old Spirits</div></div>
           <div class="c"><div class="k">Hunted</div><div class="v">Silver Ch.</div></div>
         </div>
-        <div class="fleuron"><span class="l"></span>❦<span class="r"></span></div>
         <div class="blurb">"I always have a backup plan — because this world has no mercy for those who hesitate." Her crow is always one step ahead.</div>
         <div class="open-row">
           <span class="vol">Vol. VI · 103 pp.</span>
@@ -1417,8 +945,7 @@ h1.title{
 
     <!-- ===== Dermogorgon — wizard / azure ===== -->
     <a class="folio azure" href="/folio/dermogorgon">
-      <i class="corner-tl"></i><i class="corner-tr"></i><i class="corner-bl"></i><i class="corner-br"></i>
-      <span class="trace" aria-hidden="true"><svg preserveAspectRatio="none"><rect x="0" y="0" width="100%" height="100%" pathLength="1000"/></svg></span>
+      <i class="corner-bl"></i><i class="corner-br"></i>
       <div class="sigil" aria-hidden="true">
         <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.3">
           <path d="M16 4 C18 8 22 11 22 16 C22 21 18 24 16 28 C14 24 10 21 10 16 C10 11 14 8 16 4 Z"/>
@@ -1430,7 +957,7 @@ h1.title{
         <div class="fx-layer">
           <div class="accent-glow"></div>
         </div>
-        <div class="folio-num">Fol. VII</div>
+        <div class="folio-num">Folio · VII</div>
         <video
           src="assets/folio/dermogorgon-hero.mp4"
           poster="assets/folio/dermogorgon.jpg"
@@ -1448,7 +975,6 @@ h1.title{
           <div class="c"><div class="k">Faith</div><div class="v">Apollo</div></div>
           <div class="c"><div class="k">Seeks</div><div class="v">A Vanished Love</div></div>
         </div>
-        <div class="fleuron"><span class="l"></span>❦<span class="r"></span></div>
         <div class="blurb">"As long as my Azure Flame still burns, the answer must exist somewhere." A scholar wrapped in pride, searching for someone whose name she has begun to forget.</div>
         <div class="open-row">
           <span class="vol">Vol. VII · 87 pp.</span>
@@ -1459,23 +985,6 @@ h1.title{
 
   </div>
 
-  <!-- ============ CLOSING SEAL ============ -->
-  <div class="closing-seal">
-    <div class="ember-glow" aria-hidden="true"></div>
-    <svg class="crest" viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="0.8">
-      <circle cx="30" cy="30" r="28"/>
-      <circle cx="30" cy="30" r="20"/>
-      <circle cx="30" cy="30" r="12"/>
-      <line x1="30" y1="2" x2="30" y2="58"/>
-      <line x1="2" y1="30" x2="58" y2="30"/>
-      <line x1="10" y1="10" x2="50" y2="50"/>
-      <line x1="50" y1="10" x2="10" y2="50"/>
-      <circle cx="30" cy="30" r="2" fill="currentColor"/>
-    </svg>
-    <div class="latin">Hic codex conclusus est</div>
-    <div class="translation">— Here the codex is closed. Return when the candle is lit anew.</div>
-  </div>
-
   <div class="colophon">
     The Veiled Codex <span class="sep">·</span> Roster of Folios <span class="sep">·</span> Annum Helmus CC
   </div>
@@ -1484,69 +993,28 @@ h1.title{
 
 <button id="scroll-top" aria-label="Scroll to top">&#8679;</button>
 
-<!-- Quill cursor (injected on enable) -->
-
 <script>
-  // ====== 1. Ember canvas atmosphere ======
+  // ====== 1. Drifting motes ======
   (function(){
-    if (matchMedia('(prefers-reduced-motion:reduce)').matches) return;
-    const canvas = document.getElementById('ember-canvas');
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    let W = 0, H = 0, dpr = Math.min(window.devicePixelRatio || 1, 2);
-    function resize(){
-      W = window.innerWidth; H = window.innerHeight;
-      canvas.width = W * dpr; canvas.height = H * dpr;
-      canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
-      ctx.setTransform(dpr,0,0,dpr,0,0);
+    const box = document.getElementById('atmos');
+    if (!box) return;
+    const N = 18;
+    for (let i=0;i<N;i++){
+      const m = document.createElement('div');
+      m.className = 'mote';
+      const left = Math.random()*100;
+      const dur  = 14 + Math.random()*16;
+      const del  = Math.random()*dur;
+      const dx   = (Math.random()*100 - 50) + 'px';
+      const sz   = 2 + Math.random()*2;
+      m.style.left = left + '%';
+      m.style.width = sz+'px';
+      m.style.height = sz+'px';
+      m.style.animationDuration = dur + 's';
+      m.style.animationDelay = '-' + del + 's';
+      m.style.setProperty('--dx', dx);
+      box.appendChild(m);
     }
-    resize();
-    window.addEventListener('resize', resize, { passive:true });
-
-    const N = 38;
-    const particles = [];
-    for (let i = 0; i < N; i++){
-      particles.push(spawn(true));
-    }
-    function spawn(initial){
-      return {
-        x: Math.random() * W,
-        y: initial ? Math.random() * H : H + 10,
-        vx: (Math.random() - 0.5) * 0.25,
-        vy: -0.25 - Math.random() * 0.55,
-        r: 0.7 + Math.random() * 1.8,
-        life: 0,
-        maxLife: 380 + Math.random() * 520,
-        hue: 30 + Math.random() * 12,
-        alpha: 0
-      };
-    }
-
-    function frame(){
-      ctx.clearRect(0, 0, W, H);
-      for (let i = 0; i < particles.length; i++){
-        const p = particles[i];
-        p.life++;
-        p.x += p.vx + Math.sin(p.life * 0.02) * 0.15;
-        p.y += p.vy;
-        const t = p.life / p.maxLife;
-        p.alpha = t < 0.1 ? t * 10 : t > 0.7 ? Math.max(0, (1 - t) / 0.3) : 1;
-        if (p.life >= p.maxLife || p.y < -10){
-          particles[i] = spawn(false);
-          continue;
-        }
-        const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 5);
-        g.addColorStop(0, `hsla(${p.hue}, 90%, 70%, ${p.alpha * 0.95})`);
-        g.addColorStop(0.4, `hsla(${p.hue}, 85%, 55%, ${p.alpha * 0.45})`);
-        g.addColorStop(1, `hsla(${p.hue}, 85%, 40%, 0)`);
-        ctx.fillStyle = g;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r * 5, 0, Math.PI * 2);
-        ctx.fill();
-      }
-      requestAnimationFrame(frame);
-    }
-    requestAnimationFrame(frame);
   })();
 
   // ====== 2. Folio scroll reveal ======
@@ -1575,7 +1043,7 @@ h1.title{
       const img = card.querySelector('.pane img, .pane video');
       card.addEventListener('mousemove', (e) => {
         const r = card.getBoundingClientRect();
-        const x = (e.clientX - r.left) / r.width  - 0.5;
+        const x = (e.clientX - r.left) / r.width  - 0.5; // -0.5 .. 0.5
         const y = (e.clientY - r.top)  / r.height - 0.5;
         const rx = (-y * 6).toFixed(2);
         const ry = (x * 6).toFixed(2);
@@ -1595,126 +1063,12 @@ h1.title{
     const card = document.querySelector('.folio.azure');
     const video = card?.querySelector('.pane video');
     if (!card || !video) return;
-    card.addEventListener('mouseenter', () => { video.play().catch(()=>{}); });
-    card.addEventListener('mouseleave', () => { video.pause(); video.currentTime = 0; });
-  })();
-
-  // ====== 4. Filter rail ======
-  (function(){
-    const rail = document.getElementById('filter-rail');
-    if (!rail) return;
-    const buttons = rail.querySelectorAll('.fr-btn');
-    const folios = document.querySelectorAll('#folio-grid .folio');
-    const countEl = document.getElementById('shelf-count');
-    const total = folios.length;
-    buttons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const cls = btn.dataset.class;
-        buttons.forEach(b => b.classList.toggle('active', b === btn));
-        let visible = 0;
-        folios.forEach(f => {
-          const match = cls === 'all' || f.classList.contains(cls);
-          f.classList.toggle('is-hidden', !match);
-          if (match) visible++;
-        });
-        if (countEl) countEl.textContent = String(visible).padStart(2,'0') + ' / ' + String(total).padStart(2,'0') + ' enscribed';
-      });
+    card.addEventListener('mouseenter', () => {
+      video.play().catch(()=>{});
     });
-  })();
-
-  // ====== 5. Custom quill cursor ======
-  (function(){
-    if (matchMedia('(hover:none)').matches || matchMedia('(pointer:coarse)').matches) return;
-    const toggle = document.getElementById('cursor-toggle');
-    if (!toggle) return;
-
-    let cursorEl = null;
-    let enabled = false;
-    try { enabled = localStorage.getItem('hero:cursor') === 'on'; } catch(e){}
-
-    const quillSvg = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 4 C16 6 11 10 7 16 L4 20 L8 20 C14 17 18 12 20 4 Z"/><path d="M4 20 L9 15"/></svg>`;
-    const flameSvg = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 C9 7 7 10 7 14 a5 5 0 0 0 10 0 c0 -3 -2 -7 -5 -11 z"/></svg>`;
-
-    function enable(){
-      enabled = true;
-      document.body.classList.add('codex-cursor');
-      toggle.classList.add('on');
-      if (!cursorEl){
-        cursorEl = document.createElement('div');
-        cursorEl.className = 'quill-cursor';
-        cursorEl.innerHTML = quillSvg;
-        document.body.appendChild(cursorEl);
-      }
-      cursorEl.style.display = '';
-      document.addEventListener('mousemove', onMove);
-      document.addEventListener('mouseover', onHover);
-    }
-    function disable(){
-      enabled = false;
-      document.body.classList.remove('codex-cursor');
-      toggle.classList.remove('on');
-      if (cursorEl) cursorEl.style.display = 'none';
-      document.removeEventListener('mousemove', onMove);
-      document.removeEventListener('mouseover', onHover);
-    }
-    function onMove(e){
-      if (!cursorEl) return;
-      cursorEl.style.transform = `translate(${e.clientX}px, ${e.clientY}px) translate(-50%, -50%)`;
-    }
-    function onHover(e){
-      if (!cursorEl) return;
-      const t = e.target.closest('a, button, [role="button"], .fr-btn, .cb-btn');
-      if (t){
-        cursorEl.classList.add('flame');
-        cursorEl.innerHTML = flameSvg;
-      } else {
-        cursorEl.classList.remove('flame');
-        cursorEl.innerHTML = quillSvg;
-      }
-    }
-    toggle.addEventListener('click', () => {
-      if (enabled) disable(); else enable();
-      try { localStorage.setItem('hero:cursor', enabled ? 'on' : 'off'); } catch(e){}
-    });
-    if (enabled) enable();
-  })();
-
-  // ====== 6. Latin marginalia crossfade in chronicle banner ======
-  (function(){
-    if (matchMedia('(prefers-reduced-motion:reduce)').matches) return;
-    const el = document.getElementById('cb-marginalia');
-    if (!el) return;
-    const phrases = [
-      'Lux in tenebris',
-      'Memento mori',
-      'Veritas occulta',
-      'Per aspera ad astra',
-      'Ex tenebris, lumen',
-      'Sub rosa'
-    ];
-    let i = 0;
-    el.classList.add('show');
-    setInterval(() => {
-      el.classList.remove('show');
-      setTimeout(() => {
-        i = (i + 1) % phrases.length;
-        el.textContent = phrases[i];
-        el.classList.add('show');
-      }, 1200);
-    }, 7000);
-  })();
-
-  // ====== 7. Folio memory — visited folios glow faintly ======
-  (function(){
-    document.querySelectorAll('a.folio[href^="/folio/"]').forEach(card => {
-      const slug = card.getAttribute('href');
-      const key = 'folio:visited:' + slug.replace(/\//g, '-').replace(/^-/, '');
-      let visitedAt = 0;
-      try { visitedAt = parseInt(localStorage.getItem(key) || '0', 10); } catch(e){}
-      if (visitedAt) card.classList.add('visited-memory');
-      card.addEventListener('click', () => {
-        try { localStorage.setItem(key, String(Date.now())); } catch(e){}
-      });
+    card.addEventListener('mouseleave', () => {
+      video.pause();
+      video.currentTime = 0;
     });
   })();
 
@@ -1792,6 +1146,7 @@ h1.title{
         btn.insertBefore(fb, arr);
       }
     });
+    // Lore page: flags stored as JSON object, notes as individual keys
     (function(){
       var loreBtn = document.querySelector('.cb-btns a[href="/lore/porto-stellare"]');
       if(!loreBtn) return;
@@ -1875,6 +1230,7 @@ h1.title{
     } catch(e){ audio.volume = 0.3; }
     updateSlider();
 
+    // Cross-page continuity — resume from where the previous page left off
     const POS_KEY = 'bgm:codex:pos';
     try {
       const ps = JSON.parse(localStorage.getItem(POS_KEY) || 'null');
@@ -1903,6 +1259,7 @@ h1.title{
       started = true;
       ctrl.classList.remove('pending');
       triggerEvents.forEach(ev => document.removeEventListener(ev, tryStart));
+      // gentle fade-in so the hand-off between pages feels continuous
       const target = audio.volume;
       if (target > 0){
         audio.volume = 0;
@@ -1949,6 +1306,7 @@ h1.title{
       try { localStorage.setItem('index-music-vol', audio.volume); } catch(e){}
     });
 
+    // Fade out before leaving via internal links (position already saved on pagehide)
     document.addEventListener('click', function(e){
       if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
       const a = e.target.closest('a[href]');

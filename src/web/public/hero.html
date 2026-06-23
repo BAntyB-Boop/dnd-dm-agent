@@ -235,6 +235,60 @@ body{
 
 .page{max-width:1300px;margin:0 auto;padding:80px clamp(16px,3vw,40px) 80px;position:relative;z-index:5}
 
+/* ============ SCROLL-VELOCITY MARQUEE ============ */
+.velocity-band{
+  position:relative;width:100vw;left:50%;margin-left:-50vw;
+  padding:clamp(28px, 4vw, 56px) 0;
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 50%, rgba(201,164,92,0.04) 0%, transparent 70%),
+    var(--obsidian);
+  overflow:hidden;z-index:4;
+  isolation:isolate;
+}
+.velocity-band.tight{padding:clamp(20px, 3vw, 40px) 0}
+.velocity-band::before, .velocity-band::after{
+  content:"";position:absolute;top:0;bottom:0;width:18%;z-index:3;pointer-events:none;
+}
+.velocity-band::before{left:0;background:linear-gradient(to right, var(--obsidian) 0%, transparent 100%)}
+.velocity-band::after{right:0;background:linear-gradient(to left,  var(--obsidian) 0%, transparent 100%)}
+
+.vm-row{
+  position:relative;display:flex;overflow:hidden;white-space:nowrap;
+}
+.vm-row + .vm-row{margin-top:6px}
+.vm-track{
+  display:inline-flex;align-items:center;gap:48px;
+  will-change:transform;
+  font-family:"Cinzel Decorative","Cinzel",serif;
+  font-size:clamp(36px, 6vw, 84px);
+  letter-spacing:0.06em;
+  line-height:1;
+  user-select:none;
+}
+.vm-track .glyph{
+  color:var(--gold);opacity:0.4;
+  font-family:"IM Fell English SC",serif;font-style:italic;
+}
+.vm-track .word{
+  background:linear-gradient(180deg, #f6efd2 0%, var(--gold) 55%, var(--gold-deep) 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;
+  text-shadow:0 0 28px rgba(201,164,92,0.18);
+}
+.vm-track .word.alt{
+  background:linear-gradient(180deg, #e6d6b0 0%, var(--gold-dim) 60%, transparent 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;
+  font-style:italic;font-family:"Cormorant Garamond",serif;font-weight:500;
+}
+.vm-row[data-dir="-1"] .vm-track .word{
+  background:linear-gradient(180deg, #fff5d8 0%, var(--gold-bright) 50%, var(--gold) 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;
+}
+
+@media (prefers-reduced-motion:reduce){
+  .vm-track{transform:none !important;animation:none !important}
+}
+
 /* ============ ORNAMENTAL DIVIDER ============ */
 .ornament-rule{
   display:flex;align-items:center;justify-content:center;gap:14px;
@@ -1051,6 +1105,34 @@ h1.title{
   <div class="grain" aria-hidden="true"></div>
 </section>
 
+<!-- ============ VELOCITY BAND — opener transition ============ -->
+<section class="velocity-band" aria-hidden="true" data-velocity-band>
+  <div class="vm-row" data-dir="1" data-base="0.6">
+    <div class="vm-track">
+      <span class="word">The Veiled Codex</span><span class="glyph">✦</span>
+      <span class="word alt">Roster of Folios</span><span class="glyph">❦</span>
+      <span class="word">Annum Helmus CC</span><span class="glyph">✦</span>
+      <span class="word alt">Watcher's Scribes</span><span class="glyph">❦</span>
+      <span class="word">The Veiled Codex</span><span class="glyph">✦</span>
+      <span class="word alt">Roster of Folios</span><span class="glyph">❦</span>
+      <span class="word">Annum Helmus CC</span><span class="glyph">✦</span>
+      <span class="word alt">Watcher's Scribes</span><span class="glyph">❦</span>
+    </div>
+  </div>
+  <div class="vm-row" data-dir="-1" data-base="0.45">
+    <div class="vm-track">
+      <span class="word alt">Lux in tenebris</span><span class="glyph">·</span>
+      <span class="word">Memento Mori</span><span class="glyph">·</span>
+      <span class="word alt">Veritas Occulta</span><span class="glyph">·</span>
+      <span class="word">Sub Rosa</span><span class="glyph">·</span>
+      <span class="word alt">Lux in tenebris</span><span class="glyph">·</span>
+      <span class="word">Memento Mori</span><span class="glyph">·</span>
+      <span class="word alt">Veritas Occulta</span><span class="glyph">·</span>
+      <span class="word">Sub Rosa</span><span class="glyph">·</span>
+    </div>
+  </div>
+</section>
+
 <div class="page">
 
   <!-- ============ HEADER ============ -->
@@ -1485,6 +1567,34 @@ h1.title{
 
   </div>
 
+  <!-- ============ VELOCITY BAND — closing transition ============ -->
+  <section class="velocity-band tight" style="margin-top:72px" aria-hidden="true" data-velocity-band>
+    <div class="vm-row" data-dir="-1" data-base="0.55">
+      <div class="vm-track">
+        <span class="word">Aurora Elaris</span><span class="glyph">✦</span>
+        <span class="word alt">Aython Aurelius</span><span class="glyph">❦</span>
+        <span class="word">Kael Veranth</span><span class="glyph">✦</span>
+        <span class="word alt">Anuchit Thepsuang</span><span class="glyph">❦</span>
+        <span class="word">Kael Vorn</span><span class="glyph">✦</span>
+        <span class="word alt">Jen Corner</span><span class="glyph">❦</span>
+        <span class="word">Dermogorgon</span><span class="glyph">✦</span>
+        <span class="word alt">Heroes of Borderland</span><span class="glyph">❦</span>
+      </div>
+    </div>
+    <div class="vm-row" data-dir="1" data-base="0.4">
+      <div class="vm-track">
+        <span class="word alt">Hic codex conclusus est</span><span class="glyph">·</span>
+        <span class="word">Ex tenebris, lumen</span><span class="glyph">·</span>
+        <span class="word alt">Per aspera ad astra</span><span class="glyph">·</span>
+        <span class="word">Memento Mori</span><span class="glyph">·</span>
+        <span class="word alt">Hic codex conclusus est</span><span class="glyph">·</span>
+        <span class="word">Ex tenebris, lumen</span><span class="glyph">·</span>
+        <span class="word alt">Per aspera ad astra</span><span class="glyph">·</span>
+        <span class="word">Memento Mori</span><span class="glyph">·</span>
+      </div>
+    </div>
+  </section>
+
   <!-- ============ CLOSING SEAL ============ -->
   <div class="closing-seal">
     <div class="ember-glow" aria-hidden="true"></div>
@@ -1753,6 +1863,88 @@ h1.title{
 
     if (document.readyState === 'complete') init();
     else window.addEventListener('load', init, { once:true });
+  })();
+
+  // ====== 1c. Scroll-velocity marquee bands ======
+  (function(){
+    if (matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+    const bands = document.querySelectorAll('[data-velocity-band]');
+    if (!bands.length) return;
+
+    // shared scroll velocity (smoothed)
+    let lastY = window.scrollY, lastT = performance.now();
+    let rawVel = 0, smoothVel = 0;
+    window.addEventListener('scroll', () => {
+      const now = performance.now();
+      const dy = window.scrollY - lastY;
+      const dt = Math.max(1, now - lastT);
+      rawVel = dy / dt;
+      lastY = window.scrollY; lastT = now;
+    }, { passive:true });
+
+    const rows = [];
+    bands.forEach(band => {
+      band.querySelectorAll('.vm-row').forEach(row => {
+        const track = row.querySelector('.vm-track');
+        if (!track) return;
+        // duplicate track for seamless loop
+        const clone = track.cloneNode(true);
+        clone.setAttribute('aria-hidden', 'true');
+        row.appendChild(clone);
+        rows.push({
+          band, row, tracks:[track, clone],
+          dir: parseFloat(row.dataset.dir || '1'),
+          base: parseFloat(row.dataset.base || '0.5'),
+          x: 0, width: 0, visible: true
+        });
+      });
+    });
+
+    function measure(){
+      rows.forEach(r => { r.width = r.tracks[0].getBoundingClientRect().width + 48; });
+    }
+    measure();
+    window.addEventListener('resize', measure, { passive:true });
+    window.addEventListener('load', measure, { once:true });
+
+    // pause when band off-screen
+    if ('IntersectionObserver' in window){
+      const map = new Map(rows.map(r => [r.band, []]));
+      rows.forEach(r => map.get(r.band).push(r));
+      const io = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          const list = map.get(e.target) || [];
+          list.forEach(r => r.visible = e.isIntersecting);
+        });
+      }, { threshold: 0, rootMargin: '120px 0px' });
+      bands.forEach(b => io.observe(b));
+    }
+
+    let last = performance.now();
+    function tick(now){
+      const dt = Math.min(64, now - last); last = now;
+      // exponential smoothing on velocity
+      smoothVel += (rawVel - smoothVel) * 0.12;
+      // velocity decays even without new scroll
+      rawVel *= 0.92;
+
+      // scroll boost: scale px/ms to a meaningful px/frame factor
+      const boost = smoothVel * 4.0;
+
+      for (const r of rows){
+        if (!r.visible || !r.width) continue;
+        const v = (r.base + Math.abs(boost) * (boost >= 0 ? 1 : -1)) * r.dir;
+        r.x -= v * (dt / 16.6);
+        // wrap
+        if (r.x <= -r.width) r.x += r.width;
+        else if (r.x >= 0)   r.x -= r.width;
+        const tx = r.x.toFixed(2) + 'px';
+        r.tracks[0].style.transform = `translate3d(${tx},0,0)`;
+        r.tracks[1].style.transform = `translate3d(${(r.x + r.width).toFixed(2)}px,0,0)`;
+      }
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
   })();
 
   // ====== 2. Folio scroll reveal ======

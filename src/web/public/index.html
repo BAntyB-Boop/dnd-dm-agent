@@ -64,12 +64,15 @@
 
   /* ============ HERO ============ */
   .hero{
-    position:relative;width:100%;height:100vh;overflow:hidden;
+    position:relative;width:100vw;height:100vh;height:100dvh;overflow:hidden;
     display:flex;align-items:center;justify-content:center;
   }
   .hero-video{
-    position:absolute;inset:0;width:100%;height:100%;
+    position:absolute;top:50%;left:50%;
+    width:100%;height:100%;min-width:100%;min-height:100%;
+    transform:translate(-50%,-50%);
     object-fit:cover;z-index:1;
+    cursor:pointer;
   }
   .hero-overlay{
     position:absolute;inset:0;z-index:2;
@@ -181,7 +184,6 @@
   </a>
   <ul class="vc-nav-links">
     <li><a href="/" class="active">Home</a></li>
-    <li><a href="/codex">Codex</a></li>
     <li><a href="/hero">Hero</a></li>
     <li><a href="/story">Chronicle</a></li>
     <li><a href="/sessions/session-1">Sessions</a></li>
@@ -203,7 +205,7 @@
 
 <!-- ============ HERO ============ -->
 <section class="hero">
-  <video class="hero-video" autoplay muted loop playsinline poster="assets/aurora-card.jpg">
+  <video class="hero-video" id="hero-video" autoplay muted playsinline poster="assets/aurora-card.jpg">
     <source src="assets/intro.mp4" type="video/mp4">
   </video>
   <div class="hero-overlay"></div>
@@ -215,7 +217,7 @@
     </div>
     <p class="hero-sub">Seven names. Seven oaths. One unfolding chronicle, indexed in the chapter-house archive.</p>
   </div>
-  <a class="hero-scroll" href="/codex">
+  <a class="hero-scroll" href="/hero">
     <span>Enter the Codex</span>
     <span class="arrow"></span>
   </a>
@@ -229,6 +231,24 @@
 <audio id="bg-audio" src="assets/codex-of-stars.mp3" loop preload="auto"></audio>
 
 <script>
+  // Hero video — play once, freeze on last frame, replay on hover
+  (function() {
+    var v = document.getElementById('hero-video');
+    var hero = document.querySelector('.hero');
+    if (!v || !hero) return;
+    v.addEventListener('ended', function() {
+      // Stay on the last frame (do NOT loop or reset)
+      v.pause();
+      try { v.currentTime = Math.max(0, v.duration - 0.05); } catch(e) {}
+    });
+    hero.addEventListener('mouseenter', function() {
+      if (v.ended || v.paused) {
+        try { v.currentTime = 0; } catch(e) {}
+        v.play().catch(function() {});
+      }
+    });
+  })();
+
   // Music toggle
   (function() {
     var btn = document.getElementById('music-btn');

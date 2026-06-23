@@ -266,7 +266,6 @@ export async function startWebServer(): Promise<void> {
   // ── Clean URL Routes ───────────────────────────────────────────────────
   app.get("/story", (_req, reply) => reply.sendFile("story.html"));
   app.get("/game",  (_req, reply) => reply.sendFile("game.html"));
-  app.get("/codex", (_req, reply) => reply.sendFile("codex.html"));
   app.get("/hero",  (_req, reply) => reply.sendFile("hero.html"));
   const folioMap: Record<string, string> = {
     "aurora":       "folio/aurora.html",

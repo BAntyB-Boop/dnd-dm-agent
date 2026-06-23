@@ -6,7 +6,6 @@
     { "source": "/", "destination": "/index.html" },
     { "source": "/story", "destination": "/story.html" },
     { "source": "/game", "destination": "/game.html" },
-    { "source": "/codex", "destination": "/codex.html" },
     { "source": "/hero", "destination": "/hero.html" },
     { "source": "/map/porto-stellare", "destination": "/map/porto-stellare.html" },
     { "source": "/lore/porto-stellare", "destination": "/lore/porto-stellare.html" },

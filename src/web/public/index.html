@@ -47,6 +47,13 @@
   }
   .vc-nav-links a:hover{opacity:1;color:var(--gold);border-bottom-color:var(--gold-dim)}
   .vc-nav-links a.active{opacity:1;color:var(--gold);border-bottom-color:var(--gold)}
+  .vc-nav-links li{position:relative}
+  .vc-nav-links li.has-sub > a{cursor:default}
+  .vc-nav-links li.has-sub > a::after{content:" ▾";font-size:8px;margin-left:4px;opacity:.6;letter-spacing:0;vertical-align:middle}
+  .vc-nav-sub{position:absolute;top:100%;left:50%;transform:translateX(-50%) translateY(-6px);min-width:200px;background:var(--nav-bg);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--nav-border);list-style:none;margin:0;padding:6px 0;opacity:0;visibility:hidden;transition:opacity .2s, transform .2s, visibility .2s;pointer-events:none;box-shadow:0 20px 40px rgba(0,0,0,0.5)}
+  .vc-nav-links li.has-sub:hover .vc-nav-sub,.vc-nav-links li.has-sub:focus-within .vc-nav-sub{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0);pointer-events:auto}
+  .vc-nav-sub a{display:block;padding:9px 20px;border-bottom:none;text-align:center;opacity:.85}
+  .vc-nav-sub a:hover{background:rgba(201,164,92,0.08);opacity:1;border-bottom-color:transparent}
   .vc-nav-actions{display:flex;align-items:center;gap:10px}
   .vc-icon-btn{
     width:34px;height:34px;border-radius:50%;
@@ -66,6 +73,7 @@
   .hero{
     position:relative;width:100vw;height:100vh;height:100dvh;overflow:hidden;
     display:flex;align-items:center;justify-content:center;
+    background:#000;
   }
   .hero-video{
     position:absolute;top:50%;left:50%;
@@ -185,12 +193,24 @@
   <ul class="vc-nav-links">
     <li><a href="/" class="active">Home</a></li>
     <li><a href="/hero">Hero</a></li>
-    <li><a href="/story">Chronicle</a></li>
-    <li><a href="/sessions/session-1">Sessions</a></li>
-    <li><a href="/map/porto-stellare">Map</a></li>
-    <li><a href="/lore/porto-stellare">Lore</a></li>
-    <li><a href="/bestiary">Bestiary</a></li>
-    <li><a href="/oneshot/porto-arrival">One-Shot</a></li>
+    <li class="has-sub"><a href="#" onclick="event.preventDefault()">Story</a>
+      <ul class="vc-nav-sub">
+        <li><a href="/story">Chronicle</a></li>
+        <li><a href="/sessions/session-1">Sessions</a></li>
+        <li><a href="/lore/porto-stellare">Lore</a></li>
+        <li><a href="/bestiary">Monster</a></li>
+      </ul>
+    </li>
+    <li class="has-sub"><a href="#" onclick="event.preventDefault()">World</a>
+      <ul class="vc-nav-sub">
+        <li><a href="/map/porto-stellare">Map Portostella</a></li>
+      </ul>
+    </li>
+    <li class="has-sub"><a href="#" onclick="event.preventDefault()">DM</a>
+      <ul class="vc-nav-sub">
+        <li><a href="/oneshot/porto-arrival">One-Shot</a></li>
+      </ul>
+    </li>
   </ul>
   <div class="vc-nav-actions">
     <button class="vc-icon-btn vc-music-btn" id="music-btn" data-state="off" aria-label="Toggle music">
@@ -205,7 +225,7 @@
 
 <!-- ============ HERO ============ -->
 <section class="hero">
-  <video class="hero-video" id="hero-video" autoplay muted playsinline poster="assets/aurora-card.jpg">
+  <video class="hero-video" id="hero-video" autoplay muted playsinline>
     <source src="assets/intro.mp4" type="video/mp4">
   </video>
   <div class="hero-overlay"></div>

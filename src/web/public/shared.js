@@ -1,5 +1,65 @@
 // shared.js — Veiled Codex shared interactive behaviours
 
+// Music persistence — share #bg-audio state across pages via sessionStorage
+(function() {
+  var KEY = 'vc:music';
+  function save() {
+    var a = document.getElementById('bg-audio');
+    if (!a) return;
+    try {
+      sessionStorage.setItem(KEY, JSON.stringify({
+        time: a.currentTime || 0,
+        playing: !a.paused,
+        vol: a.volume,
+        src: a.currentSrc || a.src || ''
+      }));
+    } catch(e) {}
+  }
+  function restore() {
+    var a = document.getElementById('bg-audio');
+    if (!a) return;
+    var raw;
+    try { raw = sessionStorage.getItem(KEY); } catch(e) {}
+    if (!raw) return;
+    var st;
+    try { st = JSON.parse(raw); } catch(e) { return; }
+    if (!st) return;
+    // Only restore time if same source file
+    var sameSrc = !st.src || (a.src && a.src.indexOf(st.src.split('/').pop()) !== -1) ||
+                  (st.src.indexOf((a.currentSrc||a.src||'').split('/').pop()) !== -1);
+    if (sameSrc && typeof st.time === 'number' && st.time > 0) {
+      try { a.currentTime = st.time; } catch(e) {}
+    }
+    if (typeof st.vol === 'number') {
+      try { a.volume = st.vol; } catch(e) {}
+    }
+    if (st.playing) {
+      var p = a.play();
+      if (p && p.catch) p.catch(function() {
+        // Browser blocked — resume on first user gesture
+        var once = function() {
+          document.removeEventListener('click', once);
+          document.removeEventListener('keydown', once);
+          a.play().catch(function() {});
+        };
+        document.addEventListener('click', once, { once: true });
+        document.addEventListener('keydown', once, { once: true });
+      });
+    }
+  }
+  function init() {
+    restore();
+    window.addEventListener('pagehide', save);
+    window.addEventListener('beforeunload', save);
+    document.addEventListener('visibilitychange', function() {
+      if (document.visibilityState === 'hidden') save();
+    });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else { init(); }
+})();
+
 // Theme system — applies on every page, persists in localStorage
 (function() {
   var THEME_KEY = 'vc:theme';

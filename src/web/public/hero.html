@@ -560,6 +560,13 @@ h1.title{
   .vc-nav-links a{display:block;padding:8px 14px;font-family:"Cinzel",serif;font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:#f6efd2;text-decoration:none;opacity:.7;transition:opacity .2s,color .2s;border-bottom:1px solid transparent}
   .vc-nav-links a:hover{opacity:1;color:#c9a45c;border-bottom-color:#8a6f3a}
   .vc-nav-links a.active{opacity:1;color:#c9a45c;border-bottom-color:#c9a45c}
+  .vc-nav-links li{position:relative}
+  .vc-nav-links li.has-sub > a{cursor:default}
+  .vc-nav-links li.has-sub > a::after{content:" ▾";font-size:8px;margin-left:4px;opacity:.6;letter-spacing:0;vertical-align:middle}
+  .vc-nav-sub{position:absolute;top:100%;left:50%;transform:translateX(-50%) translateY(-6px);min-width:200px;background:rgba(8,4,1,0.95);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(212,160,23,0.25);list-style:none;margin:0;padding:6px 0;opacity:0;visibility:hidden;transition:opacity .2s, transform .2s, visibility .2s;pointer-events:none;box-shadow:0 20px 40px rgba(0,0,0,0.5);z-index:201}
+  .vc-nav-links li.has-sub:hover .vc-nav-sub,.vc-nav-links li.has-sub:focus-within .vc-nav-sub{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0);pointer-events:auto}
+  .vc-nav-sub a{display:block;padding:9px 20px;border-bottom:none;text-align:center;opacity:.85}
+  .vc-nav-sub a:hover{background:rgba(201,164,92,0.08);opacity:1;border-bottom-color:transparent}
   .vc-nav-actions{display:flex;align-items:center;gap:10px}
   .vc-icon-btn{width:34px;height:34px;border-radius:50%;background:transparent;border:1px solid rgba(212,160,23,0.25);color:#f6efd2;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:color .2s,border-color .2s}
   .vc-icon-btn:hover{color:#c9a45c;border-color:#8a6f3a}
@@ -578,12 +585,24 @@ h1.title{
   <ul class="vc-nav-links">
     <li><a href="/">Home</a></li>
     <li><a href="/hero" class="active">Hero</a></li>
-    <li><a href="/story">Chronicle</a></li>
-    <li><a href="/sessions/session-1">Sessions</a></li>
-    <li><a href="/map/porto-stellare">Map</a></li>
-    <li><a href="/lore/porto-stellare">Lore</a></li>
-    <li><a href="/bestiary">Bestiary</a></li>
-    <li><a href="/oneshot/porto-arrival">One-Shot</a></li>
+    <li class="has-sub"><a href="#" onclick="event.preventDefault()">Story</a>
+      <ul class="vc-nav-sub">
+        <li><a href="/story">Chronicle</a></li>
+        <li><a href="/sessions/session-1">Sessions</a></li>
+        <li><a href="/lore/porto-stellare">Lore</a></li>
+        <li><a href="/bestiary">Monster</a></li>
+      </ul>
+    </li>
+    <li class="has-sub"><a href="#" onclick="event.preventDefault()">World</a>
+      <ul class="vc-nav-sub">
+        <li><a href="/map/porto-stellare">Map Portostella</a></li>
+      </ul>
+    </li>
+    <li class="has-sub"><a href="#" onclick="event.preventDefault()">DM</a>
+      <ul class="vc-nav-sub">
+        <li><a href="/oneshot/porto-arrival">One-Shot</a></li>
+      </ul>
+    </li>
   </ul>
   <div class="vc-nav-actions">
     <button class="vc-icon-btn vc-theme-toggle" data-mode="dark" aria-label="Toggle theme" onclick="VCTheme.toggle()">
@@ -666,26 +685,6 @@ h1.title{
     <div class="cb-btns">
       <a class="cb-btn" href="/story">
         Read the Chronicle
-        <span class="arr"></span>
-      </a>
-      <a class="cb-btn cb-btn-secondary" href="/sessions/session-1">
-        Session I
-        <span class="arr"></span>
-      </a>
-      <a class="cb-btn cb-btn-secondary" href="/map/porto-stellare">
-        Porto Stellare Map
-        <span class="arr"></span>
-      </a>
-      <a class="cb-btn cb-btn-secondary" href="/lore/porto-stellare">
-        District Lore
-        <span class="arr"></span>
-      </a>
-      <a class="cb-btn cb-btn-secondary" href="/bestiary">
-        Bestiary
-        <span class="arr"></span>
-      </a>
-      <a class="cb-btn cb-btn-secondary" href="/oneshot/porto-arrival">
-        One-Shot · DM Guide
         <span class="arr"></span>
       </a>
     </div>

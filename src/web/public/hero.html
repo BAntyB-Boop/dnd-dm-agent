@@ -247,6 +247,9 @@ body{
   isolation:isolate;
 }
 .velocity-band.tight{padding:clamp(20px, 3vw, 40px) 0}
+.velocity-band.small{padding:clamp(14px, 2vw, 22px) 0}
+.velocity-band.small .vm-track{font-size:clamp(18px, 2.4vw, 32px);gap:32px}
+.velocity-band.small .vm-row + .vm-row{margin-top:2px}
 .velocity-band::before, .velocity-band::after{
   content:"";position:absolute;top:0;bottom:0;width:18%;z-index:3;pointer-events:none;
 }
@@ -1105,34 +1108,6 @@ h1.title{
   <div class="grain" aria-hidden="true"></div>
 </section>
 
-<!-- ============ VELOCITY BAND — opener transition ============ -->
-<section class="velocity-band" aria-hidden="true" data-velocity-band>
-  <div class="vm-row" data-dir="1" data-base="0.6">
-    <div class="vm-track">
-      <span class="word">The Veiled Codex</span><span class="glyph">✦</span>
-      <span class="word alt">Roster of Folios</span><span class="glyph">❦</span>
-      <span class="word">Annum Helmus CC</span><span class="glyph">✦</span>
-      <span class="word alt">Watcher's Scribes</span><span class="glyph">❦</span>
-      <span class="word">The Veiled Codex</span><span class="glyph">✦</span>
-      <span class="word alt">Roster of Folios</span><span class="glyph">❦</span>
-      <span class="word">Annum Helmus CC</span><span class="glyph">✦</span>
-      <span class="word alt">Watcher's Scribes</span><span class="glyph">❦</span>
-    </div>
-  </div>
-  <div class="vm-row" data-dir="-1" data-base="0.45">
-    <div class="vm-track">
-      <span class="word alt">Lux in tenebris</span><span class="glyph">·</span>
-      <span class="word">Memento Mori</span><span class="glyph">·</span>
-      <span class="word alt">Veritas Occulta</span><span class="glyph">·</span>
-      <span class="word">Sub Rosa</span><span class="glyph">·</span>
-      <span class="word alt">Lux in tenebris</span><span class="glyph">·</span>
-      <span class="word">Memento Mori</span><span class="glyph">·</span>
-      <span class="word alt">Veritas Occulta</span><span class="glyph">·</span>
-      <span class="word">Sub Rosa</span><span class="glyph">·</span>
-    </div>
-  </div>
-</section>
-
 <div class="page">
 
   <!-- ============ HEADER ============ -->
@@ -1568,7 +1543,7 @@ h1.title{
   </div>
 
   <!-- ============ VELOCITY BAND — closing transition ============ -->
-  <section class="velocity-band tight" style="margin-top:72px" aria-hidden="true" data-velocity-band>
+  <section class="velocity-band small" style="margin-top:72px" aria-hidden="true" data-velocity-band>
     <div class="vm-row" data-dir="-1" data-base="0.55">
       <div class="vm-track">
         <span class="word">Aurora Elaris</span><span class="glyph">✦</span>

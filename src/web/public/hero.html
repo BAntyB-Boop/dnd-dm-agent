@@ -71,11 +71,12 @@ body{
 
 /* ============ CINEMATIC OPENER ============ */
 .opener{
-  position:relative;height:100vh;min-height:680px;
+  position:relative;height:calc(100vh - 62px);min-height:620px;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   overflow:hidden;isolation:isolate;
   z-index:5;
 }
+@media (max-width:780px){.opener{height:calc(100vh - 96px)}}
 .opener::before{
   content:"";position:absolute;inset:0;
   background:
@@ -130,8 +131,8 @@ body{
 
 .opener-title{
   font-family:"Cinzel Decorative","Cinzel",serif;font-weight:700;
-  font-size:clamp(56px, 10vw, 144px);
-  line-height:0.95;margin:0 0 22px;
+  font-size:clamp(44px, 8vw, 112px);
+  line-height:1.0;margin:0 0 22px;
   letter-spacing:0.04em;
   background:linear-gradient(180deg, #fff5d8 0%, var(--gold-bright) 35%, var(--gold) 65%, var(--gold-deep) 100%);
   -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;
@@ -164,7 +165,7 @@ body{
 
 /* scroll cue — glowing seal */
 .scroll-cue{
-  position:absolute;bottom:42px;left:50%;transform:translateX(-50%);
+  position:absolute;bottom:28px;left:50%;transform:translateX(-50%);
   display:flex;flex-direction:column;align-items:center;gap:12px;
   font-family:"Cinzel",serif;font-size:0.6rem;letter-spacing:0.36em;text-transform:uppercase;
   color:var(--gold);opacity:0;

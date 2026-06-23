@@ -1,5 +1,33 @@
 // shared.js — Veiled Codex shared interactive behaviours
 
+// Theme system — applies on every page, persists in localStorage
+(function() {
+  var THEME_KEY = 'vc:theme';
+  var saved = null;
+  try { saved = localStorage.getItem(THEME_KEY); } catch(e) {}
+  if (saved !== 'light' && saved !== 'dark') saved = 'dark';
+  document.documentElement.setAttribute('data-theme', saved);
+  function syncBtns() {
+    document.querySelectorAll('.vc-theme-toggle').forEach(function(b) {
+      b.setAttribute('data-mode', document.documentElement.getAttribute('data-theme') || 'dark');
+    });
+  }
+  window.VCTheme = {
+    get: function() { return document.documentElement.getAttribute('data-theme') || 'dark'; },
+    set: function(t) {
+      if (t !== 'light' && t !== 'dark') return;
+      document.documentElement.setAttribute('data-theme', t);
+      try { localStorage.setItem(THEME_KEY, t); } catch(e) {}
+      syncBtns();
+    },
+    toggle: function() { this.set(this.get() === 'dark' ? 'light' : 'dark'); }
+  };
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', syncBtns);
+  } else { syncBtns(); }
+})();
+
+
 // DM passcode lock — one code + one unlock state shared by every sealed page
 // (bestiary detail, one-shot guide, map & lore DM buttons). Unlock once, open everywhere.
 window.VCLock = (function() {

@@ -2684,6 +2684,39 @@ body.th-active .roster-list-th{display:flex !important}
         skyTex.colorSpace = THREE.SRGBColorSpace;
         scene.background = skyTex;
 
+        // ── Backlight sun-glow behind ship (creates silhouette rim feel) ──
+        {
+          const bgCanvas = document.createElement('canvas');
+          bgCanvas.width = 512; bgCanvas.height = 512;
+          const bx = bgCanvas.getContext('2d');
+          const bg = bx.createRadialGradient(256,256, 10, 256,256, 256);
+          bg.addColorStop(0.00, 'rgba(255,238,190,1.00)');
+          bg.addColorStop(0.15, 'rgba(255,200,120,0.85)');
+          bg.addColorStop(0.45, 'rgba(220,120,70,0.40)');
+          bg.addColorStop(0.75, 'rgba(120,40,80,0.15)');
+          bg.addColorStop(1.00, 'rgba(0,0,0,0)');
+          bx.fillStyle = bg; bx.fillRect(0,0,512,512);
+          const backlightTex = new THREE.CanvasTexture(bgCanvas);
+          const backlight = new THREE.Mesh(
+            new THREE.PlaneGeometry(28, 28),
+            new THREE.MeshBasicMaterial({ map: backlightTex, transparent:true, blending:THREE.AdditiveBlending, depthWrite:false })
+          );
+          backlight.position.set(0, 2.2, -12);   // directly behind ship, low on horizon
+          scene.add(backlight);
+
+          // soft secondary halo — bigger, dimmer, for atmospheric bloom
+          const halo2 = new THREE.Mesh(
+            new THREE.PlaneGeometry(48, 36),
+            new THREE.MeshBasicMaterial({ map: backlightTex, transparent:true, opacity:0.45, blending:THREE.AdditiveBlending, depthWrite:false })
+          );
+          halo2.position.set(0, 2.4, -14);
+          scene.add(halo2);
+
+          // expose for animation pulse
+          scene.userData.backlight = backlight;
+          scene.userData.halo2 = halo2;
+        }
+
         // ── Moon (faint disc behind ship) ──
         const moonGeo = new THREE.CircleGeometry(1.1, 48);
         const moonMat = new THREE.MeshBasicMaterial({ color: 0xf6efd2, transparent:true, opacity:0.75 });
@@ -2883,6 +2916,15 @@ body.th-active .roster-list-th{display:flex !important}
 
           // shimmer the trail
           trail.material.opacity = 0.75 + Math.sin(elapsed * 2.3) * 0.1;
+
+          // backlight breathes slowly
+          if (scene.userData.backlight){
+            const bl = scene.userData.backlight;
+            const h2 = scene.userData.halo2;
+            const pulse = 1 + Math.sin(elapsed * 0.5) * 0.06;
+            bl.scale.setScalar(pulse);
+            h2.scale.setScalar(1 + Math.sin(elapsed * 0.35 + 1.2) * 0.08);
+          }
 
           renderer.render(scene, camera);
 

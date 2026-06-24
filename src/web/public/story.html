@@ -891,6 +891,11 @@ body.th-active .roster-list-th{display:flex !important}
   filter:blur(20px);
 }
 @keyframes galaxy-spin{to{transform:rotate(360deg)}}
+.galaxy3d-canvas{
+  position:fixed;inset:0;width:100vw;height:100vh;
+  pointer-events:none;
+  mix-blend-mode:screen;
+}
 
 /* --- LAYER 2: CONSTELLATION (sigil drawn in stars) --- */
 .ci-constel{
@@ -1249,6 +1254,7 @@ body.th-active .roster-list-th{display:flex !important}
         <!-- Layer 1: Galaxy / cosmos -->
         <div class="ci-layer galaxy" data-key="galaxy" aria-hidden="true">
           <div class="ci-galaxy"></div>
+          <canvas id="galaxy3d-canvas" class="galaxy3d-canvas" aria-hidden="true"></canvas>
         </div>
 
         <!-- Layer 2: Constellation — a six-star sigil being drawn -->
@@ -2428,6 +2434,106 @@ body.th-active .roster-list-th{display:flex !important}
   })();
 </script>
 <script src="shared.js"></script>
+
+<!-- Three.js (self-hosted, see /vendor/three) -->
+<script type="importmap">
+{
+  "imports": {
+    "three": "/vendor/three/three.module.js",
+    "three/addons/": "/vendor/three/addons/"
+  }
+}
+</script>
+
+<!-- Cosmic Intro · 3D galaxy enhancement -->
+<script type="module">
+  if (!matchMedia('(prefers-reduced-motion:reduce)').matches) {
+    const canvas = document.getElementById('galaxy3d-canvas');
+    const galaxyLayer = document.querySelector('.ci-layer.galaxy');
+    const introRoot = document.getElementById('cosmic-intro');
+    if (canvas && galaxyLayer && introRoot) {
+      const THREE = await import('three');
+
+      const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+      renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, 0.1, 200);
+      camera.position.set(0, 0.6, 8);
+
+      // ── Procedural galaxy: spiral particle disk ──
+      const COUNT = 18000;
+      const ARMS = 4;
+      const RADIUS = 6;
+      const positions = new Float32Array(COUNT * 3);
+      const colors = new Float32Array(COUNT * 3);
+      const inside = new THREE.Color(0xfff5d0);   // warm core
+      const outside = new THREE.Color(0x6b8aff);  // cold rim
+      for (let i = 0; i < COUNT; i++) {
+        const r = Math.pow(Math.random(), 1.6) * RADIUS;
+        const armAngle = ((i % ARMS) / ARMS) * Math.PI * 2;
+        const spin = r * 0.9;
+        const randX = (Math.random() - 0.5) ** 3 * 0.6 * r;
+        const randY = (Math.random() - 0.5) ** 3 * 0.25 * r;
+        const randZ = (Math.random() - 0.5) ** 3 * 0.6 * r;
+        positions[i*3]   = Math.cos(armAngle + spin) * r + randX;
+        positions[i*3+1] = randY;
+        positions[i*3+2] = Math.sin(armAngle + spin) * r + randZ;
+        const c = inside.clone().lerp(outside, r / RADIUS);
+        colors[i*3] = c.r; colors[i*3+1] = c.g; colors[i*3+2] = c.b;
+      }
+      const geo = new THREE.BufferGeometry();
+      geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+      const mat = new THREE.PointsMaterial({
+        size: 0.035, sizeAttenuation: true,
+        vertexColors: true, transparent: true, opacity: 0.9,
+        blending: THREE.AdditiveBlending, depthWrite: false
+      });
+      const galaxy = new THREE.Points(geo, mat);
+      galaxy.rotation.x = 0.35;
+      scene.add(galaxy);
+
+      // ── Resize ──
+      function resize() {
+        renderer.setSize(innerWidth, innerHeight, false);
+        camera.aspect = innerWidth / innerHeight;
+        camera.updateProjectionMatrix();
+      }
+      resize();
+      addEventListener('resize', resize);
+
+      // ── Scroll progress (stage 0 = galaxy) ──
+      const stagesCount = 11;
+      let progress = 0;     // local progress within galaxy stage 0..1
+      let layerOp = 0;      // current opacity of the galaxy layer (skip render if 0)
+      function readScroll() {
+        const r = introRoot.getBoundingClientRect();
+        const total = introRoot.offsetHeight - innerHeight;
+        const raw = Math.min(1, Math.max(0, -r.top / total));
+        const p = raw * stagesCount;
+        progress = Math.min(1, Math.max(0, p));   // 0..1 across stage 0, clamps after
+        layerOp = parseFloat(galaxyLayer.style.opacity || '0');
+      }
+      readScroll();
+      addEventListener('scroll', readScroll, { passive: true });
+
+      // ── Render loop ──
+      const clock = new THREE.Clock();
+      function tick() {
+        requestAnimationFrame(tick);
+        const dt = clock.getDelta();
+        galaxy.rotation.y += dt * 0.05;
+        if (layerOp < 0.01) { renderer.clear(); return; }   // pause heavy work
+        // zoom from far → near as user scrolls through stage 0
+        const z = 8 - progress * 5.5;
+        camera.position.z += (z - camera.position.z) * 0.08;
+        camera.lookAt(0, 0, 0);
+        renderer.render(scene, camera);
+      }
+      tick();
+    }
+  }
+</script>
 
 </body>
 </html>

@@ -900,6 +900,34 @@ body.th-active .roster-list-th{display:flex !important}
 }
 .galaxy3d-canvas.visible{opacity:1}
 
+/* ===== COSMIC LOADER ===== */
+#cosmic-loader{
+  position:fixed;inset:0;z-index:9999;
+  background:radial-gradient(ellipse at center, #0a0a14 0%, #050509 70%, #000 100%);
+  display:flex;align-items:center;justify-content:center;
+  transition:opacity 0.7s ease, visibility 0.7s;
+  opacity:1;visibility:visible;
+}
+#cosmic-loader.hide{opacity:0;visibility:hidden;pointer-events:none}
+#cosmic-loader .cl-inner{
+  display:flex;flex-direction:column;align-items:center;gap:28px;
+}
+#cosmic-loader .cl-spinner{
+  width:80px;height:80px;
+  animation:cl-rot 1.4s linear infinite;
+  filter:drop-shadow(0 0 12px rgba(201,164,92,0.45));
+}
+#cosmic-loader .cl-track{stroke:rgba(201,164,92,0.12)}
+#cosmic-loader .cl-arc{stroke:#c9a45c}
+@keyframes cl-rot{to{transform:rotate(360deg)}}
+#cosmic-loader .cl-text{
+  font-family:"Cinzel",serif;
+  font-size:0.78rem;letter-spacing:0.34em;text-transform:uppercase;
+  color:#c9a45c;text-shadow:0 0 18px rgba(201,164,92,0.35);
+  animation:cl-pulse 2.2s ease-in-out infinite;
+}
+@keyframes cl-pulse{0%,100%{opacity:0.55}50%{opacity:1}}
+
 /* --- LAYER 2: CONSTELLATION (sigil drawn in stars) --- */
 .ci-constel{
   width:min(680px,80vw);aspect-ratio:1;
@@ -1205,6 +1233,18 @@ body.th-active .roster-list-th{display:flex !important}
 </style>
 </head>
 <body>
+
+<!-- =========== COSMIC LOADER (full-screen, dismissed when 3D + images ready) =========== -->
+<div id="cosmic-loader" role="status" aria-live="polite">
+  <div class="cl-inner">
+    <svg class="cl-spinner" viewBox="0 0 80 80" aria-hidden="true">
+      <circle class="cl-track"  cx="40" cy="40" r="34" fill="none" stroke-width="2"/>
+      <circle class="cl-arc"    cx="40" cy="40" r="34" fill="none" stroke-width="2"
+              stroke-linecap="round" stroke-dasharray="60 220"/>
+    </svg>
+    <div class="cl-text">Drawing the cosmos…</div>
+  </div>
+</div>
 
 <div id="read-progress" aria-hidden="true"></div>
 
@@ -2440,6 +2480,41 @@ body.th-active .roster-list-th{display:flex !important}
 </script>
 <script src="shared.js"></script>
 
+<!-- Cosmic Loader controller -->
+<script>
+  (function(){
+    const loader = document.getElementById('cosmic-loader');
+    if (!loader) return;
+    const TIMEOUT_MS = 30000;
+    let dismissed = false;
+    function dismiss(){
+      if (dismissed) return; dismissed = true;
+      loader.classList.add('hide');
+      setTimeout(() => loader.remove(), 800);
+    }
+
+    // Preload every <img> inside .cosmic-intro
+    const imgs = Array.from(document.querySelectorAll('.cosmic-intro img'));
+    const imgPromises = imgs.map(img => {
+      if (img.complete && img.naturalWidth > 0) return Promise.resolve();
+      return new Promise(res => {
+        img.addEventListener('load',  res, { once:true });
+        img.addEventListener('error', res, { once:true });
+      });
+    });
+
+    // 3D ready signal — resolved by the Three.js module after first render.
+    // If reduced-motion, 3D never inits, so resolve immediately.
+    window.__galaxy3DReady = new Promise(res => { window.__galaxy3DResolve = res; });
+    if (matchMedia('(prefers-reduced-motion:reduce)').matches) {
+      window.__galaxy3DResolve();
+    }
+
+    Promise.all([...imgPromises, window.__galaxy3DReady]).then(dismiss);
+    setTimeout(dismiss, TIMEOUT_MS);
+  })();
+</script>
+
 <!-- Three.js (self-hosted, see /vendor/three) -->
 <script type="importmap">
 {
@@ -2526,15 +2601,21 @@ body.th-active .roster-list-th{display:flex !important}
 
       // ── Render loop ──
       const clock = new THREE.Clock();
+      let firstFrame = true;
       function tick() {
         requestAnimationFrame(tick);
         const dt = clock.getDelta();
         galaxy.rotation.y += dt * 0.05;
-        if (!visible) { return; }   // pause heavy work when off-stage
+        if (!visible && !firstFrame) { return; }
         const z = 8 - stageLocal * 5.5;
         camera.position.z += (z - camera.position.z) * 0.08;
         camera.lookAt(0, 0, 0);
         renderer.render(scene, camera);
+        if (firstFrame) {
+          firstFrame = false;
+          // signal loader that 3D is on-screen
+          if (window.__galaxy3DResolve) window.__galaxy3DResolve();
+        }
       }
       tick();
     }

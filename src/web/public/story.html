@@ -394,7 +394,36 @@ h1.story-title{
 .chapter.in .chapter-romal{transform:translateY(0)}
 
 /* body */
-.chapter-body{font-family:"Cormorant Garamond",Georgia,serif;font-size:1.15rem;line-height:1.9;color:var(--ink-soft)}
+.chapter-body{
+  font-family:"Cormorant Garamond",Georgia,serif;font-size:1.15rem;line-height:1.9;color:var(--ink-soft);
+  position:relative;isolation:isolate;
+}
+/* per-chapter ambient backlight aura — color follows --accent inherited from .chapter */
+.chapter-body::before{
+  content:"";position:absolute;
+  inset:-48px -72px;
+  z-index:-1;pointer-events:none;
+  background:
+    radial-gradient(ellipse 70% 60% at 50% 50%,
+      color-mix(in srgb, var(--accent) 28%, transparent) 0%,
+      color-mix(in srgb, var(--accent) 10%, transparent) 45%,
+      transparent 80%);
+  filter:blur(36px);
+  opacity:0;
+  transition:opacity 1.4s ease;
+}
+.chapter.in .chapter-body::before{
+  opacity:0.85;
+  animation:cb-backlight-breathe 9s ease-in-out infinite;
+}
+@keyframes cb-backlight-breathe{
+  0%,100%{opacity:0.7;transform:scale(1)}
+  50%    {opacity:1;transform:scale(1.04)}
+}
+/* mobile: tighten aura so it doesn't bleed past viewport */
+@media (max-width: 700px){
+  .chapter-body::before{inset:-24px -16px;filter:blur(28px)}
+}
 .chapter-body p{margin:0 0 1.1em}
 .chapter-body p:last-child{margin-bottom:0}
 

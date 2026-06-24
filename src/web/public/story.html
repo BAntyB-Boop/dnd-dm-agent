@@ -689,10 +689,11 @@ h1.story-title{
 /* full-width cinematic ship scene (Three.js mounts to #ship3d-canvas) */
 .closing-ship-scene{
   position:relative;
-  width:100vw;margin-left:calc(50% - 50vw);margin-right:calc(50% - 50vw);
-  height:clamp(360px, 60vh, 640px);
-  margin-top:24px;margin-bottom:24px;
+  width:100%;max-width:100%;
+  height:clamp(280px, 48vh, 520px);
+  margin:24px auto;
   overflow:hidden;
+  border-radius:4px;
   background:radial-gradient(ellipse at center bottom, #1a0e1a 0%, #08060d 70%, #000 100%);
 }
 .closing-ship-scene canvas{

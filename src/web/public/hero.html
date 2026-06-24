@@ -511,7 +511,7 @@ h1.title{
   background:
     linear-gradient(180deg, var(--vellum) 0%, var(--bg-card-2) 100%);
   border:1px solid var(--line);
-  overflow:hidden;cursor:pointer;isolation:isolate;
+  overflow:visible;cursor:pointer;isolation:isolate;
   opacity:0;transform:translateY(20px);
   transition:transform 0.5s cubic-bezier(.2,.7,.2,1), border-color 0.4s, box-shadow 0.4s, opacity 0.6s;
   --accent: var(--gold);
@@ -531,6 +531,25 @@ h1.title{
 .folio:nth-child(4){transition-delay:0.35s}
 .folio:nth-child(5){transition-delay:0.45s}
 .folio:nth-child(6){transition-delay:0.55s}
+
+/* ============ BACKLIGHT — image-driven glow behind card ============ */
+.folio .backlight{
+  position:absolute;inset:-28px;z-index:-1;pointer-events:none;
+  background-image:var(--src);background-size:cover;background-position:center;
+  filter:blur(42px) saturate(1.55) brightness(0.95);
+  opacity:0.45;
+  transition:opacity .6s ease, filter .6s ease, inset .6s ease;
+  will-change:opacity, filter;
+  /* keep clip-path off — let glow bleed outward */
+}
+.folio:hover .backlight{
+  opacity:0.85;
+  filter:blur(56px) saturate(1.8) brightness(1.08);
+  inset:-44px;
+}
+@media (prefers-reduced-motion:reduce){
+  .folio .backlight{transition:none}
+}
 
 /* page-stack — gives the card the depth of a bound folio */
 .folio-grid{perspective:1400px}
@@ -1248,6 +1267,7 @@ h1.title{
 
     <!-- ===== Aurora — paladin / peril ===== -->
     <a class="folio peril" href="/folio/aurora">
+      <div class="backlight" style="--src:url('assets/aurora-card.jpg')" aria-hidden="true"></div>
       <i class="corner-tl"></i><i class="corner-tr"></i><i class="corner-bl"></i><i class="corner-br"></i><span class="page-stack" aria-hidden="true"></span>
       <span class="trace" aria-hidden="true"><svg preserveAspectRatio="none"><rect x="0" y="0" width="100%" height="100%" pathLength="1000"/></svg></span>
       <div class="sigil" aria-hidden="true">
@@ -1283,6 +1303,7 @@ h1.title{
 
     <!-- ===== Aython — bard ===== -->
     <a class="folio bard" href="/folio/aython">
+      <div class="backlight" style="--src:url('assets/aython-portrait.jpg')" aria-hidden="true"></div>
       <i class="corner-tl"></i><i class="corner-tr"></i><i class="corner-bl"></i><i class="corner-br"></i><span class="page-stack" aria-hidden="true"></span>
       <span class="trace" aria-hidden="true"><svg preserveAspectRatio="none"><rect x="0" y="0" width="100%" height="100%" pathLength="1000"/></svg></span>
       <div class="sigil" aria-hidden="true">
@@ -1297,7 +1318,7 @@ h1.title{
         <div class="accent-glow"></div>
         <div class="folio-num">Fol. II</div>
         <img src="assets/aython-portrait.jpg" alt="Aython Ashvail Aurelius">
-        <video class="fx-video" src="assets/aython-card.mp4" muted loop playsinline preload="metadata" aria-hidden="true"></video>
+        <video class="fx-video" src="assets/aython-card.mp4" muted playsinline preload="metadata" aria-hidden="true"></video>
         <div class="ident">
           <div class="race">Human · 25 yrs</div>
           <h3 class="name">Aython Aurelius</h3>
@@ -1321,6 +1342,7 @@ h1.title{
 
     <!-- ===== Kael Veranth — sorcerer / ember ===== -->
     <a class="folio ember" href="/folio/kael-veranth">
+      <div class="backlight" style="--src:url('assets/kael-veranth-card.jpg')" aria-hidden="true"></div>
       <i class="corner-tl"></i><i class="corner-tr"></i><i class="corner-bl"></i><i class="corner-br"></i><span class="page-stack" aria-hidden="true"></span>
       <span class="trace" aria-hidden="true"><svg preserveAspectRatio="none"><rect x="0" y="0" width="100%" height="100%" pathLength="1000"/></svg></span>
       <div class="sigil" aria-hidden="true">
@@ -1363,6 +1385,7 @@ h1.title{
 
     <!-- ===== Anuchit — monk / halo ===== -->
     <a class="folio halo" href="/folio/anuchit">
+      <div class="backlight" style="--src:url('assets/anuchit-card.jpg')" aria-hidden="true"></div>
       <i class="corner-tl"></i><i class="corner-tr"></i><i class="corner-bl"></i><i class="corner-br"></i><span class="page-stack" aria-hidden="true"></span>
       <span class="trace" aria-hidden="true"><svg preserveAspectRatio="none"><rect x="0" y="0" width="100%" height="100%" pathLength="1000"/></svg></span>
       <div class="sigil" aria-hidden="true">
@@ -1386,7 +1409,7 @@ h1.title{
         <div class="accent-glow"></div>
         <div class="folio-num">Fol. IV</div>
         <img src="assets/anuchit-card.jpg" alt="Anuchit Thepsuang">
-        <video class="fx-video" src="assets/anuchit-card.mp4" muted loop playsinline preload="metadata" aria-hidden="true"></video>
+        <video class="fx-video" src="assets/anuchit-card.mp4" muted playsinline preload="metadata" aria-hidden="true"></video>
         <div class="fx-flash" aria-hidden="true"></div>
         <div class="ident">
           <div class="race">Aasimar · 23 yrs</div>
@@ -1411,6 +1434,7 @@ h1.title{
 
     <!-- ===== Kael Vorn — ranger / hellfire ===== -->
     <a class="folio hellfire" href="/folio/kael-vorn">
+      <div class="backlight" style="--src:url('assets/kael-vorn-portrait.jpg')" aria-hidden="true"></div>
       <i class="corner-tl"></i><i class="corner-tr"></i><i class="corner-bl"></i><i class="corner-br"></i><span class="page-stack" aria-hidden="true"></span>
       <span class="trace" aria-hidden="true"><svg preserveAspectRatio="none"><rect x="0" y="0" width="100%" height="100%" pathLength="1000"/></svg></span>
       <div class="sigil" aria-hidden="true">
@@ -1436,7 +1460,7 @@ h1.title{
         <div class="accent-glow"></div>
         <div class="folio-num">Fol. V</div>
         <img src="assets/kael-vorn-portrait.jpg" alt="Kael Vorn">
-        <video class="fx-video" src="assets/kael-vorn-card.mp4" muted loop playsinline preload="metadata" aria-hidden="true"></video>
+        <video class="fx-video" src="assets/kael-vorn-card.mp4" muted playsinline preload="metadata" aria-hidden="true"></video>
         <div class="ident">
           <div class="race">Tiefling · 27 yrs</div>
           <h3 class="name">Kael Vorn</h3>
@@ -1460,6 +1484,7 @@ h1.title{
 
     <!-- ===== Jen Corner — cleric / crow ===== -->
     <a class="folio crow" href="/folio/jen">
+      <div class="backlight" style="--src:url('assets/jen-corner-card.jpg')" aria-hidden="true"></div>
       <i class="corner-tl"></i><i class="corner-tr"></i><i class="corner-bl"></i><i class="corner-br"></i><span class="page-stack" aria-hidden="true"></span>
       <span class="trace" aria-hidden="true"><svg preserveAspectRatio="none"><rect x="0" y="0" width="100%" height="100%" pathLength="1000"/></svg></span>
       <div class="sigil" aria-hidden="true">
@@ -1500,6 +1525,7 @@ h1.title{
 
     <!-- ===== Dermogorgon — wizard / azure ===== -->
     <a class="folio azure" href="/folio/dermogorgon">
+      <div class="backlight" style="--src:url('assets/folio/dermogorgon.jpg')" aria-hidden="true"></div>
       <i class="corner-tl"></i><i class="corner-tr"></i><i class="corner-bl"></i><i class="corner-br"></i><span class="page-stack" aria-hidden="true"></span>
       <span class="trace" aria-hidden="true"><svg preserveAspectRatio="none"><rect x="0" y="0" width="100%" height="100%" pathLength="1000"/></svg></span>
       <div class="sigil" aria-hidden="true">
@@ -1517,7 +1543,7 @@ h1.title{
         <video
           src="assets/folio/dermogorgon-hero.mp4"
           poster="assets/folio/dermogorgon.jpg"
-          muted loop playsinline preload="metadata"
+          muted playsinline preload="metadata"
           aria-label="Dermogorgon"></video>
         <div class="ident">
           <div class="race">High Elf · 200 yrs</div>
@@ -1968,8 +1994,59 @@ h1.title{
     const card = document.querySelector('.folio.azure');
     const video = card?.querySelector('.pane video');
     if (!card || !video) return;
-    card.addEventListener('mouseenter', () => { video.play().catch(()=>{}); });
-    card.addEventListener('mouseleave', () => { video.pause(); video.currentTime = 0; });
+    card.addEventListener('mouseenter', () => {
+      video.loop = true;
+      video.play().catch(()=>{});
+    });
+    card.addEventListener('mouseleave', () => {
+      video.loop = false;
+      video.pause();
+      video.currentTime = 0;
+    });
+  })();
+
+  // ====== 3c. Play video ONCE when card scrolls into view ======
+  (function(){
+    if (!('IntersectionObserver' in window)) return;
+    if (matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+    const targets = [
+      { sel: '.folio.bard',     videoSel: '.fx-video' },
+      { sel: '.folio.hellfire', videoSel: '.fx-video' },
+      { sel: '.folio.halo',     videoSel: '.fx-video' },
+      { sel: '.folio.azure',    videoSel: '.pane video' }
+    ];
+    targets.forEach(t => {
+      const card = document.querySelector(t.sel);
+      if (!card) return;
+      const video = card.querySelector(t.videoSel);
+      if (!video) return;
+      let played = false;
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting && !played){
+            played = true;
+            io.disconnect();
+            video.loop = false;
+            // Halo card needs its video-on class to make the video visible
+            if (card.classList.contains('halo')) card.classList.add('video-on');
+            const onEnded = () => {
+              video.removeEventListener('ended', onEnded);
+              // only reset if user isn't currently hovering
+              if (!card.matches(':hover')){
+                video.pause();
+                video.currentTime = 0;
+                if (card.classList.contains('halo')) card.classList.remove('video-on');
+              }
+            };
+            video.addEventListener('ended', onEnded);
+            video.play().catch(() => {
+              if (card.classList.contains('halo')) card.classList.remove('video-on');
+            });
+          }
+        });
+      }, { threshold: 0.55 });
+      io.observe(card);
+    });
   })();
 
   // ====== 4. Filter rail ======
@@ -2354,6 +2431,7 @@ h1.title{
           void halo.offsetWidth;
           halo.classList.add('flash-on');
           halo.classList.add('video-on');
+          video.loop = true;
           video.play().catch(()=>{});
         });
         halo.addEventListener('mouseleave', () => {
@@ -2363,6 +2441,7 @@ h1.title{
           halo.classList.add('flash-on');
           halo.classList.remove('video-on');
           timer = setTimeout(() => {
+            video.loop = false;
             video.pause();
             video.currentTime = 0;
           }, 500);
@@ -2374,8 +2453,8 @@ h1.title{
       if(!c) return;
       const v = c.querySelector('.fx-video');
       if(!v) return;
-      c.addEventListener('mouseenter', () => { v.play().catch(()=>{}); });
-      c.addEventListener('mouseleave', () => { v.pause(); v.currentTime = 0; });
+      c.addEventListener('mouseenter', () => { v.loop = true; v.play().catch(()=>{}); });
+      c.addEventListener('mouseleave', () => { v.loop = false; v.pause(); v.currentTime = 0; });
     });
   })();
 </script>

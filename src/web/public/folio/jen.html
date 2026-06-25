@@ -316,7 +316,8 @@ em,i{font-style:italic;color:var(--ink-soft)}
 .flying-raven{
   position:fixed;
   z-index:50;
-  width:140px;height:140px;
+  width:clamp(90px, 12vw, 140px);
+  height:clamp(90px, 12vw, 140px);
   pointer-events:none;
   opacity:0;
   transition:opacity .5s;
@@ -560,7 +561,6 @@ em,i{font-style:italic;color:var(--ink-soft)}
   .page-l, .page-r{padding:36px 36px 56px;min-height:auto}
   .page-l{background:linear-gradient(180deg, var(--bg-page), var(--bg-page-2));border-bottom:1px solid var(--vellum-dim)}
   .page-r{background:linear-gradient(180deg, var(--bg-page-2), var(--bg-page))}
-  .flying-raven{display:none}
   .inv{grid-template-columns:repeat(2,1fr)}
   .scores{grid-template-columns:repeat(3,1fr)}
 }
@@ -1356,36 +1356,57 @@ em,i{font-style:italic;color:var(--ink-soft)}
 </div>
 
 <script>
-  // Raven flies in from off-screen, then gracefully lags after cursor
+  // Raven flies in from off-screen — follows cursor on desktop, drifts idly on mobile
   (function(){
     const r = document.getElementById('raven');
     console.log('[raven] cursor-follow init — innerWidth:', window.innerWidth, 'el:', !!r);
     if (!r) return;
-    if (window.innerWidth < 768) { console.log('[raven] skipped — screen too narrow'); return; }
+
+    const isTouch = matchMedia('(hover:none), (pointer:coarse)').matches;
+    // Raven size adapts to viewport via clamp() in CSS — compute idle margin from current width
+    const ravenSize = r.offsetWidth || 120;
+    const edgePad   = Math.max(12, ravenSize * 0.25);
+
     // Start off-screen top-left for swoop intro
     let x = -240, y = -240;
-    let tx = window.innerWidth - 180, ty = 120;   // idle resting spot (top-right)
+    let tx = window.innerWidth - ravenSize - edgePad;
+    let ty = edgePad;
     let raf;
     let idle = true;
     let arrived = false;
 
-    document.addEventListener('mousemove', (e) => {
-      if (!arrived) return;   // ignore cursor until intro swoop done
-      tx = e.clientX + 40;
-      ty = e.clientY - 90;
-      idle = false;
-      r.style.opacity = '0.85';
-      clearTimeout(window.__rt);
-      window.__rt = setTimeout(() => { idle = true; r.style.opacity = '0.55'; }, 1800);
-    });
-    document.addEventListener('mouseleave', () => { idle = true; r.style.opacity = '0.55' });
+    if (!isTouch) {
+      document.addEventListener('mousemove', (e) => {
+        if (!arrived) return;
+        tx = e.clientX + 40;
+        ty = e.clientY - 90;
+        idle = false;
+        r.style.opacity = '0.85';
+        clearTimeout(window.__rt);
+        window.__rt = setTimeout(() => { idle = true; r.style.opacity = '0.55'; }, 1800);
+      });
+      document.addEventListener('mouseleave', () => { idle = true; r.style.opacity = '0.55' });
+    } else {
+      // On touch devices: drift gently in a small orbit around idle spot
+      const idleX = tx, idleY = ty;
+      setInterval(() => {
+        tx = idleX + Math.sin(performance.now() * 0.0004) * 20;
+        ty = idleY + Math.cos(performance.now() * 0.00055) * 14;
+      }, 200);
+    }
 
-    // Fade in + swoop start
+    // Re-anchor on resize so idle spot stays in viewport
+    addEventListener('resize', () => {
+      const s = r.offsetWidth || 120;
+      const pad = Math.max(12, s * 0.25);
+      if (idle) { tx = window.innerWidth - s - pad; ty = pad; }
+    });
+
     setTimeout(() => { r.style.opacity = '0.55' }, 200);
     setTimeout(() => { arrived = true; }, 3000);
 
     function tick(t){
-      const lag = arrived ? (idle ? 0.025 : 0.07) : 0.045;   // slower lerp during intro = swoop
+      const lag = arrived ? (idle ? 0.025 : 0.07) : 0.045;
       x += (tx - x) * lag;
       y += (ty - y) * lag;
       const bob = Math.sin(t/400) * 3;
@@ -2067,8 +2088,6 @@ em,i{font-style:italic;color:var(--ink-soft)}
   console.log('[raven3d] module loaded — innerWidth:', innerWidth, 'reduced-motion:', matchMedia('(prefers-reduced-motion:reduce)').matches);
   if (matchMedia('(prefers-reduced-motion:reduce)').matches) {
     console.log('[raven3d] skipped — prefers-reduced-motion');
-  } else if (innerWidth < 768) {
-    console.log('[raven3d] skipped — screen narrow');
   } else {
     const host = document.getElementById('raven');
     const canvas = document.getElementById('raven-canvas');

@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Raven 3D — Preview</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  html, body { margin:0; height:100%; background:#0a1414; color:#dfe9e1; font-family:system-ui, sans-serif; overflow:hidden; }
+  #app { position:fixed; inset:0; }
+  canvas { display:block; width:100%; height:100%; }
+  .hud {
+    position:fixed; top:14px; left:14px; z-index:10;
+    background:rgba(0,0,0,0.55); padding:10px 14px; border:1px solid #1f3232;
+    font-size:0.85rem; letter-spacing:0.04em; line-height:1.55;
+    backdrop-filter:blur(6px); max-width:280px;
+  }
+  .hud b { color:#bda36a }
+  .hud .row { margin-top:6px; font-size:0.78rem; color:#a8b8aa }
+  .ctrl {
+    position:fixed; top:14px; right:14px; z-index:10;
+    background:rgba(0,0,0,0.55); padding:10px 14px; border:1px solid #1f3232;
+    font-size:0.78rem; display:flex; flex-direction:column; gap:8px;
+    backdrop-filter:blur(6px);
+  }
+  .ctrl button {
+    background:#142020; border:1px solid #1f3232; color:#dfe9e1;
+    padding:6px 10px; font-family:inherit; font-size:0.75rem; cursor:pointer;
+    letter-spacing:0.06em;
+  }
+  .ctrl button:hover { background:#1f3232; border-color:#5fa494 }
+  .ctrl label { display:flex; align-items:center; gap:8px; font-size:0.72rem; color:#a8b8aa }
+  .status {
+    position:fixed; bottom:14px; left:14px; z-index:10;
+    font-size:0.75rem; color:#6a7d72; letter-spacing:0.04em;
+    background:rgba(0,0,0,0.5); padding:6px 12px; border:1px solid #1f3232;
+  }
+</style>
+</head>
+<body>
+
+<div class="hud">
+  <b>Raven 3D Preview</b>
+  <div class="row">Drag to rotate · Scroll to zoom · Right-drag to pan</div>
+  <div class="row" id="info">Loading <code>/assets/folio/raven.glb</code> …</div>
+</div>
+
+<div class="ctrl">
+  <button id="auto">Toggle auto-rotate</button>
+  <button id="reset">Reset camera</button>
+  <button id="wire">Toggle wireframe</button>
+  <label><input type="checkbox" id="bg" /> Light background</label>
+</div>
+
+<div id="app"></div>
+
+<div class="status" id="status">Initializing…</div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "/vendor/three/three.module.js",
+    "three/addons/": "/vendor/three/addons/"
+  }
+}
+</script>
+
+<script type="module">
+  import * as THREE from 'three';
+  import { GLTFLoader }   from 'three/addons/loaders/GLTFLoader.js';
+  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+  const status = document.getElementById('status');
+  const info   = document.getElementById('info');
+  const setStatus = (s) => { status.textContent = s };
+
+  const app = document.getElementById('app');
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x0a1414);
+
+  const camera = new THREE.PerspectiveCamera(40, innerWidth/innerHeight, 0.1, 100);
+  camera.position.set(0, 1.2, 5);
+
+  const renderer = new THREE.WebGLRenderer({ antialias:true });
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.setSize(innerWidth, innerHeight);
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  app.appendChild(renderer.domElement);
+
+  // Lighting — matching Codex of the Crow palette
+  scene.add(new THREE.AmbientLight(0x6a6a6a, 0.9));
+  const key = new THREE.DirectionalLight(0xfff0c8, 1.6);
+  key.position.set(3, 5, 4); scene.add(key);
+  const rim = new THREE.PointLight(0x5fa494, 1.3, 12);
+  rim.position.set(-3, 1, -2); scene.add(rim);
+  const fill = new THREE.DirectionalLight(0xaebec0, 0.6);
+  fill.position.set(-4, -1, 3); scene.add(fill);
+
+  // Ground grid for spatial reference
+  const grid = new THREE.GridHelper(8, 16, 0x1f3232, 0x142020);
+  grid.position.y = -1.4;
+  scene.add(grid);
+
+  // Controls
+  const controls = new OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.05;
+  controls.target.set(0, 0, 0);
+  controls.autoRotate = false;
+  controls.autoRotateSpeed = 1.5;
+
+  let raven = null;
+  let wireOn = false;
+
+  // Load the GLB
+  setStatus('Loading GLB…');
+  const loader = new GLTFLoader();
+  loader.load(
+    '/assets/folio/raven.glb',
+    (gltf) => {
+      raven = gltf.scene;
+      // Auto-fit
+      const box = new THREE.Box3().setFromObject(raven);
+      const size = box.getSize(new THREE.Vector3());
+      const sizeLen = size.length();
+      const center = box.getCenter(new THREE.Vector3());
+      raven.position.sub(center);
+      const targetSize = 2.5;
+      raven.scale.setScalar(targetSize / sizeLen);
+      scene.add(raven);
+
+      // Collect mesh + material stats
+      let meshCount = 0, vertCount = 0, materialNames = new Set();
+      raven.traverse((o) => {
+        if (o.isMesh) {
+          meshCount++;
+          vertCount += o.geometry.attributes.position.count;
+          if (o.material) materialNames.add(o.material.name || o.material.type);
+        }
+      });
+      info.innerHTML =
+        `Loaded · <b>${meshCount}</b> mesh · <b>${vertCount.toLocaleString()}</b> verts<br/>` +
+        `bounds: ${size.x.toFixed(2)} × ${size.y.toFixed(2)} × ${size.z.toFixed(2)}<br/>` +
+        `materials: ${[...materialNames].join(', ')}`;
+      setStatus('Ready · drag to rotate');
+    },
+    (xhr) => {
+      if (xhr.lengthComputable) {
+        const pct = (xhr.loaded / xhr.total * 100).toFixed(0);
+        setStatus(`Loading… ${pct}%`);
+      }
+    },
+    (err) => {
+      console.error(err);
+      info.innerHTML = '<span style="color:#c44a4a">Load failed — check /assets/folio/raven.glb</span>';
+      setStatus('Error');
+    }
+  );
+
+  // Resize
+  addEventListener('resize', () => {
+    camera.aspect = innerWidth/innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(innerWidth, innerHeight);
+  });
+
+  // Render loop
+  function tick(){
+    requestAnimationFrame(tick);
+    controls.update();
+    renderer.render(scene, camera);
+  }
+  tick();
+
+  // Controls
+  document.getElementById('auto').onclick = () => {
+    controls.autoRotate = !controls.autoRotate;
+  };
+  document.getElementById('reset').onclick = () => {
+    camera.position.set(0, 1.2, 5);
+    controls.target.set(0, 0, 0);
+    controls.update();
+  };
+  document.getElementById('wire').onclick = () => {
+    if (!raven) return;
+    wireOn = !wireOn;
+    raven.traverse((o) => { if (o.isMesh && o.material) o.material.wireframe = wireOn; });
+  };
+  document.getElementById('bg').onchange = (e) => {
+    scene.background = new THREE.Color(e.target.checked ? 0xc9c2ad : 0x0a1414);
+  };
+</script>
+
+</body>
+</html>

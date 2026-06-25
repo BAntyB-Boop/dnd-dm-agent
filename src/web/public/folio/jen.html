@@ -316,12 +316,17 @@ em,i{font-style:italic;color:var(--ink-soft)}
 .flying-raven{
   position:fixed;
   z-index:50;
-  width:64px;height:64px;
+  width:140px;height:140px;
   pointer-events:none;
   opacity:0;
-  transition:opacity .5s, transform .8s cubic-bezier(.2,.7,.2,1);
+  transition:opacity .5s;
+  will-change:transform;
 }
-.flying-raven svg{width:100%;height:100%;color:var(--raven);filter:drop-shadow(0 4px 8px rgba(0,0,0,0.7))}
+.flying-raven canvas{
+  width:100%;height:100%;display:block;
+  filter:drop-shadow(0 6px 14px rgba(0,0,0,0.8));
+}
+.flying-raven svg{display:none}  /* hide old SVG (kept as fallback) */
 
 /* ============ CROW EYES — ดวงตาอีกาในเงามืด ============ */
 .eye-layer{
@@ -832,38 +837,6 @@ em,i{font-style:italic;color:var(--ink-soft)}
   transition:opacity 0.6s;
 }
 
-/* ── Book opening intro (two pages swing open from center) ── */
-.book-intro{
-  position:fixed;inset:0;z-index:9990;pointer-events:none;
-  perspective:2200px;
-  background:transparent;
-}
-.book-intro .panel{
-  position:absolute;top:0;bottom:0;width:50%;
-  background:
-    repeating-linear-gradient(180deg, rgba(0,0,0,0) 0px, rgba(0,0,0,0) 8px, rgba(0,0,0,0.18) 9px, rgba(0,0,0,0) 14px),
-    linear-gradient(135deg, #0a1414 0%, #142020 100%);
-  box-shadow:inset 0 0 80px rgba(0,0,0,0.7);
-  transition:transform 1.8s cubic-bezier(0.6, 0, 0.2, 1), opacity 0.6s ease 1.5s;
-  transform-origin:left center;
-  border:1px solid #1f3232;
-}
-.book-intro .panel.left {left:0;  transform-origin:left  center}
-.book-intro .panel.right{right:0; transform-origin:right center}
-.book-intro.open .panel.left { transform:rotateY(-110deg); opacity:0 }
-.book-intro.open .panel.right{ transform:rotateY( 110deg); opacity:0 }
-.book-intro.done{display:none}
-.book-intro .seal{
-  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
-  width:120px;height:120px;border-radius:50%;
-  background:radial-gradient(ellipse at 35% 30%, #bda36a, #7d6c4a 60%, #3b2c18 100%);
-  box-shadow:0 8px 28px rgba(0,0,0,0.7), inset 2px 4px 10px rgba(255,220,150,0.2);
-  display:flex;align-items:center;justify-content:center;color:#3b2c18;
-  font-family:"UnifrakturCook",serif;font-size:3rem;
-  transition:transform 0.6s, opacity 0.4s;
-}
-.book-intro.open .seal{transform:translate(-50%,-50%) scale(0.5);opacity:0}
-
 /* ── Lightning flash ── */
 .lightning{
   position:fixed;inset:0;z-index:47;pointer-events:none;opacity:0;
@@ -1010,13 +983,6 @@ em,i{font-style:italic;color:var(--ink-soft)}
 </style>
 </head>
 <body>
-
-<!-- Book opening intro (two pages swing open from center) -->
-<div class="book-intro" id="book-intro" aria-hidden="true">
-  <div class="seal">✠</div>
-  <div class="panel left"></div>
-  <div class="panel right"></div>
-</div>
 
 <!-- Mouse-darkness vignette (crow watches you) -->
 <div class="crow-vignette" id="crow-vignette" aria-hidden="true"></div>
@@ -1355,10 +1321,11 @@ em,i{font-style:italic;color:var(--ink-soft)}
   <span class="seye"></span><span class="seye"></span>
 </div>
 
-<!-- ============ FLOATING RAVEN ============ -->
+<!-- ============ FLOATING RAVEN (3D GLB) ============ -->
 <div class="flying-raven" id="raven">
+  <canvas id="raven-canvas"></canvas>
   <svg viewBox="0 0 64 64" fill="currentColor">
-    <!-- simple stylised raven silhouette -->
+    <!-- SVG fallback if WebGL fails / reduced motion -->
     <path d="M10 32 Q14 26 22 26 L28 22 Q32 18 38 20 L46 22 Q52 24 54 30 L50 30 L46 32 L44 36 L40 38 L38 42 L34 44 L28 46 L24 42 L20 38 L16 36 Z"/>
     <ellipse cx="40" cy="26" rx="2" ry="2" fill="#5fa494"/>
     <path d="M16 36 L8 42 L12 38 L4 44" stroke="currentColor" stroke-width="2" fill="none"/>
@@ -1367,38 +1334,40 @@ em,i{font-style:italic;color:var(--ink-soft)}
 </div>
 
 <script>
-  // Raven follows cursor on desktop — gracefully lags + bobs
+  // Raven flies in from off-screen, then gracefully lags after cursor
   (function(){
     const r = document.getElementById('raven');
     if (!r || window.innerWidth < 1024) return;
-    let tx = window.innerWidth - 120, ty = 120;
-    let x = tx, y = ty;
+    // Start off-screen top-left for swoop intro
+    let x = -240, y = -240;
+    let tx = window.innerWidth - 180, ty = 120;   // idle resting spot (top-right)
     let raf;
-    let dir = 1;
     let idle = true;
+    let arrived = false;
 
     document.addEventListener('mousemove', (e) => {
+      if (!arrived) return;   // ignore cursor until intro swoop done
       tx = e.clientX + 40;
-      ty = e.clientY - 80;
+      ty = e.clientY - 90;
       idle = false;
-      r.style.opacity = '0.75';
+      r.style.opacity = '0.85';
       clearTimeout(window.__rt);
-      window.__rt = setTimeout(() => { idle = true; r.style.opacity = '0.4'; }, 1800);
+      window.__rt = setTimeout(() => { idle = true; r.style.opacity = '0.55'; }, 1800);
     });
-    document.addEventListener('mouseleave', () => { idle = true; r.style.opacity = '0.4' });
+    document.addEventListener('mouseleave', () => { idle = true; r.style.opacity = '0.55' });
+
+    // Fade in + swoop start
+    setTimeout(() => { r.style.opacity = '0.55' }, 200);
+    setTimeout(() => { arrived = true; }, 3000);
 
     function tick(t){
-      const lag = idle ? 0.02 : 0.06;
+      const lag = arrived ? (idle ? 0.025 : 0.07) : 0.045;   // slower lerp during intro = swoop
       x += (tx - x) * lag;
       y += (ty - y) * lag;
-      // bob
       const bob = Math.sin(t/400) * 3;
-      // flip horizontally based on direction
-      dir = (tx > x ? 1 : -1);
-      r.style.transform = `translate(${x}px, ${y + bob}px) scaleX(${dir})`;
+      r.style.transform = `translate(${x}px, ${y + bob}px)`;
       raf = requestAnimationFrame(tick);
     }
-    r.style.opacity = '0.4';
     raf = requestAnimationFrame(tick);
   })();
 
@@ -1791,16 +1760,6 @@ em,i{font-style:italic;color:var(--ink-soft)}
 <script>
   const reduced = matchMedia('(prefers-reduced-motion:reduce)').matches;
 
-  // ── Book opening intro (plays once on load) ─────────────────────
-  (function(){
-    const intro = document.getElementById('book-intro');
-    if (!intro) return;
-    requestAnimationFrame(() => {
-      setTimeout(() => intro.classList.add('open'), 450);
-      setTimeout(() => intro.classList.add('done'), 2600);
-    });
-  })();
-
   // ── Mouse-darkness vignette (crow watches you) ──────────────────
   (function(){
     if (reduced) return;
@@ -2074,6 +2033,80 @@ em,i{font-style:italic;color:var(--ink-soft)}
           if (firstFrame){ firstFrame = false; canvas.classList.add('visible'); }
         }
         tick();
+      }
+    }
+  }
+</script>
+
+<!-- ════════════════════ THREE.JS — Flying Raven (GLB) ════════════════════ -->
+<script type="module">
+  if (!matchMedia('(prefers-reduced-motion:reduce)').matches && innerWidth >= 1024) {
+    const canvas = document.getElementById('raven-canvas');
+    if (canvas) {
+      try {
+        const THREE = await import('three');
+        const { GLTFLoader } = await import('three/addons/loaders/GLTFLoader.js');
+
+        const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:true });
+        renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+        renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+        const scene  = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(36, 1, 0.1, 50);
+        camera.position.set(0, 0.2, 4.2);
+        camera.lookAt(0, 0, 0);
+
+        // Moody lighting matching the Codex of the Crow palette
+        scene.add(new THREE.AmbientLight(0x1f2a28, 0.6));
+        const key = new THREE.DirectionalLight(0xbda36a, 1.2);
+        key.position.set(2, 4, 3); scene.add(key);
+        const rim = new THREE.PointLight(0x5fa494, 1.0, 8);
+        rim.position.set(-2, 1, -2); scene.add(rim);
+        const fill = new THREE.DirectionalLight(0xaebec0, 0.35);
+        fill.position.set(-3, -1, 2); scene.add(fill);
+
+        const loader = new GLTFLoader();
+        let raven = null;
+
+        loader.load('/assets/folio/raven.glb',
+          (gltf) => {
+            raven = gltf.scene;
+            // Auto-fit: compute bounds and rescale to fit ~2.4 units
+            const box = new THREE.Box3().setFromObject(raven);
+            const size = box.getSize(new THREE.Vector3()).length();
+            const center = box.getCenter(new THREE.Vector3());
+            raven.position.sub(center);
+            raven.scale.setScalar(2.6 / size);
+            // Slight tilt for cinematic look
+            raven.rotation.y = -0.3;
+            scene.add(raven);
+          },
+          undefined,
+          (err) => { console.warn('[raven3d] GLB load failed', err); }
+        );
+
+        function resize(){
+          const w = canvas.clientWidth, h = canvas.clientHeight;
+          renderer.setSize(w, h, false);
+          camera.aspect = w/h; camera.updateProjectionMatrix();
+        }
+        resize();
+        addEventListener('resize', resize);
+
+        const clock = new THREE.Clock();
+        let elapsed = 0;
+        function tick(){
+          requestAnimationFrame(tick);
+          elapsed += clock.getDelta();
+          if (raven){
+            raven.rotation.y = -0.3 + Math.sin(elapsed * 0.5) * 0.4;
+            raven.position.y = Math.sin(elapsed * 1.6) * 0.06;
+          }
+          renderer.render(scene, camera);
+        }
+        tick();
+      } catch (err) {
+        console.warn('[raven3d] init failed', err);
       }
     }
   }

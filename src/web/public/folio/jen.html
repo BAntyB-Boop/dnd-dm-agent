@@ -1359,7 +1359,9 @@ em,i{font-style:italic;color:var(--ink-soft)}
   // Raven flies in from off-screen, then gracefully lags after cursor
   (function(){
     const r = document.getElementById('raven');
-    if (!r || window.innerWidth < 1024) return;
+    console.log('[raven] cursor-follow init — innerWidth:', window.innerWidth, 'el:', !!r);
+    if (!r) return;
+    if (window.innerWidth < 768) { console.log('[raven] skipped — screen too narrow'); return; }
     // Start off-screen top-left for swoop intro
     let x = -240, y = -240;
     let tx = window.innerWidth - 180, ty = 120;   // idle resting spot (top-right)
@@ -2062,9 +2064,15 @@ em,i{font-style:italic;color:var(--ink-soft)}
 
 <!-- ════════════════════ THREE.JS — Flying Raven (GLB) ════════════════════ -->
 <script type="module">
-  if (!matchMedia('(prefers-reduced-motion:reduce)').matches && innerWidth >= 1024) {
+  console.log('[raven3d] module loaded — innerWidth:', innerWidth, 'reduced-motion:', matchMedia('(prefers-reduced-motion:reduce)').matches);
+  if (matchMedia('(prefers-reduced-motion:reduce)').matches) {
+    console.log('[raven3d] skipped — prefers-reduced-motion');
+  } else if (innerWidth < 768) {
+    console.log('[raven3d] skipped — screen narrow');
+  } else {
     const host = document.getElementById('raven');
     const canvas = document.getElementById('raven-canvas');
+    console.log('[raven3d] host:', !!host, 'canvas:', !!canvas);
     if (host && canvas) {
       host.classList.add('loading');
       console.log('[raven3d] init start');

@@ -2075,11 +2075,16 @@ em,i{font-style:italic;color:var(--ink-soft)}
     console.log('[raven3d] host:', !!host, 'canvas:', !!canvas);
     if (host && canvas) {
       host.classList.add('loading');
-      console.log('[raven3d] init start');
+      console.log('[raven3d] init start — importing three.js modules...');
+      const importTimeout = setTimeout(() => {
+        console.warn('[raven3d] ⚠️ three.js import is taking >8s — check Network tab for /vendor/three/three.module.js status');
+      }, 8000);
       try {
         const THREE = await import('three');
+        console.log('[raven3d] ✓ three core loaded (rev ' + THREE.REVISION + ')');
         const { GLTFLoader } = await import('three/addons/loaders/GLTFLoader.js');
-        console.log('[raven3d] three loaded');
+        clearTimeout(importTimeout);
+        console.log('[raven3d] ✓ GLTFLoader loaded');
 
         const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:true });
         renderer.setPixelRatio(Math.min(devicePixelRatio, 2));

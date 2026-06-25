@@ -814,9 +814,224 @@ em,i{font-style:italic;color:var(--ink-soft)}
   *,*::before,*::after{animation-duration:0.001ms!important;animation-iteration-count:1!important;transition-duration:0.001ms!important}
   .feather,.fog,.crow-eyes{display:none!important}
 }
+
+/* ════════════════════════════════════════════════════════════════
+   ✦ EXTRA DECORATIONS — Tier 1–4 (Codex of the Crow)
+═══════════════════════════════════════════════════════════════ */
+
+/* ── Mouse-darkness vignette (crow watches you) ── */
+.crow-vignette{
+  position:fixed;inset:0;z-index:46;pointer-events:none;
+  background:radial-gradient(
+    520px 520px at var(--mx, 50%) var(--my, 50%),
+    rgba(0,0,0,0) 0%,
+    rgba(0,0,0,0) 30%,
+    rgba(0,0,0,0.55) 100%
+  );
+  mix-blend-mode:multiply;
+  transition:opacity 0.6s;
+}
+
+/* ── Book opening intro (two pages swing open from center) ── */
+.book-intro{
+  position:fixed;inset:0;z-index:9990;pointer-events:none;
+  perspective:2200px;
+  background:transparent;
+}
+.book-intro .panel{
+  position:absolute;top:0;bottom:0;width:50%;
+  background:
+    repeating-linear-gradient(180deg, rgba(0,0,0,0) 0px, rgba(0,0,0,0) 8px, rgba(0,0,0,0.18) 9px, rgba(0,0,0,0) 14px),
+    linear-gradient(135deg, #0a1414 0%, #142020 100%);
+  box-shadow:inset 0 0 80px rgba(0,0,0,0.7);
+  transition:transform 1.8s cubic-bezier(0.6, 0, 0.2, 1), opacity 0.6s ease 1.5s;
+  transform-origin:left center;
+  border:1px solid #1f3232;
+}
+.book-intro .panel.left {left:0;  transform-origin:left  center}
+.book-intro .panel.right{right:0; transform-origin:right center}
+.book-intro.open .panel.left { transform:rotateY(-110deg); opacity:0 }
+.book-intro.open .panel.right{ transform:rotateY( 110deg); opacity:0 }
+.book-intro.done{display:none}
+.book-intro .seal{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:120px;height:120px;border-radius:50%;
+  background:radial-gradient(ellipse at 35% 30%, #bda36a, #7d6c4a 60%, #3b2c18 100%);
+  box-shadow:0 8px 28px rgba(0,0,0,0.7), inset 2px 4px 10px rgba(255,220,150,0.2);
+  display:flex;align-items:center;justify-content:center;color:#3b2c18;
+  font-family:"UnifrakturCook",serif;font-size:3rem;
+  transition:transform 0.6s, opacity 0.4s;
+}
+.book-intro.open .seal{transform:translate(-50%,-50%) scale(0.5);opacity:0}
+
+/* ── Lightning flash ── */
+.lightning{
+  position:fixed;inset:0;z-index:47;pointer-events:none;opacity:0;
+  background:linear-gradient(180deg, rgba(180,230,220,0.55), rgba(95,164,148,0.1) 60%, transparent);
+  mix-blend-mode:screen;
+}
+.lightning.flash{animation:lightning-strike 0.8s ease-out 1}
+@keyframes lightning-strike{
+  0%  {opacity:0}
+  8%  {opacity:0.9}
+  14% {opacity:0.2}
+  22% {opacity:0.8}
+  35% {opacity:0.05}
+  100%{opacity:0}
+}
+
+/* ── Wind streaks ── */
+.wind-layer{position:fixed;inset:0;z-index:44;pointer-events:none;overflow:hidden}
+.wind-streak{
+  position:absolute;height:1px;
+  background:linear-gradient(90deg, transparent, rgba(174,190,192,0.5), transparent);
+  filter:blur(0.5px);
+  animation:wind-blow linear forwards;
+}
+@keyframes wind-blow{
+  0%  {transform:translateX(-30vw);opacity:0}
+  20% {opacity:0.7}
+  100%{transform:translateX(130vw);opacity:0}
+}
+
+/* ── Rain mist (sparse) ── */
+.rain{position:fixed;inset:0;z-index:43;pointer-events:none;overflow:hidden}
+.rain-drop{
+  position:absolute;top:-20px;width:1px;height:14px;
+  background:linear-gradient(180deg, rgba(174,190,192,0) 0%, rgba(174,190,192,0.5) 100%);
+  animation:rain-fall linear forwards;
+}
+@keyframes rain-fall{
+  0%  {transform:translateY(-10vh);opacity:0}
+  10% {opacity:0.6}
+  100%{transform:translateY(110vh);opacity:0}
+}
+
+/* ── Celtic wax seal on .cap labels ── */
+.cap{position:relative}
+.cap .celtic-seal{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:22px;height:22px;border-radius:50%;margin-right:10px;
+  background:radial-gradient(ellipse at 35% 30%, #3e6850 0%, #1f3a30 60%, #0a1a14 100%);
+  box-shadow:0 2px 6px rgba(0,0,0,0.5), inset 1px 2px 3px rgba(180,230,220,0.18), inset -2px -2px 4px rgba(0,0,0,0.45);
+  color:rgba(189,163,106,0.8);
+  font-family:"UnifrakturCook",serif;font-size:0.7rem;
+  flex-shrink:0;transition:transform 0.5s;
+}
+.cap:hover .celtic-seal{transform:rotate(180deg) scale(1.08)}
+
+/* hide the existing rotated-square ::before when seal is present */
+.cap.has-seal::before{display:none}
+
+/* ── Quill scratch under dropcap paragraph ── */
+.dropcap{position:relative;display:block}
+.dropcap::after{
+  content:"";position:absolute;left:0;right:0;bottom:-6px;height:1px;
+  background:linear-gradient(90deg, transparent, var(--celtic), transparent);
+  transform-origin:left;transform:scaleX(0);
+  animation:quill-scratch 2.6s cubic-bezier(0.55, 0.1, 0.2, 1) 1.4s forwards;
+}
+@keyframes quill-scratch{
+  0%  {transform:scaleX(0);opacity:0}
+  18% {opacity:1}
+  100%{transform:scaleX(1);opacity:1}
+}
+
+/* ── Blood-haze trigger on scar mention ── */
+.blood-haze{
+  position:fixed;inset:0;z-index:48;pointer-events:none;opacity:0;
+  background:radial-gradient(ellipse at 50% 40%, rgba(122,26,26,0.32) 0%, transparent 60%);
+  transition:opacity 0.8s ease;
+}
+.blood-haze.active{opacity:0.9;animation:blood-fade 2.4s ease-out forwards}
+@keyframes blood-fade{
+  0%  {opacity:0}
+  20% {opacity:0.9}
+  100%{opacity:0}
+}
+
+/* ── Portrait fog condensation ── */
+.portrait-frame{position:relative}
+.portrait-frame::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 60% 40% at 50% 25%, rgba(174,190,192,0.18), transparent 65%),
+    radial-gradient(ellipse 50% 30% at 30% 70%, rgba(174,190,192,0.12), transparent 70%);
+  opacity:0.55;mix-blend-mode:screen;
+  animation:portrait-fog 9s ease-in-out infinite alternate;
+}
+@keyframes portrait-fog{
+  0%  {opacity:0.35;transform:translateY(0)}
+  100%{opacity:0.7;transform:translateY(-2%)}
+}
+
+/* ── Weathered page edges ── */
+.page-l, .page-r{
+  -webkit-mask-image:
+    radial-gradient(ellipse 110% 100% at 50% 50%, #000 88%, rgba(0,0,0,0.85) 96%, transparent 100%);
+          mask-image:
+    radial-gradient(ellipse 110% 100% at 50% 50%, #000 88%, rgba(0,0,0,0.85) 96%, transparent 100%);
+}
+
+/* ── 3D Torc mount (replaces SVG in inv-cell) ── */
+.inv-cell .gl-3d{
+  width:40px;height:40px;flex-shrink:0;
+  position:relative;overflow:hidden;
+  border-radius:4px;
+  -webkit-mask-image:radial-gradient(ellipse 75% 80% at 50% 50%, #000 40%, transparent 90%);
+          mask-image:radial-gradient(ellipse 75% 80% at 50% 50%, #000 40%, transparent 90%);
+}
+.inv-cell .gl-3d canvas{
+  position:absolute;inset:0;width:100%;height:100%;display:block;
+  opacity:0;transition:opacity 1s ease;
+}
+.inv-cell .gl-3d canvas.visible{opacity:1}
+
+/* ── Hover tooltip (data-tip) ── */
+[data-tip]{position:relative}
+[data-tip]:hover::after{
+  content:attr(data-tip);
+  position:absolute;left:50%;bottom:calc(100% + 8px);transform:translateX(-50%);
+  background:rgba(10,20,20,0.96);
+  border:1px solid var(--vellum-dim);
+  color:var(--ink-soft);
+  font-family:"Cormorant Garamond",serif;font-style:italic;font-size:0.82rem;
+  padding:6px 11px;white-space:nowrap;
+  pointer-events:none;z-index:100;letter-spacing:0.02em;
+  box-shadow:0 6px 18px rgba(0,0,0,0.7);
+}
+
+/* ── Easter egg pulse ── */
+.crow-triggered{animation:crow-pulse 1.4s ease-out 1}
+@keyframes crow-pulse{
+  0%  {box-shadow:0 0 0 0 rgba(189,163,106,0.7)}
+  100%{box-shadow:0 0 0 70px rgba(189,163,106,0)}
+}
 </style>
 </head>
 <body>
+
+<!-- Book opening intro (two pages swing open from center) -->
+<div class="book-intro" id="book-intro" aria-hidden="true">
+  <div class="seal">✠</div>
+  <div class="panel left"></div>
+  <div class="panel right"></div>
+</div>
+
+<!-- Mouse-darkness vignette (crow watches you) -->
+<div class="crow-vignette" id="crow-vignette" aria-hidden="true"></div>
+
+<!-- Lightning flash overlay -->
+<div class="lightning" id="lightning" aria-hidden="true"></div>
+
+<!-- Wind streak layer -->
+<div class="wind-layer" id="wind-layer" aria-hidden="true"></div>
+
+<!-- Sparse rain mist -->
+<div class="rain" id="rain" aria-hidden="true"></div>
+
+<!-- Blood-haze overlay (triggers on scar mention scroll-in) -->
+<div class="blood-haze" id="blood-haze" aria-hidden="true"></div>
 
 <div id="read-progress" aria-hidden="true"></div>
 <audio id="bg-audio" src="/assets/fallow-crown.mp3" loop preload="auto"></audio>
@@ -1075,14 +1290,14 @@ em,i{font-style:italic;color:var(--ink-soft)}
         <div class="inv-cell"><div class="gl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M5 9 H19 V19 H5 Z"/><path d="M5 9 Q12 5 19 9"/></svg></div><div><div class="nm">Rations · 7</div><div class="nm-th">days of travel</div></div></div>
         <div class="inv-cell"><div class="gl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="14" r="4"/><circle cx="16" cy="14" r="4"/><path d="M6 8 L8 10 M16 10 L18 8"/></svg></div><div><div class="nm">Thief's Tools</div><div class="nm-th">pick &amp; tension rod</div></div></div>
         <div class="inv-cell"><div class="gl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/></svg></div><div><div class="nm">Coin Pouch · 21 GP</div><div class="nm-th">current funds</div></div></div>
-        <div class="inv-cell"><div class="gl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="12" r="6"/><path d="M9 9 L15 15 M15 9 L9 15"/></svg></div><div><div class="nm">Torc — Celtic Knot</div><div class="nm-th">family heirloom</div></div></div>
+        <div class="inv-cell" data-tip="The only thing his village left him."><div class="gl-3d"><canvas id="torc-canvas"></canvas></div><div><div class="nm">Torc — Celtic Knot</div><div class="nm-th">family heirloom</div></div></div>
       </div>
 
       <!-- Backstory -->
       <div class="cap" style="margin-top:30px">Of His Past <span class="line"></span></div>
       <div class="body-text">
         <p class="dropcap">Born in a small Celtic village, a quiet life — until an unknown force <em>"swept it clean."</em> He survived because a veteran criminal found him in the wreckage and saw something worth keeping.</p>
-        <p>Raised underground. Taught to lie, to hide, to infiltrate, to endure. Caught eventually — nearly executed. The scar across his throat is where the rope was.</p>
+        <p data-blood-trigger="true">Raised underground. Taught to lie, to hide, to infiltrate, to endure. Caught eventually — nearly executed. The scar across his throat is where the rope was.</p>
         <p>The Iron Druids pulled him out and gave him work. Turned a thief into something closer to a spy — and still, beneath it all, <em>a man looking for his own path.</em></p>
         <p>Now hunted by the <em>"Silver Chain."</em> The past has caught up — and he must choose what he becomes next.</p>
       </div>
@@ -1104,15 +1319,15 @@ em,i{font-style:italic;color:var(--ink-soft)}
       <div class="oaths fade-up">
         <h4>— Of His Oaths —</h4>
         <div class="row">
-          <div class="oath">
+          <div class="oath" data-tip="The first vow he ever kept.">
             <div class="trim"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M3 18 H21 M5 14 H19 M7 10 H17 M9 6 H15"/><path d="M12 6 V18"/></svg></div>
             <div class="tx">Steal not from the poor.</div>
           </div>
-          <div class="oath">
+          <div class="oath" data-tip="A line the old criminal drew for him.">
             <div class="trim"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="12" cy="12" r="8"/><path d="M8 12 L11 15 L16 9"/></svg></div>
             <div class="tx">Kill not the defenceless.</div>
           </div>
-          <div class="oath">
+          <div class="oath" data-tip="A line he drew for himself.">
             <div class="trim"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M12 3 L4 21 H20 Z"/><path d="M12 9 V15 M12 17 V17.5"/></svg></div>
             <div class="tx">Suffer not injustice to outweigh truth.</div>
           </div>
@@ -1571,6 +1786,298 @@ em,i{font-style:italic;color:var(--ink-soft)}
   })();
 </script>
 <script src="shared.js"></script>
+
+<!-- ════════════════════ DECORATION CONTROLLERS ════════════════════ -->
+<script>
+  const reduced = matchMedia('(prefers-reduced-motion:reduce)').matches;
+
+  // ── Book opening intro (plays once on load) ─────────────────────
+  (function(){
+    const intro = document.getElementById('book-intro');
+    if (!intro) return;
+    requestAnimationFrame(() => {
+      setTimeout(() => intro.classList.add('open'), 450);
+      setTimeout(() => intro.classList.add('done'), 2600);
+    });
+  })();
+
+  // ── Mouse-darkness vignette (crow watches you) ──────────────────
+  (function(){
+    if (reduced) return;
+    const el = document.getElementById('crow-vignette');
+    if (!el) return;
+    let tx = 50, ty = 50, cx = 50, cy = 50, raf = null;
+    addEventListener('mousemove', e => {
+      tx = (e.clientX / innerWidth) * 100;
+      ty = (e.clientY / innerHeight) * 100;
+      if (!raf) raf = requestAnimationFrame(update);
+    }, { passive:true });
+    function update(){
+      cx += (tx - cx) * 0.12;
+      cy += (ty - cy) * 0.12;
+      el.style.setProperty('--mx', cx.toFixed(2) + '%');
+      el.style.setProperty('--my', cy.toFixed(2) + '%');
+      if (Math.abs(tx-cx) + Math.abs(ty-cy) > 0.2) raf = requestAnimationFrame(update);
+      else raf = null;
+    }
+  })();
+
+  // ── Lightning flash (random intervals) ─────────────────────────
+  (function(){
+    if (reduced) return;
+    const el = document.getElementById('lightning');
+    if (!el) return;
+    function strike(){
+      el.classList.remove('flash');
+      void el.offsetWidth;
+      el.classList.add('flash');
+    }
+    function loop(){
+      setTimeout(() => { strike(); loop(); }, 12000 + Math.random() * 24000);
+    }
+    setTimeout(loop, 8000);
+  })();
+
+  // ── Wind streaks (occasional) ──────────────────────────────────
+  (function(){
+    if (reduced) return;
+    const host = document.getElementById('wind-layer');
+    if (!host) return;
+    function gust(){
+      const s = document.createElement('span');
+      s.className = 'wind-streak';
+      s.style.top = (10 + Math.random() * 80) + 'vh';
+      s.style.width = (180 + Math.random() * 380) + 'px';
+      s.style.animationDuration = (1.6 + Math.random() * 1.6) + 's';
+      host.appendChild(s);
+      s.addEventListener('animationend', () => s.remove(), { once:true });
+    }
+    function loop(){
+      const count = 2 + Math.floor(Math.random() * 3);
+      for (let i = 0; i < count; i++) setTimeout(gust, i * 200);
+      setTimeout(loop, 6000 + Math.random() * 8000);
+    }
+    setTimeout(loop, 3000);
+  })();
+
+  // ── Sparse rain mist ───────────────────────────────────────────
+  (function(){
+    if (reduced) return;
+    const host = document.getElementById('rain');
+    if (!host) return;
+    function drop(){
+      const d = document.createElement('span');
+      d.className = 'rain-drop';
+      d.style.left = (Math.random() * 100) + 'vw';
+      d.style.animationDuration = (0.9 + Math.random() * 0.7) + 's';
+      d.style.opacity = (0.3 + Math.random() * 0.4).toFixed(2);
+      host.appendChild(d);
+      d.addEventListener('animationend', () => d.remove(), { once:true });
+    }
+    function loop(){
+      drop();
+      setTimeout(loop, 200 + Math.random() * 400);
+    }
+    setTimeout(loop, 2000);
+  })();
+
+  // ── Celtic seals injected into every .cap ──────────────────────
+  (function(){
+    const caps = document.querySelectorAll('.cap');
+    const glyphs = ['✠', '☘', '⚜', '✦', '❉', '✝', '☩', '✺', '❀', '✡'];
+    caps.forEach((c, i) => {
+      const seal = document.createElement('span');
+      seal.className = 'celtic-seal';
+      seal.setAttribute('aria-hidden', 'true');
+      seal.textContent = glyphs[i % glyphs.length];
+      c.insertBefore(seal, c.firstChild);
+      c.classList.add('has-seal');
+    });
+  })();
+
+  // ── Blood-haze trigger on scar paragraph entering view ─────────
+  (function(){
+    const trigger = document.querySelector('[data-blood-trigger]');
+    const haze = document.getElementById('blood-haze');
+    if (!trigger || !haze || reduced) return;
+    let fired = false;
+    new IntersectionObserver(es => {
+      for (const e of es) {
+        if (e.isIntersecting && !fired){
+          fired = true;
+          haze.classList.add('active');
+          setTimeout(() => haze.classList.remove('active'), 2500);
+        }
+      }
+    }, { threshold: 0.6 }).observe(trigger);
+  })();
+
+  // ── Easter egg: type "raven" or "corvus" → flash + crow pulse ──
+  (function(){
+    let buf = '';
+    addEventListener('keydown', e => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+      buf = (buf + e.key.toLowerCase()).slice(-6);
+      if (buf.endsWith('raven') || buf.endsWith('corvus')){
+        const raven = document.getElementById('raven');
+        const lightning = document.getElementById('lightning');
+        if (raven){
+          raven.classList.add('crow-triggered');
+          setTimeout(() => raven.classList.remove('crow-triggered'), 1600);
+        }
+        if (lightning){
+          lightning.classList.remove('flash');
+          void lightning.offsetWidth;
+          lightning.classList.add('flash');
+        }
+        buf = '';
+      }
+    });
+  })();
+</script>
+
+<!-- ════════════════════ THREE.JS — Celtic Torc ════════════════════ -->
+<script type="importmap">
+{
+  "imports": {
+    "three": "/vendor/three/three.module.js",
+    "three/addons/": "/vendor/three/addons/"
+  }
+}
+</script>
+
+<script type="module">
+  if (!matchMedia('(prefers-reduced-motion:reduce)').matches) {
+    const canvas = document.getElementById('torc-canvas');
+    if (canvas) {
+      let initialized = false;
+      const io = new IntersectionObserver(es => {
+        for (const e of es) {
+          if (e.isIntersecting && !initialized){
+            initialized = true; io.disconnect();
+            initTorc().catch(err => console.warn('[torc] init failed', err));
+            break;
+          }
+        }
+      }, { rootMargin:'200px 0px' });
+      io.observe(canvas);
+
+      async function initTorc(){
+        const THREE = await import('three');
+        const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:true });
+        renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+        renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+        const scene  = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(36, 1, 0.1, 50);
+        camera.position.set(0, 0.3, 4.4);
+        camera.lookAt(0, 0, 0);
+
+        const torc = new THREE.Group();
+
+        // Open-ended torc — a partial torus (270° open) with two raven-head terminals
+        const ringMat = new THREE.MeshStandardMaterial({ color: 0xbda36a, metalness: 1.0, roughness: 0.28, emissive: 0x3a2c14, emissiveIntensity: 0.2 });
+        const ring = new THREE.Mesh(
+          new THREE.TorusGeometry(0.9, 0.13, 24, 96, Math.PI * 1.65),
+          ringMat
+        );
+        ring.rotation.x = Math.PI / 2;
+        ring.rotation.z = -Math.PI / 4;
+        torc.add(ring);
+
+        // Two terminal end-caps (raven heads — simplified spheres + beak)
+        function makeTerminal(){
+          const head = new THREE.Group();
+          const sphere = new THREE.Mesh(
+            new THREE.SphereGeometry(0.18, 24, 24),
+            new THREE.MeshStandardMaterial({ color: 0x1d1a18, metalness: 0.7, roughness: 0.35 })
+          );
+          head.add(sphere);
+          const beak = new THREE.Mesh(
+            new THREE.ConeGeometry(0.06, 0.18, 12),
+            new THREE.MeshStandardMaterial({ color: 0x0a0808, metalness: 0.5, roughness: 0.5 })
+          );
+          beak.position.set(0, 0, 0.18);
+          beak.rotation.x = Math.PI / 2;
+          head.add(beak);
+          // tiny eye glint (teal)
+          const eye = new THREE.Mesh(
+            new THREE.SphereGeometry(0.025, 8, 8),
+            new THREE.MeshBasicMaterial({ color: 0x5fa494 })
+          );
+          eye.position.set(0.08, 0.05, 0.12);
+          head.add(eye);
+          return head;
+        }
+        const angA =  Math.PI * 1.65 / 2;
+        const angB = -Math.PI * 1.65 / 2;
+        const t1 = makeTerminal();
+        const t2 = makeTerminal();
+        t1.position.set(Math.cos(angA) * 0.9, Math.sin(angA) * 0.9, 0);
+        t2.position.set(Math.cos(angB) * 0.9, Math.sin(angB) * 0.9, 0);
+        // tilt them back
+        torc.add(t1);
+        torc.add(t2);
+
+        // Knotwork band texture on the ring (emissive map)
+        const knotCanvas = document.createElement('canvas');
+        knotCanvas.width = 1024; knotCanvas.height = 128;
+        const k = knotCanvas.getContext('2d');
+        k.fillStyle = '#000'; k.fillRect(0,0,1024,128);
+        k.strokeStyle = '#fff'; k.lineWidth = 6; k.lineCap = 'round';
+        // simple celtic interlace pattern across the strip
+        for (let x = 0; x < 1024; x += 64){
+          k.beginPath();
+          k.arc(x + 32, 64, 22, 0, Math.PI * 2);
+          k.stroke();
+          k.beginPath();
+          k.moveTo(x, 64);
+          k.bezierCurveTo(x + 16, 16, x + 48, 112, x + 64, 64);
+          k.stroke();
+        }
+        const knotTex = new THREE.CanvasTexture(knotCanvas);
+        knotTex.wrapS = THREE.RepeatWrapping;
+        knotTex.repeat.set(4, 1);
+        ringMat.emissiveMap = knotTex;
+        ringMat.emissiveIntensity = 0.45;
+        ringMat.emissive = new THREE.Color(0x5fa494);
+
+        scene.add(torc);
+
+        // Lighting — moody teal/celtic
+        scene.add(new THREE.AmbientLight(0x1f2a28, 0.6));
+        const key = new THREE.DirectionalLight(0xbda36a, 1.4);
+        key.position.set(2, 4, 3); scene.add(key);
+        const rim = new THREE.PointLight(0x5fa494, 0.9, 8);
+        rim.position.set(-2, 0, -2); scene.add(rim);
+
+        function resize(){
+          const w = canvas.clientWidth, h = canvas.clientHeight;
+          renderer.setSize(w, h, false);
+          camera.aspect = w/h; camera.updateProjectionMatrix();
+        }
+        resize();
+        addEventListener('resize', resize);
+
+        let onScreen = true;
+        new IntersectionObserver(es => { onScreen = es[0].isIntersecting; }, { threshold:0 }).observe(canvas);
+
+        const clock = new THREE.Clock();
+        let elapsed = 0, firstFrame = true;
+        function tick(){
+          requestAnimationFrame(tick);
+          if (!onScreen && !firstFrame) return;
+          elapsed += clock.getDelta();
+          torc.rotation.y = elapsed * 0.7;
+          torc.rotation.x = Math.sin(elapsed * 0.8) * 0.15;
+          renderer.render(scene, camera);
+          if (firstFrame){ firstFrame = false; canvas.classList.add('visible'); }
+        }
+        tick();
+      }
+    }
+  }
+</script>
 
 </body>
 </html>

@@ -158,8 +158,8 @@ body.cellar .folio-label{color:var(--blood)}
 
 .name-display{
   font-family:"Playfair Display",serif;font-weight:700;font-style:italic;
-  font-size:clamp(48px, 6.5vw, 96px);
-  line-height:0.95;letter-spacing:-0.01em;margin:0;
+  font-size:clamp(28px, 4.6vw, 68px);
+  line-height:1.05;letter-spacing:-0.005em;margin:0;
   background:linear-gradient(180deg, var(--candle) 0%, var(--gold) 50%, var(--cognac) 100%);
   -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;
   text-shadow:0 0 60px rgba(214,163,96,0.15);
@@ -1224,7 +1224,7 @@ body.cellar .gilt-corner{color:var(--wine-deep);opacity:0.65}
 
     <div class="title-col">
       <div class="folio-label">Featuring · the Prince of the Night</div>
-      <h1 class="name-display" id="hero-name" data-text-en="Aython" data-text-fr="Aurelius">Aython<br/><span class="amp">—</span>Aurelius</h1>
+      <h1 class="name-display" id="hero-name">Aython · Ashvail · Aurelius</h1>
       <div class="full-name">Aython Ashvail Aurelius · second son of the disinherited line</div>
       <div class="house-line">Human <span class="sep">·</span> Bard <span class="sep">·</span> House&nbsp;Aurelius</div>
       <div class="epi">cast out — bound only to the next <span class="ob">cup</span>.</div>
@@ -1589,20 +1589,14 @@ body.cellar .gilt-corner{color:var(--wine-deep);opacity:0.65}
   (function(){
     const el = document.getElementById('hero-name');
     if (!el) return;
-    // Split AYTHON and AURELIUS, preserve the <br/> and <span class="amp">
-    // Final HTML: <span class="lt">A</span>...etc <br/><span class="amp">—</span><span class="lt">A</span>...
-    const first = 'Aython';
-    const last  = 'Aurelius';
-    function wrap(word, delayStart){
-      return [...word].map((ch,i) =>
-        `<span class="lt" style="animation-delay:${delayStart + i*0.06}s">${ch}</span>`
-      ).join('');
-    }
-    el.innerHTML =
-      wrap(first, 0.3)
-      + '<br/>'
-      + '<span class="amp" style="animation-delay:'+(0.3+first.length*0.06)+'s">—</span>'
-      + wrap(last, 0.3 + first.length*0.06 + 0.18);
+    const text = 'Aython · Ashvail · Aurelius';
+    let delay = 0.3;
+    el.innerHTML = [...text].map((ch) => {
+      const d = (delay += 0.05).toFixed(2);
+      if (ch === ' ') return `<span class="lt sp" style="animation-delay:${d}s"> </span>`;
+      if (ch === '·') return `<span class="amp" style="animation-delay:${d}s">·</span>`;
+      return `<span class="lt" style="animation-delay:${d}s">${ch}</span>`;
+    }).join('');
   })();
 
   // ====== 2. Drifting dust motes ======

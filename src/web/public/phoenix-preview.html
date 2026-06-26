@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Phoenix 3D — Dermogorgon's Power</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  html, body { margin:0; height:100%; background:#020616; color:#f3e6d2; font-family:system-ui, sans-serif; overflow:hidden; }
+  body {
+    background:
+      radial-gradient(900px 600px at 50% 10%, rgba(40,120,255,0.20), transparent 70%),
+      radial-gradient(700px 500px at 50% 100%, rgba(0,10,40,0.7), transparent 60%),
+      #020616;
+  }
+  #app { position:fixed; inset:0; }
+  canvas { display:block; width:100%; height:100%; }
+  .hud {
+    position:fixed; top:14px; left:14px; z-index:10;
+    background:rgba(2,8,22,0.7); padding:10px 14px; border:1px solid #1a3055;
+    font-size:0.85rem; letter-spacing:0.04em; line-height:1.55;
+    backdrop-filter:blur(6px); max-width:280px;
+  }
+  .hud b { color:#5fbcff }
+  .hud .row { margin-top:6px; font-size:0.78rem; color:#a8b8d8 }
+  .ctrl {
+    position:fixed; top:14px; right:14px; z-index:10;
+    background:rgba(2,8,22,0.7); padding:10px 14px; border:1px solid #1a3055;
+    font-size:0.78rem; display:flex; flex-direction:column; gap:8px;
+    backdrop-filter:blur(6px);
+  }
+  .ctrl button {
+    background:#0a1428; border:1px solid #1a3055; color:#dfe8f8;
+    padding:6px 10px; font-family:inherit; font-size:0.75rem; cursor:pointer;
+    letter-spacing:0.06em;
+  }
+  .ctrl button:hover { background:#15244a; border-color:#5fbcff }
+  .ctrl label { display:flex; align-items:center; gap:8px; font-size:0.72rem; color:#a8b8d8 }
+  .status {
+    position:fixed; bottom:14px; left:14px; z-index:10;
+    font-size:0.75rem; color:#5a7095; letter-spacing:0.04em;
+    background:rgba(2,8,22,0.7); padding:6px 12px; border:1px solid #1a3055;
+  }
+</style>
+</head>
+<body>
+
+<div class="hud">
+  <b>Phoenix 3D — Dermogorgon's Power</b>
+  <div class="row">Drag to rotate · Scroll to zoom · Right-drag to pan</div>
+  <div class="row" id="info">Loading <code>/assets/folio/phoenix.glb</code> …</div>
+</div>
+
+<div class="ctrl">
+  <button id="auto">Toggle auto-rotate</button>
+  <button id="reset">Reset camera</button>
+  <button id="wire">Toggle wireframe</button>
+  <button id="fx">Toggle fire FX</button>
+  <label><input type="checkbox" id="bg" /> Light background</label>
+</div>
+
+<div id="app"></div>
+<div class="status" id="status">Initializing…</div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "/vendor/three/three.module.js",
+    "three/addons/": "/vendor/three/addons/"
+  }
+}
+</script>
+
+<script type="module">
+  import * as THREE from 'three';
+  import { GLTFLoader }   from 'three/addons/loaders/GLTFLoader.js';
+  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+  const status = document.getElementById('status');
+  const info   = document.getElementById('info');
+  const setStatus = (s) => { status.textContent = s };
+
+  const scene = new THREE.Scene();
+  scene.background = null;
+
+  const camera = new THREE.PerspectiveCamera(40, innerWidth/innerHeight, 0.1, 100);
+  camera.position.set(0, 1.5, 6);
+
+  const renderer = new THREE.WebGLRenderer({ antialias:true, alpha:true });
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.setSize(innerWidth, innerHeight);
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  document.getElementById('app').appendChild(renderer.domElement);
+
+  // Lighting — cobalt-cyan blue phoenix palette
+  scene.add(new THREE.AmbientLight(0x0a1830, 0.8));
+  const key = new THREE.DirectionalLight(0x60bcff, 1.6);
+  key.position.set(3, 5, 4); scene.add(key);
+  const ember = new THREE.PointLight(0x2090ff, 1.8, 14);
+  ember.position.set(0, 1, 2); scene.add(ember);
+  const rim = new THREE.PointLight(0x40e0ff, 1.2, 10);
+  rim.position.set(-3, 2, -2); scene.add(rim);
+  const fill = new THREE.DirectionalLight(0x6040a0, 0.4);
+  fill.position.set(-4, -1, 3); scene.add(fill);
+
+  // Floor grid (faint)
+  const grid = new THREE.GridHelper(8, 16, 0x1a3055, 0x081628);
+  grid.position.y = -1.5; scene.add(grid);
+
+  // Controls
+  const controls = new OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.06;
+  controls.target.set(0, 0.3, 0);
+  controls.autoRotate = true;
+  controls.autoRotateSpeed = 1.2;
+
+  // ── Fire FX (procedural particles + aura) ──
+  let phoenix = null, fxOn = true;
+  let fxGroup = new THREE.Group();
+  scene.add(fxGroup);
+
+  // Aura sprite — cyan blue flame
+  const auraCanvas = document.createElement('canvas');
+  auraCanvas.width = auraCanvas.height = 512;
+  const ax = auraCanvas.getContext('2d');
+  const ag = ax.createRadialGradient(256,256, 20, 256,256, 256);
+  ag.addColorStop(0.00, 'rgba(180,220,255,0.85)');
+  ag.addColorStop(0.25, 'rgba(60,160,255,0.6)');
+  ag.addColorStop(0.55, 'rgba(20,60,180,0.3)');
+  ag.addColorStop(1.00, 'rgba(0,0,0,0)');
+  ax.fillStyle = ag; ax.fillRect(0,0,512,512);
+  const auraTex = new THREE.CanvasTexture(auraCanvas);
+  const aura = new THREE.Sprite(new THREE.SpriteMaterial({
+    map: auraTex, transparent:true, blending: THREE.AdditiveBlending,
+    depthWrite:false, opacity: 0.8
+  }));
+  aura.scale.set(5.5, 5.5, 1);
+  fxGroup.add(aura);
+
+  // Ember particles
+  const EMBER_COUNT = 220;
+  const eGeo = new THREE.BufferGeometry();
+  const ePos = new Float32Array(EMBER_COUNT * 3);
+  const eVel = new Float32Array(EMBER_COUNT * 3);
+  const eAge = new Float32Array(EMBER_COUNT);
+  const eLife = new Float32Array(EMBER_COUNT);
+  for (let i = 0; i < EMBER_COUNT; i++) initEmber(i);
+  function initEmber(i){
+    ePos[i*3]   = (Math.random()-0.5) * 3.0;
+    ePos[i*3+1] = -0.8 + Math.random() * 0.4;
+    ePos[i*3+2] = (Math.random()-0.5) * 1.5;
+    eVel[i*3]   = (Math.random()-0.5) * 0.3;
+    eVel[i*3+1] = 0.4 + Math.random() * 0.7;
+    eVel[i*3+2] = (Math.random()-0.5) * 0.3;
+    eAge[i] = Math.random() * 3;
+    eLife[i] = 2.5 + Math.random() * 2;
+  }
+  eGeo.setAttribute('position', new THREE.BufferAttribute(ePos, 3));
+
+  const emberTexCanvas = document.createElement('canvas');
+  emberTexCanvas.width = emberTexCanvas.height = 64;
+  const ec = emberTexCanvas.getContext('2d');
+  const eg = ec.createRadialGradient(32,32, 2, 32,32, 32);
+  eg.addColorStop(0, 'rgba(220,240,255,1)');
+  eg.addColorStop(0.4, 'rgba(80,180,255,0.8)');
+  eg.addColorStop(1, 'rgba(20,40,150,0)');
+  ec.fillStyle = eg; ec.fillRect(0,0,64,64);
+  const emberTex = new THREE.CanvasTexture(emberTexCanvas);
+
+  const embers = new THREE.Points(eGeo, new THREE.PointsMaterial({
+    size: 0.18, map: emberTex, transparent:true, blending: THREE.AdditiveBlending,
+    depthWrite:false, vertexColors:false, color:0x60bcff
+  }));
+  fxGroup.add(embers);
+
+  // Load model
+  setStatus('Loading GLB…');
+  new GLTFLoader().load('/assets/folio/phoenix.glb', (gltf) => {
+    phoenix = gltf.scene;
+    const box = new THREE.Box3().setFromObject(phoenix);
+    const size = box.getSize(new THREE.Vector3());
+    const center = box.getCenter(new THREE.Vector3());
+    phoenix.position.sub(center);
+    phoenix.scale.setScalar(3.0 / size.length());
+    scene.add(phoenix);
+
+    // Subtle blue emissive glow on the bird itself
+    phoenix.traverse((o) => {
+      if (o.isMesh && o.material) {
+        o.material.emissive = new THREE.Color(0x0a2a55);
+        o.material.emissiveIntensity = 0.45;
+      }
+    });
+
+    let meshCount = 0, vertCount = 0;
+    phoenix.traverse((o) => { if (o.isMesh){ meshCount++; vertCount += o.geometry.attributes.position.count; }});
+    info.innerHTML =
+      `Loaded · <b>${meshCount}</b> mesh · <b>${vertCount.toLocaleString()}</b> verts<br/>` +
+      `bounds: ${size.x.toFixed(2)} × ${size.y.toFixed(2)} × ${size.z.toFixed(2)}`;
+    setStatus('Ready — drag to rotate');
+  },
+  (xhr) => { if (xhr.lengthComputable) setStatus(`Loading… ${(xhr.loaded/xhr.total*100).toFixed(0)}%`); },
+  (err) => { console.error(err); info.innerHTML = '<span style="color:#ff6030">Load failed</span>'; setStatus('Error'); });
+
+  addEventListener('resize', () => {
+    camera.aspect = innerWidth/innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(innerWidth, innerHeight);
+  });
+
+  // Render loop
+  const clock = new THREE.Clock();
+  function tick(){
+    requestAnimationFrame(tick);
+    const dt = Math.min(clock.getDelta(), 0.05);
+    controls.update();
+
+    if (fxOn){
+      // Aura pulse
+      const t = clock.elapsedTime;
+      aura.scale.x = aura.scale.y = 5.5 + Math.sin(t * 1.2) * 0.35;
+      aura.material.opacity = 0.75 + Math.sin(t * 1.5) * 0.15;
+
+      // Ember update
+      for (let i = 0; i < EMBER_COUNT; i++){
+        eAge[i] += dt;
+        if (eAge[i] > eLife[i]) initEmber(i);
+        ePos[i*3]   += eVel[i*3]   * dt;
+        ePos[i*3+1] += eVel[i*3+1] * dt;
+        ePos[i*3+2] += eVel[i*3+2] * dt;
+        eVel[i*3+1] *= (1 - dt * 0.4);   // gentle drag
+      }
+      eGeo.attributes.position.needsUpdate = true;
+    }
+
+    if (phoenix){
+      phoenix.position.y = Math.sin(clock.elapsedTime * 1.1) * 0.08;
+    }
+
+    renderer.render(scene, camera);
+  }
+  tick();
+
+  // Controls
+  document.getElementById('auto').onclick = () => { controls.autoRotate = !controls.autoRotate };
+  document.getElementById('reset').onclick = () => {
+    camera.position.set(0, 1.5, 6); controls.target.set(0, 0.3, 0); controls.update();
+  };
+  document.getElementById('wire').onclick = () => {
+    if (!phoenix) return;
+    phoenix.traverse((o) => { if (o.isMesh && o.material) o.material.wireframe = !o.material.wireframe });
+  };
+  document.getElementById('fx').onclick = () => {
+    fxOn = !fxOn;
+    fxGroup.visible = fxOn;
+  };
+  document.getElementById('bg').onchange = (e) => {
+    document.body.style.background = e.target.checked
+      ? '#b8c8e0'
+      : 'radial-gradient(900px 600px at 50% 10%, rgba(40,120,255,0.20), transparent 70%), radial-gradient(700px 500px at 50% 100%, rgba(0,10,40,0.7), transparent 60%), #020616';
+  };
+</script>
+
+</body>
+</html>

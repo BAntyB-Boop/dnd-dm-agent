@@ -55,6 +55,10 @@
   <button id="reset">Reset camera</button>
   <button id="wire">Toggle wireframe</button>
   <button id="fx">Toggle fire FX</button>
+  <button id="bloom">Toggle bloom</button>
+  <label>Bloom strength
+    <input type="range" id="bloomStrength" min="0" max="3" step="0.1" value="1.1" style="width:90px">
+  </label>
   <label><input type="checkbox" id="bg" /> Light background</label>
 </div>
 
@@ -72,8 +76,11 @@
 
 <script type="module">
   import * as THREE from 'three';
-  import { GLTFLoader }   from 'three/addons/loaders/GLTFLoader.js';
-  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+  import { GLTFLoader }     from 'three/addons/loaders/GLTFLoader.js';
+  import { OrbitControls }   from 'three/addons/controls/OrbitControls.js';
+  import { EffectComposer }  from 'three/addons/postprocessing/EffectComposer.js';
+  import { RenderPass }      from 'three/addons/postprocessing/RenderPass.js';
+  import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 
   const status = document.getElementById('status');
   const info   = document.getElementById('info');
@@ -89,7 +96,36 @@
   renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
   renderer.setSize(innerWidth, innerHeight);
   renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.1;
   document.getElementById('app').appendChild(renderer.domElement);
+
+  // ── Procedural environment map (cubemap-like sphere for reflections) ──
+  // Generate a small canvas with the cobalt/cyan gradient and use as EquirectangularReflectionMap
+  const envCanvas = document.createElement('canvas');
+  envCanvas.width = 1024; envCanvas.height = 512;
+  const envCtx = envCanvas.getContext('2d');
+  const envGrad = envCtx.createLinearGradient(0, 0, 0, 512);
+  envGrad.addColorStop(0.00, '#0a1a40');
+  envGrad.addColorStop(0.35, '#1850b0');
+  envGrad.addColorStop(0.55, '#60bcff');
+  envGrad.addColorStop(0.80, '#1a2050');
+  envGrad.addColorStop(1.00, '#000510');
+  envCtx.fillStyle = envGrad; envCtx.fillRect(0, 0, 1024, 512);
+  // sprinkle bright spots
+  for (let i = 0; i < 80; i++){
+    const x = Math.random() * 1024, y = Math.random() * 512;
+    const r = 4 + Math.random() * 14;
+    const g = envCtx.createRadialGradient(x, y, 1, x, y, r);
+    g.addColorStop(0, 'rgba(180,230,255,0.7)');
+    g.addColorStop(1, 'rgba(180,230,255,0)');
+    envCtx.fillStyle = g;
+    envCtx.beginPath(); envCtx.arc(x, y, r, 0, Math.PI*2); envCtx.fill();
+  }
+  const envTex = new THREE.CanvasTexture(envCanvas);
+  envTex.mapping = THREE.EquirectangularReflectionMap;
+  envTex.colorSpace = THREE.SRGBColorSpace;
+  scene.environment = envTex;
 
   // Lighting — cobalt-cyan blue phoenix palette
   scene.add(new THREE.AmbientLight(0x0a1830, 0.8));
@@ -184,12 +220,29 @@
     phoenix.scale.setScalar(3.0 / size.length());
     scene.add(phoenix);
 
-    // Subtle blue emissive glow on the bird itself
+    // Upgrade materials to MeshPhysicalMaterial with clearcoat + env reflection
     phoenix.traverse((o) => {
-      if (o.isMesh && o.material) {
-        o.material.emissive = new THREE.Color(0x0a2a55);
-        o.material.emissiveIntensity = 0.45;
-      }
+      if (!o.isMesh || !o.material) return;
+      const old = o.material;
+      const m = new THREE.MeshPhysicalMaterial({
+        map: old.map || null,
+        color: old.color || new THREE.Color(0xffffff),
+        roughness: 0.42,
+        metalness: 0.35,
+        clearcoat: 0.85,
+        clearcoatRoughness: 0.18,
+        sheen: 1.0,
+        sheenColor: new THREE.Color(0x4080ff),
+        sheenRoughness: 0.6,
+        emissive: new THREE.Color(0x0a2a60),
+        emissiveIntensity: 0.55,
+        envMap: envTex,
+        envMapIntensity: 1.2
+      });
+      // copy emissive map if old material had it
+      if (old.emissiveMap) m.emissiveMap = old.emissiveMap;
+      o.material = m;
+      o.castShadow = false; o.receiveShadow = false;
     });
 
     let meshCount = 0, vertCount = 0;
@@ -202,10 +255,22 @@
   (xhr) => { if (xhr.lengthComputable) setStatus(`Loading… ${(xhr.loaded/xhr.total*100).toFixed(0)}%`); },
   (err) => { console.error(err); info.innerHTML = '<span style="color:#ff6030">Load failed</span>'; setStatus('Error'); });
 
+  // ── Bloom postprocessing ──
+  const composer = new EffectComposer(renderer);
+  composer.addPass(new RenderPass(scene, camera));
+  const bloom = new UnrealBloomPass(
+    new THREE.Vector2(innerWidth, innerHeight),
+    1.1,    // strength
+    0.85,   // radius
+    0.18    // threshold (lower = more pixels bloom)
+  );
+  composer.addPass(bloom);
+
   addEventListener('resize', () => {
     camera.aspect = innerWidth/innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(innerWidth, innerHeight);
+    composer.setSize(innerWidth, innerHeight);
   });
 
   // Render loop
@@ -235,9 +300,15 @@
 
     if (phoenix){
       phoenix.position.y = Math.sin(clock.elapsedTime * 1.1) * 0.08;
+      // Subtle emissive pulse for "alive flame" feel
+      phoenix.traverse((o) => {
+        if (o.isMesh && o.material && 'emissiveIntensity' in o.material) {
+          o.material.emissiveIntensity = 0.55 + Math.sin(clock.elapsedTime * 2.3) * 0.2;
+        }
+      });
     }
 
-    renderer.render(scene, camera);
+    composer.render();
   }
   tick();
 
@@ -253,6 +324,12 @@
   document.getElementById('fx').onclick = () => {
     fxOn = !fxOn;
     fxGroup.visible = fxOn;
+  };
+  document.getElementById('bloom').onclick = () => {
+    bloom.enabled = !bloom.enabled;
+  };
+  document.getElementById('bloomStrength').oninput = (e) => {
+    bloom.strength = parseFloat(e.target.value);
   };
   document.getElementById('bg').onchange = (e) => {
     document.body.style.background = e.target.checked

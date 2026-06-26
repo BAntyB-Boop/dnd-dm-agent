@@ -1268,9 +1268,132 @@ body.chronicle-open{overflow:hidden}
   .scene-num{font-size:2.4rem}
   .scene-title-en{font-size:1.3rem}
 }
+
+/* ════════════════ GRIMOIRE 3D — Floating Button + Modal ════════════════ */
+.grimoire-fab{
+  position:fixed;right:24px;bottom:84px;z-index:60;
+  width:72px;height:72px;border-radius:50%;
+  border:2px solid var(--gold);background:#08091a;
+  cursor:pointer;padding:0;overflow:hidden;
+  box-shadow:0 6px 24px rgba(0,0,0,0.6), 0 0 0 0 rgba(74,110,255,0.5);
+  transition:transform .35s cubic-bezier(.34,1.56,.64,1), border-color .3s, box-shadow .3s;
+  animation:grim-fab-pulse 3.4s ease-in-out infinite;
+}
+.grimoire-fab img{
+  width:100%;height:100%;object-fit:cover;
+  filter:contrast(1.05) saturate(0.9) drop-shadow(0 2px 4px rgba(0,0,0,0.7));
+  transition:transform 0.5s;
+}
+.grimoire-fab-glow{
+  position:absolute;inset:-4px;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle, rgba(74,110,255,0.4), transparent 70%);
+  opacity:0;transition:opacity 0.4s;
+}
+.grimoire-fab-label{
+  position:absolute;left:50%;bottom:-8px;transform:translateX(-50%);
+  background:var(--gold);color:#08091a;
+  font-family:"Cinzel",serif;font-size:0.55rem;letter-spacing:0.22em;font-weight:700;
+  padding:3px 9px;border-radius:9px;line-height:1;
+  box-shadow:0 3px 8px rgba(0,0,0,0.6);
+  white-space:nowrap;
+}
+.grimoire-fab:hover{
+  transform:scale(1.08);border-color:var(--azure-bright);
+  box-shadow:0 10px 32px rgba(0,0,0,0.7), 0 0 36px rgba(74,110,255,0.55);
+}
+.grimoire-fab:hover img{transform:scale(1.12)}
+.grimoire-fab:hover .grimoire-fab-glow{opacity:1}
+@keyframes grim-fab-pulse{
+  0%,100%{box-shadow:0 6px 24px rgba(0,0,0,0.6), 0 0 0 0 rgba(74,110,255,0.0)}
+  50%    {box-shadow:0 6px 24px rgba(0,0,0,0.6), 0 0 0 14px rgba(74,110,255,0.2)}
+}
+@media (max-width:600px){
+  .grimoire-fab{width:56px;height:56px;right:14px;bottom:72px}
+  .grimoire-fab-label{font-size:0.46rem;letter-spacing:0.18em}
+}
+
+.grimoire-modal{
+  position:fixed;inset:0;z-index:9000;
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;
+  transition:opacity 0.4s ease;
+}
+.grimoire-modal.open{opacity:1;pointer-events:auto}
+.grimoire-modal-backdrop{
+  position:absolute;inset:0;
+  background:radial-gradient(ellipse at center, rgba(20,30,80,0.85), rgba(0,0,0,0.95) 75%);
+  backdrop-filter:blur(10px);
+  cursor:pointer;
+}
+.grimoire-modal-stage{
+  position:relative;
+  width:min(900px, 92vw);height:min(640px, 84vh);
+  background:radial-gradient(ellipse at center, #0a0e26 0%, #04050d 80%);
+  border:1px solid var(--gold-dim);
+  box-shadow:0 30px 80px rgba(0,0,0,0.85), inset 0 0 50px rgba(74,110,255,0.08);
+  transform:scale(0.94);opacity:0;
+  transition:transform 0.5s cubic-bezier(.34,1.56,.64,1), opacity 0.4s;
+  overflow:hidden;
+}
+.grimoire-modal.open .grimoire-modal-stage{transform:scale(1);opacity:1}
+.grimoire-modal-stage canvas{
+  position:absolute;inset:0;width:100%;height:100%;display:block;
+  cursor:grab;
+}
+.grimoire-modal-stage canvas:active{cursor:grabbing}
+.grimoire-modal-title{
+  position:absolute;left:50%;top:18px;transform:translateX(-50%);
+  font-family:"Cinzel",serif;letter-spacing:0.28em;text-transform:uppercase;
+  font-size:0.66rem;color:var(--gold);
+  text-shadow:0 2px 8px rgba(0,0,0,0.9);pointer-events:none;
+  white-space:nowrap;z-index:3;
+}
+.grimoire-modal-hint{
+  position:absolute;left:50%;bottom:16px;transform:translateX(-50%);
+  font-family:"Cormorant Garamond",serif;font-style:italic;
+  font-size:0.78rem;color:var(--ink-mute);
+  pointer-events:none;z-index:3;
+}
+.grimoire-modal-close{
+  position:absolute;right:12px;top:12px;z-index:5;
+  width:36px;height:36px;border-radius:50%;
+  background:rgba(8,9,26,0.85);border:1px solid var(--gold-dim);
+  color:var(--ink-soft);cursor:pointer;font-size:1rem;
+  display:flex;align-items:center;justify-content:center;
+  transition:color .3s, border-color .3s, transform .3s;
+}
+.grimoire-modal-close:hover{color:var(--gold-bright);border-color:var(--gold);transform:rotate(90deg)}
+.grimoire-modal-spin{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:36px;height:36px;border:2px solid rgba(212,183,106,0.18);
+  border-top-color:var(--gold);border-radius:50%;
+  animation:grim-spin 0.9s linear infinite;z-index:4;
+  opacity:0;transition:opacity 0.3s;
+}
+.grimoire-modal.loading .grimoire-modal-spin{opacity:1}
+.grimoire-modal.ready .grimoire-modal-spin{opacity:0}
+@keyframes grim-spin{to{transform:translate(-50%,-50%) rotate(360deg)}}
 </style>
 </head>
 <body>
+
+<!-- ════════════ GRIMOIRE 3D — Floating button opens modal ════════════ -->
+<button class="grimoire-fab" id="grimoireFab" aria-label="View 3D Grimoire — Crimson Gem Codex">
+  <img src="/assets/folio/grimoire-portrait.png" alt="">
+  <span class="grimoire-fab-glow"></span>
+  <span class="grimoire-fab-label">Grimoire</span>
+</button>
+
+<div class="grimoire-modal" id="grimoireModal" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="grimoire-modal-backdrop" id="grimoireBackdrop"></div>
+  <div class="grimoire-modal-stage">
+    <button class="grimoire-modal-close" id="grimoireClose" aria-label="Close">✕</button>
+    <div class="grimoire-modal-title">— Crimson Gem Codex · the Tome of Azure Flame —</div>
+    <span class="grimoire-modal-spin" aria-hidden="true"></span>
+    <canvas id="grimoireCanvas"></canvas>
+    <div class="grimoire-modal-hint">drag to rotate · scroll to zoom · auto-rotates</div>
+  </div>
+</div>
 
 <!-- Background music -->
 <audio id="bg-audio" src="/assets/codex-of-stars.mp3" loop preload="auto"></audio>
@@ -2211,5 +2334,200 @@ body.chronicle-open{overflow:hidden}
   });
 })();
 </script>
+
+<!-- ════════════════════ THREE.JS — Grimoire 3D Popup ════════════════════ -->
+<script type="importmap">
+{
+  "imports": {
+    "three": "/vendor/three/three.module.js",
+    "three/addons/": "/vendor/three/addons/"
+  }
+}
+</script>
+
+<script type="module">
+  const fab      = document.getElementById('grimoireFab');
+  const modal    = document.getElementById('grimoireModal');
+  const close    = document.getElementById('grimoireClose');
+  const backdrop = document.getElementById('grimoireBackdrop');
+  const canvas   = document.getElementById('grimoireCanvas');
+  if (!fab || !modal || !canvas) {
+    console.warn('[grimoire3d] missing elements');
+  } else {
+    let inited = false;
+    let onScreen = false;
+    let api = null;
+
+    function open(){
+      modal.classList.add('open', 'loading');
+      modal.setAttribute('aria-hidden', 'false');
+      onScreen = true;
+      if (!inited){ inited = true; init().catch(e => console.warn('[grimoire3d] init fail', e)); }
+      else if (api) api.resize();
+      document.body.style.overflow = 'hidden';
+    }
+    function dismiss(){
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden', 'true');
+      onScreen = false;
+      document.body.style.overflow = '';
+    }
+    fab.addEventListener('click', open);
+    close.addEventListener('click', dismiss);
+    backdrop.addEventListener('click', dismiss);
+    addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal.classList.contains('open')) dismiss();
+    });
+
+    async function init(){
+      console.log('[grimoire3d] loading three.js…');
+      const THREE = await import('three');
+      const { GLTFLoader }    = await import('three/addons/loaders/GLTFLoader.js');
+      const { OrbitControls } = await import('three/addons/controls/OrbitControls.js');
+      const { EffectComposer }  = await import('three/addons/postprocessing/EffectComposer.js');
+      const { RenderPass }      = await import('three/addons/postprocessing/RenderPass.js');
+      const { UnrealBloomPass } = await import('three/addons/postprocessing/UnrealBloomPass.js');
+
+      const scene = new THREE.Scene();
+      scene.background = null;
+
+      const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 100);
+      camera.position.set(0, 0.5, 5.5);
+
+      const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:true });
+      renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+      renderer.outputColorSpace = THREE.SRGBColorSpace;
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.15;
+
+      // Procedural environment (cobalt + gold) for reflections
+      const envCanvas = document.createElement('canvas');
+      envCanvas.width = 1024; envCanvas.height = 512;
+      const ec = envCanvas.getContext('2d');
+      const eg = ec.createLinearGradient(0, 0, 0, 512);
+      eg.addColorStop(0.00, '#06070d');
+      eg.addColorStop(0.35, '#152a80');
+      eg.addColorStop(0.55, '#4a6eff');
+      eg.addColorStop(0.80, '#1a1c30');
+      eg.addColorStop(1.00, '#000208');
+      ec.fillStyle = eg; ec.fillRect(0, 0, 1024, 512);
+      // gold sparkles
+      for (let i = 0; i < 60; i++){
+        const x = Math.random() * 1024, y = Math.random() * 512;
+        const r = 3 + Math.random() * 12;
+        const g = ec.createRadialGradient(x, y, 1, x, y, r);
+        g.addColorStop(0, 'rgba(240,216,150,0.75)');
+        g.addColorStop(1, 'rgba(240,216,150,0)');
+        ec.fillStyle = g;
+        ec.beginPath(); ec.arc(x, y, r, 0, Math.PI*2); ec.fill();
+      }
+      const envTex = new THREE.CanvasTexture(envCanvas);
+      envTex.mapping = THREE.EquirectangularReflectionMap;
+      envTex.colorSpace = THREE.SRGBColorSpace;
+      scene.environment = envTex;
+
+      // Lighting — gold key + azure rim
+      scene.add(new THREE.AmbientLight(0x1a1c30, 0.7));
+      const key = new THREE.DirectionalLight(0xfff0c8, 1.6);
+      key.position.set(3, 5, 4); scene.add(key);
+      const rim = new THREE.PointLight(0x4a6eff, 1.4, 14);
+      rim.position.set(-3, 2, -2); scene.add(rim);
+      const gem = new THREE.PointLight(0xff3030, 0.9, 6);   // red glow from ruby
+      gem.position.set(0, 0.3, 1.5); scene.add(gem);
+      const fill = new THREE.DirectionalLight(0xa8b0c8, 0.4);
+      fill.position.set(-4, -1, 3); scene.add(fill);
+
+      // Controls
+      const controls = new OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.06;
+      controls.autoRotate = true;
+      controls.autoRotateSpeed = 0.7;
+      controls.enablePan = false;
+      controls.minDistance = 2.5;
+      controls.maxDistance = 12;
+
+      // Load grimoire
+      let book = null;
+      new GLTFLoader().load('/assets/folio/grimoire.glb',
+        (gltf) => {
+          book = gltf.scene;
+          const box = new THREE.Box3().setFromObject(book);
+          const size = box.getSize(new THREE.Vector3());
+          const sizeLen = size.length();
+          const center = box.getCenter(new THREE.Vector3());
+          book.position.sub(center);
+          book.scale.setScalar(3.0 / sizeLen);
+          // Upgrade materials for glossy clearcoat
+          book.traverse((o) => {
+            if (!o.isMesh || !o.material) return;
+            const old = o.material;
+            const m = new THREE.MeshPhysicalMaterial({
+              map: old.map || null,
+              color: old.color || new THREE.Color(0xffffff),
+              roughness: 0.45,
+              metalness: 0.55,
+              clearcoat: 0.7,
+              clearcoatRoughness: 0.25,
+              emissive: new THREE.Color(0x100408),
+              emissiveIntensity: 0.3,
+              envMap: envTex,
+              envMapIntensity: 1.4
+            });
+            if (old.normalMap) m.normalMap = old.normalMap;
+            if (old.roughnessMap) m.roughnessMap = old.roughnessMap;
+            if (old.metalnessMap) m.metalnessMap = old.metalnessMap;
+            if (old.emissiveMap) m.emissiveMap = old.emissiveMap;
+            o.material = m;
+          });
+          scene.add(book);
+          modal.classList.remove('loading');
+          modal.classList.add('ready');
+          console.log('[grimoire3d] GLB loaded');
+        },
+        (xhr) => {
+          if (xhr.lengthComputable) console.log(`[grimoire3d] ${(xhr.loaded/xhr.total*100).toFixed(0)}%`);
+        },
+        (err) => {
+          console.error('[grimoire3d] load failed', err);
+          modal.classList.remove('loading');
+        }
+      );
+
+      // Bloom postprocessing
+      const composer = new EffectComposer(renderer);
+      composer.addPass(new RenderPass(scene, camera));
+      const bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), 0.7, 0.7, 0.3);
+      composer.addPass(bloom);
+
+      function resize(){
+        const w = canvas.clientWidth, h = canvas.clientHeight;
+        if (!w || !h) return;
+        renderer.setSize(w, h, false);
+        composer.setSize(w, h);
+        camera.aspect = w/h; camera.updateProjectionMatrix();
+      }
+      resize();
+      addEventListener('resize', resize);
+      api = { resize };
+
+      const clock = new THREE.Clock();
+      function tick(){
+        requestAnimationFrame(tick);
+        if (!onScreen) return;
+        const t = clock.getElapsedTime();
+        controls.update();
+        if (book){
+          book.position.y = Math.sin(t * 0.9) * 0.05;
+          // Pulse the ruby (gem light + emissive)
+          gem.intensity = 0.9 + Math.sin(t * 2.2) * 0.45;
+        }
+        composer.render();
+      }
+      tick();
+    }
+  }
+</script>
+
 </body>
 </html>

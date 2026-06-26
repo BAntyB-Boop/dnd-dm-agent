@@ -1060,12 +1060,167 @@ body.cellar .gilt-corner{color:var(--wine-deep);opacity:0.65}
   opacity:0;transition:opacity 1.2s ease;
 }
 .cabinet-3d canvas.visible{opacity:1}
+.cabinet-3d .c3d-spin{
+  position:absolute;left:50%;top:50%;
+  width:22px;height:22px;margin:-11px 0 0 -11px;
+  border:2px solid rgba(214,163,96,0.18);
+  border-top-color:var(--gold);border-radius:50%;
+  animation:c3d-spin 0.9s linear infinite;
+  opacity:0;transition:opacity 0.3s ease 0.4s;
+  z-index:2;pointer-events:none;
+}
+.cabinet-3d.loading .c3d-spin{opacity:0.85}
+.cabinet-3d.ready .c3d-spin,.cabinet-3d.failed .c3d-spin{opacity:0;transition:opacity 0.3s}
+.cabinet-3d .c3d-text{
+  position:absolute;left:50%;bottom:8px;transform:translateX(-50%);
+  font-family:"Cinzel",serif;font-size:0.48rem;letter-spacing:0.24em;text-transform:uppercase;
+  color:rgba(214,163,96,0.55);
+  opacity:0;transition:opacity 0.3s ease 0.4s;
+  pointer-events:none;white-space:nowrap;
+}
+.cabinet-3d.loading .c3d-text{opacity:0.8}
+.cabinet-3d.ready .c3d-text,.cabinet-3d.failed .c3d-text{opacity:0}
+@keyframes c3d-spin{to{transform:rotate(360deg)}}
 
 /* ── Encore pulse on easter egg ── */
 .encore-triggered{animation:encore-pulse 1.4s ease-out 1}
 @keyframes encore-pulse{
   0%{box-shadow:0 0 0 0 rgba(214,163,96,0.7)}
   100%{box-shadow:0 0 0 60px rgba(214,163,96,0)}
+}
+
+/* ════════════ SIGNET RING POPUP — click cabinet item to inspect ════════════ */
+.item.signet-clickable{
+  cursor:pointer;position:relative;
+  transition:border-color .35s, background .35s, transform .35s;
+}
+.item.signet-clickable:hover{
+  border-color:var(--gold);background:rgba(214,163,96,0.04);
+  transform:translateY(-2px);
+}
+.item.signet-clickable .signet-hover-tag{
+  position:absolute;left:50%;bottom:6px;transform:translateX(-50%);
+  background:rgba(8,4,4,0.92);color:var(--gold);
+  font-family:"Cinzel",serif;font-size:0.52rem;letter-spacing:0.24em;
+  padding:4px 10px;border:1px solid var(--gold-dim);
+  opacity:0;pointer-events:none;transition:opacity 0.35s, transform 0.35s;
+  white-space:nowrap;text-transform:uppercase;
+}
+.item.signet-clickable:hover .signet-hover-tag{
+  opacity:1;transform:translateX(-50%) translateY(-4px);
+}
+
+/* Modal */
+.signet-modal{
+  position:fixed;inset:0;z-index:9100;
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;
+  transition:opacity 0.4s ease;
+}
+.signet-modal.open{opacity:1;pointer-events:auto}
+.signet-modal-backdrop{
+  position:absolute;inset:0;
+  background:radial-gradient(ellipse at center, rgba(40,24,8,0.85), rgba(0,0,0,0.95) 75%);
+  backdrop-filter:blur(10px);cursor:pointer;
+}
+.signet-modal-stage{
+  position:relative;
+  width:min(1100px, 94vw);height:min(680px, 86vh);
+  background:radial-gradient(ellipse at center, #15100a 0%, #050404 80%);
+  border:1px solid var(--gold-dim);
+  box-shadow:0 30px 80px rgba(0,0,0,0.85), inset 0 0 60px rgba(214,163,96,0.06);
+  transform:scale(0.94);opacity:0;
+  transition:transform 0.5s cubic-bezier(.34,1.56,.64,1), opacity 0.4s;
+  overflow:hidden;
+  display:grid;grid-template-columns:1.2fr 1fr;
+}
+.signet-modal.open .signet-modal-stage{transform:scale(1);opacity:1}
+.signet-modal-3d{
+  position:relative;
+  background:radial-gradient(ellipse at center, #1a120a 0%, #0a0606 80%);
+  overflow:hidden;
+}
+.signet-modal-3d canvas{
+  position:absolute;inset:0;width:100%;height:100%;display:block;
+  cursor:grab;
+}
+.signet-modal-3d canvas:active{cursor:grabbing}
+.signet-modal-text{
+  padding:48px 38px 36px;
+  display:flex;flex-direction:column;
+  background:linear-gradient(135deg, rgba(214,163,96,0.04), transparent 60%);
+  border-left:1px solid var(--gold-deep);
+  overflow-y:auto;
+}
+.signet-modal-text .eyebrow{
+  font-family:"Cinzel",serif;font-size:0.6rem;letter-spacing:0.36em;
+  text-transform:uppercase;color:var(--gold);margin-bottom:14px;
+}
+.signet-modal-text h2{
+  font-family:"Playfair Display",serif;font-style:italic;
+  font-size:2.0rem;font-weight:600;line-height:1.1;color:var(--candle);
+  margin-bottom:10px;
+}
+body.cellar .signet-modal-text h2{color:#f8d8c8}
+.signet-modal-text .motto{
+  font-family:"Cormorant Garamond",serif;font-style:italic;
+  font-size:1.08rem;color:var(--gold);
+  letter-spacing:0.05em;margin-bottom:22px;
+  border-bottom:1px solid var(--gold-deep);padding-bottom:18px;
+}
+.signet-modal-text .lore{
+  font-family:"Cormorant Garamond",serif;
+  font-size:1.02rem;line-height:1.75;color:var(--ink-soft);
+  flex:1;
+}
+.signet-modal-text .lore p{margin:0 0 0.9em}
+.signet-modal-text .lore em{color:var(--ink);font-style:italic}
+.signet-modal-text .lore .accent{color:var(--gold-bright)}
+.signet-modal-text .cta{
+  margin-top:18px;
+  display:inline-flex;align-items:center;gap:12px;
+  text-decoration:none;color:var(--gold);
+  font-family:"Cinzel",serif;font-size:0.62rem;letter-spacing:0.3em;text-transform:uppercase;
+  padding:11px 22px;border:1px solid var(--gold-dim);background:rgba(7,5,5,0.6);
+  align-self:flex-start;
+  transition:border-color .3s, color .3s, gap .3s;
+}
+.signet-modal-text .cta:hover{border-color:var(--gold);color:var(--candle);gap:18px}
+.signet-modal-text .cta::after{content:"→";font-family:serif;font-size:0.9rem;margin-left:4px}
+
+/* Heir/Disinherited mode-specific copies */
+.signet-modal .mode-heir{display:block}
+.signet-modal .mode-cellar{display:none}
+body.cellar .signet-modal .mode-heir{display:none}
+body.cellar .signet-modal .mode-cellar{display:block}
+
+.signet-modal-close{
+  position:absolute;right:12px;top:12px;z-index:5;
+  width:38px;height:38px;border-radius:50%;
+  background:rgba(8,5,4,0.9);border:1px solid var(--gold-dim);
+  color:var(--ink-soft);cursor:pointer;font-size:1rem;
+  display:flex;align-items:center;justify-content:center;
+  transition:color .3s, border-color .3s, transform .3s;
+}
+.signet-modal-close:hover{color:var(--gold-bright);border-color:var(--gold);transform:rotate(90deg)}
+
+.signet-modal-spin{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:36px;height:36px;border:2px solid rgba(214,163,96,0.18);
+  border-top-color:var(--gold);border-radius:50%;
+  animation:c3d-spin 0.9s linear infinite;z-index:3;
+  opacity:0;transition:opacity 0.3s;pointer-events:none;
+}
+.signet-modal.loading .signet-modal-spin{opacity:0.9}
+.signet-modal.ready .signet-modal-spin{opacity:0}
+
+@media (max-width:820px){
+  .signet-modal-stage{
+    grid-template-columns:1fr;grid-template-rows:55% 45%;
+    height:min(820px, 92vh);
+  }
+  .signet-modal-text{border-left:none;border-top:1px solid var(--gold-deep);padding:24px 22px}
+  .signet-modal-text h2{font-size:1.55rem}
 }
 </style>
 </head>
@@ -1355,10 +1510,15 @@ body.cellar .gilt-corner{color:var(--wine-deep);opacity:0.65}
           <div class="nm">Lyre</div>
           <div class="mt">hand-strung · for the salons</div>
         </div>
-        <div class="item">
-          <div class="cabinet-3d"><canvas id="ring-canvas"></canvas></div>
+        <div class="item signet-clickable" id="signetItem" role="button" tabindex="0" aria-label="Inspect the House Aurelius signet ring in 3D">
+          <div class="cabinet-3d" id="ring-host">
+            <span class="c3d-spin" aria-hidden="true"></span>
+            <span class="c3d-text" aria-hidden="true">Polishing…</span>
+            <canvas id="ring-canvas"></canvas>
+          </div>
           <div class="nm">Signet Ring</div>
           <div class="mt">crest of House Aurelius · refused to sell</div>
+          <span class="signet-hover-tag">Click to inspect</span>
         </div>
         <div class="item">
           <div class="gl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 3 L12 6 L16 3 L20 5 L18 9 L18 21 H6 V9 L4 5 Z"/><line x1="12" y1="6" x2="12" y2="21"/></svg></div>
@@ -1420,7 +1580,7 @@ body.cellar .gilt-corner{color:var(--wine-deep);opacity:0.65}
   </section>
 
   <!-- ============ ACT V — ANNALS ============ -->
-  <section class="act">
+  <section class="act" id="act5">
     <div class="act-head">
       <div class="wax-seal" aria-hidden="true">V</div>
       <div class="act-label">Act · V</div>
@@ -1864,17 +2024,62 @@ body.cellar .gilt-corner{color:var(--wine-deep);opacity:0.65}
 }
 </script>
 
+<!-- ════════════ SIGNET RING POPUP — modal triggered by cabinet click ════════════ -->
+<div class="signet-modal" id="signetModal" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="signet-modal-backdrop" id="signetBackdrop"></div>
+  <div class="signet-modal-stage">
+    <button class="signet-modal-close" id="signetClose" aria-label="Close">✕</button>
+
+    <!-- 3D viewer left -->
+    <div class="signet-modal-3d">
+      <span class="signet-modal-spin" aria-hidden="true"></span>
+      <canvas id="signetModalCanvas"></canvas>
+    </div>
+
+    <!-- Description right -->
+    <div class="signet-modal-text">
+      <div class="eyebrow">— Cabinet · Plate VI —</div>
+
+      <div class="mode-heir">
+        <h2>The Signet of House Aurelius</h2>
+        <div class="motto">"Altiora Petimus" — We aim higher</div>
+        <div class="lore">
+          <p>A gift from his mother on the day he came of age. Heavy <em>antique gold</em>, worn smooth by three generations of Aurelius hands before his own.</p>
+          <p>The crest: a heraldic <span class="accent">lion passant</span> beneath a twelve-rayed sun, set into oxidised silver around a deep oxblood garnet — the colour, his uncle once said, of <em>"good wine and old promises."</em></p>
+          <p>Worn on the right hand, as the family demands. Polished every morning. The bezel always angled outward, so the sun catches the gold first when he extends his hand.</p>
+        </div>
+      </div>
+
+      <div class="mode-cellar">
+        <h2>The Signet She Forgot to Take Back</h2>
+        <div class="motto">"Altiora Petimus" — We aimed higher</div>
+        <div class="lore">
+          <p>The only thing the Duchess <em>forgot</em> to reclaim that night — or perhaps she thought it would shame him more if he kept it.</p>
+          <p>He wears it now on the <span class="accent">wrong hand</span> — on purpose. A small, daily insolence to a family that no longer claims him. The garnet still catches the candle-light just as well as it did at the Gala.</p>
+          <p>He has been offered more for the ring than for his entire act. Twice he has been hungry enough to consider it. Both times the bezel turned itself outward, the way it was taught, and the matter was settled.</p>
+          <p style="color:var(--ink-mute)"><em>"It is not for sale. Not tonight."</em></p>
+        </div>
+      </div>
+
+      <a class="cta" href="#act5" id="signetCta">Read the House Aurelius story</a>
+    </div>
+  </div>
+</div>
+
 <!-- 3D Signet Ring — House Aurelius (GLB from Meshy) -->
 <script type="module">
   if (!matchMedia('(prefers-reduced-motion:reduce)').matches) {
     const canvas = document.getElementById('ring-canvas');
-    if (canvas) {
+    const host   = document.getElementById('ring-host');
+    if (canvas && host) {
       let initialized = false;
       const io = new IntersectionObserver(es => {
         for (const e of es) {
           if (e.isIntersecting && !initialized){
             initialized = true; io.disconnect();
-            initRing().catch(err => console.warn('[ring] init failed', err));
+            host.classList.add('loading');
+            initRing()
+              .catch(err => { console.warn('[ring] init failed', err); host.classList.remove('loading'); host.classList.add('failed'); });
             break;
           }
         }
@@ -1966,10 +2171,12 @@ body.cellar .gilt-corner{color:var(--wine-deep);opacity:0.65}
             });
             ring.rotation.x = 0.25;
             scene.add(ring);
+            host.classList.remove('loading');
+            host.classList.add('ready');
             console.log('[ring] GLB loaded');
           },
           (xhr) => { if (xhr.lengthComputable) console.log(`[ring] ${(xhr.loaded/xhr.total*100).toFixed(0)}%`); },
-          (err) => { console.warn('[ring] load failed', err); }
+          (err) => { console.warn('[ring] load failed', err); host.classList.remove('loading'); host.classList.add('failed'); }
         );
 
         function resize(){
@@ -2000,6 +2207,257 @@ body.cellar .gilt-corner{color:var(--wine-deep);opacity:0.65}
         }
         tick();
       }
+    }
+  }
+</script>
+
+<!-- ════════════ SIGNET RING POPUP — modal Three.js scene ════════════ -->
+<script type="module">
+  const trigger  = document.getElementById('signetItem');
+  const modal    = document.getElementById('signetModal');
+  const close    = document.getElementById('signetClose');
+  const backdrop = document.getElementById('signetBackdrop');
+  const canvas   = document.getElementById('signetModalCanvas');
+  const cta      = document.getElementById('signetCta');
+  if (!trigger || !modal || !canvas) {
+    console.warn('[signet-popup] missing elements');
+  } else {
+    let inited = false;
+    let onScreen = false;
+    let api = null;
+
+    function open(){
+      modal.classList.add('open', 'loading');
+      modal.setAttribute('aria-hidden', 'false');
+      onScreen = true;
+      if (!inited){ inited = true; init().catch(e => console.warn('[signet-popup] init fail', e)); }
+      else if (api) api.resize();
+      document.body.style.overflow = 'hidden';
+    }
+    function dismiss(){
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden', 'true');
+      onScreen = false;
+      document.body.style.overflow = '';
+    }
+    trigger.addEventListener('click', open);
+    trigger.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); }
+    });
+    close.addEventListener('click', dismiss);
+    backdrop.addEventListener('click', dismiss);
+    addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal.classList.contains('open')) dismiss();
+    });
+    // CTA → close modal then scroll to Act V smoothly
+    cta.addEventListener('click', (e) => {
+      e.preventDefault();
+      dismiss();
+      setTimeout(() => {
+        const target = document.getElementById('act5');
+        if (target) target.scrollIntoView({ behavior:'smooth', block:'start' });
+      }, 350);
+    });
+
+    async function init(){
+      console.log('[signet-popup] loading three.js…');
+      const THREE = await import('three');
+      const { GLTFLoader }      = await import('three/addons/loaders/GLTFLoader.js');
+      const { OrbitControls }   = await import('three/addons/controls/OrbitControls.js');
+      const { EffectComposer }  = await import('three/addons/postprocessing/EffectComposer.js');
+      const { RenderPass }      = await import('three/addons/postprocessing/RenderPass.js');
+      const { UnrealBloomPass } = await import('three/addons/postprocessing/UnrealBloomPass.js');
+
+      const scene = new THREE.Scene();
+      scene.background = null;
+
+      const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 100);
+      camera.position.set(0, 0.5, 5);
+
+      const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:true });
+      renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+      renderer.outputColorSpace = THREE.SRGBColorSpace;
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.15;
+
+      // Procedural gold/candle environment
+      const envCanvas = document.createElement('canvas');
+      envCanvas.width = 1024; envCanvas.height = 512;
+      const ec = envCanvas.getContext('2d');
+      const eg = ec.createLinearGradient(0, 0, 0, 512);
+      eg.addColorStop(0.00, '#1a0e08');
+      eg.addColorStop(0.40, '#5a3a18');
+      eg.addColorStop(0.60, '#d6a360');
+      eg.addColorStop(0.85, '#3a2410');
+      eg.addColorStop(1.00, '#0a0608');
+      ec.fillStyle = eg; ec.fillRect(0, 0, 1024, 512);
+      for (let i = 0; i < 70; i++){
+        const x = Math.random() * 1024, y = Math.random() * 512;
+        const r = 3 + Math.random() * 14;
+        const g = ec.createRadialGradient(x, y, 1, x, y, r);
+        g.addColorStop(0, 'rgba(255,238,190,0.85)');
+        g.addColorStop(1, 'rgba(255,238,190,0)');
+        ec.fillStyle = g;
+        ec.beginPath(); ec.arc(x, y, r, 0, Math.PI*2); ec.fill();
+      }
+      const envTex = new THREE.CanvasTexture(envCanvas);
+      envTex.mapping = THREE.EquirectangularReflectionMap;
+      envTex.colorSpace = THREE.SRGBColorSpace;
+      scene.environment = envTex;
+
+      // Lighting — candle-lit cabinet
+      scene.add(new THREE.AmbientLight(0x2a1810, 0.7));
+      const key = new THREE.DirectionalLight(0xfff0c8, 1.7);
+      key.position.set(3, 5, 4); scene.add(key);
+      const rim = new THREE.PointLight(0xc9a45c, 1.5, 12);
+      rim.position.set(-3, 1, -2); scene.add(rim);
+      const gem = new THREE.PointLight(0xff3030, 0.8, 5);
+      gem.position.set(0, 0.4, 1.6); scene.add(gem);
+      const fill = new THREE.DirectionalLight(0xfff5d0, 0.5);
+      fill.position.set(-4, -1, 3); scene.add(fill);
+
+      // Controls
+      const controls = new OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.06;
+      controls.autoRotate = true;
+      controls.autoRotateSpeed = 0.7;
+      controls.enablePan = false;
+      controls.minDistance = 2.2;
+      controls.maxDistance = 10;
+
+      // Aura sprite (warm gold) behind the ring
+      const auraCanvas = document.createElement('canvas');
+      auraCanvas.width = auraCanvas.height = 512;
+      const ax = auraCanvas.getContext('2d');
+      const ag = ax.createRadialGradient(256,256, 20, 256,256, 256);
+      ag.addColorStop(0.00, 'rgba(255,220,150,0.55)');
+      ag.addColorStop(0.30, 'rgba(214,163,96,0.30)');
+      ag.addColorStop(0.65, 'rgba(140,90,30,0.12)');
+      ag.addColorStop(1.00, 'rgba(0,0,0,0)');
+      ax.fillStyle = ag; ax.fillRect(0,0,512,512);
+      const auraTex = new THREE.CanvasTexture(auraCanvas);
+      const aura = new THREE.Sprite(new THREE.SpriteMaterial({
+        map: auraTex, transparent:true, blending:THREE.AdditiveBlending,
+        depthWrite:false, opacity:0.85
+      }));
+      aura.scale.set(5, 5, 1);
+      aura.position.z = -1.5;
+      scene.add(aura);
+
+      // Gold dust particles
+      const DUST_COUNT = 120;
+      const dustGeo = new THREE.BufferGeometry();
+      const dPos = new Float32Array(DUST_COUNT * 3);
+      const dVel = new Float32Array(DUST_COUNT * 3);
+      function initDust(i){
+        dPos[i*3]   = (Math.random()-0.5) * 4;
+        dPos[i*3+1] = -1.5 + Math.random() * 0.4;
+        dPos[i*3+2] = (Math.random()-0.5) * 2;
+        dVel[i*3]   = (Math.random()-0.5) * 0.05;
+        dVel[i*3+1] = 0.1 + Math.random() * 0.18;
+        dVel[i*3+2] = (Math.random()-0.5) * 0.05;
+      }
+      for (let i = 0; i < DUST_COUNT; i++) initDust(i);
+      dustGeo.setAttribute('position', new THREE.BufferAttribute(dPos, 3));
+
+      const dustTexCanvas = document.createElement('canvas');
+      dustTexCanvas.width = dustTexCanvas.height = 32;
+      const dc = dustTexCanvas.getContext('2d');
+      const dg = dc.createRadialGradient(16,16, 1, 16,16, 16);
+      dg.addColorStop(0, 'rgba(255,240,200,1)');
+      dg.addColorStop(0.5, 'rgba(214,163,96,0.7)');
+      dg.addColorStop(1, 'rgba(140,90,30,0)');
+      dc.fillStyle = dg; dc.fillRect(0,0,32,32);
+      const dust = new THREE.Points(dustGeo, new THREE.PointsMaterial({
+        size: 0.05, map: new THREE.CanvasTexture(dustTexCanvas),
+        transparent:true, blending:THREE.AdditiveBlending,
+        depthWrite:false, color:0xfff0c8, opacity:0.85
+      }));
+      scene.add(dust);
+
+      // Load the ring (same GLB as cabinet, browser cache makes it instant)
+      let ring = null;
+      new GLTFLoader().load('/assets/folio/aurelius-signet.glb',
+        (gltf) => {
+          ring = gltf.scene;
+          const box = new THREE.Box3().setFromObject(ring);
+          const size = box.getSize(new THREE.Vector3());
+          const sizeLen = size.length();
+          const center = box.getCenter(new THREE.Vector3());
+          ring.position.sub(center);
+          ring.scale.setScalar(3.0 / sizeLen);
+          ring.traverse((o) => {
+            if (!o.isMesh || !o.material) return;
+            const old = o.material;
+            const m = new THREE.MeshPhysicalMaterial({
+              map: old.map || null,
+              color: old.color || new THREE.Color(0xffffff),
+              roughness: 0.28,
+              metalness: 0.92,
+              clearcoat: 0.75,
+              clearcoatRoughness: 0.18,
+              envMap: envTex,
+              envMapIntensity: 1.6
+            });
+            if (old.normalMap)    m.normalMap    = old.normalMap;
+            if (old.roughnessMap) m.roughnessMap = old.roughnessMap;
+            if (old.metalnessMap) m.metalnessMap = old.metalnessMap;
+            if (old.emissiveMap)  m.emissiveMap  = old.emissiveMap;
+            o.material = m;
+          });
+          ring.rotation.x = 0.18;
+          scene.add(ring);
+          modal.classList.remove('loading');
+          modal.classList.add('ready');
+          console.log('[signet-popup] GLB loaded');
+        },
+        (xhr) => { if (xhr.lengthComputable) console.log(`[signet-popup] ${(xhr.loaded/xhr.total*100).toFixed(0)}%`); },
+        (err) => { console.error('[signet-popup] load failed', err); modal.classList.remove('loading'); }
+      );
+
+      // Bloom
+      const composer = new EffectComposer(renderer);
+      composer.addPass(new RenderPass(scene, camera));
+      const bloom = new UnrealBloomPass(new THREE.Vector2(1,1), 0.8, 0.7, 0.25);
+      composer.addPass(bloom);
+
+      function resize(){
+        const w = canvas.clientWidth, h = canvas.clientHeight;
+        if (!w || !h) return;
+        renderer.setSize(w, h, false);
+        composer.setSize(w, h);
+        camera.aspect = w/h; camera.updateProjectionMatrix();
+      }
+      resize();
+      addEventListener('resize', resize);
+      api = { resize };
+
+      const clock = new THREE.Clock();
+      function tick(){
+        requestAnimationFrame(tick);
+        if (!onScreen) return;
+        const dt = Math.min(clock.getDelta(), 0.05);
+        const t  = clock.elapsedTime;
+        controls.update();
+        if (ring){
+          ring.position.y = Math.sin(t * 0.9) * 0.04;
+          gem.intensity = 0.7 + Math.sin(t * 2.0) * 0.35;
+        }
+        // Aura pulse
+        aura.material.opacity = 0.75 + Math.sin(t * 0.8) * 0.15;
+        // Dust update
+        for (let i = 0; i < DUST_COUNT; i++){
+          dPos[i*3]   += dVel[i*3]   * dt;
+          dPos[i*3+1] += dVel[i*3+1] * dt;
+          dPos[i*3+2] += dVel[i*3+2] * dt;
+          if (dPos[i*3+1] > 1.8) initDust(i);
+        }
+        dustGeo.attributes.position.needsUpdate = true;
+
+        composer.render();
+      }
+      tick();
     }
   }
 </script>

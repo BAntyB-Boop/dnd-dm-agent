@@ -1075,11 +1075,31 @@ body::after{
     drop-shadow(0 0 48px rgba(74,110,255,.7))
     drop-shadow(0 0 110px rgba(74,110,255,.45));
   will-change:transform,opacity,filter;
+  display:none; /* hidden — replaced by 3D canvas. kept for SVG fallback */
 }
 .phoenix-overlay.active .phoenix-stage img{
   animation:phoenix-reveal 1.4s cubic-bezier(.2,.7,.2,1) forwards,
             phoenix-glow 3.4s ease-in-out 1.4s infinite;
 }
+/* 3D phoenix canvas */
+.phoenix-stage canvas{
+  width:min(88vw, 1100px);
+  height:min(88vh, 700px);
+  display:block;
+  opacity:0;
+  transform:scale(0.82);
+  transition:opacity 1.0s ease, transform 1.4s cubic-bezier(.2,.7,.2,1);
+  filter:
+    drop-shadow(0 0 18px rgba(127,160,255,.6))
+    drop-shadow(0 0 48px rgba(74,110,255,.45));
+}
+.phoenix-overlay.active .phoenix-stage canvas.ready{
+  opacity:1;
+  transform:scale(1);
+}
+/* fallback: if 3D fails, re-show the SVG */
+.phoenix-stage.fallback img{display:block}
+.phoenix-stage.fallback canvas{display:none}
 @keyframes phoenix-reveal{
   0%{opacity:0;transform:scale(.82);filter:drop-shadow(0 0 0 rgba(127,160,255,0)) drop-shadow(0 0 0 rgba(74,110,255,0)) blur(6px)}
   60%{opacity:1;filter:drop-shadow(0 0 24px rgba(127,160,255,1)) drop-shadow(0 0 64px rgba(74,110,255,.85)) drop-shadow(0 0 140px rgba(74,110,255,.55)) blur(0)}
@@ -1878,7 +1898,8 @@ body.chronicle-open{overflow:hidden}
 <!-- Phoenix Reveal Overlay -->
 <div class="phoenix-overlay" id="phoenix-overlay" aria-hidden="true">
   <div class="phoenix-embers" id="phoenix-embers"></div>
-  <div class="phoenix-stage">
+  <div class="phoenix-stage" id="phoenix-stage">
+    <canvas id="phoenix3d-canvas" aria-label="Azure Phoenix 3D"></canvas>
     <img src="/assets/folio/phoenix.svg" alt="Azure Phoenix"/>
   </div>
   <button class="phoenix-skip" id="phoenix-skip">Skip ▸</button>
@@ -2525,6 +2546,258 @@ body.chronicle-open{overflow:hidden}
         composer.render();
       }
       tick();
+    }
+  }
+</script>
+
+<!-- ════════════════════ THREE.JS — Phoenix 3D in Chronicle reveal overlay ════════════════════ -->
+<script type="module">
+  if (matchMedia('(prefers-reduced-motion:reduce)').matches) {
+    // graceful: keep SVG fallback
+    document.getElementById('phoenix-stage')?.classList.add('fallback');
+  } else {
+    const overlay = document.getElementById('phoenix-overlay');
+    const stage   = document.getElementById('phoenix-stage');
+    const canvas  = document.getElementById('phoenix3d-canvas');
+    if (!overlay || !stage || !canvas) {
+      console.warn('[phoenix3d] missing elements');
+    } else {
+      let inited = false;
+      let api = null;
+      let active = false;
+
+      // observe overlay class changes — init on first activation, pause when inactive
+      const mo = new MutationObserver(() => {
+        const isActive = overlay.classList.contains('active');
+        active = isActive;
+        if (isActive && !inited){
+          inited = true;
+          init().catch(err => {
+            console.warn('[phoenix3d] init failed — falling back to SVG', err);
+            stage.classList.add('fallback');
+          });
+        } else if (isActive && api){
+          api.resize();
+        }
+      });
+      mo.observe(overlay, { attributes:true, attributeFilter:['class'] });
+
+      async function init(){
+        console.log('[phoenix3d] loading three.js…');
+        const THREE = await import('three');
+        const { GLTFLoader }      = await import('three/addons/loaders/GLTFLoader.js');
+        const { EffectComposer }  = await import('three/addons/postprocessing/EffectComposer.js');
+        const { RenderPass }      = await import('three/addons/postprocessing/RenderPass.js');
+        const { UnrealBloomPass } = await import('three/addons/postprocessing/UnrealBloomPass.js');
+
+        const scene = new THREE.Scene();
+        scene.background = null;
+
+        const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
+        camera.position.set(0, 1.0, 6);
+        camera.lookAt(0, 0.2, 0);
+
+        const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:true });
+        renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+        renderer.outputColorSpace = THREE.SRGBColorSpace;
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 1.15;
+
+        // Procedural cobalt environment
+        const envCanvas = document.createElement('canvas');
+        envCanvas.width = 1024; envCanvas.height = 512;
+        const ec = envCanvas.getContext('2d');
+        const eg = ec.createLinearGradient(0, 0, 0, 512);
+        eg.addColorStop(0.00, '#0a1430');
+        eg.addColorStop(0.35, '#1850b0');
+        eg.addColorStop(0.55, '#60bcff');
+        eg.addColorStop(0.80, '#1a2050');
+        eg.addColorStop(1.00, '#000510');
+        ec.fillStyle = eg; ec.fillRect(0, 0, 1024, 512);
+        for (let i = 0; i < 80; i++){
+          const x = Math.random() * 1024, y = Math.random() * 512;
+          const r = 4 + Math.random() * 14;
+          const g = ec.createRadialGradient(x, y, 1, x, y, r);
+          g.addColorStop(0, 'rgba(180,230,255,0.7)');
+          g.addColorStop(1, 'rgba(180,230,255,0)');
+          ec.fillStyle = g;
+          ec.beginPath(); ec.arc(x, y, r, 0, Math.PI*2); ec.fill();
+        }
+        const envTex = new THREE.CanvasTexture(envCanvas);
+        envTex.mapping = THREE.EquirectangularReflectionMap;
+        envTex.colorSpace = THREE.SRGBColorSpace;
+        scene.environment = envTex;
+
+        // Lighting — cobalt-cyan azure flame
+        scene.add(new THREE.AmbientLight(0x0a1830, 0.8));
+        const key = new THREE.DirectionalLight(0x60bcff, 1.7);
+        key.position.set(3, 5, 4); scene.add(key);
+        const ember = new THREE.PointLight(0x2090ff, 1.9, 14);
+        ember.position.set(0, 1, 2); scene.add(ember);
+        const rim = new THREE.PointLight(0x40e0ff, 1.3, 10);
+        rim.position.set(-3, 2, -2); scene.add(rim);
+        const fill = new THREE.DirectionalLight(0x6040a0, 0.4);
+        fill.position.set(-4, -1, 3); scene.add(fill);
+
+        // Cyan aura sprite behind phoenix
+        const auraCanvas = document.createElement('canvas');
+        auraCanvas.width = auraCanvas.height = 512;
+        const ax = auraCanvas.getContext('2d');
+        const ag = ax.createRadialGradient(256,256, 20, 256,256, 256);
+        ag.addColorStop(0.00, 'rgba(180,220,255,0.85)');
+        ag.addColorStop(0.25, 'rgba(60,160,255,0.6)');
+        ag.addColorStop(0.55, 'rgba(20,60,180,0.3)');
+        ag.addColorStop(1.00, 'rgba(0,0,0,0)');
+        ax.fillStyle = ag; ax.fillRect(0,0,512,512);
+        const auraTex = new THREE.CanvasTexture(auraCanvas);
+        const aura = new THREE.Sprite(new THREE.SpriteMaterial({
+          map: auraTex, transparent:true, blending:THREE.AdditiveBlending,
+          depthWrite:false, opacity:0.8
+        }));
+        aura.scale.set(6, 6, 1);
+        aura.position.z = -1;
+        scene.add(aura);
+
+        // Cyan ember particles
+        const EMBER_COUNT = 260;
+        const eGeo = new THREE.BufferGeometry();
+        const ePos = new Float32Array(EMBER_COUNT * 3);
+        const eVel = new Float32Array(EMBER_COUNT * 3);
+        const eAge = new Float32Array(EMBER_COUNT);
+        const eLife = new Float32Array(EMBER_COUNT);
+        function initEmber(i){
+          ePos[i*3]   = (Math.random()-0.5) * 3.2;
+          ePos[i*3+1] = -1.2 + Math.random() * 0.5;
+          ePos[i*3+2] = (Math.random()-0.5) * 1.6;
+          eVel[i*3]   = (Math.random()-0.5) * 0.3;
+          eVel[i*3+1] = 0.45 + Math.random() * 0.8;
+          eVel[i*3+2] = (Math.random()-0.5) * 0.3;
+          eAge[i] = Math.random() * 3;
+          eLife[i] = 2.5 + Math.random() * 2;
+        }
+        for (let i = 0; i < EMBER_COUNT; i++) initEmber(i);
+        eGeo.setAttribute('position', new THREE.BufferAttribute(ePos, 3));
+
+        const emberTexCanvas = document.createElement('canvas');
+        emberTexCanvas.width = emberTexCanvas.height = 64;
+        const tc = emberTexCanvas.getContext('2d');
+        const tg = tc.createRadialGradient(32,32, 2, 32,32, 32);
+        tg.addColorStop(0, 'rgba(220,240,255,1)');
+        tg.addColorStop(0.4, 'rgba(80,180,255,0.8)');
+        tg.addColorStop(1, 'rgba(20,40,150,0)');
+        tc.fillStyle = tg; tc.fillRect(0,0,64,64);
+        const emberTex = new THREE.CanvasTexture(emberTexCanvas);
+
+        const embers = new THREE.Points(eGeo, new THREE.PointsMaterial({
+          size: 0.20, map: emberTex,
+          transparent:true, blending:THREE.AdditiveBlending,
+          depthWrite:false, color:0x60bcff
+        }));
+        scene.add(embers);
+
+        // Load phoenix
+        let phoenix = null;
+        new GLTFLoader().load('/assets/folio/phoenix.glb',
+          (gltf) => {
+            phoenix = gltf.scene;
+            const box = new THREE.Box3().setFromObject(phoenix);
+            const size = box.getSize(new THREE.Vector3());
+            const sizeLen = size.length();
+            const center = box.getCenter(new THREE.Vector3());
+            phoenix.position.sub(center);
+            phoenix.scale.setScalar(3.2 / sizeLen);
+            // Upgrade materials — clearcoat + cyan emissive
+            phoenix.traverse((o) => {
+              if (!o.isMesh || !o.material) return;
+              const old = o.material;
+              const m = new THREE.MeshPhysicalMaterial({
+                map: old.map || null,
+                color: old.color || new THREE.Color(0xffffff),
+                roughness: 0.42,
+                metalness: 0.35,
+                clearcoat: 0.85,
+                clearcoatRoughness: 0.18,
+                sheen: 1.0,
+                sheenColor: new THREE.Color(0x4080ff),
+                sheenRoughness: 0.6,
+                emissive: new THREE.Color(0x0a2a60),
+                emissiveIntensity: 0.6,
+                envMap: envTex,
+                envMapIntensity: 1.3
+              });
+              if (old.emissiveMap)  m.emissiveMap  = old.emissiveMap;
+              if (old.normalMap)    m.normalMap    = old.normalMap;
+              if (old.roughnessMap) m.roughnessMap = old.roughnessMap;
+              o.material = m;
+            });
+            scene.add(phoenix);
+            canvas.classList.add('ready');
+            console.log('[phoenix3d] GLB loaded');
+          },
+          (xhr) => { if (xhr.lengthComputable) console.log(`[phoenix3d] ${(xhr.loaded/xhr.total*100).toFixed(0)}%`); },
+          (err) => {
+            console.warn('[phoenix3d] load failed — falling back to SVG', err);
+            stage.classList.add('fallback');
+          }
+        );
+
+        // Bloom
+        const composer = new EffectComposer(renderer);
+        composer.addPass(new RenderPass(scene, camera));
+        const bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), 1.2, 0.9, 0.18);
+        composer.addPass(bloom);
+
+        function resize(){
+          const w = canvas.clientWidth, h = canvas.clientHeight;
+          if (!w || !h) return;
+          renderer.setSize(w, h, false);
+          composer.setSize(w, h);
+          camera.aspect = w/h; camera.updateProjectionMatrix();
+        }
+        resize();
+        addEventListener('resize', resize);
+        setTimeout(resize, 100);
+        api = { resize };
+
+        const clock = new THREE.Clock();
+        let elapsed = 0;
+        function tick(){
+          requestAnimationFrame(tick);
+          if (!active) return;   // pause when overlay not active
+          const dt = Math.min(clock.getDelta(), 0.05);
+          elapsed += dt;
+
+          if (phoenix){
+            // dramatic auto-rotate during reveal
+            phoenix.rotation.y = elapsed * 0.55;
+            phoenix.position.y = Math.sin(elapsed * 1.0) * 0.08;
+            phoenix.traverse((o) => {
+              if (o.isMesh && o.material && 'emissiveIntensity' in o.material){
+                o.material.emissiveIntensity = 0.5 + Math.sin(elapsed * 2.4) * 0.3;
+              }
+            });
+          }
+
+          // Aura pulse
+          const ap = 1 + Math.sin(elapsed * 1.1) * 0.08;
+          aura.scale.set(6 * ap, 6 * ap, 1);
+          aura.material.opacity = 0.75 + Math.sin(elapsed * 1.4) * 0.15;
+
+          // Ember update
+          for (let i = 0; i < EMBER_COUNT; i++){
+            eAge[i] += dt;
+            if (eAge[i] > eLife[i]) initEmber(i);
+            ePos[i*3]   += eVel[i*3]   * dt;
+            ePos[i*3+1] += eVel[i*3+1] * dt;
+            ePos[i*3+2] += eVel[i*3+2] * dt;
+            eVel[i*3+1] *= (1 - dt * 0.35);
+          }
+          eGeo.attributes.position.needsUpdate = true;
+
+          composer.render();
+        }
+        tick();
+      }
     }
   }
 </script>

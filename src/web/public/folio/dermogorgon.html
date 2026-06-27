@@ -432,8 +432,8 @@ body::after{
   backdrop-filter:blur(10px);cursor:pointer;
 }
 .phoenix-summon-stage{
-  position:relative;
-  width:min(960px, 94vw);height:min(680px, 86vh);
+  position:relative;display:flex;
+  width:min(1220px, 94vw);height:min(700px, 86vh);
   background:radial-gradient(ellipse at center, #08102a 0%, #02040c 80%);
   border:1px solid rgba(74,110,255,0.35);
   box-shadow:0 30px 80px rgba(0,0,0,0.9),
@@ -444,10 +444,57 @@ body::after{
   overflow:hidden;
 }
 .phoenix-summon-modal.open .phoenix-summon-stage{transform:scale(1) rotateZ(0);opacity:1}
-.phoenix-summon-stage canvas{
+.phoenix-3d-pane{position:relative;flex:1 1 auto;min-width:0;min-height:0}
+.phoenix-3d-pane canvas{
   position:absolute;inset:0;width:100%;height:100%;display:block;cursor:grab;
 }
-.phoenix-summon-stage canvas:active{cursor:grabbing}
+.phoenix-3d-pane canvas:active{cursor:grabbing}
+.phoenix-lore-pane{
+  flex:0 0 360px;
+  border-left:1px solid rgba(74,110,255,0.25);
+  background:linear-gradient(180deg, rgba(8,16,42,0.92), rgba(2,4,12,0.96));
+  padding:48px 28px 30px;
+  overflow-y:auto;color:rgba(210,222,255,0.88);
+  font-family:"Cormorant Garamond",serif;
+}
+.phoenix-lore-pane::-webkit-scrollbar{width:6px}
+.phoenix-lore-pane::-webkit-scrollbar-thumb{background:rgba(74,110,255,0.35);border-radius:3px}
+.phoenix-lore-pane h3{
+  font-family:"Cinzel",serif;letter-spacing:0.24em;text-transform:uppercase;
+  font-size:0.64rem;color:var(--azure-bright);margin:0 0 6px;font-weight:600;
+}
+.phoenix-lore-pane .lore-th{
+  display:block;font-family:"Sarabun",sans-serif;font-size:0.58rem;
+  letter-spacing:0.22em;color:rgba(127,160,255,0.6);margin-bottom:20px;
+}
+.phoenix-lore-pane .lore-section{margin-bottom:18px}
+.phoenix-lore-pane .lore-section h4{
+  font-family:"Cinzel",serif;letter-spacing:0.16em;text-transform:uppercase;
+  font-size:0.58rem;color:#c8b46a;margin:0 0 6px;font-weight:600;
+}
+.phoenix-lore-pane .lore-section p{
+  margin:0;font-size:0.94rem;line-height:1.6;color:rgba(210,222,255,0.88);
+}
+.phoenix-lore-pane .lore-section em{color:#f4c878;font-style:italic}
+.phoenix-lore-pane .lore-section strong{color:var(--azure-bright);font-weight:600}
+.phoenix-lore-pane .lore-divider{
+  height:1px;background:linear-gradient(90deg,transparent,rgba(74,110,255,0.35),transparent);
+  margin:14px 0;
+}
+.phoenix-lore-pane .lore-stat{
+  display:flex;justify-content:space-between;font-size:0.82rem;
+  padding:3px 0;border-bottom:1px dashed rgba(74,110,255,0.14);
+}
+.phoenix-lore-pane .lore-stat b{
+  font-family:"Cinzel",serif;font-size:0.6rem;letter-spacing:0.14em;
+  color:rgba(127,160,255,0.65);text-transform:uppercase;font-weight:500;
+}
+.phoenix-lore-pane .lore-stat span{color:var(--azure-bright)}
+@media (max-width:820px){
+  .phoenix-summon-stage{flex-direction:column;height:min(88vh,860px)}
+  .phoenix-3d-pane{flex:1 1 52%}
+  .phoenix-lore-pane{flex:0 0 48%;border-left:none;border-top:1px solid rgba(74,110,255,0.25);padding:18px 18px 22px}
+}
 .phoenix-summon-title{
   position:absolute;left:50%;top:18px;transform:translateX(-50%);
   font-family:"Cinzel",serif;letter-spacing:0.32em;text-transform:uppercase;
@@ -1439,8 +1486,8 @@ body.chronicle-open{overflow:hidden}
   cursor:pointer;
 }
 .grimoire-modal-stage{
-  position:relative;
-  width:min(900px, 92vw);height:min(640px, 84vh);
+  position:relative;display:flex;
+  width:min(1180px, 94vw);height:min(680px, 86vh);
   background:radial-gradient(ellipse at center, #0a0e26 0%, #04050d 80%);
   border:1px solid var(--gold-dim);
   box-shadow:0 30px 80px rgba(0,0,0,0.85), inset 0 0 50px rgba(74,110,255,0.08);
@@ -1449,11 +1496,13 @@ body.chronicle-open{overflow:hidden}
   overflow:hidden;
 }
 .grimoire-modal.open .grimoire-modal-stage{transform:scale(1);opacity:1}
-.grimoire-modal-stage canvas{
-  position:absolute;inset:0;width:100%;height:100%;display:block;
-  cursor:grab;
+.grimoire-3d-pane{
+  position:relative;flex:1 1 auto;min-width:0;min-height:0;
 }
-.grimoire-modal-stage canvas:active{cursor:grabbing}
+.grimoire-3d-pane canvas{
+  position:absolute;inset:0;width:100%;height:100%;display:block;cursor:grab;
+}
+.grimoire-3d-pane canvas:active{cursor:grabbing}
 .grimoire-modal-title{
   position:absolute;left:50%;top:18px;transform:translateX(-50%);
   font-family:"Cinzel",serif;letter-spacing:0.28em;text-transform:uppercase;
@@ -1466,6 +1515,52 @@ body.chronicle-open{overflow:hidden}
   font-family:"Cormorant Garamond",serif;font-style:italic;
   font-size:0.78rem;color:var(--ink-mute);
   pointer-events:none;z-index:3;
+}
+.grimoire-lore-pane{
+  flex:0 0 340px;
+  border-left:1px solid var(--gold-dim);
+  background:linear-gradient(180deg, rgba(10,14,38,0.92), rgba(4,5,13,0.96));
+  padding:48px 26px 30px;
+  overflow-y:auto;color:var(--ink-soft);
+  font-family:"Cormorant Garamond",serif;
+}
+.grimoire-lore-pane::-webkit-scrollbar{width:6px}
+.grimoire-lore-pane::-webkit-scrollbar-thumb{background:var(--gold-dim);border-radius:3px}
+.grimoire-lore-pane h3{
+  font-family:"Cinzel",serif;letter-spacing:0.22em;text-transform:uppercase;
+  font-size:0.62rem;color:var(--gold);margin:0 0 6px;font-weight:600;
+}
+.grimoire-lore-pane .lore-th{
+  display:block;font-family:"Sarabun",sans-serif;font-size:0.58rem;
+  letter-spacing:0.2em;color:var(--ink-mute);margin-bottom:18px;
+}
+.grimoire-lore-pane .lore-section{margin-bottom:18px}
+.grimoire-lore-pane .lore-section h4{
+  font-family:"Cinzel",serif;letter-spacing:0.16em;text-transform:uppercase;
+  font-size:0.58rem;color:var(--azure-bright);margin:0 0 6px;font-weight:600;
+}
+.grimoire-lore-pane .lore-section p{
+  margin:0;font-size:0.92rem;line-height:1.55;color:var(--ink-soft);
+}
+.grimoire-lore-pane .lore-section em{color:var(--gold-bright);font-style:italic}
+.grimoire-lore-pane .lore-section strong{color:var(--azure-bright);font-weight:600}
+.grimoire-lore-pane .lore-divider{
+  height:1px;background:linear-gradient(90deg,transparent,var(--gold-dim),transparent);
+  margin:14px 0;
+}
+.grimoire-lore-pane .lore-stat{
+  display:flex;justify-content:space-between;font-size:0.8rem;
+  padding:3px 0;border-bottom:1px dashed rgba(212,183,106,0.12);
+}
+.grimoire-lore-pane .lore-stat b{
+  font-family:"Cinzel",serif;font-size:0.6rem;letter-spacing:0.14em;
+  color:var(--ink-mute);text-transform:uppercase;font-weight:500;
+}
+.grimoire-lore-pane .lore-stat span{color:var(--gold-bright)}
+@media (max-width:780px){
+  .grimoire-modal-stage{flex-direction:column;height:min(86vh,820px)}
+  .grimoire-3d-pane{flex:1 1 55%}
+  .grimoire-lore-pane{flex:0 0 45%;border-left:none;border-top:1px solid var(--gold-dim);padding:18px 18px 22px}
 }
 .grimoire-modal-close{
   position:absolute;right:12px;top:12px;z-index:5;
@@ -1501,10 +1596,50 @@ body.chronicle-open{overflow:hidden}
   <div class="grimoire-modal-backdrop" id="grimoireBackdrop"></div>
   <div class="grimoire-modal-stage">
     <button class="grimoire-modal-close" id="grimoireClose" aria-label="Close">✕</button>
-    <div class="grimoire-modal-title">— Crimson Gem Codex · the Tome of Azure Flame —</div>
-    <span class="grimoire-modal-spin" aria-hidden="true"></span>
-    <canvas id="grimoireCanvas"></canvas>
-    <div class="grimoire-modal-hint">drag to rotate · scroll to zoom · auto-rotates</div>
+    <div class="grimoire-3d-pane">
+      <div class="grimoire-modal-title">— Crimson Gem Codex · the Tome of Azure Flame —</div>
+      <span class="grimoire-modal-spin" aria-hidden="true"></span>
+      <canvas id="grimoireCanvas"></canvas>
+      <div class="grimoire-modal-hint">drag to rotate · scroll to zoom · auto-rotates</div>
+    </div>
+    <aside class="grimoire-lore-pane">
+      <h3>Crimson Gem Codex</h3>
+      <span class="lore-th">บันทึกแห่งเปลวสีน้ำเงิน</span>
+
+      <div class="lore-section">
+        <h4>◆ What is it</h4>
+        <p>Spellbook ส่วนตัวของ <strong>Dermogorgon</strong> · ปกหนังเก่าฝัง <em>Crimson Gem</em> ที่เต้นเป็นจังหวะตาม <em>Azure Flame</em> ของเธอ · เล่มเดียวกับที่ระบุไว้ใน Sage's Kit (1 · 3 lb)</p>
+      </div>
+
+      <div class="lore-divider"></div>
+
+      <div class="lore-section">
+        <h4>✦ Origin</h4>
+        <p>ของเก่าจาก <em>Aelindra</em> · เธอหยิบติดตัวในเช้าที่เดินออกจากหมู่บ้าน <em>โดยไม่กล่าวลา</em> · เป็นหนึ่งในไม่กี่สิ่งที่เธอเลือกเอามาด้วย ตอนทิ้งบ้านไว้ข้างหลัง</p>
+      </div>
+
+      <div class="lore-divider"></div>
+
+      <div class="lore-section">
+        <h4>✧ The Crimson Gem</h4>
+        <p>อัญมณีบนสันปกเรืองแสงแดงอ่อน · เต้นพร้อมเปลวสีน้ำเงินของเธอ · นักปราชญ์บางคนเชื่อว่ามันคือ <em>พรของ Apollo</em> ที่ตอบสนองต่อวิญญาณซึ่งเคยรักอย่างสมบูรณ์</p>
+      </div>
+
+      <div class="lore-divider"></div>
+
+      <div class="lore-section">
+        <h4>⛓ Why she carries it</h4>
+        <p>ไม่ใช่แค่ตำราเวทย์ — เธอจดทุกอย่างลงไป · <em>สีของดวงตา · เสียงหัวเราะ · แม้แต่ชื่อ</em> ของคนรักที่หายไป · เพราะ <strong>ยิ่งใช้ Azure Flame · ยิ่งลืมเร็วขึ้น</strong></p>
+        <p style="margin-top:8px">มันคือ <em>ความทรงจำของเธอ</em> · และพยานเพียงหนึ่งเดียวที่ยังบอกได้ว่าเธอเคยรักใคร</p>
+      </div>
+
+      <div class="lore-divider"></div>
+
+      <div class="lore-stat"><b>Type</b><span>Wizard Spellbook</span></div>
+      <div class="lore-stat"><b>Weight</b><span>3 lb</span></div>
+      <div class="lore-stat"><b>Spells</b><span>4 cantrips · 12 first-lvl</span></div>
+      <div class="lore-stat"><b>Bond</b><span>Memory · Promise</span></div>
+    </aside>
   </div>
 </div>
 
@@ -1996,11 +2131,52 @@ body.chronicle-open{overflow:hidden}
   <div class="phoenix-summon-backdrop" id="phoenixSummonBackdrop"></div>
   <div class="phoenix-summon-stage">
     <button class="phoenix-summon-close" id="phoenixSummonClose" aria-label="Close">✕</button>
-    <div class="phoenix-summon-title">— The Azure Phoenix · Summon of Aelindra's Flame —</div>
-    <span class="phoenix-summon-spin" aria-hidden="true"></span>
-    <canvas id="phoenixSummonCanvas"></canvas>
-    <div class="phoenix-summon-quote">"ตราบเปลวฟ้ายังลุก · คำตอบต้องมีอยู่ที่ไหนสักแห่ง"</div>
-    <div class="phoenix-summon-hint">drag · scroll · auto-rotates</div>
+    <div class="phoenix-3d-pane">
+      <div class="phoenix-summon-title">— The Azure Phoenix · Summon of Aelindra's Flame —</div>
+      <span class="phoenix-summon-spin" aria-hidden="true"></span>
+      <canvas id="phoenixSummonCanvas"></canvas>
+      <div class="phoenix-summon-quote">"ตราบเปลวฟ้ายังลุก · คำตอบต้องมีอยู่ที่ไหนสักแห่ง"</div>
+      <div class="phoenix-summon-hint">drag · scroll · auto-rotates</div>
+    </div>
+    <aside class="phoenix-lore-pane">
+      <h3>The Azure Phoenix</h3>
+      <span class="lore-th">นกไฟแห่งความทรงจำ</span>
+
+      <div class="lore-section">
+        <h4>◆ A Childhood Encounter</h4>
+        <p>ตอนเธอยังเป็นเด็ก · ใน <em>Aelindra</em> มีตำนานของ <strong>นกไฟสีน้ำเงิน</strong> ที่บินผ่านหมู่บ้านเพียงทุกๆ ร้อยปี · คืนหนึ่งเธอแอบหนีออกจากบ้านไปนั่งบนเนินเขา · และมันก็ <em>มา</em> — ลงมาเกาะที่ปลายนิ้วของเธอราวกับรู้จักเธอมาก่อน</p>
+      </div>
+
+      <div class="lore-divider"></div>
+
+      <div class="lore-section">
+        <h4>✦ The Bond of a Child</h4>
+        <p>เธอไม่กลัวมันเลย · เธอ <strong>หลงรักมัน</strong> ในแบบที่มีแต่เด็กเท่านั้นที่รักได้ — ไม่มีเงื่อนไข · ไม่ต้องการคำอธิบาย · เธอนั่งดูมันจนรุ่งสางและไม่เคยบอกใครว่าเห็นมัน · ราวกับมันเป็นเพื่อนลับเพียงของเธอคนเดียว</p>
+      </div>
+
+      <div class="lore-divider"></div>
+
+      <div class="lore-section">
+        <h4>✧ The Flame Remembers</h4>
+        <p>หลายสิบปีต่อมา · เมื่อเปลวสีน้ำเงินของเธอตื่นขึ้นในวันที่เธอตกหลุมรัก · มันออกมาเป็น <em>รูปร่างของนกตัวนั้น</em> เสมอ — ไม่ใช่เพราะเธอตั้งใจ · แต่เพราะ <strong>เปลวจำหน้ามันได้ก่อนเธอเสียอีก</strong></p>
+        <p style="margin-top:8px">ทุกครั้งที่เธอเรียกมันออกมา · เธอรู้สึกเหมือนเด็กคนนั้นบนเนินเขาอีกครั้ง — ก่อนที่เธอจะลืมว่าเคยรักใคร</p>
+      </div>
+
+      <div class="lore-divider"></div>
+
+      <div class="lore-section">
+        <h4>⛓ The Last Witness</h4>
+        <p>ตอนนี้ Azure Phoenix คือสิ่งเดียวที่ <strong>ไม่เคยจางหายจากความทรงจำของเธอ</strong> · แม้ชื่อคนรักจะลบเลือน · แม้สีตาของแม่จะเริ่มไม่ชัด · เธอก็ยังจำขนของนกตัวนั้นได้ทุกเส้น · เพราะเปลวเป็นคนจำให้</p>
+      </div>
+
+      <div class="lore-divider"></div>
+
+      <div class="lore-stat"><b>Element</b><span>Azure Flame</span></div>
+      <div class="lore-stat"><b>Form</b><span>Phoenix · ลึกในใจตั้งแต่เด็ก</span></div>
+      <div class="lore-stat"><b>First Seen</b><span>Aelindra · 1 of 100 years</span></div>
+      <div class="lore-stat"><b>Cost</b><span>Memory · ทีละแผ่น</span></div>
+      <div class="lore-stat"><b>Bond</b><span>Childhood · Wonder</span></div>
+    </aside>
   </div>
 </div>
 

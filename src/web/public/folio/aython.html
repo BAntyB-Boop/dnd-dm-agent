@@ -128,6 +128,11 @@ body.cellar .portrait{border-color:var(--wine-deep)}
   transition:filter 1.2s;
 }
 body.cellar .portrait img{filter:contrast(1.15) saturate(0.85) hue-rotate(-10deg) brightness(0.92)}
+.portrait-video{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 15%;
+  opacity:0;transition:opacity .55s ease;pointer-events:none;z-index:1;
+}
+.portrait:hover .portrait-video{opacity:1}
 .portrait::after{
   content:"";position:absolute;inset:0;
   background:
@@ -1495,8 +1500,11 @@ body > *:not(.ay-intro):not(script){transition:opacity .7s ease}
 
   <!-- ============ TITLE BLOCK ============ -->
   <div class="title-grid">
-    <div class="portrait">
+    <div class="portrait" id="ay-portrait-hover">
       <img src="assets/aython-portrait.jpg" alt="Aython Ashvail Aurelius" />
+      <video class="portrait-video" src="/assets/aython-card.mp4"
+             muted loop playsinline preload="metadata"
+             aria-label="Aython sipping wine"></video>
       <div class="label">"Pour the wine first, then the verse. The truth keeps either way."</div>
     </div>
 
@@ -1868,6 +1876,16 @@ body > *:not(.ay-intro):not(script){transition:opacity .7s ease}
 <button id="scroll-top" aria-label="Scroll to top">&#8679;</button>
 
 <script>
+  // Portrait hover video play/pause
+  (function(){
+    const wrap = document.getElementById('ay-portrait-hover');
+    if (!wrap) return;
+    const v = wrap.querySelector('.portrait-video');
+    if (!v) return;
+    wrap.addEventListener('mouseenter', () => { v.play().catch(()=>{}); });
+    wrap.addEventListener('mouseleave', () => { v.pause(); v.currentTime = 0; });
+  })();
+
   // ====== 1. Name letter-by-letter reveal ======
   (function(){
     const el = document.getElementById('hero-name');
@@ -2853,8 +2871,8 @@ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
 
   // Canvas now 1024×384 (taller for 3-line layout). Keep world aspect ratio.
   const TEXT_W = 3.2, TEXT_H = 1.20;
-  const TEXT_CY_FINAL = 2.15;        // final resting height (above chalice rim ~1.57)
-  const TEXT_CY_START = 1.55;        // emerges from chalice rim
+  const TEXT_CY_FINAL = -1.15;       // below chalice base — does not occlude goblet
+  const TEXT_CY_START = -1.75;       // rises from below
   let   TEXT_CY = TEXT_CY_FINAL;
   function sampleText(count){
     const img = tctx.getImageData(0,0,1024,384).data;

@@ -1131,8 +1131,9 @@ h1.title{
 }
 .sc-name{
   font-family:"Cinzel Decorative","Cinzel",serif;font-weight:700;
-  font-size:clamp(48px, 6.5vw, 92px);
+  font-size:clamp(36px, 5.2vw, 76px);
   letter-spacing:0.05em;line-height:0.95;margin:0 0 22px;
+  white-space:nowrap;overflow:visible;
   background:linear-gradient(180deg, #fff5d8 0%, var(--sc-accent) 70%, #6a4a20 100%);
   -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;
   text-shadow: 0 0 60px var(--sc-accent-soft);
@@ -2701,6 +2702,7 @@ h1.title{
       tagline: '"Burn the past. Rise from ash."',
       blurb: 'A charismatic human engulfed in embers and ambition, Kael wields fire as both weapon and philosophy. His ashen chronicle speaks of loss and transformation — a creature who stokes the flames of his own rebirth.',
       href: '/folio/kael-veranth',
+      fx: '/assets/folio-cutouts/fx-fire-portal.png',
       abilities: [
         { key:'A', slot:'Action',    name:'Draconic Inferno',    icon:'flame',    desc:'15 ft cone of fire; foes save or burn.' },
         { key:'B', slot:'Bonus',     name:'Scorching Arc',       icon:'arc',      desc:'Hurl 2-3 arcs of flame at enemies; chain on full hit.' },
@@ -2764,7 +2766,7 @@ h1.title{
       tagline: '"Memory is fuel. Knowledge burns brightest."',
       blurb: 'An otherworldly High Elf who sacrifices memories to ignite spells, Dermogorgon stands wreathed in azure flame and cosmic dust. Each incantation consumes a fragment of self — a price paid willingly for power.',
       href: '/folio/dermogorgon',
-      fx: '/assets/folio-cutouts/fx-blue-flames.png',
+      fx: '/assets/folio-cutouts/fx-blue-phoenix.png',
       abilities: [
         { key:'A', slot:'Action',    name:'Arcane Missile', icon:'rune',       desc:'2-4 bolts of pure magic, autohit within 120 ft.' },
         { key:'B', slot:'Bonus',     name:'Mage Armor',     icon:'ward',       desc:'Shield self or ally — +3 AC and elemental resistance.' },
@@ -2922,6 +2924,8 @@ h1.title{
         t.classList.toggle('active', t.dataset.charId === id);
       });
 
+      fitName();
+
       // Phase 3: fade in
       requestAnimationFrame(() => {
         showcase.classList.remove('sc-fadeout');
@@ -2951,8 +2955,25 @@ h1.title{
       t.classList.toggle('active', t.dataset.charId === first.id);
     });
     if (first.fx){ fxImg.src = first.fx; fxLayer.classList.add('on'); }
+    fitName();
   }
   init();
+
+  // Auto-shrink sc-name to fit container width
+  function fitName(){
+    nameEl.style.fontSize = '';
+    const parent = nameEl.parentElement;
+    if (!parent) return;
+    const avail = parent.clientWidth - 4;
+    if (avail <= 0) return;
+    let size = parseFloat(getComputedStyle(nameEl).fontSize);
+    let guard = 24;
+    while (nameEl.scrollWidth > avail && size > 22 && guard-- > 0){
+      size -= 2;
+      nameEl.style.fontSize = size + 'px';
+    }
+  }
+  window.addEventListener('resize', fitName);
 
   // Keyboard navigation
   document.addEventListener('keydown', e => {

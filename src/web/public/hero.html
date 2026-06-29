@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="shared.css">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=IM+Fell+English+SC&display=swap" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js" defer></script>
+<script src="/vendor/anime/anime.min.js"></script>
 <style>
 :root{
   --bg-deep:#050507;
@@ -128,14 +129,13 @@ body{
 .opener .opener-sigil-2 svg{width:100%;height:100%}
 @keyframes opener-spin-rev{to{transform:translate(-50%,-50%) rotate(-360deg)}}
 
-.opener-content{position:relative;z-index:4;text-align:center;padding:0 20px;max-width:980px}
+.opener-content{position:relative;z-index:4;text-align:center;padding:0 20px;max-width:980px;perspective:1200px}
 
 .opener-eyebrow{
   font-family:"IM Fell English SC","Cinzel",serif;
   font-size:0.82rem;letter-spacing:0.42em;text-transform:uppercase;
   color:var(--gold);opacity:0;
   margin-bottom:28px;
-  animation:reveal-eyebrow 1.4s ease-out 0.3s forwards;
 }
 @keyframes reveal-eyebrow{
   0%{opacity:0;transform:translateY(-8px);letter-spacing:0.6em}
@@ -151,7 +151,7 @@ body{
   -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;
   text-shadow:0 0 60px rgba(201,164,92,0.25);
   filter:blur(20px);opacity:0;
-  animation:reveal-title 2.4s cubic-bezier(.2,.7,.2,1) 0.55s forwards;
+  transform-style:preserve-3d;
 }
 @keyframes reveal-title{
   0%{filter:blur(20px);opacity:0;transform:scale(1.08)}
@@ -164,12 +164,10 @@ body{
   font-size:clamp(1.1rem, 1.7vw, 1.45rem);
   color:var(--ink-soft);max-width:620px;margin:0 auto 14px;line-height:1.55;
   opacity:0;
-  animation:reveal-soft 1.6s ease-out 1.6s forwards;
 }
 .opener-attrib{
   font-family:"IM Fell English SC",serif;font-size:0.7rem;letter-spacing:0.32em;text-transform:uppercase;
   color:var(--ink-mute);opacity:0;margin-top:34px;
-  animation:reveal-soft 1.6s ease-out 2s forwards;
 }
 @keyframes reveal-soft{
   0%{opacity:0;transform:translateY(8px)}
@@ -1717,6 +1715,10 @@ h1.title{
 
       const GOLD = 0xc9a45c, GOLD_BRIGHT = 0xf4d98a, EMBER = 0xff7a3a;
 
+      // sigil group — driven by anime.js intro for scale/rotation reveal
+      const sigilGroup = new THREE.Group();
+      scene.add(sigilGroup);
+
       // === sigil rings (3 concentric tori on different planes) ===
       const rings = [];
       const ringData = [
@@ -1730,7 +1732,7 @@ h1.title{
           new THREE.MeshBasicMaterial({ color:d.color, transparent:true, opacity:d.opacity })
         );
         rings.push(m);
-        scene.add(m);
+        sigilGroup.add(m);
       });
 
       // === inner star polygon (octagram) — line segments ===
@@ -1745,7 +1747,7 @@ h1.title{
       const starGeo = new THREE.BufferGeometry().setFromPoints(starPoints);
       const star = new THREE.LineSegments(starGeo,
         new THREE.LineBasicMaterial({ color: GOLD_BRIGHT, transparent:true, opacity:0.45 }));
-      scene.add(star);
+      sigilGroup.add(star);
 
       // === radial spokes ===
       const spokePoints = [];
@@ -1758,13 +1760,20 @@ h1.title{
       const spokesGeo = new THREE.BufferGeometry().setFromPoints(spokePoints);
       const spokes = new THREE.LineSegments(spokesGeo,
         new THREE.LineBasicMaterial({ color: GOLD, transparent:true, opacity:0.10 }));
-      scene.add(spokes);
+      sigilGroup.add(spokes);
 
       // === central core glow ===
       const coreGeo = new THREE.SphereGeometry(0.18, 24, 24);
       const coreMat = new THREE.MeshBasicMaterial({ color: GOLD_BRIGHT, transparent:true, opacity:0.9 });
       const core = new THREE.Mesh(coreGeo, coreMat);
-      scene.add(core);
+      sigilGroup.add(core);
+
+      // initial hidden state for anime.js intro
+      sigilGroup.scale.setScalar(0.4);
+      sigilGroup.rotation.y = -Math.PI / 2;
+
+      // expose for the intro timeline (script block below)
+      window.heroSigil = { group: sigilGroup, camera, renderer };
 
       // === ember particles ===
       function makeGlowTexture(){
@@ -1864,6 +1873,108 @@ h1.title{
 
     if (document.readyState === 'complete') init();
     else window.addEventListener('load', init, { once:true });
+  })();
+
+  // ====== 1b'. anime.js intro timeline — 5-beat "Awakening" sequence ======
+  (function(){
+    function revealAllImmediate(){
+      document.querySelectorAll('.opener-eyebrow,.opener-title,.opener-subtitle,.opener-attrib')
+        .forEach(el => {
+          el.style.opacity = '0.95';
+          el.style.filter = 'none';
+          el.style.transform = 'none';
+        });
+    }
+    function run(){
+      if (typeof anime === 'undefined') { revealAllImmediate(); return; }
+      if (matchMedia('(prefers-reduced-motion:reduce)').matches) { revealAllImmediate(); return; }
+
+      // pre-set wider FOV so BEAT 5 can dolly back in without a jolt
+      if (window.heroSigil && window.heroSigil.camera){
+        window.heroSigil.camera.fov = 58;
+        window.heroSigil.camera.updateProjectionMatrix();
+      }
+
+      const tl = anime.timeline({ easing: 'easeOutQuart', autoplay: true });
+
+      // BEAT 1 — Sigil ignite (3D scale + rotateY in)
+      if (window.heroSigil){
+        tl.add({
+          targets: window.heroSigil.group.scale,
+          x: 1, y: 1, z: 1,
+          duration: 1300,
+          easing: 'easeOutExpo'
+        }, 200)
+        .add({
+          targets: window.heroSigil.group.rotation,
+          y: 0,
+          duration: 1500,
+          easing: 'easeOutExpo'
+        }, 200);
+      }
+
+      // BEAT 2 — Eyebrow
+      tl.add({
+        targets: '.opener-eyebrow',
+        opacity: [0, 0.95],
+        translateY: [-8, 0],
+        letterSpacing: ['0.6em', '0.42em'],
+        duration: 700,
+        easing: 'easeOutQuad'
+      }, 700);
+
+      // BEAT 3 — Title strike (blur + rotateX + flash)
+      tl.add({
+        targets: '.opener-title',
+        opacity: [0, 1],
+        filter: ['blur(20px)', 'blur(0px)'],
+        translateY: [-22, 0],
+        rotateX: ['-45deg', '0deg'],
+        duration: 1100,
+        easing: 'easeOutExpo'
+      }, 1100)
+      .add({
+        targets: '.opener-title',
+        textShadow: [
+          '0 0 60px rgba(201,164,92,0.25)',
+          '0 0 90px rgba(255,140,60,0.7)',
+          '0 0 60px rgba(201,164,92,0.25)'
+        ],
+        duration: 700,
+        easing: 'easeInOutSine'
+      }, 1750);
+
+      // BEAT 4 — subtitle + attrib
+      tl.add({
+        targets: '.opener-subtitle',
+        opacity: [0, 0.95],
+        translateY: [8, 0],
+        duration: 800,
+        easing: 'easeOutQuad'
+      }, 1900)
+      .add({
+        targets: '.opener-attrib',
+        opacity: [0, 0.95],
+        translateY: [8, 0],
+        duration: 800,
+        easing: 'easeOutQuad'
+      }, 2050);
+
+      // BEAT 5 — Sigil settle (camera micro-zoom "breath")
+      if (window.heroSigil && window.heroSigil.camera){
+        const cam = window.heroSigil.camera;
+        tl.add({
+          targets: cam,
+          fov: 50,
+          duration: 900,
+          easing: 'easeInOutSine',
+          update: () => { cam.updateProjectionMatrix(); }
+        }, 2500);
+      }
+    }
+
+    if (document.readyState === 'complete') run();
+    else window.addEventListener('load', run, { once:true });
   })();
 
   // ====== 1c. Scroll-velocity marquee bands ======

@@ -967,7 +967,28 @@ body::after{
   .music-ctrl{top:auto;bottom:14px;right:14px;padding:5px 10px}
   .music-vol{width:55px}
 }
+
+/* ============ DEMON EYE — Shockwave overlay for intro ============ */
+.dw-shockwave{
+  position:absolute;left:50%;top:50%;
+  width:60%;aspect-ratio:1;
+  border:2px solid rgba(255,90,20,0.85);
+  border-radius:50%;
+  transform:translate(-50%,-50%) scale(0);
+  opacity:0;
+  pointer-events:none;
+  box-shadow:0 0 30px rgba(255,90,20,0.6), inset 0 0 20px rgba(255,140,40,0.4);
+  z-index:3;
+}
+.dw-shockwave.s2{border-color:rgba(255,180,60,0.5);box-shadow:0 0 20px rgba(255,180,60,0.4)}
+/* When intro is active, suppress idle CSS animations so anime.js can fully control */
+.dw-wrap.intro .dw-iris      {animation:none}
+.dw-wrap.intro .dw-iris-wrap {animation:none}
+.dw-wrap.intro .dw-lid-t     {animation:none}
+.dw-wrap.intro .dw-lid-b     {animation:none}
+.dw-wrap.intro::before       {animation:none}
 </style>
+<script src="/vendor/anime/anime.min.js"></script>
 </head>
 <body>
 
@@ -1561,6 +1582,8 @@ body::after{
         </div>
       </div>
     </div>
+    <div class="dw-shockwave" id="dwShock1"></div>
+    <div class="dw-shockwave s2" id="dwShock2"></div>
     <div class="dw-lid-t"></div>
     <div class="dw-lid-b"></div>
   </div>
@@ -1773,14 +1796,160 @@ body::after{
   function open() {
     overlay.classList.add('on');
     eye.classList.add('on');
-    setTimeout(() => {
-      flash.classList.add('on');
+
+    // Cinematic demon-eye intro driven by anime.js
+    if (typeof anime !== 'undefined' && !matchMedia('(prefers-reduced-motion:reduce)').matches) {
+      runDemonEyeIntro();
+    } else {
+      // Fallback — original simple fade-in
       setTimeout(() => {
-        flash.classList.remove('on');
-        popup.classList.add('on');
-        document.body.style.overflow = 'hidden';
-      }, 260);
-    }, 680);
+        flash.classList.add('on');
+        setTimeout(() => {
+          flash.classList.remove('on');
+          popup.classList.add('on');
+          document.body.style.overflow = 'hidden';
+        }, 260);
+      }, 680);
+    }
+  }
+
+  function runDemonEyeIntro() {
+    const eyeBox    = eye.querySelector('.dw-eye');
+    const sclera    = eye.querySelector('.dw-sclera');
+    const irisWrap  = eye.querySelector('.dw-iris-wrap');
+    const iris      = eye.querySelector('.dw-iris');
+    const lidT      = eye.querySelector('.dw-lid-t');
+    const lidB      = eye.querySelector('.dw-lid-b');
+    const shock1    = document.getElementById('dwShock1');
+    const shock2    = document.getElementById('dwShock2');
+
+    // Suppress idle CSS animations so we can drive everything
+    eye.classList.add('intro');
+
+    // Initial states — eye closed, iris collapsed, container small
+    eyeBox.style.transform   = 'scale(0.35) rotate(-4deg)';
+    eyeBox.style.opacity     = '0';
+    irisWrap.style.transform = 'translate(-50%,-50%) scale(0)';
+    iris.style.boxShadow     = '0 0 0 rgba(242,112,0,0)';
+    lidT.style.transform     = 'scaleY(1)';
+    lidB.style.transform     = 'scaleY(0.78)';
+
+    const tl = anime.timeline({
+      easing: 'easeOutQuart',
+      complete: () => {
+        // Release inline styles so CSS idle animations resume
+        eyeBox.style.transform = '';
+        eyeBox.style.opacity   = '';
+        irisWrap.style.transform = '';
+        iris.style.boxShadow   = '';
+        iris.style.filter      = '';
+        lidT.style.transform   = '';
+        lidB.style.transform   = '';
+        eye.classList.remove('intro');
+
+        // Then trigger the white flash + popup
+        flash.classList.add('on');
+        setTimeout(() => {
+          flash.classList.remove('on');
+          popup.classList.add('on');
+          document.body.style.overflow = 'hidden';
+        }, 260);
+      }
+    });
+
+    // BEAT 1 (0–700ms) — Materialise: eye box anticipates & overshoots into view
+    tl.add({
+      targets: eyeBox,
+      opacity: [0, 1],
+      scale: [
+        { value: 0.35, duration: 0 },
+        { value: 1.12, duration: 520, easing: 'easeOutBack' },
+        { value: 1.00, duration: 260, easing: 'easeOutQuad' }
+      ],
+      rotate: [
+        { value: -4,  duration: 0 },
+        { value: 1.5, duration: 520, easing: 'easeOutBack' },
+        { value: 0,   duration: 260, easing: 'easeOutQuad' }
+      ]
+    }, 0);
+
+    // BEAT 2 (300–1000ms) — Iris dilates from nothing while still mostly behind closed lid
+    tl.add({
+      targets: irisWrap,
+      scale: [
+        { value: 0,    duration: 0 },
+        { value: 1.18, duration: 500, easing: 'easeOutExpo' },
+        { value: 1.00, duration: 200, easing: 'easeOutQuad' }
+      ],
+      update: anim => {
+        const s = anim.animations[0].currentValue;
+        irisWrap.style.transform = `translate(-50%,-50%) scale(${s})`;
+      }
+    }, 300);
+
+    // BEAT 3 (700–1050ms) — RIP OPEN: lids snap apart with sharp easing
+    tl.add({
+      targets: lidT,
+      scaleY: [{ value: 1, duration: 0 }, { value: 0.025, duration: 350, easing: 'cubicBezier(.85,0,.15,1)' }]
+    }, 700)
+    .add({
+      targets: lidB,
+      scaleY: [{ value: 0.78, duration: 0 }, { value: 0.025, duration: 350, easing: 'cubicBezier(.85,0,.15,1)' }]
+    }, 700);
+
+    // BEAT 4 (900–1450ms) — IRIS BURN: glow flare pulses outward
+    tl.add({
+      targets: iris,
+      boxShadow: [
+        '0 0 24px rgba(242,112,0,.78),0 0 58px rgba(212,72,0,.58),0 0 115px rgba(188,46,0,.38),inset 0 0 20px rgba(0,0,0,.68)',
+        '0 0 80px rgba(255,170,40,1),0 0 180px rgba(255,90,0,.95),0 0 300px rgba(220,40,0,.7),inset 0 0 30px rgba(0,0,0,.4)',
+        '0 0 40px rgba(255,142,10,.95),0 0 85px rgba(238,92,0,.75),0 0 185px rgba(208,56,0,.52),inset 0 0 24px rgba(0,0,0,.55)'
+      ],
+      duration: 550,
+      easing: 'easeOutQuad'
+    }, 900);
+
+    // BEAT 5 (950ms / 1150ms) — Twin shockwave rings expand outward
+    tl.add({
+      targets: shock1,
+      scale: [0, 2.6],
+      opacity: [{ value: 0, duration: 0 }, { value: 0.9, duration: 100 }, { value: 0, duration: 700 }],
+      duration: 800,
+      easing: 'easeOutExpo',
+      update: anim => {
+        const s = anim.animations[0].currentValue;
+        shock1.style.transform = `translate(-50%,-50%) scale(${s})`;
+      }
+    }, 950)
+    .add({
+      targets: shock2,
+      scale: [0, 3.2],
+      opacity: [{ value: 0, duration: 0 }, { value: 0.7, duration: 120 }, { value: 0, duration: 780 }],
+      duration: 900,
+      easing: 'easeOutExpo',
+      update: anim => {
+        const s = anim.animations[0].currentValue;
+        shock2.style.transform = `translate(-50%,-50%) scale(${s})`;
+      }
+    }, 1150);
+
+    // BEAT 6 (1400–1700ms) — Micro-shake (lock-on shudder)
+    tl.add({
+      targets: eyeBox,
+      translateX: [
+        { value: -3, duration: 50 }, { value: 4, duration: 50 },
+        { value: -2, duration: 50 }, { value: 0, duration: 80 }
+      ],
+      translateY: [
+        { value: 2, duration: 50 }, { value: -3, duration: 50 },
+        { value: 1, duration: 50 }, { value: 0, duration: 80 }
+      ],
+      filter: [
+        { value: 'drop-shadow(0 0 0 rgba(255,80,0,0))', duration: 0 },
+        { value: 'drop-shadow(0 0 30px rgba(255,80,0,0.8))', duration: 120 },
+        { value: 'drop-shadow(0 0 0 rgba(255,80,0,0))', duration: 200 }
+      ]
+    }, 1400);
   }
 
   function close() {

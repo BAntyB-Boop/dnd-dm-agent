@@ -646,7 +646,14 @@ body.kv-intro-done > *:not(.kv-intro):not(script){opacity:1;visibility:visible;t
   body.kv-intro-active > *:not(.kv-intro):not(script){opacity:1;visibility:visible}
 }
 </style>
-<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
 <script src="/vendor/anime/anime.min.js"></script>
 </head>
 <body class="kv-intro-active">
@@ -1287,11 +1294,17 @@ body.kv-intro-done > *:not(.kv-intro):not(script){opacity:1;visibility:visible;t
 </script>
 
 <!-- ============ INTRO CINEMATIC SCRIPT — Arrow → Blood → KAEL VORN ============ -->
-<script>
+<script type="module">
+import * as THREE from 'three';
+import { EffectComposer }   from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass }       from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass }  from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { OutputPass }       from 'three/addons/postprocessing/OutputPass.js';
+
 (function(){
   const overlay = document.getElementById('kvIntro');
   const canvas  = document.getElementById('kvIntroCanvas');
-  if (!overlay || !canvas || typeof THREE === 'undefined' || typeof anime === 'undefined'){
+  if (!overlay || !canvas || typeof anime === 'undefined'){
     document.body.classList.remove('kv-intro-active');
     document.body.classList.add('kv-intro-done');
     if (overlay) overlay.style.display = 'none';
@@ -1325,6 +1338,21 @@ body.kv-intro-done > *:not(.kv-intro):not(script){opacity:1;visibility:visible;t
 
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.setSize(W, H, false);
+
+  // ── Post-processing: Bloom for cinematic glow ──────────────────
+  const composer = new EffectComposer(renderer);
+  composer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  composer.setSize(W, H);
+  const renderPass = new RenderPass(scene, camera);
+  composer.addPass(renderPass);
+  const bloomPass = new UnrealBloomPass(
+    new THREE.Vector2(W, H),
+    0.85,   // strength
+    0.55,   // radius
+    0.18    // threshold — low so emissive stuff blooms
+  );
+  composer.addPass(bloomPass);
+  composer.addPass(new OutputPass());
 
   const EMBER       = new THREE.Color(0xff3a14);
   const EMBER_BRIGHT= new THREE.Color(0xff7a2a);
@@ -1496,8 +1524,8 @@ body.kv-intro-done > *:not(.kv-intro):not(script){opacity:1;visibility:visible;t
         particles.setMatrixAt(i, _o.matrix);
       }
     } else if (particlePhase === 2){
-      // seek to text target
-      const k = 0.085;
+      // seek to text target — slower lerp so the formation is visible
+      const k = 0.048;
       for (let i = 0; i < PCOUNT; i++){
         const t = targets[i];
         px[i] += (t.x - px[i]) * k;
@@ -1566,13 +1594,15 @@ body.kv-intro-done > *:not(.kv-intro):not(script){opacity:1;visibility:visible;t
     // target subtle idle rotation
     targetGroup.rotation.z += 0.003;
 
-    renderer.render(scene, camera);
+    composer.render();
     raf = requestAnimationFrame(frame);
   }
 
   function onResize(){
     W = window.innerWidth; H = window.innerHeight;
     renderer.setSize(W, H, false);
+    composer.setSize(W, H);
+    bloomPass.setSize(W, H);
     camera.aspect = W/H; camera.updateProjectionMatrix();
   }
   window.addEventListener('resize', onResize);
@@ -1598,97 +1628,113 @@ body.kv-intro-done > *:not(.kv-intro):not(script){opacity:1;visibility:visible;t
     autoplay: false
   });
 
-  // Target appears (snap in at t=0)
+  // Target appears (slow ceremonial reveal at t=0)
   tl.add({
     targets: targetGroup.scale,
     x: 1, y: 1, z: 1,
-    duration: 400,
+    duration: 900,
     easing: 'easeOutBack'
   }, 0);
 
-  // BEAT 1 — Arrow flies in (0 → 600ms)
+  // BEAT 1 — Arrow flies in (200 → 1300ms, 1.1s slow heavy approach)
   tl.add({
     targets: arrowGroup.position,
     x: 0.0,
     y: 0.0,
     z: 0.4,
-    duration: 600,
+    duration: 1100,
     easing: 'easeInQuart'
-  }, 0)
+  }, 200)
   .add({
     targets: arrowGroup.rotation,
     z: 0,
-    duration: 600,
+    duration: 1100,
     easing: 'easeInQuart'
-  }, 0);
+  }, 200);
 
-  // BEAT 2 — IMPACT (t=600ms): flash, shake, splatter, target wobble
+  // BEAT 2 — IMPACT (t=1300ms): flash, shake, splatter, target wobble
   tl.add({
     targets: flashMat,
     opacity: [
       { value: 0,    duration: 0 },
-      { value: 0.95, duration: 60, easing: 'easeOutQuad' },
-      { value: 0,    duration: 220, easing: 'easeOutQuad' }
+      { value: 1.0,  duration: 90,  easing: 'easeOutQuad' },
+      { value: 0,    duration: 420, easing: 'easeOutQuad' }
     ]
-  }, 600)
+  }, 1300)
   .add({
     targets: shake,
     amp: [
       { value: 0,    duration: 0 },
-      { value: 0.35, duration: 60 },
-      { value: 0,    duration: 380, easing: 'easeOutQuad' }
+      { value: 0.45, duration: 90 },
+      { value: 0,    duration: 800, easing: 'easeOutQuad' }
     ]
-  }, 600)
+  }, 1300)
   .add({
     targets: targetGroup.scale,
-    x: [1, 1.12, 1],
-    y: [1, 1.12, 1],
-    z: [1, 1.12, 1],
-    duration: 500,
-    easing: 'easeOutElastic(1, .6)'
-  }, 600)
+    x: [1, 1.16, 1],
+    y: [1, 1.16, 1],
+    z: [1, 1.16, 1],
+    duration: 900,
+    easing: 'easeOutElastic(1, .55)'
+  }, 1300)
+  .add({
+    targets: bloomPass,
+    strength: [
+      { value: 0.85, duration: 0 },
+      { value: 1.9,  duration: 120, easing: 'easeOutQuad' },
+      { value: 0.85, duration: 600, easing: 'easeOutQuad' }
+    ]
+  }, 1300)
   .add({
     targets: arrowGroup.position,
-    x: [{value: 0.0, duration: 0}, {value: 0.04, duration: 80}, {value: 0.0, duration: 80}],
-    y: [{value: 0.0, duration: 0}, {value: 0.02, duration: 80}, {value: 0.0, duration: 80}]
-  }, 600)
+    x: [{value: 0.0, duration: 0}, {value: 0.05, duration: 140}, {value: 0.0, duration: 140}],
+    y: [{value: 0.0, duration: 0}, {value: 0.03, duration: 140}, {value: 0.0, duration: 140}]
+  }, 1300)
   .add({
     // trigger splatter at impact + small delay
     targets: { _: 0 },
     _: 1,
     duration: 1,
     begin: () => emitSplatter()
-  }, 660);
+  }, 1400);
 
-  // BEAT 3 — Begin seeking phase (t=1500ms)
+  // BEAT 3 — Begin seeking phase (t=2700ms — let splatter breathe longer)
   tl.add({
     targets: { _: 0 },
     _: 1,
     duration: 1,
     begin: () => { particlePhase = 2; }
-  }, 1500);
+  }, 2700);
 
-  // BEAT 4 — Crisp text reveal (t=2400ms, fade in over 500ms)
+  // BEAT 4 — Crisp text reveal (t=4100ms, fade in over 900ms)
   tl.add({
     targets: textMat,
     opacity: [0, 0.95],
-    duration: 500,
+    duration: 900,
     easing: 'easeOutQuad'
-  }, 2400)
+  }, 4100)
+  .add({
+    targets: bloomPass,
+    strength: [
+      { value: 0.85, duration: 0 },
+      { value: 1.4,  duration: 500, easing: 'easeOutQuad' },
+      { value: 0.95, duration: 700, easing: 'easeOutQuad' }
+    ]
+  }, 4100)
   .add({
     targets: { _: 0 },
     _: 1,
     duration: 1,
     begin: () => { particlePhase = 3; }
-  }, 2900);
+  }, 5000);
 
-  // BEAT 5 — Hold 1s, then finish at t=3900
+  // BEAT 5 — Hold 1.5s, then finish at t=6500
   tl.add({
     targets: { _: 0 },
     _: 1,
     duration: 1,
     begin: () => finish()
-  }, 3900);
+  }, 6500);
 
   // ── FINISH / SKIP ──────────────────────────────────────────────
   let finished = false;
@@ -1702,6 +1748,8 @@ body.kv-intro-done > *:not(.kv-intro):not(script){opacity:1;visibility:visible;t
     setTimeout(() => {
       cancelAnimationFrame(raf);
       window.removeEventListener('resize', onResize);
+      composer.dispose && composer.dispose();
+      bloomPass.dispose && bloomPass.dispose();
       renderer.dispose();
       partGeo.dispose(); partMat.dispose();
       textTex.dispose(); textMat.dispose();
@@ -1719,8 +1767,8 @@ body.kv-intro-done > *:not(.kv-intro):not(script){opacity:1;visibility:visible;t
 
   // ── Kick off ───────────────────────────────────────────────────
   raf = requestAnimationFrame(frame);
-  // Safety: force-finish after 8s no matter what
-  setTimeout(finish, 8000);
+  // Safety: force-finish after 11s no matter what
+  setTimeout(finish, 11000);
 
   // Wait for fonts (max 800ms) so "KAEL VORN" samples match the displayed font
   function startTimeline(){

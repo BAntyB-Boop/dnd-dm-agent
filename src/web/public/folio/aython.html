@@ -1241,12 +1241,12 @@ body.cellar .signet-modal .mode-cellar{display:block}
 }
 @keyframes aySkipPulse{0%,100%{opacity:0.3}50%{opacity:0.7}}
 body.ay-intro-active{overflow:hidden}
-body.ay-intro-active > *:not(.ay-intro):not(script){opacity:0;visibility:hidden;transition:none}
-body.ay-intro-done > *:not(.ay-intro):not(script){opacity:1;visibility:visible;transition:opacity .7s ease}
+body.ay-intro-active > *:not(.ay-intro):not(script){opacity:0 !important;visibility:hidden !important;transition:none !important}
+body > *:not(.ay-intro):not(script){transition:opacity .7s ease}
 @media (prefers-reduced-motion:reduce){
   .ay-intro{display:none}
   body.ay-intro-active{overflow:auto}
-  body.ay-intro-active > *:not(.ay-intro):not(script){opacity:1;visibility:visible}
+  body.ay-intro-active > *:not(.ay-intro):not(script){opacity:1 !important;visibility:visible !important}
 }
 </style>
 <script src="/vendor/anime/anime.min.js"></script>
@@ -2507,7 +2507,6 @@ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
   const canvas  = document.getElementById('ayIntroCanvas');
   const earlyBail = () => {
     document.body.classList.remove('ay-intro-active');
-    document.body.classList.add('ay-intro-done');
     if (overlay) overlay.style.display = 'none';
   };
   if (!overlay || !canvas || typeof anime === 'undefined') { earlyBail(); return; }
@@ -2610,11 +2609,20 @@ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
   wine.scale.y = 0.001;     // start empty
   goblet.add(wine);
 
-  // Inner reflective disc on wine top — rises with the fill level
+  // Inner reflective disc on wine top — shows Aython's portrait, dims as wine darkens
+  const portraitTex = new THREE.TextureLoader().load('/assets/aython-portrait.jpg', t => {
+    t.colorSpace = THREE.SRGBColorSpace;
+    // Flip texture so portrait faces the camera (camera looks down toward Z-)
+    t.center.set(0.5, 0.5);
+    t.rotation = Math.PI;
+  });
+  portraitTex.colorSpace = THREE.SRGBColorSpace;
   const wineTopGeo = new THREE.CircleGeometry(0.54, 64);
   const wineTopMat = new THREE.MeshStandardMaterial({
-    color: WINE_BRIGHT, emissive: 0x5a1010, emissiveIntensity: 0.7,
-    metalness: 0.3, roughness: 0.15, side: THREE.DoubleSide,
+    map: portraitTex,
+    color: 0xc06060,                 // wine tint over portrait
+    emissive: 0x4a0808, emissiveIntensity: 0.4,
+    metalness: 0.2, roughness: 0.25, side: THREE.DoubleSide,
     transparent: true, opacity: 0
   });
   const wineTop = new THREE.Mesh(wineTopGeo, wineTopMat);
@@ -2668,8 +2676,10 @@ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
   }
   drawText();
 
-  const TEXT_W = 4.0, TEXT_H = 1.0;
-  const TEXT_CY = 2.55;    // text floats above the chalice
+  const TEXT_W = 3.2, TEXT_H = 0.65;
+  const TEXT_CY_FINAL = 2.05;        // final resting height (above chalice rim ~1.57)
+  const TEXT_CY_START = 1.55;        // emerges from wine surface
+  let   TEXT_CY = TEXT_CY_FINAL;     // used for particle target sampling
   function sampleText(count){
     const img = tctx.getImageData(0,0,1024,256).data;
     const found = [];
@@ -2731,24 +2741,23 @@ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
         _o.updateMatrix(); particles.setMatrixAt(i, _o.matrix);
       }
     } else if (particlePhase === 2){
-      const k = 0.055;
+      // Drift outward, slow rise, gradual shrink — like vapor dispersing
       for (let i=0;i<PCOUNT;i++){
-        const t = targets[i];
-        px[i] += (t.x - px[i]) * k;
-        py[i] += (t.y - py[i]) * k;
-        pz[i] += (t.z - pz[i]) * k;
+        py[i] += pvy[i] * dt * 0.4;
+        // drift outward (away from y-axis)
+        const r = Math.hypot(px[i], pz[i]) || 0.001;
+        px[i] += (px[i]/r) * 0.3 * dt;
+        pz[i] += (pz[i]/r) * 0.3 * dt;
+        ppsc[i] *= 0.985; // shrink each frame
         _o.position.set(px[i], py[i], pz[i]);
         _o.scale.setScalar(ppsc[i]);
         _o.updateMatrix(); particles.setMatrixAt(i, _o.matrix);
       }
     } else {
-      const tNow = performance.now()*0.001;
+      // Fully dissipated — hidden
       for (let i=0;i<PCOUNT;i++){
-        const t = targets[i];
-        const jx = Math.sin(tNow*1.6 + i) * 0.005;
-        const jy = Math.cos(tNow*1.3 + i*1.4) * 0.005;
-        _o.position.set(t.x+jx, t.y+jy, t.z);
-        _o.scale.setScalar(ppsc[i]);
+        _o.position.set(0, -50, 0);
+        _o.scale.setScalar(0.001);
         _o.updateMatrix(); particles.setMatrixAt(i, _o.matrix);
       }
     }
@@ -2792,8 +2801,19 @@ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
     color: 0xf4d98a, blending: THREE.AdditiveBlending, depthWrite:false
   });
   const textPlane = new THREE.Mesh(new THREE.PlaneGeometry(TEXT_W, TEXT_H), textMat);
-  textPlane.position.set(0, TEXT_CY, 0.05);
+  textPlane.position.set(0, TEXT_CY_START, 0.85);  // in front of chalice, never occluded
+  textPlane.scale.set(0.4, 0.4, 0.4);
   scene.add(textPlane);
+
+  // Red ghost — chromatic split layer for theatrical shimmer
+  const textGhostMat = new THREE.MeshBasicMaterial({
+    map: textTex, transparent:true, opacity:0,
+    color: 0xff5040, blending: THREE.AdditiveBlending, depthWrite:false
+  });
+  const textGhost = new THREE.Mesh(new THREE.PlaneGeometry(TEXT_W, TEXT_H), textGhostMat);
+  textGhost.position.set(0.18, TEXT_CY_START, 0.84);
+  textGhost.scale.set(0.4, 0.4, 0.4);
+  scene.add(textGhost);
 
   // ── Render loop ────────────────────────────────────────────────
   let lastT = performance.now(), raf = null;
@@ -2911,43 +2931,89 @@ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
     ]
   }, 3300);
 
-  // BEAT 7 (4800ms) — Particles RISE from wine surface
+  // BEAT 7 (4800ms) — Particles RISE from wine surface (vapour)
   tl.add({
     targets: { _:0 }, _:1, duration:1,
     begin: () => emitRise()
   }, 4800);
 
-  // BEAT 8 (5800ms) — Particles begin seeking text positions
+  // BEAT 7b (5400ms) — Wine portrait dims as the page turns
+  tl.add({
+    targets: wineTopMat,
+    opacity: [0.95, 0.35],
+    duration: 1200,
+    easing: 'easeInQuad'
+  }, 5400);
+
+  // BEAT 8 (5800ms) — Particles begin drifting outward + shrinking
   tl.add({
     targets: { _:0 }, _:1, duration:1,
     begin: () => { particlePhase = 2; }
   }, 5800);
 
-  // BEAT 9 (7000–7800ms) — Crisp text reveal
+  // BEAT 9 (6800–8000ms) — TITLE CARD RISES from wine surface
+  // Differentiated from Kael Vorn's "particles form text" — here it's a theatrical
+  // banner that rises out of the liquid with elastic bounce + chromatic shimmer.
   tl.add({
+    targets: textPlane.position,
+    y: [TEXT_CY_START, TEXT_CY_FINAL],
+    duration: 1100,
+    easing: 'easeOutElastic(1, .65)'
+  }, 6800)
+  .add({
+    targets: textPlane.scale,
+    x: [{value:0.4, duration:0}, {value:1.15, duration:600, easing:'easeOutBack'}, {value:1.0, duration:500, easing:'easeOutQuad'}],
+    y: [{value:0.4, duration:0}, {value:1.15, duration:600, easing:'easeOutBack'}, {value:1.0, duration:500, easing:'easeOutQuad'}],
+    z: [{value:0.4, duration:0}, {value:1.15, duration:600, easing:'easeOutBack'}, {value:1.0, duration:500, easing:'easeOutQuad'}]
+  }, 6800)
+  .add({
     targets: textMat,
     opacity: [0, 0.95],
-    duration: 800,
+    duration: 900,
     easing: 'easeOutQuad'
-  }, 7000)
+  }, 6800)
+  // Chromatic ghost — offset right, fades in then collapses back to centre
+  .add({
+    targets: textGhost.position,
+    y: [TEXT_CY_START, TEXT_CY_FINAL],
+    duration: 1100,
+    easing: 'easeOutElastic(1, .65)'
+  }, 6800)
+  .add({
+    targets: textGhost.scale,
+    x: [{value:0.4, duration:0}, {value:1.15, duration:600}, {value:1.0, duration:500}],
+    y: [{value:0.4, duration:0}, {value:1.15, duration:600}, {value:1.0, duration:500}],
+    z: [{value:0.4, duration:0}, {value:1.15, duration:600}, {value:1.0, duration:500}]
+  }, 6800)
+  .add({
+    targets: textGhost.position,
+    x: [{value:0.18, duration:0}, {value:0.18, duration:600}, {value:0, duration:500, easing:'easeOutQuad'}]
+  }, 6800)
+  .add({
+    targets: textGhostMat,
+    opacity: [{value:0, duration:0}, {value:0.6, duration:600}, {value:0, duration:500, easing:'easeOutQuad'}]
+  }, 6800)
+  // Bloom flare during reveal
   .add({
     targets: bloom,
     strength: [
       { value: 0.85, duration: 0 },
-      { value: 1.5, duration: 400 },
-      { value: 1.0, duration: 600 }
+      { value: 1.7,  duration: 500 },
+      { value: 1.0,  duration: 700 }
     ]
-  }, 7000)
-  .add({
+  }, 6800);
+
+  // BEAT 10 (8200ms) — particles fully dissipated
+  tl.add({
     targets: { _:0 }, _:1, duration:1,
     begin: () => { particlePhase = 3; }
-  }, 7800);
+  }, 8200);
 
-  // BEAT 10 (9400ms) — finish
+  // BEAT 11 (8900ms) — finish
   tl.add({
     targets: { _:0 }, _:1, duration:1,
     begin: () => finish()
-  }, 9400);
+  }, 8900);
 
   // ── FINISH / SKIP ──────────────────────────────────────────────
   let finished = false;
@@ -2957,7 +3023,6 @@ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
     try { tl.pause(); } catch(e){}
     overlay.classList.add('done');
     document.body.classList.remove('ay-intro-active');
-    document.body.classList.add('ay-intro-done');
     setTimeout(() => {
       cancelAnimationFrame(raf);
       window.removeEventListener('resize', onResize);
@@ -2971,6 +3036,8 @@ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
       splashGeo.dispose(); splashMat.dispose();
       partGeo.dispose(); partMat.dispose();
       textTex.dispose(); textMat.dispose();
+      textGhostMat.dispose();
+      portraitTex.dispose && portraitTex.dispose();
       overlay.parentNode && overlay.parentNode.removeChild(overlay);
     }, 800);
   }

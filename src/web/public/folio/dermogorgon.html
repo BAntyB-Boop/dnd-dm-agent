@@ -2992,9 +2992,91 @@ body.chronicle-open{overflow:hidden}
       }));
       scene.add(embers);
 
-      // Load phoenix glb → convert to particle point cloud
+      // ── Particle material (shared by .bin path and runtime sampling path) ──
+      function buildPhoenixMaterial(){
+        return new THREE.ShaderMaterial({
+          uniforms: {
+            uTime:       { value: 0 },
+            uSize:       { value: 5.5 },
+            uPixelRatio: { value: Math.min(devicePixelRatio, 2) }
+          },
+          vertexShader: `
+            attribute float aSeed;
+            attribute float aY01;
+            uniform float uTime;
+            uniform float uSize;
+            uniform float uPixelRatio;
+            varying float vY01;
+            varying float vSeed;
+            void main(){
+              vY01 = aY01;
+              vSeed = aSeed;
+              vec3 p = position;
+              float a = uTime * (1.4 + aSeed * 1.2) + aSeed * 6.2831;
+              float amp = 0.014;
+              p.x += sin(a)         * amp;
+              p.y += cos(a * 1.13)  * amp;
+              p.z += sin(a * 0.87)  * amp;
+              vec4 mv = modelViewMatrix * vec4(p, 1.0);
+              gl_Position = projectionMatrix * mv;
+              gl_PointSize = uSize * uPixelRatio * (300.0 / -mv.z);
+            }
+          `,
+          fragmentShader: `
+            varying float vY01;
+            varying float vSeed;
+            void main(){
+              vec2 c = gl_PointCoord - 0.5;
+              float d2 = dot(c, c);
+              if (d2 > 0.25) discard;
+              float falloff = 1.0 - smoothstep(0.0, 0.25, d2);
+              vec3 col0 = vec3(0.01, 0.02, 0.06);
+              vec3 col1 = vec3(0.05, 0.18, 0.55);
+              vec3 col2 = vec3(0.45, 0.78, 1.00);
+              vec3 col  = mix(col0, col1, smoothstep(0.0, 0.55, vY01));
+              col       = mix(col,  col2, smoothstep(0.55, 1.0, vY01));
+              col *= 0.85 + vSeed * 0.4;
+              gl_FragColor = vec4(col, falloff);
+            }
+          `,
+          transparent: true,
+          blending: THREE.AdditiveBlending,
+          depthWrite: false
+        });
+      }
+
+      function makePhoenixFromBuffers(positions, seeds, y01s){
+        const pgeo = new THREE.BufferGeometry();
+        pgeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        pgeo.setAttribute('aSeed',    new THREE.BufferAttribute(seeds, 1));
+        pgeo.setAttribute('aY01',     new THREE.BufferAttribute(y01s, 1));
+        return new THREE.Points(pgeo, buildPhoenixMaterial());
+      }
+
+      // ── Fast path: try pre-baked .bin first ──
       let phoenix = null;
-      new GLTFLoader().load('/assets/folio/phoenix.glb',
+      try {
+        const r = await fetch('/assets/folio/phoenix-particles.bin', { cache:'force-cache' });
+        if (r.ok){
+          const buf = await r.arrayBuffer();
+          const v = new DataView(buf);
+          const magic = String.fromCharCode(v.getUint8(0), v.getUint8(1), v.getUint8(2), v.getUint8(3));
+          if (magic === 'PHX1'){
+            const count = v.getUint32(4, true);
+            const positions = new Float32Array(buf, 8, count*3);
+            const seeds     = new Float32Array(buf, 8 + count*3*4, count);
+            const y01s      = new Float32Array(buf, 8 + count*3*4 + count*4, count);
+            phoenix = makePhoenixFromBuffers(positions, seeds, y01s);
+            scene.add(phoenix);
+            modal.classList.remove('loading');
+            modal.classList.add('ready');
+            console.log('[phoenix-summon] loaded pre-baked particles · pts=', count);
+          }
+        }
+      } catch(_){ /* fall through to runtime sample */ }
+
+      // ── Fallback: sample at runtime from GLB ──
+      if (!phoenix) new GLTFLoader().load('/assets/folio/phoenix.glb',
         (gltf) => {
           const root = gltf.scene;
           const box = new THREE.Box3().setFromObject(root);
@@ -3047,66 +3129,15 @@ body.chronicle-open{overflow:hidden}
             y01s[i] = (positions[i*3+1] - yMin) / yRange;
           }
 
-          const pgeo = new THREE.BufferGeometry();
-          pgeo.setAttribute('position', new THREE.BufferAttribute(positions.subarray(0, cursor*3), 3));
-          pgeo.setAttribute('aSeed',    new THREE.BufferAttribute(seeds.subarray(0, cursor), 1));
-          pgeo.setAttribute('aY01',     new THREE.BufferAttribute(y01s.subarray(0, cursor), 1));
-
-          const pmat = new THREE.ShaderMaterial({
-            uniforms: {
-              uTime:       { value: 0 },
-              uSize:       { value: 5.5 },
-              uPixelRatio: { value: Math.min(devicePixelRatio, 2) }
-            },
-            vertexShader: `
-              attribute float aSeed;
-              attribute float aY01;
-              uniform float uTime;
-              uniform float uSize;
-              uniform float uPixelRatio;
-              varying float vY01;
-              varying float vSeed;
-              void main(){
-                vY01 = aY01;
-                vSeed = aSeed;
-                vec3 p = position;
-                float a = uTime * (1.4 + aSeed * 1.2) + aSeed * 6.2831;
-                float amp = 0.014;
-                p.x += sin(a)         * amp;
-                p.y += cos(a * 1.13)  * amp;
-                p.z += sin(a * 0.87)  * amp;
-                vec4 mv = modelViewMatrix * vec4(p, 1.0);
-                gl_Position = projectionMatrix * mv;
-                gl_PointSize = uSize * uPixelRatio * (300.0 / -mv.z);
-              }
-            `,
-            fragmentShader: `
-              varying float vY01;
-              varying float vSeed;
-              void main(){
-                vec2 c = gl_PointCoord - 0.5;
-                float d2 = dot(c, c);
-                if (d2 > 0.25) discard;
-                float falloff = 1.0 - smoothstep(0.0, 0.25, d2);
-                vec3 col0 = vec3(0.01, 0.02, 0.06); // near-black base
-                vec3 col1 = vec3(0.05, 0.18, 0.55); // deep cobalt mid
-                vec3 col2 = vec3(0.45, 0.78, 1.00); // bright cyan crown
-                vec3 col  = mix(col0, col1, smoothstep(0.0, 0.55, vY01));
-                col       = mix(col,  col2, smoothstep(0.55, 1.0, vY01));
-                col *= 0.85 + vSeed * 0.4;
-                gl_FragColor = vec4(col, falloff);
-              }
-            `,
-            transparent: true,
-            blending: THREE.AdditiveBlending,
-            depthWrite: false
-          });
-
-          phoenix = new THREE.Points(pgeo, pmat);
+          phoenix = makePhoenixFromBuffers(
+            positions.slice(0, cursor*3),
+            seeds.slice(0, cursor),
+            y01s.slice(0, cursor)
+          );
           scene.add(phoenix);
           modal.classList.remove('loading');
           modal.classList.add('ready');
-          console.log('[phoenix-summon] particle phoenix ready · pts=', cursor);
+          console.log('[phoenix-summon] runtime-sampled particles · pts=', cursor);
         },
         (xhr) => { if (xhr.lengthComputable) console.log(`[phoenix-summon] ${(xhr.loaded/xhr.total*100).toFixed(0)}%`); },
         (err) => { console.error('[phoenix-summon] load failed', err); modal.classList.remove('loading'); }

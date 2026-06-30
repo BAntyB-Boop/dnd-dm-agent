@@ -358,7 +358,51 @@ h1.title{
 .chronicle-banner::after{
   content:"";position:absolute;inset:18px;border:1px solid var(--gold-dim);pointer-events:none;
   opacity:0.55;
+  z-index:2;
 }
+
+/* ===== Animated background for chronicle banner (15s seamless loop) ===== */
+.cb-bg-anim{
+  position:absolute; inset:0;
+  overflow:hidden; pointer-events:none;
+  z-index:0;
+  -webkit-mask-image: inherit; mask-image: inherit;
+}
+.cb-bg-anim .cb-light{
+  position:absolute; left:50%; top:50%;
+  width:140%; height:160%;
+  transform:translate(-50%,-50%);
+  background:
+    radial-gradient(ellipse 55% 45% at 30% 40%, rgba(255,200,120,0.18) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 45% at 70% 60%, rgba(255,170,90,0.14)  0%, transparent 60%),
+    radial-gradient(ellipse 45% 40% at 50% 50%, rgba(201,164,92,0.10)  0%, transparent 65%);
+  mix-blend-mode: screen;
+  animation: cbLightDrift 15s ease-in-out infinite;
+  filter: blur(40px);
+}
+@keyframes cbLightDrift{
+  0%,100%{ transform:translate(-50%,-50%) scale(1.00) rotate(0deg);   opacity:0.85 }
+  50%    { transform:translate(-50%,-50%) scale(1.08) rotate(180deg); opacity:1.00 }
+}
+.cb-bg-anim .cb-embers{position:absolute;inset:0;overflow:hidden}
+.cb-bg-anim .cb-ember{
+  position:absolute; bottom:-10px;
+  width:3px; height:3px; border-radius:50%;
+  background: radial-gradient(circle, #fff5d8 0%, #ffae3a 40%, rgba(255,120,40,0) 80%);
+  box-shadow: 0 0 8px rgba(255,180,80,0.7);
+  opacity:0;
+  animation: cbEmberRise 15s linear infinite;
+}
+@keyframes cbEmberRise{
+  0%   { transform: translate(0, 0)                          scale(0.6); opacity:0 }
+  10%  { opacity: var(--peak, 0.85) }
+  90%  { opacity: var(--peak, 0.85) }
+  100% { transform: translate(var(--dx, 30px), -110%)        scale(0.4); opacity:0 }
+}
+/* Ensure foreground content sits above the animated layer */
+.chronicle-banner > *{ position:relative; z-index:1; }
+.chronicle-banner .wax-seal{ z-index:6; }
+.chronicle-banner .bg-sigil{ z-index:1; }
 
 /* wax seal — top-right corner, outside the inner frame */
 .wax-seal{
@@ -1516,6 +1560,12 @@ h1.title{
 
   <!-- ============ CHRONICLE BANNER — WAX SEAL ============ -->
   <div class="chronicle-banner" id="chronicle">
+    <!-- Animated background (15s seamless loop) -->
+    <div class="cb-bg-anim" aria-hidden="true">
+      <div class="cb-light"></div>
+      <div class="cb-embers" id="cb-embers"></div>
+    </div>
+
     <!-- Wax seal -->
     <div class="wax-seal" aria-hidden="true">
       <svg viewBox="0 0 100 100">
@@ -2293,6 +2343,28 @@ h1.title{
       try { localStorage.setItem('hero:cursor', enabled ? 'on' : 'off'); } catch(e){}
     });
     if (enabled) enable();
+  })();
+
+  // ====== Chronicle bg embers (15s seamless loop) ======
+  (function(){
+    if (matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+    const box = document.getElementById('cb-embers');
+    if (!box) return;
+    const N = 14;
+    for (let i = 0; i < N; i++){
+      const e = document.createElement('div');
+      e.className = 'cb-ember';
+      const left  = Math.random() * 100;
+      const dx    = (Math.random() - 0.5) * 80;
+      const peak  = 0.55 + Math.random() * 0.35;
+      const delay = -(i / N) * 15;     // even spacing across 15s
+      const sz    = 2 + Math.random() * 3;
+      e.style.cssText =
+        `left:${left}%;width:${sz}px;height:${sz}px;` +
+        `--dx:${dx}px;--peak:${peak};` +
+        `animation-delay:${delay}s;`;
+      box.appendChild(e);
+    }
   })();
 
   // ====== 6. Latin marginalia crossfade in chronicle banner ======

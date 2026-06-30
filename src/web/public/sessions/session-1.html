@@ -668,6 +668,229 @@ body.th-active .dm-voice p{font-family:"Noto Serif Thai",serif;font-size:.95rem;
   h1,h2,h3{color:#111!important}
   a{color:#111!important;text-decoration:none}
 }
+
+/* ============================================================
+   ✦ CINEMATIC CHAPTER READER — redesign overrides
+   Transforms each chapter into a full-viewport cinematic scene
+   with oversized typography, full-bleed parallax imagery,
+   and a sticky timeline rail.
+   ============================================================ */
+
+/* — Layout: widen canvas, give the timeline its own rail — */
+.story-layout{
+  grid-template-columns:200px minmax(0,1fr);
+  max-width:1280px;
+  gap:0 80px;
+}
+
+/* — Side nav becomes a centered cinematic timeline — */
+.side-nav{
+  top:50%;
+  transform:translateY(-50%);
+  padding-top:0;
+}
+.side-nav-label{font-size:.46rem;letter-spacing:.42em;opacity:.55;margin-bottom:24px}
+.side-nav ul::before{
+  left:21px;
+  background:linear-gradient(to bottom,transparent,color-mix(in srgb,var(--gold) 35%,transparent) 15%,color-mix(in srgb,var(--gold) 35%,transparent) 85%,transparent);
+}
+.side-nav a{padding:14px 10px 14px 0;gap:18px}
+.side-nav a::before{width:9px;height:9px;margin-top:8px;margin-left:14px}
+.side-nav a.active::before{transform:scale(1.7);box-shadow:0 0 18px var(--gold)}
+.side-nav .nav-roman{font-size:1rem;letter-spacing:.32em;font-weight:500}
+.side-nav .nav-label{font-size:.88rem}
+
+/* — Chapter becomes a cinematic scene (full-viewport, no card) — */
+.chapter{
+  margin-bottom:0;
+  min-height:100vh;
+  padding:18vh 0 12vh;
+  transition:opacity 1.4s ease,transform 1.4s cubic-bezier(.2,.7,.2,1);
+}
+.chapter-inner{
+  background:none!important;
+  border:none!important;
+  padding:0!important;
+  box-shadow:none!important;
+  overflow:visible;
+}
+.chapter.in .chapter-inner{box-shadow:none!important;border:none!important}
+.chapter-inner::before,.chapter-inner::after{display:none!important}
+.chapter.ch5 .chapter-inner{background:none!important;border-left-color:transparent!important}
+
+/* — Oversized Roman numeral as backdrop — */
+.chapter-romal{
+  position:absolute;
+  top:-6vh;left:50%;right:auto;
+  transform:translateX(-50%) translateY(-12%);
+  font-size:clamp(220px,30vw,440px);
+  -webkit-text-stroke:1.5px color-mix(in srgb,var(--accent) 22%,transparent);
+  opacity:.22;
+  z-index:0;
+}
+.chapter.in .chapter-romal{transform:translateX(-50%) translateY(0)}
+
+/* — Chapter header: centered & dramatic — */
+.chapter-header{
+  flex-direction:column;
+  align-items:center;
+  text-align:center;
+  gap:22px;
+  border:none!important;
+  padding:0 0 36px;
+  margin-bottom:48px;
+  position:relative;
+}
+.chapter-header::after{
+  content:"";
+  position:absolute;bottom:0;left:50%;transform:translateX(-50%);
+  width:90px;height:1px;
+  background:linear-gradient(to right,transparent,var(--accent),transparent);
+}
+.chapter-num{
+  background:transparent;border:none;padding:0;
+  font-size:.62rem;letter-spacing:.5em;
+  color:color-mix(in srgb,var(--accent) 80%,var(--ink-mute));
+}
+.chapter-title-en,.chapter-title-th{
+  font-size:clamp(36px,5vw,60px);
+  letter-spacing:.04em;line-height:1.15;
+  max-width:18ch;
+  background:linear-gradient(180deg,var(--gold-bright) 0%,color-mix(in srgb,var(--accent) 60%,var(--ink)) 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 4px 30px color-mix(in srgb,var(--accent) 25%,transparent));
+}
+
+/* — DM voice → cinematic subtitle — */
+.dm-voice{
+  border:none!important;
+  background:transparent!important;
+  text-align:center;
+  max-width:640px;
+  margin:0 auto 56px;
+  padding:0;
+}
+.dm-voice::before{
+  position:static;display:inline-block;
+  margin:0 auto 14px;
+  background:transparent;
+  border:1px solid color-mix(in srgb,var(--accent) 45%,var(--gold-dim));
+  padding:5px 14px;
+  letter-spacing:.42em;
+}
+.dm-voice p{font-size:1.12rem;line-height:1.8;font-style:italic}
+body.th-active .dm-voice p{font-size:1rem;line-height:1.95}
+
+/* — Body: bigger, narrower for reading flow — */
+.chapter-body{
+  font-size:1.26rem;
+  line-height:2.02;
+  max-width:680px;
+  margin:0 auto;
+  color:var(--ink);
+}
+body.th-active .chapter-body{font-size:1.14rem;line-height:2.1}
+.chapter-body p{margin:0 0 1.35em}
+.chapter-body .lang-en>p:first-child::first-letter,
+.chapter-body .lang-th>p:first-child::first-letter{
+  font-size:4.4em;padding:8px 16px 0 0;
+}
+
+/* — Full-bleed cinematic images — */
+.chapter-img-solo{
+  margin:64px calc(50% - 50vw) 64px;
+  width:100vw;max-width:100vw;
+  padding:0;
+  background:var(--bg-deep);
+  border:none!important;
+  box-shadow:none!important;
+  position:relative;
+  overflow:hidden;
+}
+.chapter-img-solo:hover{border:none!important;box-shadow:none!important}
+.chapter-img-solo img,
+.chapter-img-solo video{
+  width:100%;
+  height:clamp(420px,78vh,760px)!important;
+  object-fit:cover;
+  filter:brightness(.88) contrast(1.08) saturate(1.04);
+  transition:filter .8s ease;
+}
+.chapter-img-solo:hover img,
+.chapter-img-solo:hover video{
+  filter:brightness(.96) contrast(1.05);
+  transform:none;
+}
+.chapter-img-solo .img-c{display:none}
+
+/* letterbox bars */
+.chapter-img-solo::before,
+.chapter-img-solo::after{
+  content:"";position:absolute;left:0;right:0;height:80px;
+  z-index:2;pointer-events:none;
+}
+.chapter-img-solo::before{top:0;background:linear-gradient(to bottom,var(--bg-deep),transparent)}
+.chapter-img-solo::after{bottom:0;background:linear-gradient(to top,var(--bg-deep) 10%,transparent)}
+
+.chapter-img-solo .chapter-img-cap{
+  opacity:1;
+  text-align:center;
+  padding:36px 12px 26px;
+  background:linear-gradient(transparent,rgba(0,0,0,.75) 80%);
+  font-size:.6rem;letter-spacing:.46em;
+  z-index:3;
+}
+
+/* — Scroll-driven parallax (Chromium / supported browsers) — */
+@supports (animation-timeline:view()){
+  .chapter-img-solo img,
+  .chapter-img-solo video{
+    animation:cine-parallax linear both;
+    animation-timeline:view();
+    animation-range:cover;
+    will-change:transform;
+  }
+  @keyframes cine-parallax{
+    from{transform:translateY(-7%) scale(1.12)}
+    to  {transform:translateY( 7%) scale(1.12)}
+  }
+  .chapter-header{
+    animation:cine-rise linear both;
+    animation-timeline:view();
+    animation-range:entry 0% entry 70%;
+  }
+  @keyframes cine-rise{
+    from{opacity:0;transform:translateY(50px);filter:blur(6px)}
+    to  {opacity:1;transform:none;filter:none}
+  }
+}
+
+/* — Scene separator: subtler now that chapters are full-viewport — */
+.chapter-sep{
+  margin:0 auto 60px;
+  font-size:.9rem;letter-spacing:.8em;opacity:.32;
+}
+
+/* — Responsive — */
+@media (max-width:1100px){
+  .story-layout{grid-template-columns:160px minmax(0,1fr);gap:0 40px}
+}
+@media (max-width:860px){
+  .chapter{padding:8vh 0 6vh;min-height:auto}
+  .chapter-romal{font-size:200px;top:-2vh;opacity:.16}
+  .chapter-title-en,.chapter-title-th{font-size:clamp(28px,7vw,44px)}
+  .chapter-img-solo{margin:40px calc(50% - 50vw) 40px}
+  .chapter-img-solo img,.chapter-img-solo video{height:58vh!important}
+  .dm-voice{margin-bottom:36px}
+  .dm-voice p{font-size:1rem}
+  .chapter-body{font-size:1.1rem;line-height:1.88}
+  .chapter-header{margin-bottom:32px;padding-bottom:24px;gap:16px}
+}
+@media (max-width:520px){
+  .chapter-body .lang-en>p:first-child::first-letter,
+  .chapter-body .lang-th>p:first-child::first-letter{font-size:3.4em;padding:4px 10px 0 0}
+  .chapter-img-solo .chapter-img-cap{font-size:.5rem;letter-spacing:.32em;padding:22px 10px 18px}
+}
 </style>
 </head>
 <body>

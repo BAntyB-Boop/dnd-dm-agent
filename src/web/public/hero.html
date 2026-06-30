@@ -2987,9 +2987,9 @@ h1.title{
     const svgUrl = sigilFileUrl(c);
     const cw = particlesEl.clientWidth, ch = particlesEl.clientHeight;
     if (!cw || !ch) return;
-    // Sigil drawn larger than portrait so dust extends past silhouette
-    const SIGIL_H = Math.min(ch * 1.25, Math.min(cw * 1.05, 880));
-    const SIGIL_W = SIGIL_H; // square SVG viewBox
+    // Sigil fills the entire stage card (whichever dimension is larger)
+    const SIGIL_SIZE = Math.max(cw, ch) * 1.05;
+    const SIGIL_W = SIGIL_SIZE, SIGIL_H = SIGIL_SIZE;
     const offX = (cw - SIGIL_W) / 2;
     const offY = (ch - SIGIL_H) / 2;
     const pts = await sampleSigilPoints(svgUrl, Math.round(SIGIL_W), Math.round(SIGIL_H), PARTICLE_COUNT);

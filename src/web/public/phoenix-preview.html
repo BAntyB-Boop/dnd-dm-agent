@@ -47,7 +47,7 @@
 <div class="hud">
   <b>Phoenix 3D — Dermogorgon's Power</b>
   <div class="row">Drag to rotate · Scroll to zoom · Right-drag to pan</div>
-  <div class="row" id="info">Loading <code>/assets/folio/phoenix.glb</code> …</div>
+  <div class="row" id="info">Loading <code>/assets/characters/dermogorgon/phoenix.glb</code> …</div>
 </div>
 
 <div class="ctrl">
@@ -211,7 +211,7 @@
 
   // Load model
   setStatus('Loading GLB…');
-  new GLTFLoader().load('/assets/folio/phoenix.glb', (gltf) => {
+  new GLTFLoader().load('/assets/characters/dermogorgon/phoenix.glb', (gltf) => {
     phoenix = gltf.scene;
     const box = new THREE.Box3().setFromObject(phoenix);
     const size = box.getSize(new THREE.Vector3());

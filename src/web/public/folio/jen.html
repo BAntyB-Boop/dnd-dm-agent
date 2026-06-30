@@ -1438,7 +1438,7 @@ em,i{font-style:italic;color:var(--ink-soft)}
 
 <!-- ============ RAVEN 3D POPUP — floating button opens modal ============ -->
 <button class="raven-fab" id="ravenFab" aria-label="View 3D Raven model">
-  <img src="/assets/folio/raven-portrait.png" alt="">
+  <img src="/assets/characters/jen/raven-portrait.png" alt="">
   <span class="raven-fab-glow"></span>
   <span class="raven-fab-label">3D</span>
 </button>
@@ -2234,7 +2234,7 @@ em,i{font-style:italic;color:var(--ink-soft)}
         const loader = new GLTFLoader();
         let raven = null;
 
-        loader.load('/assets/folio/raven.glb',
+        loader.load('/assets/characters/jen/raven.glb',
           (gltf) => {
             raven = gltf.scene;
             const box = new THREE.Box3().setFromObject(raven);
@@ -2367,7 +2367,7 @@ em,i{font-style:italic;color:var(--ink-soft)}
       let eyes = [];
       let aura = null;
 
-      loader.load('/assets/folio/raven.glb', (gltf) => {
+      loader.load('/assets/characters/jen/raven.glb', (gltf) => {
         raven = gltf.scene;
         const box = new THREE.Box3().setFromObject(raven);
         const size = box.getSize(new THREE.Vector3());

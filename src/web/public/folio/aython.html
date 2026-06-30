@@ -2281,7 +2281,7 @@ body > *:not(.ay-intro):not(script){transition:opacity .7s ease}
 
         // Load the GLB
         let ring = null;
-        new GLTFLoader().load('/assets/folio/aurelius-signet.glb',
+        new GLTFLoader().load('/assets/characters/aython/signet.glb',
           (gltf) => {
             ring = gltf.scene;
             const box = new THREE.Box3().setFromObject(ring);
@@ -2519,7 +2519,7 @@ body > *:not(.ay-intro):not(script){transition:opacity .7s ease}
 
       // Load the ring (same GLB as cabinet, browser cache makes it instant)
       let ring = null;
-      new GLTFLoader().load('/assets/folio/aurelius-signet.glb',
+      new GLTFLoader().load('/assets/characters/aython/signet.glb',
         (gltf) => {
           ring = gltf.scene;
           const box = new THREE.Box3().setFromObject(ring);

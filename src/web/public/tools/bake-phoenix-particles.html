@@ -58,9 +58,9 @@ btn.addEventListener('click', async () => {
     const { GLTFLoader }         = await import('three/addons/loaders/GLTFLoader.js');
     const { MeshSurfaceSampler } = await import('three/addons/math/MeshSurfaceSampler.js');
 
-    log('loading /assets/folio/phoenix.glb (20MB, may take a moment)…', 'info');
+    log('loading /assets/characters/dermogorgon/phoenix.glb (20MB, may take a moment)…', 'info');
     const gltf = await new Promise((res, rej) => {
-      new GLTFLoader().load('/assets/folio/phoenix.glb', res,
+      new GLTFLoader().load('/assets/characters/dermogorgon/phoenix.glb', res,
         (xhr) => { if (xhr.lengthComputable) log(`  download ${(xhr.loaded/xhr.total*100).toFixed(0)}%`); },
         rej);
     });
@@ -140,7 +140,7 @@ btn.addEventListener('click', async () => {
     a.click();
     URL.revokeObjectURL(url);
     log(`downloaded phoenix-particles.bin (${(buf.byteLength/1024/1024).toFixed(2)} MB)`, 'ok');
-    log('→ place file at: src/web/public/assets/folio/phoenix-particles.bin', 'info');
+    log('→ place file at: src/web/public/assets/characters/dermogorgon/phoenix-particles.bin', 'info');
   } catch(e){
     console.error(e);
     log('ERROR: ' + (e.message || e), 'err');

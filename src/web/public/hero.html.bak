@@ -959,8 +959,8 @@ h1.title{
         </div>
         <div class="folio-num">Folio · VII</div>
         <video
-          src="assets/folio/dermogorgon-hero.mp4"
-          poster="assets/folio/dermogorgon.jpg"
+          src="assets/characters/dermogorgon/hero.mp4"
+          poster="assets/characters/dermogorgon/main.jpg"
           muted loop playsinline preload="metadata"
           aria-label="Dermogorgon"></video>
         <div class="ident">

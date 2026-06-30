@@ -41,7 +41,7 @@
 <div class="hud">
   <b>Raven 3D Preview</b>
   <div class="row">Drag to rotate · Scroll to zoom · Right-drag to pan</div>
-  <div class="row" id="info">Loading <code>/assets/folio/raven.glb</code> …</div>
+  <div class="row" id="info">Loading <code>/assets/characters/jen/raven.glb</code> …</div>
 </div>
 
 <div class="ctrl">
@@ -115,7 +115,7 @@
   setStatus('Loading GLB…');
   const loader = new GLTFLoader();
   loader.load(
-    '/assets/folio/raven.glb',
+    '/assets/characters/jen/raven.glb',
     (gltf) => {
       raven = gltf.scene;
       // Auto-fit
@@ -151,7 +151,7 @@
     },
     (err) => {
       console.error(err);
-      info.innerHTML = '<span style="color:#c44a4a">Load failed — check /assets/folio/raven.glb</span>';
+      info.innerHTML = '<span style="color:#c44a4a">Load failed — check /assets/characters/jen/raven.glb</span>';
       setStatus('Error');
     }
   );

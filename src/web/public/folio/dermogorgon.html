@@ -1587,7 +1587,7 @@ body.chronicle-open{overflow:hidden}
 
 <!-- ════════════ GRIMOIRE 3D — Floating button opens modal ════════════ -->
 <button class="grimoire-fab" id="grimoireFab" aria-label="View 3D Grimoire — Crimson Gem Codex">
-  <img src="/assets/folio/grimoire-portrait.png" alt="">
+  <img src="/assets/characters/dermogorgon/grimoire-portrait.png" alt="">
   <span class="grimoire-fab-glow"></span>
   <span class="grimoire-fab-label">Grimoire</span>
 </button>
@@ -1683,8 +1683,8 @@ body.chronicle-open{overflow:hidden}
 <section class="cine-hero">
   <div class="cine-portrait">
     <video
-      src="/assets/folio/dermogorgon-hero.mp4"
-      poster="/assets/folio/dermogorgon.jpg"
+      src="/assets/characters/dermogorgon/hero.mp4"
+      poster="/assets/characters/dermogorgon/main.jpg"
       autoplay muted playsinline preload="metadata"
       aria-label="Dermogorgon — Azure Flame Wizard"></video>
   </div>
@@ -1740,7 +1740,7 @@ body.chronicle-open{overflow:hidden}
 
   <!-- PLATE — turnaround -->
   <div class="viewstrip reveal">
-    <img src="/assets/folio/dermogorgon-turnaround.png" alt="Dermogorgon — front, side, back turnaround" />
+    <img src="/assets/characters/dermogorgon/turnaround.png" alt="Dermogorgon — front, side, back turnaround" />
     <div class="caption">
       <div class="lbl">Plate · 01 — Four Faces of the Azure Flame</div>
       <div class="txt">Front, side, back — the same robe in every weather. She keeps only one wardrobe, and one unanswered question.</div>
@@ -2183,7 +2183,7 @@ body.chronicle-open{overflow:hidden}
 <div class="phoenix-overlay" id="phoenix-overlay" aria-hidden="true">
   <div class="phoenix-embers" id="phoenix-embers"></div>
   <div class="phoenix-stage">
-    <img src="/assets/folio/phoenix.svg" alt="Azure Phoenix"/>
+    <img src="/assets/characters/dermogorgon/phoenix.svg" alt="Azure Phoenix"/>
   </div>
   <button class="phoenix-skip" id="phoenix-skip">Skip ▸</button>
 </div>
@@ -2753,7 +2753,7 @@ body.chronicle-open{overflow:hidden}
 
       // Load grimoire
       let book = null;
-      new GLTFLoader().load('/assets/folio/grimoire.glb',
+      new GLTFLoader().load('/assets/characters/dermogorgon/grimoire.glb',
         (gltf) => {
           book = gltf.scene;
           const box = new THREE.Box3().setFromObject(book);
@@ -2994,7 +2994,7 @@ body.chronicle-open{overflow:hidden}
 
       // Load phoenix glb
       let phoenix = null;
-      new GLTFLoader().load('/assets/folio/phoenix.glb',
+      new GLTFLoader().load('/assets/characters/dermogorgon/phoenix.glb',
         (gltf) => {
           phoenix = gltf.scene;
           const box = new THREE.Box3().setFromObject(phoenix);

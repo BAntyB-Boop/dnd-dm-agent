@@ -203,24 +203,66 @@ body{
 .enter-game-btn{
   position:fixed;top:80px;left:28px;z-index:200;
   display:inline-flex;align-items:center;gap:10px;
-  padding:10px 20px;background:rgba(7,7,10,0.85);
-  border:1px solid var(--gold-dim);color:var(--gold);
+  padding:11px 22px;background:linear-gradient(135deg,rgba(28,20,8,0.92),rgba(7,7,10,0.92));
+  border:1px solid var(--gold);color:var(--gold-bright);
   font-family:"Cinzel",serif;font-size:0.64rem;letter-spacing:0.32em;text-transform:uppercase;text-decoration:none;
-  backdrop-filter:blur(6px);
-  transition:border-color .3s, color .3s, box-shadow .3s, gap .3s;
+  backdrop-filter:blur(8px);
+  transition:border-color .3s, color .3s, gap .3s, transform .25s;
   overflow:hidden;
+  box-shadow:
+    0 0 0 1px rgba(201,164,92,0.15),
+    0 0 24px rgba(201,164,92,0.45),
+    0 0 60px rgba(201,164,92,0.22),
+    inset 0 0 18px rgba(201,164,92,0.12);
+  text-shadow:0 0 12px rgba(246,239,210,0.55);
+  animation:enter-btn-pulse 2.8s ease-in-out infinite;
+}
+@keyframes enter-btn-pulse{
+  0%,100%{
+    box-shadow:
+      0 0 0 1px rgba(201,164,92,0.15),
+      0 0 22px rgba(201,164,92,0.40),
+      0 0 50px rgba(201,164,92,0.18),
+      inset 0 0 16px rgba(201,164,92,0.10);
+  }
+  50%{
+    box-shadow:
+      0 0 0 1px rgba(201,164,92,0.30),
+      0 0 36px rgba(201,164,92,0.70),
+      0 0 90px rgba(201,164,92,0.38),
+      inset 0 0 22px rgba(201,164,92,0.20);
+  }
 }
 .enter-game-btn::before{
   content:"";position:absolute;inset:0;
-  background:linear-gradient(90deg, transparent 0, rgba(201,164,92,0.2) 50%, transparent 100%);
-  transform:translateX(-100%);
-  transition:transform .8s ease;
+  background:linear-gradient(90deg, transparent 0, rgba(246,239,210,0.35) 50%, transparent 100%);
+  transform:translateX(-120%);
+  animation:enter-btn-sheen 3.2s ease-in-out infinite;
+  pointer-events:none;
+}
+@keyframes enter-btn-sheen{
+  0%,55%{transform:translateX(-120%)}
+  75%   {transform:translateX(120%)}
+  100%  {transform:translateX(120%)}
+}
+.enter-game-btn::after{
+  content:"";position:absolute;inset:-2px;border-radius:inherit;
+  background:linear-gradient(120deg,transparent 30%,rgba(246,239,210,0.6),transparent 70%);
+  filter:blur(6px);opacity:0;z-index:-1;
+  transition:opacity .4s;
 }
 .enter-game-btn:hover{
-  border-color:var(--gold);color:var(--ink);gap:18px;
-  box-shadow:0 0 30px rgba(201,164,92,0.25);
+  border-color:var(--gold-bright);color:var(--gold-bright);gap:18px;
+  transform:translateY(-1px);
+  animation:none;
+  box-shadow:
+    0 0 0 1px rgba(246,239,210,0.4),
+    0 0 40px rgba(246,239,210,0.55),
+    0 0 100px rgba(201,164,92,0.5),
+    inset 0 0 24px rgba(246,239,210,0.18);
 }
-.enter-game-btn:hover::before{transform:translateX(100%)}
+.enter-game-btn:hover::before{animation:none;transform:translateX(120%);transition:transform .9s ease}
+.enter-game-btn:hover::after{opacity:.7}
 .enter-game-btn .btn-arrow{
   width:18px;height:1px;background:currentColor;position:relative;
   transition:width .3s;
@@ -1648,7 +1690,7 @@ h1.title{
       <div class="sc-fx" id="sc-fx" aria-hidden="true">
         <img id="sc-fx-img" src="" alt="">
       </div>
-      <img class="sc-portrait" id="sc-portrait" src="/assets/folio-cutouts/aurora.png" alt="">
+      <img class="sc-portrait" id="sc-portrait" src="/assets/characters/aurora/cutout.png" alt="">
     </div>
 
     <!-- Center-right: Info panel -->

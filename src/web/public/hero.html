@@ -342,7 +342,9 @@ h1.title{
 .chronicle-banner{
   margin:56px 0;position:relative;
   background: transparent;
-  padding:clamp(20px,3vw,40px) clamp(28px,5vw,80px) clamp(40px,5vw,60px);
+  padding:clamp(40px,5vw,60px) clamp(28px,5vw,80px);
+  display:flex; flex-direction:column; justify-content:center; align-items:center;
+  min-height:clamp(360px, 42vw, 560px);
   text-align:center;overflow:visible;
   opacity:0;animation:fade-up 1s ease-out 0.4s forwards;
   /* torn parchment top + bottom via SVG mask */
@@ -365,8 +367,13 @@ h1.title{
   z-index:0;
 }
 .cb-bg-anim .cb-bg-video{
-  position:absolute; inset:0; width:100%; height:100%;
-  object-fit:cover; opacity:0.55; mix-blend-mode:screen;
+  position:absolute; top:50%; left:50%;
+  transform: translate(-50%, -50%);
+  width:100%; height:100%;
+  max-width:100%; max-height:100%;
+  min-width:100%; min-height:100%;
+  object-fit:contain;
+  opacity:0.55; mix-blend-mode:screen;
 }
 .cb-bg-anim .cb-bg-veil{
   position:absolute; inset:0;

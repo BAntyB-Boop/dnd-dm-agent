@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Living Manuscript · 15s seamless loop</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:#0a0608;color:#cfe;font-family:system-ui,sans-serif;overflow:hidden}
+  body{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;min-height:100vh}
+
+  .toolbar{
+    position:fixed;top:8px;left:8px;z-index:1000;
+    background:rgba(0,0,0,0.7);border:1px solid #2a2030;border-radius:6px;
+    padding:8px 12px;font-size:12px;
+  }
+  .toolbar button{background:#3a2810;color:#f5e6c8;border:1px solid #6a4a20;padding:6px 12px;border-radius:3px;cursor:pointer;font-size:12px;margin-right:6px}
+  .toolbar button:hover{background:#5a3818}
+  .toolbar code{color:#fc8;background:#1a0a04;padding:1px 5px;border-radius:2px}
+  body.recording .toolbar{display:none}
+
+  /* ─── STAGE: exact 1920×1080 16:9 ─── */
+  .stage{
+    position:relative;
+    width:1920px; height:1080px;
+    overflow:hidden;
+    background: radial-gradient(ellipse at 50% 50%, #2c1a10 0%, #150906 55%, #0a0608 100%);
+    transform-origin: top center;
+  }
+
+  /* ─── Layer 1 · Parchment base texture ─── */
+  .parchment{
+    position:absolute; inset:0;
+    background:
+      radial-gradient(ellipse at 30% 40%, rgba(245,230,200,0.10) 0%, transparent 55%),
+      radial-gradient(ellipse at 70% 60%, rgba(201,164,92,0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 50%, rgba(74,40,16,0.15) 0%, transparent 70%);
+    mix-blend-mode: screen;
+  }
+  .parchment::after{
+    content:"";position:absolute;inset:0;
+    background-image:
+      repeating-radial-gradient(circle at 50% 50%, rgba(74,40,16,0.04) 0, rgba(74,40,16,0.04) 2px, transparent 2px, transparent 6px);
+    opacity:0.4;
+  }
+
+  /* ─── Layer 2 · Slow drifting amber glow (15s perfect loop) ─── */
+  .glow{
+    position:absolute; left:50%; top:50%;
+    width:1400px; height:1400px;
+    transform:translate(-50%,-50%);
+    background: radial-gradient(circle, rgba(201,164,92,0.30) 0%, rgba(201,164,92,0.10) 30%, transparent 70%);
+    mix-blend-mode: screen;
+    animation: glowPulse 15s ease-in-out infinite;
+    filter: blur(20px);
+  }
+  @keyframes glowPulse{
+    0%,100%{opacity:0.6; transform:translate(-50%,-50%) scale(1.00)}
+    50%    {opacity:1.0; transform:translate(-50%,-50%) scale(1.08)}
+  }
+
+  /* ─── Layer 3 · Vignette breathing (15s) ─── */
+  .vignette{
+    position:absolute;inset:0;pointer-events:none;
+    background: radial-gradient(ellipse at 50% 50%, transparent 35%, rgba(10,6,8,0.6) 75%, rgba(10,6,8,0.95) 100%);
+    animation: vignBreathe 15s ease-in-out infinite;
+  }
+  @keyframes vignBreathe{
+    0%,100%{opacity:0.95}
+    50%    {opacity:0.75}
+  }
+
+  /* ─── Layer 4 · Floating embers (loop wrap) ─── */
+  .embers{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+  .ember{
+    position:absolute; bottom:-20px;
+    width:4px; height:4px; border-radius:50%;
+    background: radial-gradient(circle, #fff5d8 0%, #ffae3a 35%, rgba(255,120,40,0) 75%);
+    box-shadow: 0 0 12px rgba(255,180,80,0.8);
+    animation: emberRise 15s linear infinite;
+    opacity:0;
+  }
+  @keyframes emberRise{
+    0%   { transform: translate(0, 0)         scale(0.6); opacity:0 }
+    8%   { opacity: var(--ember-peak, 0.9) }
+    50%  { transform: translate(var(--ember-dx, 40px), -550px) scale(1.0); }
+    92%  { opacity: var(--ember-peak, 0.9) }
+    100% { transform: translate(var(--ember-dx2, 90px), -1120px) scale(0.4); opacity:0 }
+  }
+
+  /* ─── Layer 5 · Sigils that "ignite" with stroke-draw effect ─── */
+  .sigils{position:absolute;inset:0}
+  .sigil{
+    position:absolute;
+    stroke:#c9a45c; fill:none; stroke-width:2.5;
+    filter: drop-shadow(0 0 8px rgba(201,164,92,0.85));
+    stroke-dasharray: 500;
+    animation-duration: 15s;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+  }
+  /* 6 sigils at different positions, each draws then fades, staggered 2.5s */
+  .sigil.s1{ left: 12%; top: 18%; width:160px; height:160px; animation-name: sigilDraw; animation-delay: 0s; }
+  .sigil.s2{ left: 78%; top: 14%; width:140px; height:140px; animation-name: sigilDraw; animation-delay:-2.5s; }
+  .sigil.s3{ left:  6%; top: 62%; width:130px; height:130px; animation-name: sigilDraw; animation-delay:-5s; }
+  .sigil.s4{ left: 83%; top: 65%; width:170px; height:170px; animation-name: sigilDraw; animation-delay:-7.5s; }
+  .sigil.s5{ left: 22%; top: 78%; width:120px; height:120px; animation-name: sigilDraw; animation-delay:-10s; }
+  .sigil.s6{ left: 64%; top: 80%; width:140px; height:140px; animation-name: sigilDraw; animation-delay:-12.5s; }
+  @keyframes sigilDraw{
+    0%   { stroke-dashoffset: 500; opacity: 0; }
+    15%  { stroke-dashoffset: 0;   opacity: 0.95; }
+    65%  { stroke-dashoffset: 0;   opacity: 0.95; }
+    85%  { stroke-dashoffset: 0;   opacity: 0; }
+    100% { stroke-dashoffset: -500; opacity: 0; }
+  }
+
+  /* ─── Layer 6 · Central crest (always visible, slowly rotating, 15s loop) ─── */
+  .crest{
+    position:absolute; left:50%; top:50%;
+    width:520px; height:520px;
+    transform: translate(-50%,-50%);
+    pointer-events:none;
+  }
+  .crest svg{ width:100%; height:100%; overflow:visible; }
+  .crest .ring{
+    stroke:#c9a45c; fill:none; stroke-width:1.5;
+    filter: drop-shadow(0 0 12px rgba(201,164,92,0.7));
+    animation: ringSpin 30s linear infinite; /* 2 full rotations in 30s, but only show 15s → so 0.5 turn per loop, smooth */
+    transform-origin: 260px 260px;
+  }
+  .crest .ring.inner{ animation: ringSpinRev 30s linear infinite; }
+  @keyframes ringSpin{
+    0%   {transform: rotate(0deg)}
+    100% {transform: rotate(180deg)}
+  }
+  @keyframes ringSpinRev{
+    0%   {transform: rotate(0deg)}
+    100% {transform: rotate(-180deg)}
+  }
+  .crest .crestCore{
+    transform-origin: 260px 260px;
+    animation: crestBreath 15s ease-in-out infinite;
+  }
+  @keyframes crestBreath{
+    0%,100%{ opacity: 0.85; transform: scale(1.00); }
+    50%    { opacity: 1.00; transform: scale(1.05); }
+  }
+
+  /* ─── Layer 7 · Latin marginalia text fade ─── */
+  .marg{
+    position:absolute;
+    font-family: "Cinzel", Georgia, serif;
+    color: #c9a45c;
+    letter-spacing: 0.18em;
+    text-shadow: 0 0 10px rgba(201,164,92,0.5);
+    pointer-events:none;
+    opacity:0;
+    animation-duration: 15s; animation-iteration-count: infinite; animation-timing-function: ease-in-out;
+  }
+  .marg.m1{ top: 8%;  left: 50%; transform: translateX(-50%); font-size: 26px; animation-name: margFade; animation-delay:  -1s; }
+  .marg.m2{ bottom:8%; left: 50%; transform: translateX(-50%); font-size: 22px; animation-name: margFade; animation-delay:  -6s; }
+  .marg.m3{ top: 50%; left: 4%;  transform: translateY(-50%) rotate(-90deg); font-size: 18px; transform-origin: center; animation-name: margFade; animation-delay: -11s; }
+  @keyframes margFade{
+    0%   { opacity:0 }
+    20%  { opacity:0.85 }
+    60%  { opacity:0.85 }
+    80%  { opacity:0 }
+    100% { opacity:0 }
+  }
+
+  /* ─── Layer 8 · Candle flicker on left & right edges ─── */
+  .candle{
+    position:absolute; top:50%;
+    width:60px; height:160px;
+    transform:translateY(-50%);
+    pointer-events:none;
+    background: radial-gradient(ellipse at 50% 30%, #ffd380 0%, rgba(255,180,80,0.4) 30%, transparent 70%);
+    mix-blend-mode: screen;
+    filter: blur(8px);
+    animation: candleFlick 1.5s ease-in-out infinite;  /* 10 cycles in 15s → loops cleanly */
+  }
+  .candle.left{ left: 60px; }
+  .candle.right{ right: 60px; }
+  @keyframes candleFlick{
+    0%,100%{ opacity:0.85; transform:translateY(-50%) scale(1.00); }
+    20%    { opacity:1.00; transform:translateY(-50%) scale(1.08); }
+    40%    { opacity:0.75; transform:translateY(-50%) scale(0.95); }
+    60%    { opacity:0.95; transform:translateY(-50%) scale(1.04); }
+    80%    { opacity:0.80; transform:translateY(-50%) scale(0.98); }
+  }
+
+  /* ─── Layer 9 · Film grain (15s loop) ─── */
+  .grain{
+    position:absolute;inset:0;pointer-events:none;
+    opacity:0.06; mix-blend-mode: overlay;
+    background-image:
+      repeating-radial-gradient(circle at 17% 23%, rgba(255,255,255,0.6) 0, transparent 1px),
+      repeating-radial-gradient(circle at 73% 81%, rgba(255,255,255,0.4) 0, transparent 1px),
+      repeating-radial-gradient(circle at 41% 67%, rgba(255,255,255,0.4) 0, transparent 1px);
+    animation: grainShift 1.5s steps(3) infinite; /* 10 cycles in 15s */
+  }
+  @keyframes grainShift{
+    0%   { transform: translate(0,0) }
+    33%  { transform: translate(-3px,2px) }
+    66%  { transform: translate(2px,-2px) }
+    100% { transform: translate(0,0) }
+  }
+
+</style>
+</head>
+<body>
+  <div class="toolbar">
+    <button id="recBtn">Hide UI for capture (R)</button>
+    <span>Stage <code>1920×1080</code> · loop <code>15.000s</code> · use <b>ScreenToGif</b> / <b>ffmpeg</b> to record 15s</span>
+  </div>
+
+  <div class="stage" id="stage">
+
+    <div class="parchment"></div>
+    <div class="glow"></div>
+
+    <!-- Floating embers -->
+    <div class="embers" id="embers"></div>
+
+    <!-- Sigils -->
+    <svg class="sigils" viewBox="0 0 1920 1080" preserveAspectRatio="none">
+      <!-- s1: sword -->
+      <g class="sigil s1" style="position:absolute">
+        <svg viewBox="0 0 100 100" x="0" y="0" width="100%" height="100%">
+          <path d="M50 10 L50 75 M40 75 L60 75 M50 75 L50 88 M35 30 L65 30" stroke="#c9a45c" fill="none" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+      </g>
+      <!-- s2: flame -->
+      <g class="sigil s2">
+        <svg viewBox="0 0 100 100" width="100%" height="100%">
+          <path d="M50 90 Q30 70 40 50 Q45 35 50 40 Q55 25 50 10 Q70 30 65 55 Q60 75 50 90 Z" stroke="#c9a45c" fill="none" stroke-width="3" stroke-linejoin="round"/>
+        </svg>
+      </g>
+      <!-- s3: eye -->
+      <g class="sigil s3">
+        <svg viewBox="0 0 100 100" width="100%" height="100%">
+          <path d="M10 50 Q50 15 90 50 Q50 85 10 50 Z" stroke="#c9a45c" fill="none" stroke-width="3"/>
+          <circle cx="50" cy="50" r="12" stroke="#c9a45c" fill="none" stroke-width="3"/>
+          <circle cx="50" cy="50" r="4" stroke="#c9a45c" fill="#c9a45c" stroke-width="1"/>
+        </svg>
+      </g>
+      <!-- s4: dragon coil -->
+      <g class="sigil s4">
+        <svg viewBox="0 0 100 100" width="100%" height="100%">
+          <circle cx="50" cy="50" r="34" stroke="#c9a45c" fill="none" stroke-width="3"/>
+          <path d="M50 16 Q70 40 50 50 Q30 60 50 84 M30 30 L70 70 M70 30 L30 70" stroke="#c9a45c" fill="none" stroke-width="2.5"/>
+        </svg>
+      </g>
+      <!-- s5: raven -->
+      <g class="sigil s5">
+        <svg viewBox="0 0 100 100" width="100%" height="100%">
+          <path d="M20 60 Q35 30 50 50 Q65 30 80 60 M30 55 L50 50 L70 55 M50 50 L50 80" stroke="#c9a45c" fill="none" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+        </svg>
+      </g>
+      <!-- s6: chalice -->
+      <g class="sigil s6">
+        <svg viewBox="0 0 100 100" width="100%" height="100%">
+          <path d="M30 20 L70 20 Q70 55 50 55 Q30 55 30 20 M50 55 L50 80 M35 85 L65 85" stroke="#c9a45c" fill="none" stroke-width="3" stroke-linejoin="round"/>
+        </svg>
+      </g>
+    </svg>
+
+    <!-- Central crest -->
+    <div class="crest">
+      <svg viewBox="0 0 520 520">
+        <defs>
+          <radialGradient id="crestGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#fff5d8" stop-opacity="0.4"/>
+            <stop offset="50%" stop-color="#c9a45c" stop-opacity="0.15"/>
+            <stop offset="100%" stop-color="#c9a45c" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <circle cx="260" cy="260" r="240" fill="url(#crestGlow)"/>
+
+        <g class="ring">
+          <circle cx="260" cy="260" r="220" stroke="#c9a45c" fill="none" stroke-width="1.5" stroke-dasharray="6 10"/>
+          <circle cx="260" cy="260" r="200" stroke="#c9a45c" fill="none" stroke-width="1"/>
+        </g>
+        <g class="ring inner">
+          <circle cx="260" cy="260" r="170" stroke="#c9a45c" fill="none" stroke-width="1" stroke-dasharray="2 6"/>
+          <circle cx="260" cy="260" r="150" stroke="#c9a45c" fill="none" stroke-width="1.5"/>
+        </g>
+
+        <g class="crestCore" stroke="#c9a45c" fill="none" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" style="filter: drop-shadow(0 0 14px rgba(255,210,120,0.7))">
+          <!-- crown -->
+          <path d="M200 200 L220 170 L240 200 L260 160 L280 200 L300 170 L320 200 L320 220 L200 220 Z"/>
+          <!-- shield body -->
+          <path d="M210 240 L310 240 L310 310 Q310 340 260 360 Q210 340 210 310 Z"/>
+          <!-- sword -->
+          <path d="M260 250 L260 340 M250 270 L270 270"/>
+          <!-- ribbon -->
+          <path d="M180 350 L260 360 L340 350 L320 380 L260 374 L200 380 Z"/>
+        </g>
+      </svg>
+    </div>
+
+    <!-- Marginalia -->
+    <div class="marg m1">— Codex · Veiled · Enscribed —</div>
+    <div class="marg m2">Lux · in · tenebris · ardet</div>
+    <div class="marg m3">— Memento · sigillum · veritatis —</div>
+
+    <!-- Candle flicker edges -->
+    <div class="candle left"></div>
+    <div class="candle right"></div>
+
+    <!-- Vignette + grain -->
+    <div class="vignette"></div>
+    <div class="grain"></div>
+  </div>
+
+<script>
+// Spawn embers — 18 particles with staggered start times so they wrap seamlessly
+(function(){
+  const box = document.getElementById('embers');
+  const N = 18;
+  for (let i = 0; i < N; i++){
+    const e = document.createElement('div');
+    e.className = 'ember';
+    const left  = Math.random() * 100;                  // %
+    const dx    = (Math.random() - 0.5) * 120;
+    const dx2   = dx + (Math.random() - 0.5) * 80;
+    const peak  = 0.5 + Math.random() * 0.4;
+    const delay = -(i / N) * 15;                        // even staggered across 15s
+    const sz    = 3 + Math.random() * 4;
+    e.style.cssText = `
+      left:${left}%;
+      width:${sz}px; height:${sz}px;
+      --ember-dx:${dx}px;
+      --ember-dx2:${dx2}px;
+      --ember-peak:${peak};
+      animation-delay:${delay}s;
+    `;
+    box.appendChild(e);
+  }
+})();
+
+// Hotkey: R to toggle UI for capture
+document.addEventListener('keydown', e => {
+  if (e.key === 'r' || e.key === 'R') document.body.classList.toggle('recording');
+});
+document.getElementById('recBtn').addEventListener('click', () => document.body.classList.toggle('recording'));
+
+// Scale stage to fit viewport while preserving 16:9
+function fitStage(){
+  const s = document.getElementById('stage');
+  const scale = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+  s.style.transform = `scale(${scale})`;
+}
+fitStage();
+window.addEventListener('resize', fitStage);
+</script>
+</body>
+</html>

@@ -341,10 +341,7 @@ h1.title{
 /* ============ CHRONICLE BANNER — WAX-SEALED PROCLAMATION ============ */
 .chronicle-banner{
   margin:56px 0;position:relative;
-  background:
-    linear-gradient(135deg, rgba(201,164,92,0.06) 0%, transparent 50%),
-    linear-gradient(315deg, rgba(176,26,26,0.07) 0%, transparent 50%),
-    linear-gradient(180deg, var(--vellum) 0%, var(--vellum-2) 100%);
+  background: transparent;
   padding:clamp(48px,6vw,84px) clamp(28px,5vw,80px) clamp(40px,5vw,60px);
   text-align:center;overflow:visible;
   opacity:0;animation:fade-up 1s ease-out 0.4s forwards;
@@ -362,11 +359,10 @@ h1.title{
 }
 
 /* ===== Animated background for chronicle banner (15s seamless loop) ===== */
-.cb-bg-anim{
+.chronicle-banner > .cb-bg-anim{
   position:absolute; inset:0;
   overflow:hidden; pointer-events:none;
   z-index:0;
-  -webkit-mask-image: inherit; mask-image: inherit;
 }
 .cb-bg-anim .cb-light{
   position:absolute; left:50%; top:50%;
@@ -400,7 +396,7 @@ h1.title{
   100% { transform: translate(var(--dx, 30px), -110%)        scale(0.4); opacity:0 }
 }
 /* Ensure foreground content sits above the animated layer */
-.chronicle-banner > *{ position:relative; z-index:1; }
+.chronicle-banner > *:not(.cb-bg-anim){ position:relative; z-index:1; }
 .chronicle-banner .wax-seal{ z-index:6; }
 .chronicle-banner .bg-sigil{ z-index:1; }
 

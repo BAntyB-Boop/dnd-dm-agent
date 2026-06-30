@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Sigil Preview · match to characters</title>
+<style>
+  body{background:#0a0e1c;color:#cfe;font:14px/1.5 system-ui,sans-serif;padding:32px;margin:0}
+  h1{font-family:Georgia,serif;color:#9cf;margin:0 0 4px}
+  .sub{color:#789;margin-bottom:24px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px}
+  .card{background:#0e1530;border:1px solid #1f2c50;border-radius:8px;padding:14px;text-align:center}
+  .card .fn{font-family:ui-monospace,monospace;font-size:12px;color:#7ad;margin-bottom:8px;word-break:break-all}
+  .frame{background:#fff;border-radius:4px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;overflow:hidden}
+  .frame.dark{background:#000}
+  .frame img{width:100%;height:100%;object-fit:contain;filter:none}
+  .frame.dark img{filter:invert(1)}
+  .toggle{margin-top:8px;font-size:12px;color:#7ad;cursor:pointer;user-select:none}
+  .roster{margin:24px 0 16px;background:#0c1228;border:1px solid #1f2c50;border-radius:6px;padding:14px;font-size:13px}
+  .roster b{color:#fc8}
+  .roster .row{padding:3px 0}
+</style>
+</head>
+<body>
+  <h1>Sigil Preview</h1>
+  <div class="sub">ดูทั้ง 7 ไฟล์พร้อมกัน · คลิก "invert" ใต้รูปเพื่อสลับพื้น/เส้น · บอกผมว่าไฟล์ไหน = ตัวละครไหน</div>
+
+  <div class="roster">
+    <div><b>Characters (7):</b></div>
+    <div class="row">1. <b>AURORA</b> — Wood Elf Paladin · Oath of Vengeance (sword / eye / olive branches)</div>
+    <div class="row">2. <b>KAEL VERANTH</b> — Human Sorcerer · Draconic Bloodline (dragon / flame)</div>
+    <div class="row">3. <b>JEN CORNER</b> — Human Cleric Protector · Celtic blood (raven / shield / knotwork)</div>
+    <div class="row">4. <b>AYTHON</b> — Human Bard · House Aurelius (chalice / laurel / crest)</div>
+    <div class="row">5. <b>DERMOGORGON</b> — High Elf Wizard · Azure Flame (phoenix / spellbook)</div>
+    <div class="row">6. <b>ANUCHIT</b> — Demon-bound (great eye / chains / slit pupil)</div>
+    <div class="row">7. <b>KAEL VORN</b> — Lone Hunter (arrows / wolf skull / bow)</div>
+  </div>
+
+  <div class="grid" id="grid"></div>
+
+<script>
+const files = [
+  'uIhmJ01.svg',
+  'VX4NdT001.svg',
+  'weDuMrG01.svg',
+  'Dln3Fwl01.svg',
+  'E2tAq0u01.svg',
+  'WGPhUw601.svg',
+  'ou30m01.svg'
+];
+const grid = document.getElementById('grid');
+files.forEach(f => {
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.innerHTML = `
+    <div class="fn">${f}</div>
+    <div class="frame" data-dark="0">
+      <img src="sigil-preview/${f}" alt="${f}">
+    </div>
+    <div class="toggle">⇄ invert background</div>
+  `;
+  const frame = card.querySelector('.frame');
+  card.querySelector('.toggle').addEventListener('click', () => {
+    const d = frame.dataset.dark === '1';
+    frame.dataset.dark = d ? '0' : '1';
+    frame.classList.toggle('dark', !d);
+  });
+  grid.appendChild(card);
+});
+</script>
+</body>
+</html>

@@ -2833,11 +2833,11 @@ h1.title{
   const byId = id => CHARACTERS.find(c => c.id === id);
 
   // Build a coloured sigil data-URI from a character icon
+  function sigilFileUrl(c){
+    return '/assets/sigils/' + c.id + '.svg';
+  }
   function sigilDataUri(c){
-    const svg = (ICON[c.classIcon] || ICON.sword)
-      .replace(/stroke="currentColor"/g, `stroke="${c.color}"`)
-      .replace(/<svg /, `<svg xmlns="http://www.w3.org/2000/svg" `);
-    return 'url("data:image/svg+xml;utf8,' + encodeURIComponent(svg) + '")';
+    return 'url("' + sigilFileUrl(c) + '")';
   }
 
   // ── DOM refs ────────────────────────────────────────────────────
@@ -2900,6 +2900,9 @@ h1.title{
   let particles = [];        // {x,y,tx,ty,vx,vy,seed}
   let pColor = '#c9a45c';
   let pTransition = 1;       // 0→1 progress for last shape change
+  let pMouse = { x:0, y:0, active:false };
+  const MOUSE_RADIUS = 140;
+  const MOUSE_FORCE  = 1400;
 
   function setupParticlesCanvas(){
     if (!particlesEl || pCanvas) return;
@@ -2908,6 +2911,16 @@ h1.title{
     pCtx = pCanvas.getContext('2d');
     resizeParticlesCanvas();
     new ResizeObserver(resizeParticlesCanvas).observe(particlesEl);
+    // Cursor interaction — track mouse over the whole stage
+    if (stage){
+      stage.addEventListener('mousemove', (e) => {
+        const r = particlesEl.getBoundingClientRect();
+        pMouse.x = e.clientX - r.left;
+        pMouse.y = e.clientY - r.top;
+        pMouse.active = true;
+      });
+      stage.addEventListener('mouseleave', () => { pMouse.active = false; });
+    }
     // init particles in random positions
     for (let i = 0; i < PARTICLE_COUNT; i++){
       particles.push({
@@ -2933,25 +2946,27 @@ h1.title{
     pCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
   }
 
-  // Sample target points from class sigil SVG
-  async function sampleSigilPoints(svgString, w, h, want){
+  // Sample target points from class sigil SVG (loaded from /assets/sigils/<id>.svg)
+  async function sampleSigilPoints(svgUrl, w, h, want){
     const off = document.createElement('canvas');
     off.width = w; off.height = h;
     const oc = off.getContext('2d');
-    // Solid white shape on transparent so we sample by alpha
-    const cleanSvg = svgString
-      .replace(/stroke="currentColor"/g, 'stroke="#ffffff"')
-      .replace(/fill="currentColor"/g, 'fill="#ffffff"')
-      .replace(/<svg /, '<svg xmlns="http://www.w3.org/2000/svg" ');
-    const url = 'data:image/svg+xml;utf8,' + encodeURIComponent(cleanSvg);
     const img = new Image();
-    await new Promise((res, rej) => { img.onload = res; img.onerror = rej; img.src = url; });
+    img.crossOrigin = 'anonymous';
+    await new Promise((res, rej) => { img.onload = res; img.onerror = rej; img.src = svgUrl; });
     oc.drawImage(img, 0, 0, w, h);
     const data = oc.getImageData(0, 0, w, h).data;
     const pts = [];
+    // SVGs are traced black-on-transparent or black-on-white.
+    // A pixel is "shape" if it's opaque AND dark (luminance < 0.6).
     for (let y = 0; y < h; y += 2){
       for (let x = 0; x < w; x += 2){
-        if (data[(y*w + x)*4 + 3] > 96) pts.push([x, y]);
+        const idx = (y*w + x)*4;
+        const a = data[idx + 3];
+        if (a < 96) continue;
+        const r = data[idx], g = data[idx+1], b = data[idx+2];
+        const lum = (0.299*r + 0.587*g + 0.114*b) / 255;
+        if (lum < 0.6) pts.push([x, y]);
       }
     }
     if (!pts.length) return [];
@@ -2969,15 +2984,15 @@ h1.title{
     if (!particlesEl) return;
     setupParticlesCanvas();
     pColor = c.color;
-    const svg = ICON[c.classIcon] || ICON.sword;
+    const svgUrl = sigilFileUrl(c);
     const cw = particlesEl.clientWidth, ch = particlesEl.clientHeight;
     if (!cw || !ch) return;
-    // Sigil drawn at ~70% of stage height, centered
-    const SIGIL_H = Math.min(ch * 0.85, 560);
+    // Sigil drawn larger than portrait so dust extends past silhouette
+    const SIGIL_H = Math.min(ch * 1.25, Math.min(cw * 1.05, 880));
     const SIGIL_W = SIGIL_H; // square SVG viewBox
     const offX = (cw - SIGIL_W) / 2;
     const offY = (ch - SIGIL_H) / 2;
-    const pts = await sampleSigilPoints(svg, Math.round(SIGIL_W), Math.round(SIGIL_H), PARTICLE_COUNT);
+    const pts = await sampleSigilPoints(svgUrl, Math.round(SIGIL_W), Math.round(SIGIL_H), PARTICLE_COUNT);
     if (!pts.length) return;
     // Disperse current particles slightly then assign new targets
     for (let i = 0; i < PARTICLE_COUNT; i++){
@@ -3001,26 +3016,43 @@ h1.title{
     pTransition = Math.min(1, pTransition + 0.012);
     const lerp = 0.05 + pTransition * 0.05; // ease toward target
     const t = (now || 0) * 0.001;
+    const mActive = pMouse.active;
+    const mr2 = MOUSE_RADIUS * MOUSE_RADIUS;
     for (let i = 0; i < particles.length; i++){
       const p = particles[i];
       const dx = p.tx - p.x;
       const dy = p.ty - p.y;
       p.vx = p.vx * 0.84 + dx * lerp;
       p.vy = p.vy * 0.84 + dy * lerp;
+      // cursor repel — push particles away within radius
+      if (mActive){
+        const mdx = p.x - pMouse.x;
+        const mdy = p.y - pMouse.y;
+        const d2 = mdx*mdx + mdy*mdy;
+        if (d2 < mr2 && d2 > 0.01){
+          const d = Math.sqrt(d2);
+          const f = (1 - d / MOUSE_RADIUS) * MOUSE_FORCE / (d * d + 60);
+          p.vx += mdx * f;
+          p.vy += mdy * f;
+        }
+      }
       // subtle ambient jitter even when settled
-      const jx = Math.sin(t * (1.2 + p.seed * 1.4) + p.seed * 6.28) * 0.35;
-      const jy = Math.cos(t * (1.1 + p.seed * 1.3) + p.seed * 5.13) * 0.35;
+      const jx = Math.sin(t * (1.2 + p.seed * 1.4) + p.seed * 6.28) * 0.45;
+      const jy = Math.cos(t * (1.1 + p.seed * 1.3) + p.seed * 5.13) * 0.45;
       p.x += p.vx + jx;
       p.y += p.vy + jy;
     }
-    // draw dust
+    // draw dust — bigger, with soft glow halo
     pCtx.fillStyle = pColor;
-    pCtx.globalAlpha = 0.55;
+    pCtx.shadowColor = pColor;
+    pCtx.shadowBlur = 6;
+    pCtx.globalAlpha = 0.7;
     for (let i = 0; i < particles.length; i++){
       const p = particles[i];
-      const sz = 0.9 + p.seed * 1.4;
+      const sz = 2.2 + p.seed * 2.6; // 2.2 – 4.8 px
       pCtx.fillRect(p.x, p.y, sz, sz);
     }
+    pCtx.shadowBlur = 0;
     pCtx.globalAlpha = 1;
   }
 

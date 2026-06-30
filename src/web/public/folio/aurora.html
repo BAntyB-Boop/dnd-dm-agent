@@ -391,7 +391,7 @@ body.broken .tl-age{color:var(--blood)}
 body.broken .fall-card{border-color:#3a1010}
 .fall-art{
   background-color:#000;
-  background-image:url("assets/aurora-portrait.jpg");
+  background-image:url("assets/characters/aurora/portrait.jpg");
   background-repeat:no-repeat;background-size:cover;background-position:center 8%;
   filter:contrast(1.08) saturate(0.95);position:relative;min-height:380px;
   transition:filter 1.2s;
@@ -572,7 +572,7 @@ body.broken .view-cell .lbl{color:#ffb4b4}
     </div>
 
     <div class="glass-frame">
-      <img src="assets/aurora-portrait.jpg" alt="Aurora Elaris" />
+      <img src="assets/characters/aurora/portrait.jpg" alt="Aurora Elaris" />
       <svg class="arch-svg" viewBox="0 0 520 920" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true">
         <path d="M30 60 Q30 30 60 30 L460 30 Q490 30 490 60 L490 880 L30 880 Z"/>
         <path d="M60 60 Q60 0 260 0 Q460 0 460 60"/>
@@ -680,10 +680,10 @@ body.broken .view-cell .lbl{color:#ffb4b4}
     </div>
 
     <div class="views-strip">
-      <div class="view-cell"><img src="assets/aurora-front.jpg" alt="front"><span class="lbl">Front · 01</span></div>
-      <div class="view-cell"><img src="assets/aurora-three.jpg" alt="three-quarter"><span class="lbl">3/4 · 02</span></div>
-      <div class="view-cell"><img src="assets/aurora-side.jpg" alt="side"><span class="lbl">Side · 03</span></div>
-      <div class="view-cell"><img src="assets/aurora-back.jpg" alt="back"><span class="lbl">Back · 04</span></div>
+      <div class="view-cell"><img src="assets/characters/aurora/front.jpg" alt="front"><span class="lbl">Front · 01</span></div>
+      <div class="view-cell"><img src="assets/characters/aurora/three.jpg" alt="three-quarter"><span class="lbl">3/4 · 02</span></div>
+      <div class="view-cell"><img src="assets/characters/aurora/side.jpg" alt="side"><span class="lbl">Side · 03</span></div>
+      <div class="view-cell"><img src="assets/characters/aurora/back.jpg" alt="back"><span class="lbl">Back · 04</span></div>
     </div>
     <div style="margin-top:18px;text-align:center;font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--ink-mute);font-size:0.98rem">
       Plate-and-mail of the Veiled Watch, embroidered with cobalt-thread sigils of Helm. The greatsword <em style="color:var(--ink-soft)">Iustitia</em> hangs always at her hip.
@@ -947,8 +947,8 @@ body.broken .view-cell .lbl{color:#ffb4b4}
     }
 
     try {
-      const sv = localStorage.getItem('aurora-music-vol');
-      const sm = localStorage.getItem('aurora-music-mute');
+      const sv = localStorage.getItem('characters/aurora/music-vol');
+      const sm = localStorage.getItem('characters/aurora/music-mute');
       if (sv !== null){ audio.volume = parseFloat(sv); volSlider.value = sv; }
       else audio.volume = 0.3;
       if (sm === 'true'){ audio.muted = true; iconSound.style.display = 'none'; iconMute.style.display = ''; }
@@ -982,7 +982,7 @@ body.broken .view-cell .lbl{color:#ffb4b4}
       audio.muted = !audio.muted;
       iconSound.style.display = audio.muted ? 'none' : '';
       iconMute.style.display  = audio.muted ? ''     : 'none';
-      try { localStorage.setItem('aurora-music-mute', audio.muted); } catch(e){}
+      try { localStorage.setItem('characters/aurora/music-mute', audio.muted); } catch(e){}
     });
 
     volSlider.addEventListener('input', function(){
@@ -992,11 +992,11 @@ body.broken .view-cell .lbl{color:#ffb4b4}
       if (audio.muted && audio.volume > 0){
         audio.muted = false;
         iconSound.style.display = ''; iconMute.style.display = 'none';
-        try { localStorage.setItem('aurora-music-mute', false); } catch(e){}
+        try { localStorage.setItem('characters/aurora/music-mute', false); } catch(e){}
       }
     });
     volSlider.addEventListener('change', function(){
-      try { localStorage.setItem('aurora-music-vol', audio.volume); } catch(e){}
+      try { localStorage.setItem('characters/aurora/music-vol', audio.volume); } catch(e){}
     });
   })();
 </script>

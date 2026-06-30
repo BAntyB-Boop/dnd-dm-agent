@@ -375,7 +375,7 @@ body.cellar .tl-age{color:var(--blood)}
 body.cellar .encore-card{border-color:#3a1010}
 .encore-art{
   background-color:#000;
-  background-image:url("assets/aython-portrait.jpg");
+  background-image:url("assets/characters/aython/portrait.jpg");
   background-repeat:no-repeat;background-size:cover;background-position:center 8%;
   position:relative;min-height:380px;
   filter:contrast(1.08) saturate(0.95);
@@ -1501,8 +1501,8 @@ body > *:not(.ay-intro):not(script){transition:opacity .7s ease}
   <!-- ============ TITLE BLOCK ============ -->
   <div class="title-grid">
     <div class="portrait" id="ay-portrait-hover">
-      <img src="assets/aython-portrait.jpg" alt="Aython Ashvail Aurelius" />
-      <video class="portrait-video" src="/assets/aython-card.mp4"
+      <img src="assets/characters/aython/portrait.jpg" alt="Aython Ashvail Aurelius" />
+      <video class="portrait-video" src="/assets/characters/aython/card.mp4"
              muted loop playsinline preload="metadata"
              aria-label="Aython sipping wine"></video>
       <div class="label">"Pour the wine first, then the verse. The truth keeps either way."</div>
@@ -1990,8 +1990,8 @@ body > *:not(.ay-intro):not(script){transition:opacity .7s ease}
     }
 
     try {
-      const sv = localStorage.getItem('aython-music-vol');
-      const sm = localStorage.getItem('aython-music-mute');
+      const sv = localStorage.getItem('characters/aython/music-vol');
+      const sm = localStorage.getItem('characters/aython/music-mute');
       if (sv !== null){ audio.volume = parseFloat(sv); volSlider.value = sv; }
       else audio.volume = 0.3;
       if (sm === 'true'){ audio.muted = true; iconSound.style.display = 'none'; iconMute.style.display = ''; }
@@ -2025,7 +2025,7 @@ body > *:not(.ay-intro):not(script){transition:opacity .7s ease}
       audio.muted = !audio.muted;
       iconSound.style.display = audio.muted ? 'none' : '';
       iconMute.style.display  = audio.muted ? ''     : 'none';
-      try { localStorage.setItem('aython-music-mute', audio.muted); } catch(e){}
+      try { localStorage.setItem('characters/aython/music-mute', audio.muted); } catch(e){}
     });
 
     volSlider.addEventListener('input', function(){
@@ -2035,11 +2035,11 @@ body > *:not(.ay-intro):not(script){transition:opacity .7s ease}
       if (audio.muted && audio.volume > 0){
         audio.muted = false;
         iconSound.style.display = ''; iconMute.style.display = 'none';
-        try { localStorage.setItem('aython-music-mute', false); } catch(e){}
+        try { localStorage.setItem('characters/aython/music-mute', false); } catch(e){}
       }
     });
     volSlider.addEventListener('change', function(){
-      try { localStorage.setItem('aython-music-vol', audio.volume); } catch(e){}
+      try { localStorage.setItem('characters/aython/music-vol', audio.volume); } catch(e){}
     });
   })();
 </script>

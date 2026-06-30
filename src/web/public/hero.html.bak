@@ -358,8 +358,8 @@ h1.title{
   opacity:0;pointer-events:none;z-index:5;mix-blend-mode:screen;
   box-shadow:inset 0 0 80px 20px rgba(255,236,180,0.9);
 }
-.folio.halo.flash-on .fx-flash{animation:anuchit-flash .5s ease-out}
-@keyframes anuchit-flash{
+.folio.halo.flash-on .fx-flash{animation:characters/anuchit/flash .5s ease-out}
+@keyframes characters/anuchit/flash{
   0%{opacity:0}
   30%{opacity:1}
   100%{opacity:0}
@@ -715,7 +715,7 @@ h1.title{
         <div class="fx-layer fx-bleed"></div>
         <div class="accent-glow"></div>
         <div class="folio-num">Folio · I</div>
-        <img src="assets/aurora-card.jpg" alt="Aurora Elaris">
+        <img src="assets/characters/aurora/card.jpg" alt="Aurora Elaris">
         <div class="ident">
           <div class="race">Wood Elf · 200 yrs</div>
           <h3 class="name">Aurora Elaris</h3>
@@ -750,8 +750,8 @@ h1.title{
         <div class="fx-layer"><div class="fx-drip"></div></div>
         <div class="accent-glow"></div>
         <div class="folio-num">Folio · II</div>
-        <img src="assets/aython-portrait.jpg" alt="Aython Ashvail Aurelius">
-        <video class="fx-video" src="assets/aython-card.mp4" muted loop playsinline preload="metadata" aria-hidden="true"></video>
+        <img src="assets/characters/aython/portrait.jpg" alt="Aython Ashvail Aurelius">
+        <video class="fx-video" src="assets/characters/aython/card.mp4" muted loop playsinline preload="metadata" aria-hidden="true"></video>
         <div class="ident">
           <div class="race">Human · 25 yrs</div>
           <h3 class="name">Aython Aurelius</h3>
@@ -791,7 +791,7 @@ h1.title{
         </div>
         <div class="accent-glow"></div>
         <div class="folio-num">Folio · III</div>
-        <img src="assets/kael-veranth-card.jpg" alt="Kael Veranth">
+        <img src="assets/characters/kael-veranth/card.jpg" alt="Kael Veranth">
         <div class="ident">
           <div class="race">Human · 21 yrs</div>
           <h3 class="name">Kael Veranth</h3>
@@ -835,8 +835,8 @@ h1.title{
         </div>
         <div class="accent-glow"></div>
         <div class="folio-num">Folio · IV</div>
-        <img src="assets/anuchit-card.jpg" alt="Anuchit Thepsuang">
-        <video class="fx-video" src="assets/anuchit-card.mp4" muted loop playsinline preload="metadata" aria-hidden="true"></video>
+        <img src="assets/characters/anuchit/card.jpg" alt="Anuchit Thepsuang">
+        <video class="fx-video" src="assets/characters/anuchit/card.mp4" muted loop playsinline preload="metadata" aria-hidden="true"></video>
         <div class="fx-flash" aria-hidden="true"></div>
         <div class="ident">
           <div class="race">Aasimar · 23 yrs</div>
@@ -883,8 +883,8 @@ h1.title{
         </div>
         <div class="accent-glow"></div>
         <div class="folio-num">Folio · V</div>
-        <img src="assets/kael-vorn-portrait.jpg" alt="Kael Vorn">
-        <video class="fx-video" src="assets/kael-vorn-card.mp4" muted loop playsinline preload="metadata" aria-hidden="true"></video>
+        <img src="assets/characters/kael-vorn/portrait.jpg" alt="Kael Vorn">
+        <video class="fx-video" src="assets/characters/kael-vorn/card.mp4" muted loop playsinline preload="metadata" aria-hidden="true"></video>
         <div class="ident">
           <div class="race">Tiefling · 27 yrs</div>
           <h3 class="name">Kael Vorn</h3>
@@ -922,7 +922,7 @@ h1.title{
         </div>
         <div class="accent-glow"></div>
         <div class="folio-num">Folio · VI</div>
-        <img src="assets/jen-corner-card.jpg" alt="Jen Corner">
+        <img src="assets/characters/jen/card.jpg" alt="Jen Corner">
         <div class="ident">
           <div class="race">Human · 24 yrs</div>
           <h3 class="name">Jen Corner</h3>

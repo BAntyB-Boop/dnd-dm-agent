@@ -364,6 +364,15 @@ h1.title{
   overflow:hidden; pointer-events:none;
   z-index:0;
 }
+.cb-bg-anim .cb-bg-video{
+  position:absolute; inset:0; width:100%; height:100%;
+  object-fit:cover; opacity:0.55; mix-blend-mode:screen;
+}
+.cb-bg-anim .cb-bg-veil{
+  position:absolute; inset:0;
+  background: radial-gradient(ellipse at 50% 50%, transparent 30%, rgba(10,6,8,0.55) 80%);
+  pointer-events:none;
+}
 .cb-bg-anim .cb-light{
   position:absolute; left:50%; top:50%;
   width:140%; height:160%;
@@ -1556,10 +1565,11 @@ h1.title{
 
   <!-- ============ CHRONICLE BANNER — WAX SEAL ============ -->
   <div class="chronicle-banner" id="chronicle">
-    <!-- Animated background (15s seamless loop) -->
+    <!-- Animated background (seamless looping video) -->
     <div class="cb-bg-anim" aria-hidden="true">
-      <div class="cb-light"></div>
-      <div class="cb-embers" id="cb-embers"></div>
+      <video class="cb-bg-video" src="/assets/quill-loop.mp4"
+             autoplay muted loop playsinline preload="auto"></video>
+      <div class="cb-bg-veil"></div>
     </div>
 
     <!-- Wax seal -->
@@ -3101,14 +3111,14 @@ h1.title{
       const dy = p.ty - p.y;
       p.vx = p.vx * 0.84 + dx * lerp;
       p.vy = p.vy * 0.84 + dy * lerp;
-      // cursor repel — push particles away within radius
+      // cursor attract — pull particles toward cursor within radius
       if (mActive){
-        const mdx = p.x - pMouse.x;
-        const mdy = p.y - pMouse.y;
+        const mdx = pMouse.x - p.x;
+        const mdy = pMouse.y - p.y;
         const d2 = mdx*mdx + mdy*mdy;
         if (d2 < mr2 && d2 > 0.01){
           const d = Math.sqrt(d2);
-          const f = (1 - d / MOUSE_RADIUS) * MOUSE_FORCE / (d * d + 60);
+          const f = (1 - d / MOUSE_RADIUS) * 0.18;
           p.vx += mdx * f;
           p.vy += mdy * f;
         }

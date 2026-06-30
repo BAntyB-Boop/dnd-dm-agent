@@ -2636,7 +2636,7 @@ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
 
   const camera = new THREE.PerspectiveCamera(38, W/H, 0.1, 100);
   camera.position.set(0, 1.7, 4.6);
-  camera.lookAt(0, 1.05, 0);
+  camera.lookAt(0, 0.65, 0);
 
   // ── Bloom ──────────────────────────────────────────────────────
   const composer = new EffectComposer(renderer);
@@ -2870,9 +2870,9 @@ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
   drawText();
 
   // Canvas now 1024×384 (taller for 3-line layout). Keep world aspect ratio.
-  const TEXT_W = 3.2, TEXT_H = 1.20;
-  const TEXT_CY_FINAL = -1.15;       // below chalice base — does not occlude goblet
-  const TEXT_CY_START = -1.75;       // rises from below
+  const TEXT_W = 2.6, TEXT_H = 0.36;
+  const TEXT_CY_FINAL = -0.28;       // just below chalice foot, inside camera frustum
+  const TEXT_CY_START = -0.85;       // rises from below the frame
   let   TEXT_CY = TEXT_CY_FINAL;
   function sampleText(count){
     const img = tctx.getImageData(0,0,1024,384).data;

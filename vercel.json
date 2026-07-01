@@ -1,8 +1,8 @@
 {
   "framework": "vite",
-  "outputDirectory": "src/web/react-app/dist",
-  "installCommand": "cd src/web/react-app && npm install --no-audit --no-fund --prefer-offline",
-  "buildCommand": "cd src/web/react-app && npm run build",
+  "outputDirectory": "../react-app/dist",
+  "installCommand": "cd ../react-app && npm install --no-audit --no-fund --prefer-offline",
+  "buildCommand": "cd ../react-app && npm run build",
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [

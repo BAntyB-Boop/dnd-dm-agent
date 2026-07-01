@@ -1,8 +1,8 @@
 {
   "framework": null,
   "outputDirectory": "src/web/public",
-  "installCommand": "npm --prefix src/web/react-app install",
-  "buildCommand": "npm --prefix src/web/react-app run build",
+  "installCommand": "cd src/web/react-app && npm install --no-audit --no-fund --prefer-offline",
+  "buildCommand": "cd src/web/react-app && npm run build",
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [

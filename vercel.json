@@ -1,30 +1,11 @@
 {
-  "framework": null,
-  "outputDirectory": "src/web/public",
+  "framework": "vite",
+  "outputDirectory": "src/web/react-app/dist",
   "installCommand": "cd src/web/react-app && npm install --no-audit --no-fund --prefer-offline",
   "buildCommand": "cd src/web/react-app && npm run build",
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
-    { "source": "/", "destination": "/index.html" },
-    { "source": "/story", "destination": "/story.html" },
-    { "source": "/game", "destination": "/game.html" },
-    { "source": "/hero", "destination": "/hero.html" },
-    { "source": "/map/porto-stellare", "destination": "/map/porto-stellare.html" },
-    { "source": "/lore/porto-stellare", "destination": "/lore/porto-stellare.html" },
-    { "source": "/sessions/session-1", "destination": "/sessions/session-1.html" },
-    { "source": "/oneshot", "destination": "/oneshot/index.html" },
-    { "source": "/oneshot/porto-arrival", "destination": "/oneshot/porto-arrival.html" },
-    { "source": "/oneshot/sea-ambush", "destination": "/oneshot/sea-ambush.html" },
-    { "source": "/bestiary", "destination": "/bestiary/index.html" },
-    { "source": "/bestiary/detail", "destination": "/bestiary/detail.html" },
-    { "source": "/folio/anuchit", "destination": "/folio/anuchit.html" },
-    { "source": "/folio/aurora", "destination": "/folio/aurora.html" },
-    { "source": "/folio/aython", "destination": "/folio/aython.html" },
-    { "source": "/folio/jen", "destination": "/folio/jen.html" },
-    { "source": "/folio/kael-veranth", "destination": "/folio/kael-veranth.html" },
-    { "source": "/folio/kael-vorn", "destination": "/folio/kael-vorn.html" },
-    { "source": "/folio/dermogorgon", "destination": "/folio/dermogorgon.html" },
-    { "source": "/app", "destination": "/app/index.html" }
+    { "source": "/(.*)", "destination": "/index.html" }
   ]
 }

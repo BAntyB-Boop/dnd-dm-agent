@@ -246,22 +246,40 @@ export async function startWebServer(): Promise<void> {
   const app = Fastify({ logger: false });
 
   await app.register(FastifyCors, { origin: true });
+
+  // HTML must always revalidate (content changes often); everything else
+  // (js/css/images/audio/video) is safe to cache since filenames are stable.
+  function setStaticCacheHeaders(res: { setHeader: (k: string, v: string) => void }, filePath: string): void {
+    if (filePath.endsWith(".html")) {
+      res.setHeader("Cache-Control", "no-cache");
+    } else {
+      res.setHeader("Cache-Control", "public, max-age=86400");
+    }
+  }
+
   await app.register(FastifyStatic, {
     root: path.join(process.cwd(), "src/web/public"),
     prefix: "/",
+    setHeaders: setStaticCacheHeaders,
   });
+
+  // Uploaded/generated assets (maps, avatars, monsters) rarely change once
+  // created, so they can be cached longer than the bundled site assets.
+  function setUploadedAssetCacheHeaders(res: { setHeader: (k: string, v: string) => void }): void {
+    res.setHeader("Cache-Control", "public, max-age=604800");
+  }
 
   const mapsDir = path.join(process.cwd(), "maps");
   if (!fs.existsSync(mapsDir)) fs.mkdirSync(mapsDir, { recursive: true });
-  await app.register(FastifyStatic, { root: mapsDir, prefix: "/maps/", decorateReply: false });
+  await app.register(FastifyStatic, { root: mapsDir, prefix: "/maps/", decorateReply: false, setHeaders: setUploadedAssetCacheHeaders });
 
   const avatarsDir = path.join(process.cwd(), "avatars");
   if (!fs.existsSync(avatarsDir)) fs.mkdirSync(avatarsDir, { recursive: true });
-  await app.register(FastifyStatic, { root: avatarsDir, prefix: "/avatars/", decorateReply: false });
+  await app.register(FastifyStatic, { root: avatarsDir, prefix: "/avatars/", decorateReply: false, setHeaders: setUploadedAssetCacheHeaders });
 
   const monstersDir = path.join(process.cwd(), "monsters");
   if (!fs.existsSync(monstersDir)) fs.mkdirSync(monstersDir, { recursive: true });
-  await app.register(FastifyStatic, { root: monstersDir, prefix: "/monsters/", decorateReply: false });
+  await app.register(FastifyStatic, { root: monstersDir, prefix: "/monsters/", decorateReply: false, setHeaders: setUploadedAssetCacheHeaders });
 
   // ── Clean URL Routes ───────────────────────────────────────────────────
   app.get("/story", (_req, reply) => reply.sendFile("story.html"));

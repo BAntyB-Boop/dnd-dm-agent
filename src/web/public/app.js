@@ -324,7 +324,7 @@ function updateMapMarkers() {
     const pct = c.max_hp > 0 ? c.hp / c.max_hp : 0;
     const col = HP_COLORS(pct);
     const avatarHtml = c.avatar
-      ? `<img class="cmap-img" src="/avatars/${encodeURIComponent(c.avatar)}" alt="${c.name}"
+      ? `<img class="cmap-img" src="/avatars/${encodeURIComponent(c.avatar)}" alt="${c.name}" loading="lazy"
              onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
          <div class="cmap-fallback" style="display:none">⚔️</div>`
       : `<div class="cmap-fallback">⚔️</div>`;
@@ -341,7 +341,7 @@ function updateMapMarkers() {
       const pct = p.max_hp > 0 ? p.hp / p.max_hp : 0;
       const col = HP_COLORS(pct);
       const avatarHtml = p.avatar
-        ? `<img class="cmap-img" src="/monsters/${encodeURIComponent(p.avatar)}" alt="${p.name}"
+        ? `<img class="cmap-img" src="/monsters/${encodeURIComponent(p.avatar)}" alt="${p.name}" loading="lazy"
                onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
            <div class="cmap-fallback" style="display:none">👾</div>`
         : `<div class="cmap-fallback">👾</div>`;
@@ -509,7 +509,7 @@ function renderParty(characters) {
     const ringColor = HP_COLORS(pct);
 
     const avatarInner = c.avatar
-      ? `<img class="char-avatar-img" src="/avatars/${encodeURIComponent(c.avatar)}" alt="${c.name}"
+      ? `<img class="char-avatar-img" src="/avatars/${encodeURIComponent(c.avatar)}" alt="${c.name}" loading="lazy"
            onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
          <div class="char-avatar-fallback" style="display:none">⚔️</div>`
       : `<div class="char-avatar-fallback">⚔️</div>`;
@@ -582,14 +582,14 @@ function renderCombat(combat) {
     if (p.is_player) {
       const char = (state.characters || []).find(c => c.name === p.name);
       if (char && char.avatar) {
-        avatarHtml = `<img class="combatant-avatar" src="/avatars/${encodeURIComponent(char.avatar)}"
+        avatarHtml = `<img class="combatant-avatar" src="/avatars/${encodeURIComponent(char.avatar)}" loading="lazy"
                            onerror="this.outerHTML='<span class=combatant-icon>🧙</span>'" />`;
       } else {
         avatarHtml = `<span class="combatant-icon">🧙</span>`;
       }
     } else {
       if (p.avatar) {
-        avatarHtml = `<img class="combatant-avatar monster-avatar" src="/monsters/${encodeURIComponent(p.avatar)}"
+        avatarHtml = `<img class="combatant-avatar monster-avatar" src="/monsters/${encodeURIComponent(p.avatar)}" loading="lazy"
                            onerror="this.outerHTML='<span class=combatant-icon>👾</span>'" />`;
       } else {
         avatarHtml = `<span class="combatant-icon">👾</span>`;
@@ -974,7 +974,7 @@ function _renderCharSheetContent(c, charId) {
   $('charsheet-content').innerHTML = `
     <div class="cs-header">
       ${c.avatar
-        ? `<img class="cs-avatar" src="/avatars/${encodeURIComponent(c.avatar)}" alt="${c.name}" />`
+        ? `<img class="cs-avatar" src="/avatars/${encodeURIComponent(c.avatar)}" alt="${c.name}" loading="lazy" />`
         : '<div class="cs-avatar-fallback">⚔️</div>'}
       <div class="cs-header-info">
         <div class="cs-name">${c.name}</div>
@@ -2551,13 +2551,37 @@ async function initAuth() {
   $('login-player-btn').addEventListener('click', () => finishLogin(pendingUsername, pendingPassword, 'player'));
 }
 
-// Patch fetch calls that need auth token for DM operations
+// Patch fetch calls: add auth token, a request timeout, and one retry on
+// network failure/timeout for idempotent (GET) requests — protects the UI
+// from hanging forever on a slow or flaky connection.
 const _origFetch = window.fetch.bind(window);
-window.fetch = function(url, opts = {}) {
+const FETCH_TIMEOUT_MS = 12000;
+
+function _fetchOnce(url, opts) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+  return _origFetch(url, { ...opts, signal: opts.signal ?? controller.signal })
+    .finally(() => clearTimeout(timer));
+}
+
+window.fetch = async function(url, opts = {}) {
   if (typeof url === 'string' && url.startsWith('/api/') && authToken) {
     opts = { ...opts, headers: { ...opts.headers, ...getAuthHeaders() } };
   }
-  return _origFetch(url, opts);
+  const method = (opts.method ?? 'GET').toUpperCase();
+  try {
+    return await _fetchOnce(url, opts);
+  } catch (err) {
+    // Retry once for safe GET requests only — POST/PATCH aren't safe to replay blindly.
+    if (method === 'GET' && !opts.signal) {
+      try {
+        return await _fetchOnce(url, opts);
+      } catch (err2) {
+        throw err2.name === 'AbortError' ? new Error('Request timed out — check your connection') : err2;
+      }
+    }
+    throw err.name === 'AbortError' ? new Error('Request timed out — check your connection') : err;
+  }
 };
 
 // ── Start ─────────────────────────────────────────────────────────────────

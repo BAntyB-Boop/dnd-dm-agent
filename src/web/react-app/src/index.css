@@ -2,6 +2,85 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  html, body { background: #06060c; color: #e8e2cf; min-height: 100vh; }
+/* ============================================================
+   Veiled Codex — global shell styles (theme vars, reset,
+   navbar, footer). Copied verbatim from the legacy static
+   pages so the visual identity is preserved 1:1. Class names
+   (.vc-nav, .vc-foot, …) are kept intact.
+   ============================================================ */
+
+:root{
+  --gold:#c9a45c; --gold-dim:#8a6f3a; --ink:#0a0807; --ink-soft:#f6efd2;
+  --ink-faint:rgba(244,228,193,0.5);
+  --nav-bg:rgba(8,4,1,0.55);
+  --nav-border:rgba(212,160,23,0.25);
+}
+[data-theme="light"]{
+  --gold:#8a6f3a; --gold-dim:#6b5429; --ink:#f0e7d0; --ink-soft:#1a1410;
+  --ink-faint:rgba(26,20,16,0.6);
+  --nav-bg:rgba(246,239,210,0.85);
+  --nav-border:rgba(138,111,58,0.35);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--ink);color:var(--ink-soft);font-family:"Cormorant Garamond",Georgia,serif;overflow-x:hidden}
+#root{min-height:100vh}
+
+/* ============ NAVBAR ============ */
+.vc-nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 32px;
+  background:var(--nav-bg);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--nav-border);
+  transition:background .3s, border-color .3s;
+}
+.vc-nav-brand{
+  display:flex;align-items:center;gap:10px;
+  font-family:"Cinzel",serif;font-size:13px;letter-spacing:.28em;
+  text-transform:uppercase;color:var(--gold);text-decoration:none;
+}
+.vc-nav-brand svg{width:18px;height:18px}
+.vc-nav-links{display:flex;align-items:center;gap:4px;list-style:none;margin:0;padding:0}
+.vc-nav-links a{
+  display:block;padding:8px 14px;font-family:"Cinzel",serif;font-size:10.5px;
+  letter-spacing:.22em;text-transform:uppercase;color:var(--ink-soft);
+  text-decoration:none;opacity:.7;transition:opacity .2s, color .2s;
+  border-bottom:1px solid transparent;
+}
+.vc-nav-links a:hover{opacity:1;color:var(--gold);border-bottom-color:var(--gold-dim)}
+.vc-nav-links a.active{opacity:1;color:var(--gold);border-bottom-color:var(--gold)}
+.vc-nav-links li{position:relative}
+.vc-nav-links li.has-sub > a{cursor:default}
+.vc-nav-links li.has-sub > a::after{content:" ▾";font-size:8px;margin-left:4px;opacity:.6;letter-spacing:0;vertical-align:middle}
+.vc-nav-sub{position:absolute;top:100%;left:50%;transform:translateX(-50%) translateY(-6px);min-width:200px;background:var(--nav-bg);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--nav-border);list-style:none;margin:0;padding:6px 0;opacity:0;visibility:hidden;transition:opacity .2s, transform .2s, visibility .2s;pointer-events:none;box-shadow:0 20px 40px rgba(0,0,0,0.5)}
+.vc-nav-links li.has-sub:hover .vc-nav-sub,.vc-nav-links li.has-sub:focus-within .vc-nav-sub{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0);pointer-events:auto}
+.vc-nav-sub a{display:block;padding:9px 20px;border-bottom:none;text-align:center;opacity:.85}
+.vc-nav-sub a:hover{background:rgba(201,164,92,0.08);opacity:1;border-bottom-color:transparent}
+.vc-nav-actions{display:flex;align-items:center;gap:10px}
+.vc-icon-btn{
+  width:34px;height:34px;border-radius:50%;
+  background:transparent;border:1px solid var(--nav-border);
+  color:var(--ink-soft);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:color .2s, border-color .2s, background .2s;
+}
+.vc-icon-btn:hover{color:var(--gold);border-color:var(--gold-dim)}
+.vc-icon-btn svg{width:16px;height:16px}
+.vc-theme-toggle .moon{display:none}
+.vc-theme-toggle[data-mode="light"] .sun{display:none}
+.vc-theme-toggle[data-mode="light"] .moon{display:inline}
+.vc-music-btn[data-state="on"]{color:var(--gold);border-color:var(--gold-dim)}
+
+/* ============ FOOTER ============ */
+.vc-foot{
+  padding:24px 32px;text-align:center;
+  font-family:"Cinzel",serif;font-size:10px;letter-spacing:.3em;
+  text-transform:uppercase;color:var(--ink-faint);
+  border-top:1px solid var(--nav-border);
+}
+
+@media (max-width:780px){
+  .vc-nav{padding:10px 16px;flex-wrap:wrap;gap:8px}
+  .vc-nav-links{order:3;width:100%;justify-content:center;flex-wrap:wrap;gap:0;border-top:1px solid var(--nav-border);padding-top:8px}
+  .vc-nav-links a{padding:6px 10px;font-size:9.5px}
 }

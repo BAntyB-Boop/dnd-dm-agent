@@ -7,9 +7,12 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
   plugins: [react()],
-  base: '/app/',
+  base: '/',
+  // Serve the existing static assets (video, audio, character art, folio images)
+  // straight from the legacy public folder so /assets/... keeps resolving.
+  publicDir: path.resolve(__dirname, '../public'),
   build: {
-    outDir: path.resolve(__dirname, '../public/app'),
+    outDir: path.resolve(__dirname, 'dist'),
     emptyOutDir: true,
   },
   resolve: {
@@ -17,5 +20,7 @@ export default defineConfig({
   },
   server: {
     port: 5173,
+    // Allow ?raw imports of the legacy folio HTML / shared.css that live in ../public.
+    fs: { allow: ['..'] },
   },
 });

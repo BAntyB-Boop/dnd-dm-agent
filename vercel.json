@@ -1,14 +1,15 @@
 {
   "framework": null,
   "outputDirectory": "src/web/public",
-  "buildCommand": ":",
-  "installCommand": ":",
+  "installCommand": "npm --prefix src/web/react-app install",
+  "buildCommand": "npm --prefix src/web/react-app run build",
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
     { "source": "/", "destination": "/index.html" },
     { "source": "/story", "destination": "/story.html" },
     { "source": "/game", "destination": "/game.html" },
+    { "source": "/hero", "destination": "/hero.html" },
     { "source": "/map/porto-stellare", "destination": "/map/porto-stellare.html" },
     { "source": "/lore/porto-stellare", "destination": "/lore/porto-stellare.html" },
     { "source": "/sessions/session-1", "destination": "/sessions/session-1.html" },
@@ -23,6 +24,7 @@
     { "source": "/folio/jen", "destination": "/folio/jen.html" },
     { "source": "/folio/kael-veranth", "destination": "/folio/kael-veranth.html" },
     { "source": "/folio/kael-vorn", "destination": "/folio/kael-vorn.html" },
-    { "source": "/folio/dermogorgon", "destination": "/folio/dermogorgon.html" }
+    { "source": "/folio/dermogorgon", "destination": "/folio/dermogorgon.html" },
+    { "source": "/app", "destination": "/app/index.html" }
   ]
 }
